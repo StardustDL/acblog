@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AcBlog.Data
+namespace AcBlog.Data.Providers.SQLServer
 {
     public class Class1
     {
