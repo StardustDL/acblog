@@ -1,19 +1,21 @@
-﻿namespace AcBlog.Data.Providers
+﻿using System.Threading.Tasks;
+
+namespace AcBlog.Data.Providers
 {
-    public interface IRecordProvider<T, TId>
+    public interface IRecordProvider<T, TId> : IProvider
     {
         bool IsReadable { get; }
 
         bool IsWritable { get; }
 
-        bool Exists(TId id);
+        Task<bool> Exists(TId id);
 
-        T Get(TId id);
+        Task<T> Get(TId id);
 
-        bool Delete(TId id);
+        Task<bool> Delete(TId id);
 
-        bool Update(T value);
+        Task<bool> Update(T value);
 
-        TId Create(T value);
+        Task<TId> Create(T value);
     }
 }

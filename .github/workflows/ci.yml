@@ -30,7 +30,8 @@ jobs:
         CONFIG: ${{ matrix.config }}
       run: |
         mkdir reports/test
-        dotnet test -c $env:CONFIG ./test/Test.Base /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=../../reports/test/coverage.xml /p:MergeWith=../../coverage.json
+        dotnet test -c $env:CONFIG /p:CollectCoverage=true /p:CoverletOutput=../../reports/test/coverage.json /p:MergeWith=../../reports/test/coverage.json /maxcpucount:1
+        dotnet test -c $env:CONFIG ./test/Test.Base /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=../../reports/test/coverage.xml /p:MergeWith=../../reports/test/coverage.json
       shell: pwsh
     - name: Benchmark
       env:

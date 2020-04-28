@@ -3,10 +3,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Test.Base
 {
     [TestClass]
-    public class UnitTest1
+    public class BasicTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Basic()
         {
         }
     }
