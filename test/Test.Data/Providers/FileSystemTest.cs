@@ -39,6 +39,10 @@ namespace Test.Data.Providers
             Directory.CreateDirectory(root);
 
             UserProvider provider = new UserProvider(root);
+
+            Assert.IsTrue(provider.IsReadable);
+            Assert.IsTrue(provider.IsWritable);
+
             User user = new User
             {
                 Nickname = "nick"
@@ -46,8 +50,15 @@ namespace Test.Data.Providers
             var id = await provider.Create(user);
             Assert.IsNotNull(id);
             Assert.IsTrue(await provider.Exists(id));
+
             var userLoaded = await provider.Get(id);
             Assert.AreEqual(user.Nickname, userLoaded.Nickname);
+
+            user.Nickname = "new";
+            Assert.IsTrue(await provider.Update(user));
+            userLoaded = await provider.Get(id);
+            Assert.AreEqual(user.Nickname, userLoaded.Nickname);
+
             Assert.IsTrue(await provider.Delete(id));
             Assert.IsFalse(await provider.Delete(id));
             Assert.IsFalse(await provider.Exists(id));
@@ -60,6 +71,10 @@ namespace Test.Data.Providers
             Directory.CreateDirectory(root);
 
             PostProvider provider = new PostProvider(root);
+
+            Assert.IsTrue(provider.IsReadable);
+            Assert.IsTrue(provider.IsWritable);
+
             Post post = new Post
             {
                 Title = "title"
@@ -67,8 +82,14 @@ namespace Test.Data.Providers
             var id = await provider.Create(post);
             Assert.IsNotNull(id);
             Assert.IsTrue(await provider.Exists(id));
-            var userLoaded = await provider.Get(id);
-            Assert.AreEqual(post.Title, userLoaded.Title);
+            var postLoaded = await provider.Get(id);
+            Assert.AreEqual(post.Title, postLoaded.Title);
+
+            post.Title = "new";
+            Assert.IsTrue(await provider.Update(post));
+            postLoaded = await provider.Get(id);
+            Assert.AreEqual(post.Title, postLoaded.Title);
+
             Assert.IsTrue(await provider.Delete(id));
             Assert.IsFalse(await provider.Delete(id));
             Assert.IsFalse(await provider.Exists(id));

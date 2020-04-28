@@ -1,5 +1,6 @@
 ﻿using AcBlog.Data.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace AcBlog.Data.Providers.FileSystem
         public async Task<string> Create(Post value)
         {
             var id = Guid.NewGuid().ToString();
+            value.Id = id;
 
             using var fs = File.OpenWrite(GetPostFile(id));
             await JsonSerializer.SerializeAsync(fs, value);
@@ -68,6 +70,14 @@ namespace AcBlog.Data.Providers.FileSystem
                 return true;
             }
             return false;
+        }
+
+        public async IAsyncEnumerable<Post> All()
+        {
+            foreach(var v in Directory.GetFiles(RootPath, "*.json"))
+            {
+                yield return await Get(Path.GetFileNameWithoutExtension(v));
+            }
         }
     }
 }

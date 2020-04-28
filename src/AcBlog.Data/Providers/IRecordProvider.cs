@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AcBlog.Data.Providers
 {
@@ -7,6 +8,8 @@ namespace AcBlog.Data.Providers
         bool IsReadable { get; }
 
         bool IsWritable { get; }
+
+        IAsyncEnumerable<T> All();
 
         Task<bool> Exists(TId id);
 
