@@ -1,0 +1,51 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  ci:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        config: [Release]
+        dnv: ["3.1.201"]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ matrix.dnv }}
+    - name: Restore & Build
+      env:
+        CONFIG: ${{ matrix.config }}
+      run: |
+        dotnet restore -s https://api.nuget.org/v3/index.json
+        dotnet build -c $env:CONFIG
+      shell: pwsh
+    - name: Test
+      env:
+        CONFIG: ${{ matrix.config }}
+      run: |
+        mkdir reports/test
+        dotnet test -c $env:CONFIG ./test/Test.Base /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=../../reports/test/coverage.xml /p:MergeWith=../../coverage.json
+      shell: pwsh
+    - name: Benchmark
+      env:
+        CONFIG: ${{ matrix.config }}
+      run: dotnet run -c $env:CONFIG --project ./test/Benchmark.Base
+      shell: pwsh
+    - name: Generate reports
+      run: |
+        dotnet tool install dotnet-reportgenerator-globaltool --tool-path ./tools
+        ./tools/reportgenerator -reports:./reports/test/coverage.xml -targetdir:./reports/test
+        mkdir reports/benchmark
+        Copy-Item ./BenchmarkDotNet.Artifacts/* ./reports/benchmark -Recurse
+      shell: pwsh
+    - name: Upload reports
+      uses: actions/upload-artifact@master
+      with:
+        name: ci-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.dnv }}
+        path: ./reports
