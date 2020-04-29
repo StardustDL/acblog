@@ -9,7 +9,7 @@ namespace AcBlog.SDK.API
 {
     internal class PostService : IPostService
     {
-        const string PrepUrl = "/Posts";
+        const string _prepUrl = "/Posts";
 
         public PostService(HttpClient httpClient)
         {
@@ -26,7 +26,7 @@ namespace AcBlog.SDK.API
 
         public async IAsyncEnumerable<Post> All()
         {
-            var responseMessage = await HttpClient.GetAsync(PrepUrl);
+            var responseMessage = await HttpClient.GetAsync(_prepUrl);
             responseMessage.EnsureSuccessStatusCode();
             foreach (var v in await responseMessage.Content.ReadFromJsonAsync<Post[]>())
                 yield return v;
@@ -34,7 +34,7 @@ namespace AcBlog.SDK.API
 
         public async Task<string?> Create(Post value)
         {
-            var responseMessage = await HttpClient.PostAsJsonAsync(PrepUrl, value);
+            var responseMessage = await HttpClient.PostAsJsonAsync(_prepUrl, value);
 
             if (!responseMessage.IsSuccessStatusCode)
                 return null;
@@ -46,7 +46,7 @@ namespace AcBlog.SDK.API
 
         public async Task<bool> Delete(string id)
         {
-            var responseMessage = await HttpClient.DeleteAsync($"{PrepUrl}/{id}");
+            var responseMessage = await HttpClient.DeleteAsync($"{_prepUrl}/{id}");
 
             if (!responseMessage.IsSuccessStatusCode)
                 return false;
@@ -56,13 +56,13 @@ namespace AcBlog.SDK.API
 
         public async Task<bool> Exists(string id)
         {
-            var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{id}");
+            var responseMessage = await HttpClient.GetAsync($"{_prepUrl}/{id}");
             return responseMessage.IsSuccessStatusCode;
         }
 
         public async Task<Post> Get(string id)
         {
-            var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{id}");
+            var responseMessage = await HttpClient.GetAsync($"{_prepUrl}/{id}");
             responseMessage.EnsureSuccessStatusCode();
 
             return await responseMessage.Content.ReadFromJsonAsync<Post>();
@@ -70,7 +70,7 @@ namespace AcBlog.SDK.API
 
         public async Task<bool> Update(Post value)
         {
-            var responseMessage = await HttpClient.PutAsJsonAsync($"{PrepUrl}/{value.Id}", value);
+            var responseMessage = await HttpClient.PutAsJsonAsync($"{_prepUrl}/{value.Id}", value);
             responseMessage.EnsureSuccessStatusCode();
 
             return await responseMessage.Content.ReadFromJsonAsync<bool>();

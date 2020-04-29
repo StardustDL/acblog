@@ -19,6 +19,8 @@ namespace AcBlog.Server.API
 {
     public class Startup
     {
+        const string _devCorsPolicy = nameof(_devCorsPolicy);
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -57,6 +59,15 @@ namespace AcBlog.Server.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AcBlog API", Version = "v1" });
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(_devCorsPolicy,
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:5001", "http://localhost:5000");
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +81,11 @@ namespace AcBlog.Server.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            if (env.IsDevelopment())
+            {
+                app.UseCors(_devCorsPolicy);
+            }
 
             app.UseAuthorization();
 

@@ -12,7 +12,7 @@ namespace Test.Data.Providers
             Assert.IsTrue(provider.IsReadable);
             Assert.IsTrue(provider.IsWritable);
 
-            await foreach (var v in provider.All()) ;
+            await foreach (var _ in provider.All()) ;
 
             User user = new User
             {
@@ -40,7 +40,7 @@ namespace Test.Data.Providers
             Assert.IsTrue(provider.IsReadable);
             Assert.IsTrue(provider.IsWritable);
 
-            await foreach (var v in provider.All()) ;
+            await foreach (var _ in provider.All()) ;
 
             Post post = new Post
             {

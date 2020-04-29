@@ -9,7 +9,7 @@ namespace Test.API
     [TestClass]
     public class PostsControllerTest
     {
-        const string PREP = "/Posts";
+        const string _prepUrl = "/Posts";
 
         WebApplicationFactory<AcBlog.Server.API.Program> Factory { get; set; }
 
@@ -29,7 +29,7 @@ namespace Test.API
         public async Task All()
         {
             using var client = Factory.CreateClient();
-            var responseMessage = await client.GetAsync(PREP);
+            var responseMessage = await client.GetAsync(_prepUrl);
             responseMessage.EnsureSuccessStatusCode();
             var result = await responseMessage.Content.ReadFromJsonAsync<Post[]>();
         }
@@ -43,7 +43,7 @@ namespace Test.API
 
             // Create
 
-            var responseMessage = await client.PostAsJsonAsync(PREP, origin);
+            var responseMessage = await client.PostAsJsonAsync(_prepUrl, origin);
 
             responseMessage.EnsureSuccessStatusCode();
 
@@ -51,7 +51,7 @@ namespace Test.API
 
             // Get
 
-            responseMessage = await client.GetAsync($"{PREP}/{id}");
+            responseMessage = await client.GetAsync($"{_prepUrl}/{id}");
             responseMessage.EnsureSuccessStatusCode();
 
             var result = await responseMessage.Content.ReadFromJsonAsync<Post>();
@@ -61,23 +61,23 @@ namespace Test.API
             // Update
 
             origin.Title = "new title";
-            responseMessage = await client.PutAsJsonAsync($"{PREP}/{id}", origin);
+            responseMessage = await client.PutAsJsonAsync($"{_prepUrl}/{id}", origin);
 
             responseMessage.EnsureSuccessStatusCode();
 
             Assert.IsTrue(await responseMessage.Content.ReadFromJsonAsync<bool>());
 
-            responseMessage = await client.GetAsync($"{PREP}/{id}");
+            responseMessage = await client.GetAsync($"{_prepUrl}/{id}");
             responseMessage.EnsureSuccessStatusCode();
             result = await responseMessage.Content.ReadFromJsonAsync<Post>();
             Assert.AreEqual(id, result.Id);
             Assert.AreEqual(origin.Title, result.Title);
 
             // Delete
-            responseMessage = await client.DeleteAsync($"{PREP}/{id}");
+            responseMessage = await client.DeleteAsync($"{_prepUrl}/{id}");
             responseMessage.EnsureSuccessStatusCode();
             Assert.IsTrue(await responseMessage.Content.ReadFromJsonAsync<bool>());
-            responseMessage = await client.GetAsync($"{PREP}/{id}");
+            responseMessage = await client.GetAsync($"{_prepUrl}/{id}");
             Assert.AreEqual(System.Net.HttpStatusCode.NotFound, responseMessage.StatusCode);
         }
     }
