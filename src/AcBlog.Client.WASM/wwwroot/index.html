@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -22,6 +22,12 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script src="_content/AcBlog.Client.Components.Markdown/component.js"></script>
+    <script src="lib/monaco-editor/vs/loader.js"></script>
+    <script>
+        require.config({ paths: { 'vs': 'lib/monaco-editor/vs' } });
+    </script>
+    <script src="_content/AcBlog.Client.Components.CodeEditor/component.js"></script>
 </body>
 
 </html>

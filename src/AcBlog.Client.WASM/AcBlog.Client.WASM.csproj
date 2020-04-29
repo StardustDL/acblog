@@ -15,6 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AcBlog.Client.Components.CodeEditor\AcBlog.Client.Components.CodeEditor.csproj" />
+    <ProjectReference Include="..\AcBlog.Client.Components.Markdown\AcBlog.Client.Components.Markdown.csproj" />
     <ProjectReference Include="..\AcBlog.Data\AcBlog.Data.csproj" />
     <ProjectReference Include="..\AcBlog.SDK\AcBlog.SDK.csproj" />
   </ItemGroup>
@@ -22,5 +24,7 @@
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties package_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

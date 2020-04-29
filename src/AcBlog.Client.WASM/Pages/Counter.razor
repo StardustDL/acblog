@@ -1,4 +1,6 @@
 ﻿@page "/counter"
+@using AcBlog.Client.Components.Markdown
+@using AcBlog.Client.Components.CodeEditor
 
 <h1>Counter</h1>
 
@@ -6,9 +8,14 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
+<MarkdownRenderer Value="### abc"></MarkdownRenderer>
+
+<div style="min-height:500px; background:white; overflow: auto">
+    <CodeEditor Value="### abc"></CodeEditor>
+</div>
+
 @code {
     private int currentCount = 0;
-
     private void IncrementCount()
     {
         currentCount++;

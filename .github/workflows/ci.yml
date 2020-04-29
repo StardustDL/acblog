@@ -9,7 +9,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         config: [Release]
-        dnv: ["3.1.201"]
+        dotnet-version: ["3.1.201"]
+        node-version: ["12.x"]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
@@ -17,11 +18,18 @@ jobs:
     - name: Setup dotnet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{ matrix.dnv }}
+        dotnet-version: ${{ matrix.dotnet-version }}
+    - name: Setup NodeJS
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
     - name: Restore & Build
       env:
         CONFIG: ${{ matrix.config }}
       run: |
+        npm install --global gulp
+        cd src/AcBlog.Client.Components.Markdown ; npm ci ; gulp ; cd ../..
+        cd src/AcBlog.Client.WASM ; npm ci ; gulp ; cd ../..
         dotnet restore -s https://api.nuget.org/v3/index.json
         dotnet build -c $env:CONFIG
       shell: pwsh
@@ -48,5 +56,5 @@ jobs:
     - name: Upload reports
       uses: actions/upload-artifact@master
       with:
-        name: ci-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.dnv }}
+        name: ci-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.dotnet-version }}
         path: ./reports

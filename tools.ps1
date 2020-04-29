@@ -1,26 +1,11 @@
 if ($args.Count -gt 0) {
     switch ($args[0]) {
-        "dep" {
-            Write-Output "Install dependencies..."
-            if (!$?) {
-                exit 1
-            }
-        }
-        "dep-dev" {
-            Write-Output "Install dependencies for development..."
-            if (!$?) {
-                exit 1
-            }
-        }
         "format" {
-            Write-Output "Formatting..."
+            Write-Output "Format..."
             dotnet format
             if (!$?) {
                 exit 1
             }
-        }
-        "clean" {
-            Write-Output "Clean generated files.."
         }
         "api" {
             Write-Output "Run API..."
