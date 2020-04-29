@@ -1,6 +1,4 @@
-﻿using AcBlog.Data.Models;
-using AcBlog.Data.Providers;
-using AcBlog.Data.Providers.FileSystem;
+﻿using AcBlog.Data.Providers.FileSystem;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -12,7 +10,7 @@ using System.Threading.Tasks;
 namespace Test.Data.Providers
 {
     [TestClass]
-    public class FileSystemTest
+    public class FileSystemTest : ProviderTest
     {
         string RootPath { get; set; }
 
@@ -33,66 +31,25 @@ namespace Test.Data.Providers
         }
 
         [TestMethod]
-        public async Task User()
+        public Task User()
         {
             var root = Path.Join(RootPath, "users");
             Directory.CreateDirectory(root);
 
             UserProvider provider = new UserProvider(root);
 
-            Assert.IsTrue(provider.IsReadable);
-            Assert.IsTrue(provider.IsWritable);
-
-            User user = new User
-            {
-                Nickname = "nick"
-            };
-            var id = await provider.Create(user);
-            Assert.IsNotNull(id);
-            Assert.IsTrue(await provider.Exists(id));
-
-            var userLoaded = await provider.Get(id);
-            Assert.AreEqual(user.Nickname, userLoaded.Nickname);
-
-            user.Nickname = "new";
-            Assert.IsTrue(await provider.Update(user));
-            userLoaded = await provider.Get(id);
-            Assert.AreEqual(user.Nickname, userLoaded.Nickname);
-
-            Assert.IsTrue(await provider.Delete(id));
-            Assert.IsFalse(await provider.Delete(id));
-            Assert.IsFalse(await provider.Exists(id));
+            return UserProvider(provider);
         }
 
         [TestMethod]
-        public async Task Post()
+        public Task Post()
         {
             var root = Path.Join(RootPath, "posts");
             Directory.CreateDirectory(root);
 
             PostProvider provider = new PostProvider(root);
 
-            Assert.IsTrue(provider.IsReadable);
-            Assert.IsTrue(provider.IsWritable);
-
-            Post post = new Post
-            {
-                Title = "title"
-            };
-            var id = await provider.Create(post);
-            Assert.IsNotNull(id);
-            Assert.IsTrue(await provider.Exists(id));
-            var postLoaded = await provider.Get(id);
-            Assert.AreEqual(post.Title, postLoaded.Title);
-
-            post.Title = "new";
-            Assert.IsTrue(await provider.Update(post));
-            postLoaded = await provider.Get(id);
-            Assert.AreEqual(post.Title, postLoaded.Title);
-
-            Assert.IsTrue(await provider.Delete(id));
-            Assert.IsFalse(await provider.Delete(id));
-            Assert.IsFalse(await provider.Exists(id));
+            return PostProvider(provider);
         }
     }
 }

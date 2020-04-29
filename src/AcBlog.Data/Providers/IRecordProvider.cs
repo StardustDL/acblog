@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Providers
 {
-    public interface IRecordProvider<T, TId> : IProvider
+    public interface IRecordProvider<T, TId> : IProvider where TId : class
     {
         bool IsReadable { get; }
 
@@ -19,6 +19,6 @@ namespace AcBlog.Data.Providers
 
         Task<bool> Update(T value);
 
-        Task<TId> Create(T value);
+        Task<TId?> Create(T value);
     }
 }

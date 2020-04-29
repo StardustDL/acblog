@@ -21,17 +21,35 @@ namespace AcBlog.Data.Providers.FileSystem
 
         public bool IsWritable => true;
 
-        public ProviderContext Context { get; set; }
+        public ProviderContext? Context { get; set; }
 
         string GetUserFile(string id) => Path.Join(RootPath, $"{id}.json");
 
-        public async Task<string> Create(User value)
+        async Task SaveFile(FileStream stream, User data)
+        {
+            await JsonSerializer.SerializeAsync(stream, data);
+        }
+
+        async Task<User> LoadFile(FileStream stream)
+        {
+            var result = await JsonSerializer.DeserializeAsync<User>(stream);
+            return result;
+        }
+
+        public async Task<string?> Create(User value)
         {
             var id = Guid.NewGuid().ToString();
             value.Id = id;
 
-            using var fs = File.OpenWrite(GetUserFile(id));
-            await JsonSerializer.SerializeAsync(fs, value);
+            try
+            {
+                using var fs = File.Open(GetUserFile(id), FileMode.CreateNew, FileAccess.Write);
+                await SaveFile(fs, value);
+            }
+            catch
+            {
+                return null;
+            }
 
             return id;
         }
@@ -54,8 +72,10 @@ namespace AcBlog.Data.Providers.FileSystem
 
         public async Task<User> Get(string id)
         {
-            using var fs = File.OpenRead(GetUserFile(id));
-            var result = await JsonSerializer.DeserializeAsync<User>(fs);
+            using var fs = File.Open(GetUserFile(id), FileMode.Open, FileAccess.Read);
+
+            var result = await LoadFile(fs);
+
             result.Id = id;
             return result;
         }
@@ -65,8 +85,8 @@ namespace AcBlog.Data.Providers.FileSystem
             var file = GetUserFile(value.Id);
             if (File.Exists(file))
             {
-                using var fs = File.OpenWrite(file);
-                await JsonSerializer.SerializeAsync(fs, value);
+                using var fs = File.Open(file, FileMode.Truncate, FileAccess.Write);
+                await SaveFile(fs, value);
 
                 return true;
             }

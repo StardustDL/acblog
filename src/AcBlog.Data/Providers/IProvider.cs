@@ -3,6 +3,6 @@
     public interface IProvider
     {
         
-        ProviderContext Context { get; set; }
+        ProviderContext? Context { get; set; }
     }
 }

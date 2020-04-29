@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
@@ -19,6 +20,12 @@ namespace Test.API
         public void Setup()
         {
             Factory = new WebApplicationFactory<AcBlog.Server.API.Program>();
+        }
+
+        [TestCleanup]
+        public void Clean()
+        {
+            Factory.Dispose();
         }
 
         [TestMethod]
@@ -71,15 +78,10 @@ namespace Test.API
 
             // Delete
             responseMessage = await client.DeleteAsync($"{PREP}/{id}");
+            responseMessage.EnsureSuccessStatusCode();
             Assert.IsTrue(await responseMessage.Content.ReadFromJsonAsync<bool>());
             responseMessage = await client.GetAsync($"{PREP}/{id}");
             Assert.AreEqual(System.Net.HttpStatusCode.NotFound, responseMessage.StatusCode);
-        }
-
-        [TestCleanup]
-        public void Clean()
-        {
-            Factory.Dispose();
         }
     }
 }

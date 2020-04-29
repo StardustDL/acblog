@@ -20,17 +20,35 @@ namespace AcBlog.Data.Providers.FileSystem
 
         public bool IsWritable => true;
 
-        public ProviderContext Context { get; set; }
+        public ProviderContext? Context { get; set; }
 
         string GetPostFile(string id) => Path.Join(RootPath, $"{id}.json");
 
-        public async Task<string> Create(Post value)
+        async Task SaveFile(FileStream stream, Post data)
+        {
+            await JsonSerializer.SerializeAsync(stream, data);
+        }
+
+        async Task<Post> LoadFile(FileStream stream)
+        {
+            var result = await JsonSerializer.DeserializeAsync<Post>(stream);
+            return result;
+        }
+
+        public async Task<string?> Create(Post value)
         {
             var id = Guid.NewGuid().ToString();
             value.Id = id;
 
-            using var fs = File.OpenWrite(GetPostFile(id));
-            await JsonSerializer.SerializeAsync(fs, value);
+            try
+            {
+                using var fs = File.Open(GetPostFile(id), FileMode.CreateNew, FileAccess.Write);
+                await SaveFile(fs, value);
+            }
+            catch
+            {
+                return null;
+            }
 
             return id;
         }
@@ -53,8 +71,10 @@ namespace AcBlog.Data.Providers.FileSystem
 
         public async Task<Post> Get(string id)
         {
-            using var fs = File.OpenRead(GetPostFile(id));
-            var result = await JsonSerializer.DeserializeAsync<Post>(fs);
+            using var fs = File.Open(GetPostFile(id), FileMode.Open, FileAccess.Read);
+
+            var result = await LoadFile(fs);
+
             result.Id = id;
             return result;
         }
@@ -64,8 +84,8 @@ namespace AcBlog.Data.Providers.FileSystem
             var file = GetPostFile(value.Id);
             if (File.Exists(file))
             {
-                using var fs = File.OpenWrite(file);
-                await JsonSerializer.SerializeAsync(fs, value);
+                using var fs = File.Open(file, FileMode.Truncate, FileAccess.Write);
+                await SaveFile(fs, value);
 
                 return true;
             }
@@ -74,7 +94,7 @@ namespace AcBlog.Data.Providers.FileSystem
 
         public async IAsyncEnumerable<Post> All()
         {
-            foreach(var v in Directory.GetFiles(RootPath, "*.json"))
+            foreach (var v in Directory.GetFiles(RootPath, "*.json"))
             {
                 yield return await Get(Path.GetFileNameWithoutExtension(v));
             }

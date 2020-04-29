@@ -36,8 +36,19 @@ namespace AcBlog.Server.API
                     Directory.CreateDirectory(rootPath);
                 }
 
-                services.AddSingleton<IUserProvider>(sv => new Data.Providers.FileSystem.UserProvider(rootPath));
-                services.AddSingleton<IPostProvider>(sv => new Data.Providers.FileSystem.PostProvider(rootPath));
+                string userRootPath = Path.Join(rootPath, "users");
+                if (!Directory.Exists(userRootPath))
+                {
+                    Directory.CreateDirectory(userRootPath);
+                }
+                string postRootPath = Path.Join(rootPath, "posts");
+                if (!Directory.Exists(postRootPath))
+                {
+                    Directory.CreateDirectory(postRootPath);
+                }
+
+                services.AddSingleton<IUserProvider>(sv => new Data.Providers.FileSystem.UserProvider(userRootPath));
+                services.AddSingleton<IPostProvider>(sv => new Data.Providers.FileSystem.PostProvider(postRootPath));
             }
 
             services.AddControllers();
