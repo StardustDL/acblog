@@ -8,6 +8,8 @@
   "author": "StardustDL",
   "license": "ISC",
   "dependencies": {
+    "@mdi/font": "^5.1.45",
+    "bootstrap": "^4.4.1",
     "monaco-editor": "^0.20.0"
   },
   "devDependencies": {

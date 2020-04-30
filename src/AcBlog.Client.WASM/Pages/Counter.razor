@@ -8,12 +8,6 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
-<MarkdownRenderer Value="### abc"></MarkdownRenderer>
-
-<div style="min-height:500px; background:white; overflow: auto">
-    <CodeEditor Value="### abc"></CodeEditor>
-</div>
-
 @code {
     private int currentCount = 0;
     private void IncrementCount()
