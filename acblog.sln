@@ -27,9 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.SDK", "test\Test.SDK\T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.WASM", "src\AcBlog.Client.WASM\AcBlog.Client.WASM.csproj", "{ED7DB08F-2339-4AD6-8838-4DAAC0915C1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcBlog.Client.Components.Markdown", "src\AcBlog.Client.Components.Markdown\AcBlog.Client.Components.Markdown.csproj", "{469FD464-DE5E-49D0-8F95-91ACEDE50E8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.Components.Markdown", "src\AcBlog.Client.Components.Markdown\AcBlog.Client.Components.Markdown.csproj", "{469FD464-DE5E-49D0-8F95-91ACEDE50E8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcBlog.Client.Components.CodeEditor", "src\AcBlog.Client.Components.CodeEditor\AcBlog.Client.Components.CodeEditor.csproj", "{8B8B96C8-8DA7-4F89-B2CC-362F96D7F449}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.Components.CodeEditor", "src\AcBlog.Client.Components.CodeEditor\AcBlog.Client.Components.CodeEditor.csproj", "{8B8B96C8-8DA7-4F89-B2CC-362F96D7F449}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

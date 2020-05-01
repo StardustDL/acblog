@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using AcBlog.SDK;
 using AcBlog.SDK.API;
+using AcBlog.Client.WASM.Models;
 
 namespace AcBlog.Client.WASM
 {
@@ -19,8 +20,30 @@ namespace AcBlog.Client.WASM
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddHttpClient<IBlogService, HttpApiBlogService>(
-                client => client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("APIServer")));
+            string server = builder.Configuration.GetValue<string>("APIServer", null);
+
+            {
+                var blogSettings = new BlogSettings()
+                {
+                    Name = "AcBlog",
+                    Description = "A blog system based on WebAssembly.",
+                    IconUrl = "icon-512.png"
+                };
+                builder.Configuration.Bind("BlogSettings", blogSettings);
+
+                builder.Services.AddSingleton(blogSettings);
+            }
+
+            if (server == null)
+            {
+                builder.Services.AddHttpClient<IBlogService, HttpApiBlogService>(
+                    client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+            }
+            else
+            {
+                builder.Services.AddHttpClient<IBlogService, HttpApiBlogService>(
+                    client => client.BaseAddress = new Uri(server));
+            }
 
             await builder.Build().RunAsync();
         }

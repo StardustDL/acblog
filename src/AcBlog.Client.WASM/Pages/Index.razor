@@ -1,5 +1,28 @@
 ﻿@page "/"
+@layout BaseLayout
+@inject BlogSettings BlogSettings
 
-<h1>Hello, world!</h1>
+<div class="jumbotron jumbotron-fluid p-0">
+    <div class="container">
+        <div class="d-flex flex-column justify-content-center" style="height: 100vh;">
+            <div class="d-flex flex-row mx-auto">
+                <img src="@BlogSettings.IconUrl" width="256" height="256" class="mx-auto" />
+                <div class="d-flex flex-column justify-content-center ml-5">
+                    <h1 class="display-4 text-center mt-3 pb-4 border-bottom">@BlogSettings.Name</h1>
+                    <p class="lead text-center">@BlogSettings.Description</p>
+                    <div class="d-flex flex-row justify-content-around mt-3">
+                        <a class="btn btn-outline-primary btn-lg mdi mdi-archive" href="posts">Posts</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-Welcome to your new app.
+</div>
+
+@code
+{
+    protected override void OnInitialized()
+    {
+    }
+}

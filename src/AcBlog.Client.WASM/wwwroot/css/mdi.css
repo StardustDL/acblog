@@ -1,76 +1,46 @@
-﻿.mdi::before {
-    font-size: 24px;
-    line-height: 14px;
-}
-
-.btn .mdi::before {
+﻿.alert.mdi::before,
+.breadcrumb .mdi::before,
+.btn.mdi::before,
+.card-title.mdi::before,
+.card-subtitle.mdi::before,
+.card-link.mdi::before,
+.dropdown-item.mdi::before,
+.list-group-item.mdi::before,
+.nav-link.mdi::before {
+    font-size: 1.25em;
+    line-height: initial;
     position: relative;
-    top: 4px;
+    top: 0.09rem;
 }
 
-.btn-xs .mdi::before {
-    font-size: 18px;
-    top: 3px;
+.alert.mdi::before,
+.breadcrumb .mdi:not(:empty)::before,
+.btn.mdi:not(:empty)::before,
+.card-title.mdi:not(:empty)::before,
+.card-subtitle.mdi:not(:empty)::before,
+.card-link.mdi:not(:empty)::before,
+.dropdown-item.mdi:not(:empty)::before,
+.nav-link.mdi:not(:empty)::before {
+    margin-right: 0.25rem;
 }
 
-.btn-sm .mdi::before {
-    font-size: 18px;
-    top: 3px;
+.list-group-item.mdi:not(:empty)::before {
+    margin-right: 0.5rem;
 }
 
-.dropdown-menu .mdi {
-    width: 18px;
+.dropdown-item.mdi:not(:empty)::before {
+    margin-left: -0.75rem;
 }
 
-    .dropdown-menu .mdi::before {
-        position: relative;
-        top: 4px;
-        left: -8px;
-    }
+.alert.mdi::before,
+.list-group-item.mdi:not(:empty)::before {
+    margin-left: -0.5rem;
+}
 
-.nav .mdi::before {
+.modal-title.mdi::before {
+    font-size: 1.5em;
+    line-height: 0.5;
     position: relative;
-    top: 4px;
-}
-
-.navbar .navbar-toggle .mdi::before {
-    position: relative;
-    top: 4px;
-    color: #FFF;
-}
-
-.breadcrumb .mdi::before {
-    position: relative;
-    top: 4px;
-}
-
-.breadcrumb a:hover {
-    text-decoration: none;
-}
-
-    .breadcrumb a:hover span {
-        text-decoration: underline;
-    }
-
-.alert .mdi::before {
-    position: relative;
-    top: 4px;
-    margin-right: 2px;
-}
-
-.input-group-addon .mdi::before {
-    position: relative;
-    top: 3px;
-}
-
-.navbar-brand .mdi::before {
-    position: relative;
-    top: 2px;
-    margin-right: 2px;
-}
-
-.list-group-item .mdi::before {
-    position: relative;
-    top: 3px;
-    left: -3px
+    top: 0.26rem;
+    margin-right: 0.5rem;
 }
