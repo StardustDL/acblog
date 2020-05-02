@@ -24,12 +24,11 @@ namespace AcBlog.SDK.API
 
         public ProviderContext? Context { get; set; }
 
-        public async IAsyncEnumerable<User> All()
+        public async Task<IEnumerable<User>> All()
         {
             var responseMessage = await HttpClient.GetAsync(_prepUrl);
             responseMessage.EnsureSuccessStatusCode();
-            foreach (var v in await responseMessage.Content.ReadFromJsonAsync<User[]>())
-                yield return v;
+            return await responseMessage.Content.ReadFromJsonAsync<IEnumerable<User>>();
         }
 
         public async Task<string?> Create(User value)
@@ -60,7 +59,7 @@ namespace AcBlog.SDK.API
             return responseMessage.IsSuccessStatusCode;
         }
 
-        public async Task<User> Get(string id)
+        public async Task<User?> Get(string id)
         {
             var responseMessage = await HttpClient.GetAsync($"{_prepUrl}/{id}");
             responseMessage.EnsureSuccessStatusCode();

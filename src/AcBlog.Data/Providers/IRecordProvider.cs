@@ -3,17 +3,17 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Providers
 {
-    public interface IRecordProvider<T, TId> : IProvider where TId : class
+    public interface IRecordProvider<T, TId> : IProvider where TId : class where T : class
     {
         bool IsReadable { get; }
 
         bool IsWritable { get; }
 
-        IAsyncEnumerable<T> All();
+        Task<IEnumerable<T>> All();
 
         Task<bool> Exists(TId id);
 
-        Task<T> Get(TId id);
+        Task<T?> Get(TId id);
 
         Task<bool> Delete(TId id);
 

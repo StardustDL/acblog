@@ -1,4 +1,5 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Providers;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -24,12 +25,11 @@ namespace AcBlog.SDK.API
 
         public ProviderContext? Context { get; set; }
 
-        public async IAsyncEnumerable<Post> All()
+        public async Task<IEnumerable<Post>> All()
         {
             var responseMessage = await HttpClient.GetAsync(_prepUrl);
             responseMessage.EnsureSuccessStatusCode();
-            foreach (var v in await responseMessage.Content.ReadFromJsonAsync<Post[]>())
-                yield return v;
+            return await responseMessage.Content.ReadFromJsonAsync<IEnumerable<Post>>();
         }
 
         public async Task<string?> Create(Post value)
@@ -60,12 +60,17 @@ namespace AcBlog.SDK.API
             return responseMessage.IsSuccessStatusCode;
         }
 
-        public async Task<Post> Get(string id)
+        public async Task<Post?> Get(string id)
         {
             var responseMessage = await HttpClient.GetAsync($"{_prepUrl}/{id}");
             responseMessage.EnsureSuccessStatusCode();
 
             return await responseMessage.Content.ReadFromJsonAsync<Post>();
+        }
+
+        public Task<PostQueryResponse> Query(PostQueryRequest query)
+        {
+            throw new System.NotImplementedException();
         }
 
         public async Task<bool> Update(Post value)

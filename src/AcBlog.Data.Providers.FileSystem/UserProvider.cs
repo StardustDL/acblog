@@ -8,97 +8,43 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Providers.FileSystem
 {
-    public class UserProvider : IUserProvider
+    public class UserProvider : UserProviderBase
     {
-        public UserProvider(string rootPath)
+        public UserProvider(string rootPath) : base(rootPath)
         {
-            RootPath = rootPath;
         }
 
-        public string RootPath { get; }
+        public override bool IsReadable => true;
 
-        public bool IsReadable => true;
+        public override bool IsWritable => true;
 
-        public bool IsWritable => true;
-
-        public ProviderContext? Context { get; set; }
-
-        string GetUserFile(string id) => Path.Join(RootPath, $"{id}.json");
-
-        async Task SaveFile(FileStream stream, User data)
+        protected override Task<Stream> GetFileReadStream(string path)
         {
-            await JsonSerializer.SerializeAsync(stream, data);
+            return Task.FromResult<Stream>(File.Open(path, FileMode.Open, FileAccess.Read));
         }
 
-        async Task<User> LoadFile(FileStream stream)
+        protected override Task<Stream> GetFileWriteStream(string path)
         {
-            var result = await JsonSerializer.DeserializeAsync<User>(stream);
-            return result;
+            if (File.Exists(path))
+                return Task.FromResult<Stream>(File.Open(path, FileMode.Truncate, FileAccess.Write));
+            else
+                return Task.FromResult<Stream>(File.Open(path, FileMode.CreateNew, FileAccess.Write));
         }
 
-        public async Task<string?> Create(User value)
+        protected override Task<bool> GetFileExists(string path) => Task.FromResult(File.Exists(path));
+
+        public override async Task<bool> Delete(string id)
         {
-            var id = Guid.NewGuid().ToString();
-            value.Id = id;
-
-            try
-            {
-                using var fs = File.Open(GetUserFile(id), FileMode.CreateNew, FileAccess.Write);
-                await SaveFile(fs, value);
-            }
-            catch
-            {
-                return null;
-            }
-
-            return id;
-        }
-
-        public Task<bool> Delete(string id)
-        {
-            var file = GetUserFile(id);
+            var file = GetUserPath(id);
             if (File.Exists(file))
             {
                 File.Delete(file);
-                return Task.FromResult(true);
-            }
-            return Task.FromResult(false);
-        }
-
-        public Task<bool> Exists(string id)
-        {
-            return Task.FromResult(File.Exists(GetUserFile(id)));
-        }
-
-        public async Task<User> Get(string id)
-        {
-            using var fs = File.Open(GetUserFile(id), FileMode.Open, FileAccess.Read);
-
-            var result = await LoadFile(fs);
-
-            result.Id = id;
-            return result;
-        }
-
-        public async Task<bool> Update(User value)
-        {
-            var file = GetUserFile(value.Id);
-            if (File.Exists(file))
-            {
-                using var fs = File.Open(file, FileMode.Truncate, FileAccess.Write);
-                await SaveFile(fs, value);
-
+                await base.Delete(id);
                 return true;
             }
             return false;
         }
 
-        public async IAsyncEnumerable<User> All()
-        {
-            foreach (var v in Directory.GetFiles(RootPath, "*.json"))
-            {
-                yield return await Get(Path.GetFileNameWithoutExtension(v));
-            }
-        }
+        public override Task<bool> Exists(string id) => GetFileExists(GetUserPath(id));
     }
 }

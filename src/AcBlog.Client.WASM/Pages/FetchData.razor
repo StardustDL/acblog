@@ -36,10 +36,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = new List<Post>();
-        await foreach(var p in Service.PostService.All())
-        {
-            forecasts.Add(p);
-        }
+        forecasts = (await Service.PostService.All()).ToList();
     }
 }

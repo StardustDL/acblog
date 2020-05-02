@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AcBlog.Data.Providers.FileSystem\AcBlog.Data.Providers.FileSystem.csproj" />
     <ProjectReference Include="..\AcBlog.Data\AcBlog.Data.csproj" />
   </ItemGroup>
 

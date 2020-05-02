@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AcBlog.Data.Models;
+using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Providers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,10 @@ namespace AcBlog.Server.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IAsyncEnumerable<Post>> All() => Ok(Provider.All());
+        public async Task<ActionResult<IEnumerable<Post>>> All() => Ok(await Provider.All());
+
+        [HttpPut("query")]
+        public async Task<ActionResult<PostQueryResponse>> Query([FromBody] PostQueryRequest query) => Ok(await Provider.Query(query));
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

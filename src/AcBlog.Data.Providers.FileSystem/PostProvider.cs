@@ -1,103 +1,47 @@
 ﻿using AcBlog.Data.Models;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace AcBlog.Data.Providers.FileSystem
 {
-    public class PostProvider : IPostProvider
+    public class PostProvider : PostProviderBase
     {
-        public PostProvider(string rootPath)
+        public PostProvider(string rootPath) : base(rootPath)
         {
-            RootPath = rootPath;
         }
 
-        public string RootPath { get; }
+        public override bool IsReadable => true;
 
-        public bool IsReadable => true;
+        public override bool IsWritable => true;
 
-        public bool IsWritable => true;
-
-        public ProviderContext? Context { get; set; }
-
-        string GetPostFile(string id) => Path.Join(RootPath, $"{id}.json");
-
-        async Task SaveFile(FileStream stream, Post data)
+        protected override Task<Stream> GetFileReadStream(string path)
         {
-            await JsonSerializer.SerializeAsync(stream, data);
+            return Task.FromResult<Stream>(File.Open(path, FileMode.Open, FileAccess.Read));
         }
 
-        async Task<Post> LoadFile(FileStream stream)
+        protected override Task<Stream> GetFileWriteStream(string path)
         {
-            var result = await JsonSerializer.DeserializeAsync<Post>(stream);
-            return result;
+            if (File.Exists(path))
+                return Task.FromResult<Stream>(File.Open(path, FileMode.Truncate, FileAccess.Write));
+            else
+                return Task.FromResult<Stream>(File.Open(path, FileMode.CreateNew, FileAccess.Write));
         }
 
-        public async Task<string?> Create(Post value)
+        protected override Task<bool> GetFileExists(string path) => Task.FromResult(File.Exists(path));
+
+        public override async Task<bool> Delete(string id)
         {
-            var id = Guid.NewGuid().ToString();
-            value.Id = id;
-
-            try
-            {
-                using var fs = File.Open(GetPostFile(id), FileMode.CreateNew, FileAccess.Write);
-                await SaveFile(fs, value);
-            }
-            catch
-            {
-                return null;
-            }
-
-            return id;
-        }
-
-        public Task<bool> Delete(string id)
-        {
-            var file = GetPostFile(id);
+            var file = GetPostPath(id);
             if (File.Exists(file))
             {
                 File.Delete(file);
-                return Task.FromResult(true);
-            }
-            return Task.FromResult(false);
-        }
-
-        public Task<bool> Exists(string id)
-        {
-            return Task.FromResult(File.Exists(GetPostFile(id)));
-        }
-
-        public async Task<Post> Get(string id)
-        {
-            using var fs = File.Open(GetPostFile(id), FileMode.Open, FileAccess.Read);
-
-            var result = await LoadFile(fs);
-
-            result.Id = id;
-            return result;
-        }
-
-        public async Task<bool> Update(Post value)
-        {
-            var file = GetPostFile(value.Id);
-            if (File.Exists(file))
-            {
-                using var fs = File.Open(file, FileMode.Truncate, FileAccess.Write);
-                await SaveFile(fs, value);
-
+                await base.Delete(id);
                 return true;
             }
             return false;
         }
 
-        public async IAsyncEnumerable<Post> All()
-        {
-            foreach (var v in Directory.GetFiles(RootPath, "*.json"))
-            {
-                yield return await Get(Path.GetFileNameWithoutExtension(v));
-            }
-        }
+        public override Task<bool> Exists(string id) => GetFileExists(GetPostPath(id));
     }
 }

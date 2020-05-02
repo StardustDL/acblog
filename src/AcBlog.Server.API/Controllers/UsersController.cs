@@ -21,7 +21,7 @@ namespace AcBlog.Server.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IAsyncEnumerable<User>> All() => Ok(Provider.All());
+        public async Task<ActionResult<IEnumerable<User>>> All() => Ok(await Provider.All());
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
