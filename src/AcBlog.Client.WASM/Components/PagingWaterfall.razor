@@ -15,11 +15,11 @@
             <ul class="pagination" style="display:inline-flex">
                 @if (Data.CurrentPage.HasPreviousPage)
                 {
-                    <li class="page-item"><a class="page-link" @onclick="@(async e=>await OnPreviousPage.InvokeAsync(null))"><i class="fa fa-angle-left"></i></a></li>
+                    <li class="page-item"><a class="page-link" @onclick="@(async e=>await OnPreviousPage.InvokeAsync(null))"><i class="mdi mdi-chevron-left"></i></a></li>
                 }
                 @if (Data.CurrentPage.HasNextPage)
                 {
-                    <li class="page-item"><a class="page-link" @onclick="@(async e=>await OnNextPage.InvokeAsync(null))"><i class="fa fa-angle-right"></i></a></li>
+                    <li class="page-item"><a class="page-link" @onclick="@(async e=>await OnNextPage.InvokeAsync(null))"><i class="mdi mdi-chevron-right"></i></a></li>
                 }
             </ul>
         </div>

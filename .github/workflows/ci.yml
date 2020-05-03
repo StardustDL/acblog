@@ -95,7 +95,7 @@ jobs:
       run: |
         mkdir publish
         cd src/AcBlog.Client.WASM
-        dotnet publish -c $env:CONFIG -o ../../
+        dotnet publish -c $env:CONFIG -o ../../publish
       shell: pwsh
     - name: Upload
       uses: actions/upload-artifact@master

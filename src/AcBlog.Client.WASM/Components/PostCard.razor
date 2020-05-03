@@ -19,7 +19,7 @@ else
             </div>
 
             <p class="card-text mb-1">
-                <!--content-->
+                <AcBlog.Client.WASM.Components.Displays.TextClipperDisplay Value="@Post.Content"></AcBlog.Client.WASM.Components.Displays.TextClipperDisplay>
             </p>
             <a href="posts/@Post.Id" class="card-link" style="color: #555; border-bottom: 1px solid #666;">Read more</a>
         </div>
@@ -34,6 +34,7 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
+        Post = null;
         Post = await Service.PostService.Get(PostId);
     }
 }

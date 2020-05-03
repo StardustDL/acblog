@@ -1,0 +1,28 @@
+﻿<span>@Clipped</span>
+
+@code {
+    [Parameter]
+    public string Value { get; set; }
+
+    [Parameter]
+    public int Length { get; set; } = 300;
+
+    private string Clipped { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (Value == null)
+        {
+            Clipped = "";
+        }
+
+        if (Value.Length <= Length)
+        {
+            Clipped = Value;
+        }
+        else
+        {
+            Clipped = Value.Substring(0, Length) + "...";
+        }
+    }
+}

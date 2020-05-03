@@ -12,7 +12,7 @@
 
         public bool HasPreviousPage => Offset > 0;
 
-        public bool HasNextPage => Offset < TotalCount;
+        public bool HasNextPage => Offset + CountPerPage < TotalCount;
 
         public Pagination PreviousPage()
         {

@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include=".gitignore" />
     <Content Include="js\component.js" />
   </ItemGroup>
 
