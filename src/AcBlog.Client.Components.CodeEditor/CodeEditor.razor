@@ -22,7 +22,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await JSRuntime.InvokeAsync<object>("AcBlogClientComponentsCodeEditor_createCodeEditor", codeEditor, DotNetObjectReference.Create(this));
+        await JSRuntime.InvokeVoidAsync("AcBlogClientComponentsCodeEditor_createCodeEditor", codeEditor, DotNetObjectReference.Create(this));
         await base.OnAfterRenderAsync(firstRender);
     }
 

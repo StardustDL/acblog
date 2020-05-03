@@ -24,19 +24,17 @@ namespace AcBlog.Client.WASM
 
             string server = builder.Configuration.GetValue<string>("APIServer", null);
 
+            var blogSettings = new BlogSettings()
             {
-                var blogSettings = new BlogSettings()
-                {
-                    Name = "AcBlog",
-                    Description = "A blog system based on WebAssembly.",
-                    IconUrl = "icon-512.png",
-                    Footer = "",
-                    StartYear = DateTimeOffset.Now.Year,
-                };
-                builder.Configuration.Bind("BlogSettings", blogSettings);
-
-                builder.Services.AddSingleton(blogSettings);
-            }
+                Name = "AcBlog",
+                Description = "A blog system based on WebAssembly.",
+                IconUrl = "icon-512.png",
+                Footer = "",
+                StartYear = DateTimeOffset.Now.Year,
+                IsStaticServer = true
+            };
+            builder.Configuration.Bind("BlogSettings", blogSettings);
+            builder.Services.AddSingleton(blogSettings);
 
             if (string.IsNullOrEmpty(server))
             {
@@ -44,6 +42,16 @@ namespace AcBlog.Client.WASM
                 builder.Services.AddSingleton<IBlogService>(sp =>
                 {
                     return new HttpStaticFileBlogService("/data",
+                        sp.GetRequiredService<IHttpClientFactory>().CreateClient("static-file-provider"));
+                });
+            }
+            else if(blogSettings.IsStaticServer)
+            {
+                var uri = new Uri(server);
+                builder.Services.AddHttpClient("static-file-provider", client => client.BaseAddress = uri);
+                builder.Services.AddSingleton<IBlogService>(sp =>
+                {
+                    return new HttpStaticFileBlogService(uri.LocalPath,
                         sp.GetRequiredService<IHttpClientFactory>().CreateClient("static-file-provider"));
                 });
             }

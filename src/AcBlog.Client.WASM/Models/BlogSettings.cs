@@ -18,5 +18,7 @@ namespace AcBlog.Client.WASM.Models
         public int StartYear { get; set; }
 
         public string Onwer { get; set; }
+
+        public bool IsStaticServer { get; set; }
     }
 }

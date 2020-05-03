@@ -22,6 +22,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
         protected override async Task<Stream> GetFileReadStream(string path)
         {
             var rep = await Client.GetAsync(path);
+            rep.EnsureSuccessStatusCode();
             return await rep.Content.ReadAsStreamAsync();
         }
     }

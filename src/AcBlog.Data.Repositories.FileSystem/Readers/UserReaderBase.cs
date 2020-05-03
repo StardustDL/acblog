@@ -23,7 +23,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         protected UserRepositoryConfig? Config { get; set; } = null;
 
-        protected string GetUserPath(string id) => Path.Join(RootPath, $"{id}.json");
+        protected string GetUserPath(string id) => Path.Join(RootPath, $"{id}.json").Replace("\\", "/");
 
         protected async Task EnsureConfig()
         {

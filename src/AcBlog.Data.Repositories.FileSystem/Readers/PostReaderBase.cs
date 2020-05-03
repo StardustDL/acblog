@@ -23,7 +23,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         protected PostRepositoryConfig? Config { get; set; } = null;
 
-        protected string GetPostPath(string id) => Path.Join(RootPath, $"{id}.json");
+        protected string GetPostPath(string id) => Path.Join(RootPath, $"{id}.json").Replace("\\", "/");
 
         protected async Task EnsureConfig()
         {
@@ -36,7 +36,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
                 Config.CountPerPage = 10;
         }
 
-        protected string GetPagePath(int number) => Path.Join(RootPath, "pages", $"{number}.json");
+        protected string GetPagePath(int number) => Path.Join(RootPath, "pages", $"{number}.json").Replace("\\", "/");
 
         protected abstract Task<Stream> GetFileReadStream(string path);
 
