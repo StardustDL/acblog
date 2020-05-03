@@ -21,6 +21,13 @@ if ($args.Count -gt 0) {
                 exit 1
             }
         }
+        "wasm-pub" {
+            Write-Output "Publish WASM..."
+            Set-Location ./src/AcBlog.Client.WASM ; dotnet publish -c Release; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
+        }
         "test" {
             Write-Output "Test..."
             dotnet test /p:CollectCoverage=true

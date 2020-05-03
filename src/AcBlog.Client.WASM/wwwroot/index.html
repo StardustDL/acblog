@@ -11,6 +11,14 @@
     <link href="css/app.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+
+    <script src="js/sparedirect.js"></script>
+    <script type="text/javascript">
+        var sparedirectTo = sparedirectDecode(window.location);
+        if (sparedirectTo) {
+            window.history.replaceState(null, null, sparedirectTo);
+        }
+    </script>
 </head>
 
 <body>
