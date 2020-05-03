@@ -45,7 +45,7 @@ namespace AcBlog.Client.WASM
                         sp.GetRequiredService<IHttpClientFactory>().CreateClient("static-file-provider"));
                 });
             }
-            else if(blogSettings.IsStaticServer)
+            else if (blogSettings.IsStaticServer)
             {
                 var uri = new Uri(server);
                 builder.Services.AddHttpClient("static-file-provider", client => client.BaseAddress = uri);
