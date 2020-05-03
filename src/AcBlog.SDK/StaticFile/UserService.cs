@@ -1,6 +1,7 @@
 ﻿using AcBlog.Data.Models;
-using AcBlog.Data.Providers;
-using AcBlog.Data.Providers.FileSystem;
+using AcBlog.Data.Models.Actions;
+using AcBlog.Data.Repositories;
+using AcBlog.Data.Repositories.FileSystem.Readers;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,23 +10,26 @@ namespace AcBlog.SDK.StaticFile
 {
     internal class UserService : IUserService
     {
-        UserProviderReader Reader { get; }
+        UserRemoteReader Reader { get; }
 
-        public UserService(HttpClient httpClient)
+        public UserService(IBlogService blog, string rootPath, HttpClient httpClient)
         {
+            Blog = blog;
             HttpClient = httpClient;
-            Reader = new UserProviderReader("/users", httpClient);
+            Reader = new UserRemoteReader($"{rootPath}/users", httpClient);
         }
+
+        public IBlogService Blog { get; private set; }
 
         public HttpClient HttpClient { get; }
 
-        public bool IsReadable => Reader.IsReadable;
+        public Task<bool> CanRead() => Reader.CanRead();
 
-        public bool IsWritable => Reader.IsWritable;
+        public Task<bool> CanWrite() => Reader.CanWrite();
 
-        public ProviderContext? Context { get => Reader.Context; set => Reader.Context = value; }
+        public RepositoryAccessContext? Context { get => Reader.Context; set => Reader.Context = value; }
 
-        public Task<IEnumerable<User>> All() => Reader.All();
+        public Task<IEnumerable<string>> All() => Reader.All();
 
         public Task<string?> Create(User value) => Reader.Create(value);
 
@@ -36,5 +40,7 @@ namespace AcBlog.SDK.StaticFile
         public Task<User?> Get(string id) => Reader.Get(id);
 
         public Task<bool> Update(User value) => Reader.Update(value);
+
+        public Task<QueryResponse<string>> Query(UserQueryRequest query) => Reader.Query(query);
     }
 }

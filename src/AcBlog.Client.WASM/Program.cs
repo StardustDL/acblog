@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using AcBlog.SDK;
 using AcBlog.SDK.API;
 using AcBlog.Client.WASM.Models;
+using AcBlog.SDK.StaticFile;
+using System.IO;
 
 namespace AcBlog.Client.WASM
 {
@@ -27,17 +29,23 @@ namespace AcBlog.Client.WASM
                 {
                     Name = "AcBlog",
                     Description = "A blog system based on WebAssembly.",
-                    IconUrl = "icon-512.png"
+                    IconUrl = "icon-512.png",
+                    Footer = "",
+                    StartYear = DateTimeOffset.Now.Year,
                 };
                 builder.Configuration.Bind("BlogSettings", blogSettings);
 
                 builder.Services.AddSingleton(blogSettings);
             }
 
-            if (server == null)
+            if (string.IsNullOrEmpty(server))
             {
-                builder.Services.AddHttpClient<IBlogService, HttpApiBlogService>(
-                    client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+                builder.Services.AddHttpClient("static-file-provider", client => client.BaseAddress = new Uri(Path.Join(builder.HostEnvironment.BaseAddress, "data")));
+                builder.Services.AddSingleton<IBlogService>(sp =>
+                {
+                    return new HttpStaticFileBlogService("/data",
+                        sp.GetRequiredService<IHttpClientFactory>().CreateClient("static-file-provider"));
+                });
             }
             else
             {

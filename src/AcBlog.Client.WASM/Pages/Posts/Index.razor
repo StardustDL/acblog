@@ -1,7 +1,55 @@
 ﻿@page "/posts"
+@inject IBlogService Service
 
-<h3>Posts</h3>
+<div class="d-flex flex-row">
+    <h1>Posts</h1>
+</div>
+
+@if (Data == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage">
+        <ItemTemplate>
+            <PostCard PostId="@context"></PostCard>
+        </ItemTemplate>
+    </PagingWaterfall>
+}
 
 @code {
+    QueryResponse<string> Data { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        Data = await Service.PostService.Query(new PostQueryRequest
+        {
+            Paging = new Pagination()
+        });
+    }
+
+    private async Task OnUpdatePage()
+    {
+        Data = await Service.PostService.Query(new PostQueryRequest
+        {
+            Paging = Data.CurrentPage
+        });
+    }
+
+    private async Task OnPreviousPage()
+    {
+        Data = await Service.PostService.Query(new PostQueryRequest
+        {
+            Paging = Data.CurrentPage.PreviousPage()
+        });
+    }
+
+    private async Task OnNextPage()
+    {
+        Data = await Service.PostService.Query(new PostQueryRequest
+        {
+            Paging = Data.CurrentPage.NextPage()
+        });
+    }
 }

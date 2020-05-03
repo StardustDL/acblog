@@ -1,4 +1,7 @@
-﻿using AcBlog.Data.Providers.FileSystem;
+﻿using AcBlog.Data.Models;
+using AcBlog.Data.Repositories;
+using AcBlog.Data.Repositories.FileSystem;
+using AcBlog.Data.Repositories.FileSystem.Readers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -7,10 +10,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test.Data.Providers
+namespace Test.Data.Repositories
 {
     [TestClass]
-    public class FileSystemTest : ProviderTest
+    public class FileSystemTest : RepositoriyTest
     {
         string RootPath { get; set; }
 
@@ -31,25 +34,39 @@ namespace Test.Data.Providers
         }
 
         [TestMethod]
-        public Task User()
+        public async Task User()
         {
             var root = Path.Join(RootPath, "users");
             Directory.CreateDirectory(root);
 
-            UserProvider provider = new UserProvider(root);
+            var seedUser = new User[]
+            {
+                new User{Nickname = "a", Id = Guid.NewGuid().ToString()},
+            };
 
-            return UserProvider(provider);
+            await UserRepositoryBuilder.Build(seedUser, root, 10);
+
+            IUserRepository provider = new UserLocalReader(root);
+
+            await UserRepository(provider);
         }
 
         [TestMethod]
-        public Task Post()
+        public async Task Post()
         {
             var root = Path.Join(RootPath, "posts");
             Directory.CreateDirectory(root);
 
-            PostProvider provider = new PostProvider(root);
+            var seedPost = new Post[]
+            {
+                new Post{Title = "a", Id = Guid.NewGuid().ToString()},
+            };
 
-            return PostProvider(provider);
+            await PostRepositoryBuilder.Build(seedPost, root, 10);
+
+            IPostRepository provider = new PostLocalReader(root);
+
+            await PostRepository(provider);
         }
     }
 }

@@ -10,8 +10,8 @@ namespace AcBlog.SDK.API
         {
             HttpClient = httpClient;
 
-            UserService = new UserService(httpClient);
-            PostService = new PostService(httpClient);
+            UserService = new UserService(this, httpClient);
+            PostService = new PostService(this, httpClient);
         }
 
         public HttpClient HttpClient { get; }

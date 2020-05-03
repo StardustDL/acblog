@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Test.SDK
 {
-
     [TestClass]
     public class ApiTest : SDKTest
     {
@@ -28,10 +27,8 @@ namespace Test.SDK
             Factory.Dispose();
         }
 
-        [TestMethod]
         public Task User() => UserService(Service.UserService);
 
-        [TestMethod]
         public Task Post() => PostService(Service.PostService);
     }
 }

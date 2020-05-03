@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\AcBlog.Data.Providers.FileSystem\AcBlog.Data.Providers.FileSystem.csproj" />
+    <ProjectReference Include="..\..\src\AcBlog.Data.Repositories.FileSystem\AcBlog.Data.Repositories.FileSystem.csproj" />
   </ItemGroup>
 
 </Project>

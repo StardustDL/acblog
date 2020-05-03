@@ -12,5 +12,11 @@ namespace AcBlog.Client.WASM.Models
         public string Description { get; set; }
 
         public string IconUrl { get; set; }
+
+        public string Footer { get; set; }
+
+        public int StartYear { get; set; }
+
+        public string Onwer { get; set; }
     }
 }

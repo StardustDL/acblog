@@ -1,18 +1,14 @@
-using AcBlog.Data.Models;
+﻿using AcBlog.SDK.StaticFile;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace Test.API
+namespace Test.SDK
 {
     [TestClass]
-    public class UsersControllerTest
+    public class StaticFileTest : SDKTest
     {
-        const string PREP = "/Users";
+        HttpStaticFileBlogService Service { get; set; }
 
         WebApplicationFactory<AcBlog.Server.API.Program> Factory { get; set; }
 
@@ -20,12 +16,18 @@ namespace Test.API
         public void Setup()
         {
             Factory = new WebApplicationFactory<AcBlog.Server.API.Program>();
+            Service = new HttpStaticFileBlogService("/data", Factory.CreateClient());
         }
 
         [TestCleanup]
         public void Clean()
         {
+            Service.HttpClient.Dispose();
             Factory.Dispose();
         }
+
+        public Task User() => UserService(Service.UserService);
+
+        public Task Post() => PostService(Service.PostService);
     }
 }

@@ -1,0 +1,35 @@
+﻿@inject IBlogService Service
+
+@if (Post != null)
+{
+    <div class="card border-0">
+        <div class="card-body">
+            <div class="card-title d-flex flex-row mb-1">
+                <h4>
+                    <a href="posts/@Post.Id" style="color:black">@Post.Title</a>
+                </h4>
+            </div>
+
+            <div class="card-subtitle mb-2">
+                <!--metadata-->
+            </div>
+
+            <p class="card-text mb-1">
+                <!--content-->
+            </p>
+            <a href="posts/@Post.Id" class="card-link" style="color: #555; border-bottom: 1px solid #666;">Read more</a>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string PostId { get; set; }
+
+    private Post Post { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Post = await Service.PostService.Get(PostId);
+    }
+}

@@ -5,6 +5,13 @@
 
 <footer class="border-top footer text-muted">
     <div class="container-fluid">
-        <i class="mdi mdi-copyright"></i> 2020 - @BlogSettings.Name - <a href="https://github.com/acblog/acblog"><i class="mdi mdi-github"></i></a>
+        <i class="mdi mdi-copyright"></i>
+        @BlogSettings.StartYear - @DateTimeOffset.Now.Year, @(BlogSettings.Onwer). All rights reserved.
+        @if (!string.IsNullOrEmpty(BlogSettings.Footer))
+        {
+            @((MarkupString)BlogSettings.Footer)
+        }
+
+        Powered by <a href="https://github.com/acblog/acblog">AcBlog</a>.
     </div>
 </footer>

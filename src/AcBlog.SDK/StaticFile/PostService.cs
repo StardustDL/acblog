@@ -1,7 +1,7 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
-using AcBlog.Data.Providers;
-using AcBlog.Data.Providers.FileSystem;
+using AcBlog.Data.Repositories;
+using AcBlog.Data.Repositories.FileSystem.Readers;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -10,23 +10,26 @@ namespace AcBlog.SDK.StaticFile
 {
     internal class PostService : IPostService
     {
-        PostProviderReader Reader { get; }
+        PostRemoteReader Reader { get; }
 
-        public PostService(HttpClient httpClient)
+        public PostService(IBlogService blog, string rootPath, HttpClient httpClient)
         {
+            Blog = blog;
             HttpClient = httpClient;
-            Reader = new PostProviderReader("/posts", httpClient);
+            Reader = new PostRemoteReader($"{rootPath}/posts", httpClient);
         }
 
         public HttpClient HttpClient { get; }
 
-        public bool IsReadable => Reader.IsReadable;
+        public Task<bool> CanRead() => Reader.CanRead();
 
-        public bool IsWritable => Reader.IsWritable;
+        public Task<bool> CanWrite() => Reader.CanWrite();
 
-        public ProviderContext? Context { get => Reader.Context; set => Reader.Context = value; }
+        public RepositoryAccessContext? Context { get => Reader.Context; set => Reader.Context = value; }
 
-        public Task<IEnumerable<Post>> All() => Reader.All();
+        public IBlogService Blog { get; private set; }
+
+        public Task<IEnumerable<string>> All() => Reader.All();
 
         public Task<string?> Create(Post value) => Reader.Create(value);
 
@@ -36,7 +39,7 @@ namespace AcBlog.SDK.StaticFile
 
         public Task<Post?> Get(string id) => Reader.Get(id);
 
-        public Task<PostQueryResponse> Query(PostQueryRequest query) => Reader.Query(query);
+        public Task<QueryResponse<string>> Query(PostQueryRequest query) => Reader.Query(query);
 
         public Task<bool> Update(Post value) => Reader.Update(value);
     }

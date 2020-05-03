@@ -10,7 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AcBlog.Data.Providers.FileSystem\AcBlog.Data.Providers.FileSystem.csproj" />
+    <ProjectReference Include="..\AcBlog.Data.Repositories.FileSystem\AcBlog.Data.Repositories.FileSystem.csproj" />
+    <ProjectReference Include="..\AcBlog.Data.Repositories.SQLServer\AcBlog.Data.Repositories.SQLServer.csproj" />
     <ProjectReference Include="..\AcBlog.Data\AcBlog.Data.csproj" />
   </ItemGroup>
 

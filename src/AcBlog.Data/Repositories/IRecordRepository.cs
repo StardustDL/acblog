@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AcBlog.Data.Providers
+namespace AcBlog.Data.Repositories
 {
-    public interface IRecordProvider<T, TId> : IProvider where TId : class where T : class
+    public interface IRecordRepository<T, TId> : IRepository where TId : class where T : class
     {
-        bool IsReadable { get; }
+        Task<bool> CanRead();
 
-        bool IsWritable { get; }
+        Task<bool> CanWrite();
 
-        Task<IEnumerable<T>> All();
+        Task<IEnumerable<string>> All();
 
         Task<bool> Exists(TId id);
 

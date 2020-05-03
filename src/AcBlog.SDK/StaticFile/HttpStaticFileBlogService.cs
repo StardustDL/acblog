@@ -1,7 +1,5 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
-using AcBlog.Data.Providers;
-using AcBlog.Data.Providers.FileSystem;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -13,12 +11,12 @@ namespace AcBlog.SDK.StaticFile
 {
     public class HttpStaticFileBlogService : IBlogService
     {
-        public HttpStaticFileBlogService(HttpClient httpClient)
+        public HttpStaticFileBlogService(string rootPath, HttpClient httpClient)
         {
             HttpClient = httpClient;
 
-            UserService = new UserService(httpClient);
-            PostService = new PostService(httpClient);
+            UserService = new UserService(this, rootPath, httpClient);
+            PostService = new PostService(this, rootPath, httpClient);
         }
 
         public HttpClient HttpClient { get; }

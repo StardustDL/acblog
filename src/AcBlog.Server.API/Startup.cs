@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using AcBlog.Data.Providers;
+using AcBlog.Data.Models;
+using AcBlog.Data.Repositories;
+using AcBlog.Data.Repositories.FileSystem;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -39,18 +41,10 @@ namespace AcBlog.Server.API
                 }
 
                 string userRootPath = Path.Join(rootPath, "users");
-                if (!Directory.Exists(userRootPath))
-                {
-                    Directory.CreateDirectory(userRootPath);
-                }
                 string postRootPath = Path.Join(rootPath, "posts");
-                if (!Directory.Exists(postRootPath))
-                {
-                    Directory.CreateDirectory(postRootPath);
-                }
 
-                services.AddSingleton<IUserProvider>(sv => new Data.Providers.FileSystem.UserProvider(userRootPath));
-                services.AddSingleton<IPostProvider>(sv => new Data.Providers.FileSystem.PostProvider(postRootPath));
+                services.AddSingleton<IUserRepository>(sv => new Data.Repositories.FileSystem.Readers.UserLocalReader(userRootPath));
+                services.AddSingleton<IPostRepository>(sv => new Data.Repositories.FileSystem.Readers.PostLocalReader(postRootPath));
             }
 
             services.AddControllers();

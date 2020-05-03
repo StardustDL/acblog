@@ -1,0 +1,48 @@
+﻿@typeparam TItem
+
+@if (Data != null)
+{
+    <div class="card-columns @(!Column.HasValue ? "waterfall-card-columns" : "")" style="@(Column.HasValue ? $"column-count: {Column.Value}" : "")">
+        @foreach (var item in Data.Results)
+        {
+            @ItemTemplate(item)
+        }
+    </div>
+
+    @if (Data.CurrentPage != null)
+    {
+        <div class="text-center">
+            <ul class="pagination" style="display:inline-flex">
+                @if (Data.CurrentPage.HasPreviousPage)
+                {
+                    <li class="page-item"><a class="page-link" @onclick="@(async e=>await OnPreviousPage.InvokeAsync(null))"><i class="fa fa-angle-left"></i></a></li>
+                }
+                @if (Data.CurrentPage.HasNextPage)
+                {
+                    <li class="page-item"><a class="page-link" @onclick="@(async e=>await OnNextPage.InvokeAsync(null))"><i class="fa fa-angle-right"></i></a></li>
+                }
+            </ul>
+        </div>
+    }
+}
+
+@code {
+
+    [Parameter]
+    public QueryResponse<TItem> Data { get; set; }
+
+    [Parameter]
+    public int? Column { get; set; } = null;
+
+    [Parameter]
+    public RenderFragment<TItem> ItemTemplate { get; set; }
+
+    [Parameter]
+    public EventCallback OnUpdatePage { get; set; }
+
+    [Parameter]
+    public EventCallback OnPreviousPage { get; set; }
+
+    [Parameter]
+    public EventCallback OnNextPage { get; set; }
+}
