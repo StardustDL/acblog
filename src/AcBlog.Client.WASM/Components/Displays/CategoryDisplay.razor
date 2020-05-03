@@ -1,0 +1,11 @@
+﻿@if (Value != null && Value.Count != 0)
+{
+    <span class="itemdisplay">
+        <span class="mdi mdi-folder">@string.Join("/", Value)</span>
+    </span>
+}
+
+@code {
+    [Parameter]
+    public ICollection<string> Value { get; set; }
+}

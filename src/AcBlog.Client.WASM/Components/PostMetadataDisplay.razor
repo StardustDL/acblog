@@ -1,0 +1,40 @@
+﻿@using AcBlog.Client.WASM.Components.Displays
+
+@if (Value != null)
+{
+    <div style="color:#999">
+        <small>
+            <ItemTimeDisplay CreationTime="@Value.CreationTime" ModificationTime="@Value.ModificationTime" />
+        </small>
+        @if (Value.Category != null && Value.Category.Length > 0)
+        {
+            <small class="m-1">|</small>
+            <small>
+                <CategoryDisplay Value="@Value.Category" />
+            </small>
+        }
+        @if (Value.Keywords != null && Value.Keywords.Length > 0)
+        {
+            <small class="m-1">|</small>
+            <small>
+                <KeywordsDisplay Value="@Value.Keywords" />
+            </small>
+        }
+        @if (!string.IsNullOrEmpty(Value.Content))
+        {
+            <small class="m-1">|</small>
+            <small>
+                <WordCountDisplay Value="@Value.Content" />
+            </small>
+            <small class="m-1">|</small>
+            <small>
+                <ReadTimeDisplay Value="@Value.Content" />
+            </small>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Post Value { get; set; }
+}

@@ -1,4 +1,8 @@
-﻿.alert.mdi::before,
+﻿.itemdisplay .mdi:not(:empty)::before {
+    margin-right: 0.25rem;
+}
+
+.alert.mdi::before,
 .breadcrumb .mdi::before,
 .btn.mdi::before,
 .card-title.mdi::before,

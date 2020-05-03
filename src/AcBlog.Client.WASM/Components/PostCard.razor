@@ -1,6 +1,10 @@
 ﻿@inject IBlogService Service
 
-@if (Post != null)
+@if (Post == null)
+{
+    <Loader></Loader>
+}
+else
 {
     <div class="card border-0">
         <div class="card-body">
@@ -11,7 +15,7 @@
             </div>
 
             <div class="card-subtitle mb-2">
-                <!--metadata-->
+                <PostMetadataDisplay Value="@Post" />
             </div>
 
             <p class="card-text mb-1">

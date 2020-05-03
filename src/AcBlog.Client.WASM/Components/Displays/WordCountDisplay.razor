@@ -1,0 +1,23 @@
+﻿<span class="itemdisplay">
+    <span class="mdi mdi-file-word">@Count</span>
+</span>
+
+@code {
+    [Parameter]
+    public string Value { get; set; }
+
+    private string Count { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        int len = Value?.Length ?? 0;
+        if (len < 1000)
+        {
+            Count = len.ToString();
+        }
+        else
+        {
+            Count = $"{(len / 1000.0).ToString("f1")}k";
+        }
+    }
+}

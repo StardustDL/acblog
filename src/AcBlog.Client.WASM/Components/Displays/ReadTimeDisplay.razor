@@ -1,0 +1,25 @@
+﻿<span class="itemdisplay">
+    <span class="mdi mdi-clock">@Time</span>
+</span>
+
+@code {
+    const int CharPerMinute = 500;
+
+    [Parameter]
+    public string Value { get; set; }
+
+    private string Time { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        int time = (int)Math.Round((Value?.Length ?? 0) / (double)CharPerMinute);
+        if (time <= 1)
+        {
+            Time = "1 minute";
+        }
+        else
+        {
+            Time = $"{time.ToString()} minutes";
+        }
+    }
+}

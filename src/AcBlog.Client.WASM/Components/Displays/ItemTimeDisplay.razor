@@ -1,0 +1,15 @@
+﻿<span class="itemdisplay">
+    <i class="mdi mdi-calendar"></i>
+    <time datetime="@CreationTime"
+          title="@(string.Format("Creation time: {0} / Modification time: {1}", CreationTime.DateTime.ToString("yyyy-MM-dd hh:mm:ss"), ModificationTime.DateTime.ToString("yyyy-MM-dd hh:mm:ss")))">
+        @CreationTime.ToLocalTime().Date.ToString("yyyy-MM-dd")
+    </time>
+</span>
+
+@code {
+    [Parameter]
+    public DateTimeOffset CreationTime { get; set; }
+
+    [Parameter]
+    public DateTimeOffset ModificationTime { get; set; }
+}
