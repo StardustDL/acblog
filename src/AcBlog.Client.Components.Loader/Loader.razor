@@ -1,0 +1,26 @@
+﻿
+<div class="loader @TypeClass">
+    <div>
+        <div>
+            <div>
+                <div>
+                    <div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Type { get; set; } = 1;
+
+    private string TypeClass { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        TypeClass = $"loader{Math.Max(1, Math.Min(4, Type))}";
+    }
+}

@@ -1,0 +1,95 @@
+@keyframes rotate {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	50% {
+		transform: rotate(180deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes rotate2 {
+	0% {
+		transform: rotate(0deg);
+		border-top-color: rgba(0, 0, 0, 0.5);
+	}
+
+	50% {
+		transform: rotate(180deg);
+		border-top-color: rgba(0, 0, 255, 0.5);
+	}
+
+	100% {
+		transform: rotate(360deg);
+		border-top-color: rgba(0, 0, 0, 0.5);
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.loader {
+	position: relative;
+	margin: 75px auto;
+	width: 150px;
+	height: 150px;
+	display: block;
+	overflow: hidden;
+}
+
+	.loader div {
+		height: 100%;
+	}
+
+/* loader 1 */
+.loader1, .loader1 div {
+	border-radius: 50%;
+	padding: 8px;
+	border: 2px solid transparent;
+	animation: rotate linear 3.5s infinite;
+	border-top-color: rgba(0, 0, 0, 0.5);
+	border-bottom-color: rgba(0, 0, 255, 0.5);
+}
+
+/*loader 2  */
+.loader2, .loader2 div {
+	border-radius: 50%;
+	padding: 8px;
+	border: 2px solid transparent;
+	animation: rotate linear 3.5s infinite;
+	border-top-color: rgba(0, 0, 255, 0.5);
+	border-left-color: rgba(0, 0, 0, 0.5);
+	border-right-color: rgba(0, 0, 0, 0.5);
+}
+
+/*loader 3  */
+.loader3, .loader3 div {
+	border-radius: 50%;
+	padding: 8px;
+	border: 2px solid transparent;
+	animation: rotate linear 3.5s infinite;
+	border-top-color: rgba(0, 0, 0, 0.5);
+	border-left-color: rgba(0, 0, 255, 0.5);
+	animation-timing-function: cubic-bezier(0.55, 0.38, 0.21, 0.88);
+	animation-duration: 3s;
+}
+
+/* loader 4 */
+.loader4, .loader4 div {
+	border-radius: 50%;
+	padding: 8px;
+	border: 2px solid transparent;
+	animation: rotate linear 3.5s infinite;
+	border-radius: 50%;
+	padding: 4px;
+	animation: rotate2 4s infinite linear;
+}
+
+.loader, .loader * {
+	will-change: transform;
+}

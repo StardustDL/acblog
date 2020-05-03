@@ -1,20 +1,21 @@
 ﻿@page "/posts/{id}"
 @inject IBlogService Service
 @using AcBlog.Client.Components.Markdown
+@using AcBlog.Client.Components.Loader
 
 @if (Post == null)
 {
-    <p><em>Loading...</em></p>
+    <Loader></Loader>
 }
 else
 {
-        <div class="d-flex flex-row">
-            <h1 class="display-4">@Post.Title</h1>
-        </div>
-        <div class="mb-4">
-            <!--metadata-->
-        </div>
-        <MarkdownRenderer Value="@Post.Content" />
+    <div class="d-flex flex-row">
+        <h1 class="display-4">@Post.Title</h1>
+    </div>
+    <div class="mb-4">
+        <!--metadata-->
+    </div>
+    <MarkdownRenderer Value="@Post.Content" />
 }
 
 @code {

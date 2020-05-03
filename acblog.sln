@@ -31,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Data.Repositories.Fi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Data.Repositories.SQLServer", "src\AcBlog.Data.Repositories.SQLServer\AcBlog.Data.Repositories.SQLServer.csproj", "{334843D1-0685-4173-986E-8DABCDB3CE5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcBlog.Tool.StaticGenerator", "src\AcBlog.Tool.StaticGenerator\AcBlog.Tool.StaticGenerator.csproj", "{C70BDEA7-FC27-4C7D-8475-9822BA04D057}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Tool.StaticGenerator", "src\AcBlog.Tool.StaticGenerator\AcBlog.Tool.StaticGenerator.csproj", "{C70BDEA7-FC27-4C7D-8475-9822BA04D057}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.Components.Loader", "src\AcBlog.Client.Components.Loader\AcBlog.Client.Components.Loader.csproj", "{47C96C50-D637-4914-85A6-6E2E9C9931D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +97,10 @@ Global
 		{C70BDEA7-FC27-4C7D-8475-9822BA04D057}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C70BDEA7-FC27-4C7D-8475-9822BA04D057}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C70BDEA7-FC27-4C7D-8475-9822BA04D057}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47C96C50-D637-4914-85A6-6E2E9C9931D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47C96C50-D637-4914-85A6-6E2E9C9931D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47C96C50-D637-4914-85A6-6E2E9C9931D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47C96C50-D637-4914-85A6-6E2E9C9931D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
