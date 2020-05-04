@@ -6,6 +6,21 @@
 {
     <Loader></Loader>
 }
+else if (IsProtected)
+{
+    <div class="d-flex flex-row">
+        <h1 class="display-4">Protected Post</h1>
+    </div>
+    <div class="input-group mt-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputPassword">Password</label>
+        </div>
+        <input type="password" id="inputPassword" class="form-control" @bind="Password" placeholder="@PasswordPlaceholder">
+        <div class="input-group-append">
+            <button type="button" class="btn btn-primary" @onclick="@OnPasswordSubmit">Deprotect</button>
+        </div>
+    </div>
+}
 else
 {
     <div class="d-flex flex-row">
@@ -23,8 +38,35 @@ else
 
     private Post Post { get; set; }
 
+    private string Password { get; set; }
+
+    private bool IsProtected { get; set; } = false;
+
+    private string PasswordPlaceholder { get; set; } = "Password";
+
     protected override async Task OnParametersSetAsync()
     {
         Post = await Service.PostService.Get(Id);
+        IsProtected = await Service.PostService.Protector.IsProtected(Post);
+    }
+
+    private async Task OnPasswordSubmit()
+    {
+        Post dep = null;
+        try
+        {
+            dep = await Service.PostService.Protector.Deprotect(Post, new Data.Protections.ProtectionKey
+            {
+                Password = Password
+            });
+        }
+        catch
+        {
+            PasswordPlaceholder = "Wrong password. Please retry.";
+            Password = "";
+            return;
+        }
+        Post = dep;
+        IsProtected = await Service.PostService.Protector.IsProtected(Post);
     }
 }

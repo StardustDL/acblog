@@ -1,5 +1,6 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
+using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -23,6 +24,8 @@ namespace AcBlog.SDK.API
         public HttpClient HttpClient { get; }
 
         public RepositoryAccessContext? Context { get; set; }
+
+        public IProtector<Post> Protector => throw new System.NotImplementedException();
 
         public async Task<IEnumerable<string>> All()
         {

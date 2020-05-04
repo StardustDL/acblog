@@ -1,5 +1,6 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
+using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.FileSystem.Readers;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace AcBlog.SDK.StaticFile
         {
             Blog = blog;
             HttpClient = httpClient;
+            Protector = new PostProtector();
             Reader = new PostRemoteReader($"{rootPath}/posts", httpClient);
         }
 
@@ -28,6 +30,8 @@ namespace AcBlog.SDK.StaticFile
         public RepositoryAccessContext? Context { get => Reader.Context; set => Reader.Context = value; }
 
         public IBlogService Blog { get; private set; }
+
+        public IProtector<Post> Protector { get; private set; }
 
         public Task<IEnumerable<string>> All() => Reader.All();
 

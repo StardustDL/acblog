@@ -10,17 +10,29 @@ else
         <div class="card-body">
             <div class="card-title d-flex flex-row mb-1">
                 <h4>
-                    <a href="posts/@Post.Id" style="color:black">@Post.Title</a>
+                    <a href="posts/@Post.Id" style="color:black">
+                        @if (IsProtected)
+                        {
+                            <span>Protected Post</span>
+                        }
+                        else
+                        {
+                            <span>@Post.Title</span>
+                        }
+                    </a>
                 </h4>
             </div>
 
-            <div class="card-subtitle mb-2">
-                <PostMetadataDisplay Value="@Post" />
-            </div>
+            @if (!IsProtected)
+            {
+                <div class="card-subtitle mb-2">
+                    <PostMetadataDisplay Value="@Post" />
+                </div>
 
-            <p class="card-text mb-1">
-                <AcBlog.Client.WASM.Components.Displays.TextClipperDisplay Value="@Post.Content"></AcBlog.Client.WASM.Components.Displays.TextClipperDisplay>
-            </p>
+                <p class="card-text mb-1">
+                    <AcBlog.Client.WASM.Components.Displays.TextClipperDisplay Value="@Post.Content"></AcBlog.Client.WASM.Components.Displays.TextClipperDisplay>
+                </p>
+            }
             <a href="posts/@Post.Id" class="card-link" style="color: #555; border-bottom: 1px solid #666;">Read more</a>
         </div>
     </div>
@@ -32,9 +44,14 @@ else
 
     private Post Post { get; set; }
 
+    private bool IsProtected { get; set; } = false;
+
     protected override async Task OnParametersSetAsync()
     {
         Post = null;
+        IsProtected = false;
+
         Post = await Service.PostService.Get(PostId);
+        IsProtected = await Service.PostService.Protector.IsProtected(Post);
     }
 }

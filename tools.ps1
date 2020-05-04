@@ -46,7 +46,11 @@ if ($args.Count -gt 0) {
         }
         "wasm-pub" {
             Write-Output "Publish WASM..."
-            Set-Location ./src/AcBlog.Client.WASM ; dotnet publish -c Release; Set-Location ../..
+            Set-Location ./src/AcBlog.Client.WASM
+            Move-Item ./wwwroot/data ./data
+            dotnet publish -c Release
+            Move-Item ./data ./wwwroot/data
+            Set-Location ../..
             if (!$?) {
                 exit 1
             }

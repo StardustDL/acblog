@@ -1,4 +1,5 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.FileSystem;
 using System;
@@ -21,15 +22,20 @@ namespace AcBlog.Tool.StaticGenerator
         public IList<string> keywords { get; set; }
 
         public IList<string> category { get; set; }
+
+        public string password { get; set; }
     }
 
     class Program
     {
         static async Task Main(string[] args)
         {
+            PostProtector = new PostProtector();
+
             string dist = Path.Join(Environment.CurrentDirectory, "dist");
             if (Directory.Exists(dist))
                 Directory.Delete(dist, true);
+
             Directory.CreateDirectory(dist);
             {
                 string postDist = Path.Join(dist, "posts");
@@ -45,8 +51,9 @@ namespace AcBlog.Tool.StaticGenerator
                     {
                         post = await LoadPost(di, fi);
                     }
-                    catch
+                    catch(Exception ex)
                     {
+                        Console.WriteLine(ex);
                         return;
                     }
                     Console.WriteLine($"Loaded {fi.FullName}");
@@ -55,6 +62,8 @@ namespace AcBlog.Tool.StaticGenerator
                 await PostRepositoryBuilder.Build(posts, postDist, 10);
             }
         }
+        
+        static PostProtector PostProtector { get; set; }
 
         static async Task<Post> LoadPost(DirectoryInfo root, FileInfo file)
         {
@@ -78,6 +87,7 @@ namespace AcBlog.Tool.StaticGenerator
             }
             var lines = rawText.Replace("\r\n", "\n").Replace("\r", "\n").Split("\n");
             int contentBg = 0;
+            PostMetadata metadata = null;
             if (lines.Length > 0)
             {
                 if (lines[0].Length >= 3 && lines[0].All(c => c == '-'))
@@ -94,7 +104,7 @@ namespace AcBlog.Tool.StaticGenerator
                     contentBg = r;
                     try
                     {
-                        var metadata = deserializer.Deserialize<PostMetadata>(yaml);
+                        metadata = deserializer.Deserialize<PostMetadata>(yaml);
                         if (metadata.title != null)
                             post.Title = metadata.title;
                         if (metadata.keywords != null)
@@ -111,7 +121,10 @@ namespace AcBlog.Tool.StaticGenerator
                 }
             }
             post.Content = string.Join('\n', lines[contentBg..]);
-
+            if(metadata != null && !string.IsNullOrEmpty(metadata.password))
+            {
+                post = await PostProtector.Protect(post, new ProtectionKey { Password = metadata.password });
+            }
             return post;
         }
     }
