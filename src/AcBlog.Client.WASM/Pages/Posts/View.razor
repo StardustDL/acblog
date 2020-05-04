@@ -12,7 +12,9 @@ else
         <h1 class="display-4">@Post.Title</h1>
     </div>
     <PostMetadataDisplay Value="@Post" />
-    <MarkdownRenderer Value="@Post.Content" />
+    <article class="markdown-body">
+        <MarkdownRenderer Value="@Post.Content" />
+    </article>
 }
 
 @code {

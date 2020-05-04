@@ -10,6 +10,7 @@
   "dependencies": {
     "@mdi/font": "^5.1.45",
     "bootstrap": "^4.4.1",
+    "github-markdown-css": "^4.0.0",
     "jquery": "^3.5.0",
     "monaco-editor": "^0.20.0",
     "popper": "^1.0.1"

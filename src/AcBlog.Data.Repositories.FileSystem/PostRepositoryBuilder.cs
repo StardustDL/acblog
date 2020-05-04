@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace AcBlog.Data.Repositories.FileSystem
 {
@@ -22,6 +23,8 @@ namespace AcBlog.Data.Repositories.FileSystem
         public static async Task Build(IList<Post> data, string rootPath, int countPerPage)
         {
             if (countPerPage <= 0) countPerPage = 10;
+
+            data = (from x in data orderby x.CreationTime descending select x).ToArray();
 
             string pagePath = Path.Join(rootPath, "pages");
 

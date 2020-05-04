@@ -19,4 +19,8 @@ gulp.task('mdi', function () {
     return gulp.src("./node_modules/@mdi/font/{css,fonts}/**/*").pipe(gulp.dest('wwwroot/lib/mdi'));
 });
 
-gulp.task('default', gulp.parallel('monaco-editor', 'bootstrap', 'mdi', 'jquery'));
+gulp.task('markdown-css', function () {
+    return gulp.src("./node_modules/github-markdown-css/*.css").pipe(gulp.dest('wwwroot/lib/markdown-css'));
+});
+
+gulp.task('default', gulp.parallel('monaco-editor', 'bootstrap', 'mdi', 'jquery', 'markdown-css'));
