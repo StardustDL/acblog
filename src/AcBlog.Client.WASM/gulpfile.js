@@ -1,4 +1,5 @@
-﻿'use strict';
+/// <binding />
+'use strict';
 
 var gulp = require('gulp');
 

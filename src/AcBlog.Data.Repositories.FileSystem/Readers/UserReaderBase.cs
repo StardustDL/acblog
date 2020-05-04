@@ -94,7 +94,6 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             }
             catch
             {
-                return new QueryResponse<string>();
             }
             var res = new QueryResponse<string>(result.ToArray(), new Pagination
             {

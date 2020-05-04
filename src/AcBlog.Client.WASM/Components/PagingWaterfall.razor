@@ -15,11 +15,22 @@
             <ul class="pagination" style="display:inline-flex">
                 @if (Data.CurrentPage.HasPreviousPage)
                 {
-                    <li class="page-item"><a class="page-link" @onclick="@(async e=>await OnPreviousPage.InvokeAsync(null))"><i class="mdi mdi-chevron-left"></i></a></li>
+                    <li class="page-item">
+                        <a class="page-link mdi mdi-chevron-left" style="cursor:pointer" @onclick="@(async e=>await OnPreviousPage.InvokeAsync(null))"></a>
+                    </li>
+                }
+                @for (int i = Math.Max(0, Data.CurrentPage.PageNumber - 5); i < Math.Min(Data.CurrentPage.TotalPage, Data.CurrentPage.PageNumber + 5); i++)
+                {
+                    int pn = i;
+                    <li class="page-item @(i == Data.CurrentPage.PageNumber ? "active" : "")">
+                        <a class="page-link" style="cursor:pointer" @onclick="@(async e=>await OnPageTo.InvokeAsync(pn))">@(i+1)</a>
+                    </li>
                 }
                 @if (Data.CurrentPage.HasNextPage)
                 {
-                    <li class="page-item"><a class="page-link" @onclick="@(async e=>await OnNextPage.InvokeAsync(null))"><i class="mdi mdi-chevron-right"></i></a></li>
+                    <li class="page-item">
+                        <a class="page-link mdi mdi-chevron-right" style="cursor:pointer" @onclick="@(async e=>await OnNextPage.InvokeAsync(null))"></a>
+                    </li>
                 }
             </ul>
         </div>
@@ -45,4 +56,7 @@
 
     [Parameter]
     public EventCallback OnNextPage { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnPageTo { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿/// <binding />
+/// <binding />
 'use strict';
 
 const browserify = require('browserify');
@@ -11,7 +11,7 @@ const log = require('gulplog');
 const babel = require('gulp-babel');
 const minify = require('gulp-minify');
 
-gulp.task('markdown', function () {
+gulp.task('component', function () {
     // set up the browserify instance on a task basis
     var b = browserify({
         entries: ['js/component.js'],
@@ -33,12 +33,4 @@ gulp.task('markdown', function () {
         .pipe(gulp.dest('wwwroot'));
 });
 
-gulp.task('highlight', function () {
-    return gulp.src("./node_modules/highlight.js/styles/*").pipe(gulp.dest('wwwroot/highlight.js/'));
-});
-
-gulp.task('katex', function () {
-    return gulp.src("./node_modules/katex/dist/**/*").pipe(gulp.dest('wwwroot/katex/'));
-});
-
-gulp.task('default', gulp.parallel('markdown', 'highlight', 'katex'));
+gulp.task('default', gulp.parallel('component'));

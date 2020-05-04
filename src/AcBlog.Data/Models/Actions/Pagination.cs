@@ -1,4 +1,6 @@
-﻿namespace AcBlog.Data.Models.Actions
+﻿using System;
+
+namespace AcBlog.Data.Models.Actions
 {
     public class Pagination
     {
@@ -9,6 +11,8 @@
         public int TotalCount { get; set; } = 0;
 
         public int Offset => CountPerPage * PageNumber;
+
+        public int TotalPage => (int)Math.Ceiling((double)TotalCount / CountPerPage);
 
         public bool HasPreviousPage => Offset > 0;
 

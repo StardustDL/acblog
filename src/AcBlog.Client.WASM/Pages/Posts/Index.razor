@@ -1,5 +1,8 @@
 ﻿@page "/posts"
+@page "/posts/list"
+@page "/posts/list/{pageNumber:int}"
 @inject IBlogService Service
+@inject NavigationManager NavigationManager
 
 <div class="d-flex flex-row">
     <h1>Posts</h1>
@@ -11,7 +14,7 @@
 }
 else
 {
-    <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage">
+    <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage" OnPageTo="@OnPageTo">
         <ItemTemplate>
             <PostCard PostId="@context"></PostCard>
         </ItemTemplate>
@@ -19,14 +22,29 @@ else
 }
 
 @code {
+    const int CountPerPage = 10;
+
     QueryResponse<string> Data { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    [Parameter]
+    public int? PageNumber { get; set; } = null;
+
+    protected override async Task OnParametersSetAsync()
     {
         Data = await Service.PostService.Query(new PostQueryRequest
         {
-            Paging = new Pagination()
+            Paging = new Pagination
+            {
+                PageNumber = PageNumber ?? 0,
+                CountPerPage = CountPerPage
+            }
         });
+    }
+
+    private Task OnPageTo(int pageNumber)
+    {
+        NavigationManager.NavigateTo($"posts/list/{pageNumber}");
+        return Task.CompletedTask;
     }
 
     private async Task OnUpdatePage()
@@ -37,19 +55,13 @@ else
         });
     }
 
-    private async Task OnPreviousPage()
+    private Task OnPreviousPage()
     {
-        Data = await Service.PostService.Query(new PostQueryRequest
-        {
-            Paging = Data.CurrentPage.PreviousPage()
-        });
+        return OnPageTo(Data.CurrentPage.PageNumber - 1);
     }
 
-    private async Task OnNextPage()
+    private Task OnNextPage()
     {
-        Data = await Service.PostService.Query(new PostQueryRequest
-        {
-            Paging = Data.CurrentPage.NextPage()
-        });
+        return OnPageTo(Data.CurrentPage.PageNumber + 1);
     }
 }

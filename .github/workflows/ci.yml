@@ -28,9 +28,7 @@ jobs:
         CONFIG: ${{ matrix.config }}
       run: |
         npm install --global gulp
-        cd src/AcBlog.Client.Components.Markdown ; npm ci ; gulp ; cd ../..
-        cd src/AcBlog.Client.WASM ; npm ci ; gulp ; cd ../..
-        dotnet restore -s https://api.nuget.org/v3/index.json
+        pwsh -c ./tools.ps1 restore
         dotnet build -c $env:CONFIG
       shell: pwsh
     - name: Test
@@ -84,8 +82,7 @@ jobs:
         CONFIG: ${{ matrix.config }}
       run: |
         npm install --global gulp
-        cd src/AcBlog.Client.Components.Markdown ; npm ci ; gulp ; cd ../..
-        cd src/AcBlog.Client.WASM ; npm ci ; gulp ; cd ../..
+        pwsh -c ./tools.ps1 restore
         dotnet restore -s https://api.nuget.org/v3/index.json
         dotnet build -c $env:CONFIG
       shell: pwsh

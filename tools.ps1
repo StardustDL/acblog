@@ -1,5 +1,28 @@
 if ($args.Count -gt 0) {
     switch ($args[0]) {
+        "restore" {
+            Write-Output "Restore npm..."
+            Set-Location src/AcBlog.Client.Components.Markdown ; npm ci ; gulp ; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
+            Set-Location src/AcBlog.Client.Components.CodeEditor ; npm ci ; gulp ; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
+            Set-Location src/AcBlog.Client.Components.Loader ; npm ci ; gulp ; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
+            Set-Location src/AcBlog.Client.WASM ; npm ci ; gulp ; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
+            dotnet restore -s https://api.nuget.org/v3/index.json
+            if (!$?) {
+                exit 1
+            }
+        }
         "format" {
             Write-Output "Format..."
             dotnet format

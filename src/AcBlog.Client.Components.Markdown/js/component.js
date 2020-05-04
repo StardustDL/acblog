@@ -1,18 +1,7 @@
 "use strict";
 
-var abbr = require("markdown-it-abbr");
-var container = require("markdown-it-container");
-var deflist = require("markdown-it-deflist");
-var emoji = require("markdown-it-emoji");
-var footnote = require("markdown-it-footnote");
-var ins = require("markdown-it-ins");
-var sub = require("markdown-it-sub");
-var sup = require("markdown-it-sup");
-var mark = require("markdown-it-mark");
-var tasklists = require("markdown-it-task-lists");
-var katex = require("@iktakahiro/markdown-it-katex");
-var hljs = require('highlight.js');
-var md = require("markdown-it")({
+const hljs = require('highlight.js');
+const md = require("markdown-it")({
     highlight: function (str, lang) {
         if (lang && hljs.getLanguage(lang)) {
             try {
@@ -24,17 +13,17 @@ var md = require("markdown-it")({
         return ''; // use external default escaping
     }
 })
-    .use(abbr)
-    .use(container)
-    .use(deflist)
-    .use(emoji)
-    .use(footnote)
-    .use(ins)
-    .use(sub)
-    .use(sup)
-    .use(mark)
-    .use(tasklists)
-    .use(katex);
+    .use(require("markdown-it-abbr"))
+    .use(require("markdown-it-container"))
+    .use(require("markdown-it-deflist"))
+    .use(require("markdown-it-emoji"))
+    .use(require("markdown-it-footnote"))
+    .use(require("markdown-it-ins"))
+    .use(require("markdown-it-sub"))
+    .use(require("markdown-it-sup"))
+    .use(require("markdown-it-mark"))
+    .use(require("markdown-it-task-lists"))
+    .use(require("@iktakahiro/markdown-it-katex"));
 
 window.AcBlogClientComponentsMarkdown_markdownRender = function (element, content) {
     element.innerHTML = md.render(content);
