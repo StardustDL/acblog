@@ -19,6 +19,7 @@ namespace AcBlog.Client.Components.Slides
 <script src=""_content/AcBlog.Client.Components.Slides/remark/remark.min.js"">
 </script>
 <script>
+window.onerror = function(message, source, lineno, colno, error) { return true; }
 var slideshow = remark.create();
 </script>
 </body>

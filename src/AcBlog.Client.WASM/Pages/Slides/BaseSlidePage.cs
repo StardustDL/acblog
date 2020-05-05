@@ -12,18 +12,18 @@ using System.Threading.Tasks;
 using System.Web;
 using AcBlog.Client.WASM.Shared;
 
-namespace AcBlog.Client.WASM.Pages.Posts
+namespace AcBlog.Client.WASM.Pages.Slides
 {
-    public class BasePostPage : BasePage
+    public class BaseSlidePage : BasePage
     {
         protected override string Title
         {
             get => base.Title; set
             {
                 if (string.IsNullOrEmpty(value))
-                    value = $"Posts";
+                    value = $"Slides";
                 else
-                    value = $"{value} - Posts";
+                    value = $"{value} - Slides";
                 base.Title = value;
             }
         }

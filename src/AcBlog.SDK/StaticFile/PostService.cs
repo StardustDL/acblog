@@ -15,10 +15,10 @@ namespace AcBlog.SDK.StaticFile
 
         public PostService(IBlogService blog, string rootPath, HttpClient httpClient)
         {
-            Blog = blog;
+            BlogService = blog;
             HttpClient = httpClient;
             Protector = new PostProtector();
-            Reader = new PostRemoteReader($"{rootPath}/posts", httpClient);
+            Reader = new PostRemoteReader(rootPath, httpClient);
         }
 
         public HttpClient HttpClient { get; }
@@ -29,7 +29,7 @@ namespace AcBlog.SDK.StaticFile
 
         public RepositoryAccessContext? Context { get => Reader.Context; set => Reader.Context = value; }
 
-        public IBlogService Blog { get; private set; }
+        public IBlogService BlogService { get; private set; }
 
         public IProtector<Post> Protector { get; private set; }
 

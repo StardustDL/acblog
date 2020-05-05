@@ -15,11 +15,11 @@ namespace AcBlog.SDK.API
 
         public PostService(IBlogService blog, HttpClient httpClient)
         {
-            Blog = blog;
+            BlogService = blog;
             HttpClient = httpClient;
         }
 
-        public IBlogService Blog { get; private set; }
+        public IBlogService BlogService { get; private set; }
 
         public HttpClient HttpClient { get; }
 

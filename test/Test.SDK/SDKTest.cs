@@ -19,7 +19,8 @@ namespace Test.SDK
         protected async Task BlogService(IBlogService service)
         {
             await UserService(service.UserService);
-            await PostService(service.PostService);
+            await PostService(service.ArticleService);
+            await PostService(service.SlidesService);
         }
     }
 }

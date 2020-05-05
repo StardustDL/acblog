@@ -18,14 +18,17 @@
   - Markdown rendering
   - LaTeX math rendering
   - Password protection
+  - Table of contents
+- Slides
 
 ## Build
 
 1. Install .NET Core SDK 3.1.201, NodeJS 12.x and npm.
-2. Install Gulp
+2. Install Gulp & Libman
 
 ```sh
 npm install -g gulp
+dotnet tool install --global Microsoft.Web.LibraryManager.Cli
 ```
 
 3. Restore dependencies

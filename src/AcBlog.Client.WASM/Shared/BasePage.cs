@@ -39,7 +39,7 @@ namespace AcBlog.Client.WASM.Shared
                     value = BlogSettings.Name;
                 else
                     value = $"{value} - {BlogSettings.Name}";
-                if(value != _title)
+                if (value != _title)
                 {
                     _title = value;
                     StateHasChanged();

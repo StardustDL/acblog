@@ -1,11 +1,11 @@
-﻿@page "/posts"
-@page "/posts/list"
-@page "/posts/list/{pageNumber:int}"
-@inherits BasePostPage
+﻿@page "/articles"
+@page "/articles/list"
+@page "/articles/list/{pageNumber:int}"
+@inherits BaseArticlePage
 
 <div class="container">
     <div class="d-flex flex-row">
-        <h1>Posts</h1>
+        <h1>Articles</h1>
     </div>
 
     @if (Data == null)
@@ -16,7 +16,7 @@
     {
         <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage" OnPageTo="@OnPageTo">
             <ItemTemplate>
-                <PostCard PostId="@context"></PostCard>
+                <PostCard PostId="@context" Service="@Service.ArticleService" Href="@($"articles/{context}")"></PostCard>
             </ItemTemplate>
         </PagingWaterfall>
     }
@@ -35,7 +35,7 @@
         Data = null;
         Title = "Loading...";
 
-        Data = await Service.PostService.Query(new PostQueryRequest
+        Data = await Service.ArticleService.Query(new PostQueryRequest
         {
             Paging = new Pagination
             {
@@ -49,13 +49,13 @@
 
     private Task OnPageTo(int pageNumber)
     {
-        NavigationManager.NavigateTo($"posts/list/{pageNumber}");
+        NavigationManager.NavigateTo($"articles/list/{pageNumber}");
         return Task.CompletedTask;
     }
 
     private async Task OnUpdatePage()
     {
-        Data = await Service.PostService.Query(new PostQueryRequest
+        Data = await Service.ArticleService.Query(new PostQueryRequest
         {
             Paging = Data.CurrentPage
         });

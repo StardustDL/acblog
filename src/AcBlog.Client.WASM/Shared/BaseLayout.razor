@@ -2,9 +2,16 @@
 @inject BlogSettings BlogSettings
 @layout EmptyLayout
 
-@Body
+<div style="margin-bottom: 40px;">
+    @Body
+</div>
 
-<footer class="border-top footer text-muted">
+<footer class="border-top text-muted"
+        style="position: absolute;
+            bottom: 0;
+            width: 100%;
+            white-space: nowrap;
+            line-height: 40px;">
     <div class="container-fluid">
         <i class="mdi mdi-copyright"></i>
         @BlogSettings.StartYear - @DateTimeOffset.Now.Year, @(BlogSettings.Onwer). All rights reserved.

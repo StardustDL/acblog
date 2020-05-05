@@ -11,13 +11,14 @@ namespace AcBlog.SDK.API
             HttpClient = httpClient;
 
             UserService = new UserService(this, httpClient);
-            PostService = new PostService(this, httpClient);
         }
 
         public HttpClient HttpClient { get; }
 
         public IUserService UserService { get; private set; }
 
-        public IPostService PostService { get; private set; }
+        public IPostService ArticleService => throw new NotImplementedException();
+
+        public IPostService SlidesService => throw new NotImplementedException();
     }
 }

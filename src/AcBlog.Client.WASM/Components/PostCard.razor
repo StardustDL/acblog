@@ -1,6 +1,4 @@
-﻿@inject IBlogService Service
-
-@if (Post == null)
+﻿@if (Post == null)
 {
     <Loader></Loader>
 }
@@ -10,7 +8,7 @@ else
         <div class="card-body">
             <div class="card-title d-flex flex-row mb-1">
                 <h4>
-                    <a href="posts/@Post.Id" style="color:black">
+                    <a href="@Href" style="color:black">
                         @if (IsProtected)
                         {
                             <span>Protected Post</span>
@@ -33,7 +31,7 @@ else
                     <AcBlog.Client.WASM.Components.Displays.TextClipperDisplay Value="@Post.Content"></AcBlog.Client.WASM.Components.Displays.TextClipperDisplay>
                 </p>
             }
-            <a href="posts/@Post.Id" class="card-link" style="color: #555; border-bottom: 1px solid #666;">Read more</a>
+            <a href="@Href" class="card-link" style="color: #555; border-bottom: 1px solid #666;">Read more</a>
         </div>
     </div>
 }
@@ -41,6 +39,12 @@ else
 @code {
     [Parameter]
     public string PostId { get; set; }
+
+    [Parameter]
+    public IPostService Service { get; set; }
+
+    [Parameter]
+    public string Href { get; set; }
 
     private Post Post { get; set; }
 
@@ -51,7 +55,7 @@ else
         Post = null;
         IsProtected = false;
 
-        Post = await Service.PostService.Get(PostId);
-        IsProtected = await Service.PostService.Protector.IsProtected(Post);
+        Post = await Service.Get(PostId);
+        IsProtected = await Service.Protector.IsProtected(Post);
     }
 }

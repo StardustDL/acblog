@@ -1,30 +1,73 @@
 ﻿@page "/slides"
 @page "/slides/list"
 @page "/slides/list/{pageNumber:int}"
-@inherits BasePage
-@layout EmptyLayout
-@using AcBlog.Client.Components.Slides
+@inherits BaseSlidePage
 
-<SlidesRenderer Value="@Value"></SlidesRenderer>
+<div class="container">
+    <div class="d-flex flex-row">
+        <h1>Slides</h1>
+    </div>
+
+    @if (Data == null)
+    {
+        <Loader></Loader>
+    }
+    else
+    {
+        <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage" OnPageTo="@OnPageTo">
+            <ItemTemplate>
+                <PostCard PostId="@context" Service="@Service.SlidesService" Href="@($"slides/{context}")"></PostCard>
+            </ItemTemplate>
+        </PagingWaterfall>
+    }
+</div>
 
 @code {
+    const int CountPerPage = 10;
+
+    QueryResponse<string> Data { get; set; }
+
     [Parameter]
     public int? PageNumber { get; set; } = null;
 
-    private string Value = @"class: center, middle
+    protected override async Task OnParametersSetAsync()
+    {
+        Data = null;
+        Title = "Loading...";
 
-# Title
+        Data = await Service.SlidesService.Query(new PostQueryRequest
+        {
+            Paging = new Pagination
+            {
+                PageNumber = PageNumber ?? 0,
+                CountPerPage = CountPerPage
+            }
+        });
+        Title = $"Page {Data.CurrentPage.PageNumber + 1}";
+        await base.OnParametersSetAsync();
+    }
 
----
+    private Task OnPageTo(int pageNumber)
+    {
+        NavigationManager.NavigateTo($"slides/list/{pageNumber}");
+        return Task.CompletedTask;
+    }
 
-# Agenda
+    private async Task OnUpdatePage()
+    {
+        Data = await Service.SlidesService.Query(new PostQueryRequest
+        {
+            Paging = Data.CurrentPage
+        });
+    }
 
-1. Introduction2
-2. Deep-dive
-3. ...
+    private Task OnPreviousPage()
+    {
+        return OnPageTo(Data.CurrentPage.PageNumber - 1);
+    }
 
----
-
-# Introduction
-";
+    private Task OnNextPage()
+    {
+        return OnPageTo(Data.CurrentPage.PageNumber + 1);
+    }
 }

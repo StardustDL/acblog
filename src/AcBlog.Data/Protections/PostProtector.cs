@@ -82,7 +82,7 @@ namespace AcBlog.Data.Protections
 
         public async Task<Post> Deprotect(Post value, ProtectionKey key)
         {
-            if(!await IsProtected(value))
+            if (!await IsProtected(value))
             {
                 return value;
             }

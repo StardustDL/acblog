@@ -5,18 +5,6 @@ html {
     min-height: 100%;
 }
 
-body {
-    margin-bottom: 40px;
-}
-
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    white-space: nowrap;
-    line-height: 40px;
-}
-
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
 }

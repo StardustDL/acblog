@@ -4,6 +4,8 @@
     {
         IUserService UserService { get; }
 
-        IPostService PostService { get; }
+        IPostService ArticleService { get; }
+
+        IPostService SlidesService { get; }
     }
 }

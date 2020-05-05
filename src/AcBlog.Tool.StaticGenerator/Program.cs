@@ -38,32 +38,51 @@ namespace AcBlog.Tool.StaticGenerator
 
             Directory.CreateDirectory(dist);
             {
-                string postDist = Path.Join(dist, "posts");
+                string postDist = Path.Join(dist, "articles");
                 Directory.CreateDirectory(postDist);
+                DirectoryInfo di = new DirectoryInfo(Path.Join(Environment.CurrentDirectory, "articles"));
 
-                DirectoryInfo di = new DirectoryInfo(Path.Join(Environment.CurrentDirectory, "posts"));
-                List<Post> posts = new List<Post>();
+                var ls = await LoadPosts(di);
+                ls.ForEach(x => x.Type = PostType.Article);
 
-                foreach (var fi in di.GetFiles("*.md", SearchOption.AllDirectories))
-                {
-                    Post post = null;
-                    try
-                    {
-                        post = await LoadPost(di, fi);
-                    }
-                    catch(Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                        return;
-                    }
-                    Console.WriteLine($"Loaded {fi.FullName}");
-                    posts.Add(post);
-                }
-                await PostRepositoryBuilder.Build(posts, postDist, 10);
+                await PostRepositoryBuilder.Build(ls, postDist, 10);
+            }
+            {
+                string postDist = Path.Join(dist, "slides");
+                Directory.CreateDirectory(postDist);
+                DirectoryInfo di = new DirectoryInfo(Path.Join(Environment.CurrentDirectory, "slides"));
+
+                var ls = await LoadPosts(di);
+                ls.ForEach(x => x.Type = PostType.Slides);
+
+                await PostRepositoryBuilder.Build(ls, postDist, 10);
             }
         }
-        
+
         static PostProtector PostProtector { get; set; }
+
+        static async Task<List<Post>> LoadPosts(DirectoryInfo di)
+        {
+            List<Post> posts = new List<Post>();
+
+            foreach (var fi in di.GetFiles("*.md", SearchOption.AllDirectories))
+            {
+                Post post = null;
+                try
+                {
+                    post = await LoadPost(di, fi);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw ex;
+                }
+                Console.WriteLine($"Loaded {fi.FullName}");
+                posts.Add(post);
+            }
+
+            return posts;
+        }
 
         static async Task<Post> LoadPost(DirectoryInfo root, FileInfo file)
         {
@@ -120,8 +139,12 @@ namespace AcBlog.Tool.StaticGenerator
                     }
                 }
             }
-            post.Content = string.Join('\n', lines[contentBg..]);
-            if(metadata != null && !string.IsNullOrEmpty(metadata.password))
+            if (contentBg + 1 < lines.Length)
+            {
+                post.Content = string.Join('\n', lines[(contentBg + 1)..]);
+            }
+            else post.Content = "";
+            if (metadata != null && !string.IsNullOrEmpty(metadata.password))
             {
                 post = await PostProtector.Protect(post, new ProtectionKey { Password = metadata.password });
             }

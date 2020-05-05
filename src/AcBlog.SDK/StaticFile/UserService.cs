@@ -16,7 +16,7 @@ namespace AcBlog.SDK.StaticFile
         {
             Blog = blog;
             HttpClient = httpClient;
-            Reader = new UserRemoteReader($"{rootPath}/users", httpClient);
+            Reader = new UserRemoteReader(rootPath, httpClient);
         }
 
         public IBlogService Blog { get; private set; }
