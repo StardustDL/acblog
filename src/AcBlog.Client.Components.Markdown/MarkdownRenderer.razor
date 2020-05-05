@@ -1,4 +1,5 @@
 ﻿@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 
 <div @ref="markdownContent">
 
@@ -8,17 +9,29 @@
     [Parameter]
     public string Value { get; set; } = "";
 
+    [Parameter]
+    public string TocElementId { get; set; } = null;
+
     private ElementReference markdownContent;
+
+    private string BaseUrl { get; set; }
+
+    protected override void OnInitialized()
+    {
+        BaseUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        var ind = BaseUrl.IndexOf('#');
+        if (ind >= 0)
+            BaseUrl = BaseUrl.Remove(ind);
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await Render(Value);
-        await base.OnAfterRenderAsync(firstRender);
     }
 
     public async Task Render(string value)
     {
         Value = value;
-        await JSRuntime.InvokeAsync<object>("AcBlogClientComponentsMarkdown_markdownRender", markdownContent, Value);
+        await JSRuntime.InvokeVoidAsync("AcBlogClientComponentsMarkdown_markdownRender", markdownContent, Value, TocElementId, BaseUrl);
     }
 }

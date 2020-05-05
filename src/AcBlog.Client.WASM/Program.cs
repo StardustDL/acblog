@@ -12,11 +12,14 @@ using AcBlog.SDK.API;
 using AcBlog.Client.WASM.Models;
 using AcBlog.SDK.StaticFile;
 using System.IO;
+using Microsoft.AspNetCore.Components;
 
 namespace AcBlog.Client.WASM
 {
     public class Program
     {
+        static string LastUri { get; set; } = "";
+
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -60,7 +63,6 @@ namespace AcBlog.Client.WASM
                 builder.Services.AddHttpClient<IBlogService, HttpApiBlogService>(
                     client => client.BaseAddress = new Uri(server));
             }
-
             await builder.Build().RunAsync();
         }
     }

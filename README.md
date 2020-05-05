@@ -4,10 +4,46 @@
 
 ## Features
 
+- Based on WebAssembly
+- Single Page APP
+  - Installable
+  - Offline
+- Frontend
+  - Full static files
+- Backend
+  - Static-file backend with generator
+  - Dynamic server backend
+- Post
+  - Category & Keywords
+  - Markdown rendering
+  - LaTeX math rendering
+  - Password protection
+
+## Build
+
+1. Install .NET Core SDK 3.1.201, NodeJS 12.x and npm.
+2. Install Gulp
+
+```sh
+npm install -g gulp
+```
+
+3. Restore dependencies
+
+```sh
+pwsh -c tools.ps1 restore
+```
+
+4. Build project
+
+```sh
+dotnet build
+```
+
 ## Test & Benchmark
 
 ```sh
-dotnet test
+pwsh -c tools.ps1 test
 
-dotnet run --project ./test/Benchmark.Base -c Release
+pwsh -c tools.ps1 benchmark
 ```

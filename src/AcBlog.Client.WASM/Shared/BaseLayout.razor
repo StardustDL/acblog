@@ -1,5 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@inject IJSRuntime JSRuntime
 @inject BlogSettings BlogSettings
 
 @Body
@@ -18,8 +17,4 @@
 </footer>
 
 @code{
-    protected override async Task OnInitializedAsync()
-    {
-        await JSRuntime.InvokeVoidAsync("setTitle", BlogSettings.Name);
-    }
 }

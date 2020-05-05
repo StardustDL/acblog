@@ -1,6 +1,6 @@
 ﻿@page "/"
 @layout BaseLayout
-@inject BlogSettings BlogSettings
+@inherits BasePage
 
 <div class="jumbotron jumbotron-fluid p-0">
     <div class="container">
@@ -21,7 +21,4 @@
 
 @code
 {
-    protected override void OnInitialized()
-    {
-    }
 }
