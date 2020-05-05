@@ -91,12 +91,25 @@ jobs:
       env:
         CONFIG: ${{ matrix.config }}
       run: |
-        mkdir publish
         cd src/AcBlog.Client.WASM
-        dotnet publish -c $env:CONFIG -o ../../publish
+        mkdir publish
+        dotnet publish -c $env:CONFIG -o ./publish
       shell: pwsh
-    - name: Upload
+    - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
         name: wasmpub-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.dotnet-version }}
-        path: ./publish
+        path: ./src/AcBlog.Client.WASM/publish
+    - name: Build image
+      run: |
+        cd src/AcBlog.Client.WASM
+        docker build . --file Dockerfile --tag acblog:wasm
+    - name: Push image
+      if: github.event_name == 'push'
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        docker tag acblog:wasm $DOCKER_USERNAME/acblog:wasm
+        docker push $DOCKER_USERNAME/acblog:wasm
