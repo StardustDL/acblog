@@ -28,6 +28,7 @@ jobs:
         CONFIG: ${{ matrix.config }}
       run: |
         npm install --global gulp
+        dotnet tool install --global Microsoft.Web.LibraryManager.Cli
         pwsh -c ./tools.ps1 restore
         dotnet build -c $env:CONFIG
       shell: pwsh

@@ -1,0 +1,30 @@
+﻿@page "/slides"
+@page "/slides/list"
+@page "/slides/list/{pageNumber:int}"
+@inherits BasePage
+@layout EmptyLayout
+@using AcBlog.Client.Components.Slides
+
+<SlidesRenderer Value="@Value"></SlidesRenderer>
+
+@code {
+    [Parameter]
+    public int? PageNumber { get; set; } = null;
+
+    private string Value = @"class: center, middle
+
+# Title
+
+---
+
+# Agenda
+
+1. Introduction2
+2. Deep-dive
+3. ...
+
+---
+
+# Introduction
+";
+}

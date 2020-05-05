@@ -13,3 +13,9 @@ window.acblogInteropModalAction = function (id, action) {
         m.modal(action);
     }
 };
+window.acblogInteropToastAction = function (id, action) {
+    var m = $('#' + id);
+    if (m) {
+        m.modal(action);
+    }
+};

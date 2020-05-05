@@ -6,6 +6,10 @@ if ($args.Count -gt 0) {
             if (!$?) {
                 exit 1
             }
+            Set-Location src/AcBlog.Client.Components.Slides ; libman restore ; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
             Set-Location src/AcBlog.Client.Components.CodeEditor ; npm ci ; gulp ; Set-Location ../..
             if (!$?) {
                 exit 1

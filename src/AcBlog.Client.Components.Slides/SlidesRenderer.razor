@@ -1,0 +1,23 @@
+﻿@inject IJSRuntime JSRuntime
+
+<iframe srcdoc="@InnerDoc"></iframe>
+
+@code {
+    [Parameter]
+    public string Value { get; set; } = "";
+
+    private string InnerDoc { get; set; } = "";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await Render(Value);
+        await base.OnParametersSetAsync();
+    }
+
+    public Task Render(string value)
+    {
+        Value = value;
+        InnerDoc = Templates.RenderSlides(Value);
+        return Task.CompletedTask;
+    }
+}
