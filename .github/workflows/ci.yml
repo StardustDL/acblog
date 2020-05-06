@@ -74,6 +74,7 @@ jobs:
     - name: Restore & Build
       run: |
         npm install --global gulp
+        dotnet tool install --global Microsoft.Web.LibraryManager.Cli
         pwsh -c ./tools.ps1 restore
         dotnet restore -s https://api.nuget.org/v3/index.json
         dotnet build -c Release
@@ -83,7 +84,7 @@ jobs:
         cd src/AcBlog.Client.WASM
         mkdir publish
         dotnet publish -c Release -o ./publish
-        echo "{ ""build"": { ""Commit"": ""$GITHUB_SHA"", ""Branch"": ""$GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$GITHUB_REPOSITORY"" } }" > ./publish/wwwroot/build.json
+        echo "{ ""build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./publish/wwwroot/build.json
       shell: pwsh
     - name: Upload artifact
       uses: actions/upload-artifact@master
@@ -93,12 +94,14 @@ jobs:
     - name: Build image
       run: |
         docker build . --file ./docker/client/wasm/Dockerfile --tag acblog:wasm
+      shell: pwsh
     - name: Push image
       if: github.event_name == 'push'
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
-        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        docker tag acblog:wasm $DOCKER_USERNAME/acblog:wasm
-        docker push $DOCKER_USERNAME/acblog:wasm
+        echo "$env:DOCKER_PASSWORD" | docker login -u "$env:DOCKER_USERNAME" --password-stdin
+        docker tag acblog:wasm $env:DOCKER_USERNAME/acblog:wasm
+        docker push $env:DOCKER_USERNAME/acblog:wasm
+      shell: pwsh

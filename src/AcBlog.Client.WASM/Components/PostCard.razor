@@ -1,9 +1,4 @@
-﻿@if (Post == null)
-{
-    <Loader></Loader>
-}
-else
-{
+﻿<Loader OnLoad="@OnLoad">
     <div class="card border-0">
         <div class="card-body">
             <div class="card-title d-flex flex-row mb-1">
@@ -34,7 +29,7 @@ else
             <a href="@Href" class="card-link" style="color: #555; border-bottom: 1px solid #666;">Read more</a>
         </div>
     </div>
-}
+</Loader>
 
 @code {
     [Parameter]
@@ -50,11 +45,8 @@ else
 
     private bool IsProtected { get; set; } = false;
 
-    protected override async Task OnParametersSetAsync()
+    private async Task OnLoad()
     {
-        Post = null;
-        IsProtected = false;
-
         Post = await Service.Get(PostId);
         IsProtected = await Service.Protector.IsProtected(Post);
     }

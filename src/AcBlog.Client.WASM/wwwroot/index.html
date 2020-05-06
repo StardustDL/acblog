@@ -6,15 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Loading...</title>
     <base href="/" />
+    <link rel="icon" href="icon.png"/>
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="lib/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
     <link href="lib/markdown-css/github-markdown.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
-    <link href="_content/AcBlog.Client.Components.Loader/component.css" rel="stylesheet" />
+    <link href="_content/AcBlog.Client.Components.Loading/component.css" rel="stylesheet" />
     <link href="_content/AcBlog.Client.Components.Markdown/highlight.js/github.css" rel="stylesheet" />
     <link href="_content/AcBlog.Client.Components.Markdown/katex/katex.min.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
-    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon.png" />
 
     <script src="js/interop.js"></script>
     <script type="text/javascript">
@@ -42,7 +43,7 @@
 
 <body>
     <app>
-        <div class="loader loader1" style="margin: auto; bottom: 0; right:0; left: 0; top: 0; position: fixed">
+        <div class="loading loading1" style="margin: auto; bottom: 0; right:0; left: 0; top: 0; position: fixed">
             <div>
                 <div>
                     <div>
@@ -57,7 +58,7 @@
         </div>
     </app>
 
-    <div id="blazor-error-ui" class="alert alert-danger mdi mdi-alert">
+    <div id="blazor-error-ui" class="alert alert-danger mdi mdi-alert" role="alert">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>

@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AcBlog.Client.Components.CodeEditor\AcBlog.Client.Components.CodeEditor.csproj" />
-    <ProjectReference Include="..\AcBlog.Client.Components.Loader\AcBlog.Client.Components.Loader.csproj" />
+    <ProjectReference Include="..\AcBlog.Client.Components.Loading\AcBlog.Client.Components.Loading.csproj" />
     <ProjectReference Include="..\AcBlog.Client.Components.Markdown\AcBlog.Client.Components.Markdown.csproj" />
     <ProjectReference Include="..\AcBlog.Client.Components.Slides\AcBlog.Client.Components.Slides.csproj" />
     <ProjectReference Include="..\AcBlog.Data\AcBlog.Data.csproj" />

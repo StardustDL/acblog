@@ -1,0 +1,61 @@
+﻿@using AcBlog.Client.Components.Loading
+
+@switch (State)
+{
+    case DataLoadingState.Loading:
+        <Loading></Loading>
+        break;
+    case DataLoadingState.Success:
+        @ChildContent
+        break;
+    case DataLoadingState.Failed:
+        <LoadFailingAlert OnReload="@Load"></LoadFailingAlert>
+        break;
+}
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback OnLoad { get; set; }
+
+    [Parameter]
+    public EventCallback OnLoaded { get; set; }
+
+    public DataLoadingState State { get; private set; }
+
+    private bool NeedCallback { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+        await base.OnInitializedAsync();
+    }
+
+    public async Task Load()
+    {
+        State = DataLoadingState.Loading;
+        try
+        {
+            await OnLoad.InvokeAsync(null);
+            State = DataLoadingState.Success;
+            NeedCallback = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Loading failed because " + ex.ToString());
+            State = DataLoadingState.Failed;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (NeedCallback && State == DataLoadingState.Success)
+        {
+            NeedCallback = false;
+            await OnLoaded.InvokeAsync(null);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}

@@ -2,40 +2,38 @@
 @inherits BaseArticlePage
 @using AcBlog.Client.Components.Markdown
 
-@if (Post == null)
-{
-    <Loader></Loader>
-}
-else if (IsProtected)
-{
-    <div class="container">
-        <h1 class="display-4">Protected Post</h1>
-        <button type="button" class="btn btn-primary mt-3" style="width: 100%;" @onclick="@OnDeprotectClick">Deprotect</button>
-    </div>
-
-    <InputPasswordModal @ref="inputPasswordModal" OnPasswordSubmit="@OnPasswordSubmit"></InputPasswordModal>
-}
-else
-{
-    <div class="row">
-        <div class="col-2"></div>
-        <div class="col-10">
-            <h1 class="display-4">@Post.Title</h1>
-            <PostMetadataDisplay Value="@Post" />
+<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded">
+    @if (IsProtected)
+    {
+        <div class="container">
+            <h1 class="display-4">Protected Post</h1>
+            <button type="button" class="btn btn-primary mt-3" style="width: 100%;" @onclick="@OnDeprotectClick">Deprotect</button>
         </div>
-    </div>
 
-    <div class="row mt-3">
-        <div class="col-2">
-            <div id="post-toc" style="position: sticky; top: 1rem">
-
+        <InputPasswordModal @ref="inputPasswordModal" OnPasswordSubmit="@OnPasswordSubmit"></InputPasswordModal>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-10">
+                <h1 class="display-4">@Post.Title</h1>
+                <PostMetadataDisplay Value="@Post" />
             </div>
         </div>
-        <article class="markdown-body col-10">
-            <MarkdownRenderer Value="@Post.Content" TocElementId="post-toc" />
-        </article>
-    </div>
-}
+
+        <div class="row mt-3">
+            <div class="col-2">
+                <div id="post-toc" style="position: sticky; top: 1rem">
+
+                </div>
+            </div>
+            <article class="markdown-body col-10">
+                <MarkdownRenderer Value="@Post.Content" TocElementId="post-toc" />
+            </article>
+        </div>
+    }
+</Loader>
 
 @code {
     [Parameter]
@@ -47,14 +45,7 @@ else
 
     private InputPasswordModal inputPasswordModal;
 
-    protected override async Task OnParametersSetAsync()
-    {
-        Post = await Service.ArticleService.Get(Id);
-        IsProtected = await Service.ArticleService.Protector.IsProtected(Post);
-        await base.OnParametersSetAsync();
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private async Task OnLoaded()
     {
         if (Post == null)
         {
@@ -72,19 +63,31 @@ else
                 Title = Post.Title;
             }
         }
-        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task OnLoad()
+    {
+        Post = await Service.ArticleService.Get(Id);
+        IsProtected = await Service.ArticleService.Protector.IsProtected(Post);
     }
 
     private async Task OnPasswordSubmit(string password)
     {
-        Post dep = await Service.ArticleService.Protector.Deprotect(Post, new Data.Protections.ProtectionKey
+        try
         {
-            Password = password
-        });
-        Post = dep;
-        IsProtected = await Service.ArticleService.Protector.IsProtected(Post);
-        if (!IsProtected)
-            await inputPasswordModal.Hide();
+            Post dep = await Service.ArticleService.Protector.Deprotect(Post, new Data.Protections.ProtectionKey
+            {
+                Password = password
+            });
+            Post = dep;
+            IsProtected = await Service.ArticleService.Protector.IsProtected(Post);
+            if (!IsProtected)
+                await inputPasswordModal.Hide();
+        }
+        catch
+        {
+            throw new WrongPasswordException();
+        }
     }
 
     private async Task OnDeprotectClick()

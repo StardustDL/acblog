@@ -28,14 +28,14 @@ $blue: rgba(0, 0, 255, .5);
 	}
 }
 
-@mixin loaderDivMixin {
+@mixin loadingDivMixin {
 	border-radius: 50%;
 	padding: 8px;
 	border: 2px solid transparent;
 	animation: rotate linear 3.5s infinite;
 }
 
-.loader {
+.loading {
 	position: relative;
 	margin: 75px auto;
 	width: 150px;
@@ -47,42 +47,42 @@ $blue: rgba(0, 0, 255, .5);
 	}
 }
 
-/* loader 1 */
-.loader1, .loader1 div {
-	@include loaderDivMixin;
+/* loading 1 */
+.loading1, .loading1 div {
+	@include loadingDivMixin;
 	border-top-color: $grey;
 	border-bottom-color: $blue;
 }
 
-/*loader 2  */
-.loader2, .loader2 div {
-	@include loaderDivMixin;
+/*loading 2  */
+.loading2, .loading2 div {
+	@include loadingDivMixin;
 	border-top-color: $blue;
 	border-left-color: $grey;
 	border-right-color: $grey;
 }
 
-/*loader 3  */
-.loader3, .loader3 div {
-	@include loaderDivMixin;
+/*loading 3  */
+.loading3, .loading3 div {
+	@include loadingDivMixin;
 	border-top-color: $grey;
 	border-left-color: $blue;
 	animation-timing-function: cubic-bezier(.55, .38, .21, .88);
 	animation-duration: 3s;
 }
 
-/* loader 4 */
-.loader4, .loader4 div {
-	@include loaderDivMixin;
+/* loading 4 */
+.loading4, .loading4 div {
+	@include loadingDivMixin;
 	border-radius: 50%;
 	padding: 4px;
 	animation: rotate2 4s infinite linear;
 }
 
-div.loader:hover {
+div.loading:hover {
 	animation-play-state: paused;
 }
 
-.loader, .loader * {
+.loading, .loading * {
 	will-change: transform;
 }

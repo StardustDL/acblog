@@ -9,7 +9,7 @@ if ($args.Count -gt 0) {
             if (!$?) {
                 exit 1
             }
-            Set-Location src/AcBlog.Client.Components.Loader ; ncu ; Set-Location ../..
+            Set-Location src/AcBlog.Client.Components.Loading ; ncu ; Set-Location ../..
             if (!$?) {
                 exit 1
             }
@@ -27,7 +27,7 @@ if ($args.Count -gt 0) {
             if (!$?) {
                 exit 1
             }
-            Set-Location src/AcBlog.Client.Components.Loader ; ncu -u ; Set-Location ../..
+            Set-Location src/AcBlog.Client.Components.Loading ; ncu -u ; Set-Location ../..
             if (!$?) {
                 exit 1
             }
@@ -50,7 +50,7 @@ if ($args.Count -gt 0) {
             if (!$?) {
                 exit 1
             }
-            Set-Location src/AcBlog.Client.Components.Loader ; npm ci ; gulp ; Set-Location ../..
+            Set-Location src/AcBlog.Client.Components.Loading ; npm ci ; gulp ; Set-Location ../..
             if (!$?) {
                 exit 1
             }

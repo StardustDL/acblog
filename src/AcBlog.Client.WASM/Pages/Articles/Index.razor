@@ -8,18 +8,13 @@
         <h1>Articles</h1>
     </div>
 
-    @if (Data == null)
-    {
-        <Loader></Loader>
-    }
-    else
-    {
+    <Loader OnLoad="@OnLoad" @ref="loader">
         <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage" OnPageTo="@OnPageTo">
             <ItemTemplate>
                 <PostCard PostId="@context" Service="@Service.ArticleService" Href="@($"articles/{context}")"></PostCard>
             </ItemTemplate>
         </PagingWaterfall>
-    }
+    </Loader>
 </div>
 
 @code {
@@ -30,11 +25,11 @@
     [Parameter]
     public int? PageNumber { get; set; } = null;
 
-    protected override async Task OnParametersSetAsync()
-    {
-        Data = null;
-        Title = "Loading...";
+    private Loader loader;
 
+    private async Task OnLoad()
+    {
+        Title = "Loading...";
         Data = await Service.ArticleService.Query(new PostQueryRequest
         {
             Paging = new Pagination
@@ -44,7 +39,6 @@
             }
         });
         Title = $"Page {Data.CurrentPage.PageNumber + 1}";
-        await base.OnParametersSetAsync();
     }
 
     private Task OnPageTo(int pageNumber)
@@ -55,10 +49,7 @@
 
     private async Task OnUpdatePage()
     {
-        Data = await Service.ArticleService.Query(new PostQueryRequest
-        {
-            Paging = Data.CurrentPage
-        });
+        await loader.Load();
     }
 
     private Task OnPreviousPage()

@@ -10,7 +10,9 @@ namespace AcBlog.Client.WASM.Models
 
         public string Description { get; set; }
 
-        public string IconUrl { get; set; }
+        public string IndexIconUrl { get; set; }
+
+        public string IndexBackgroundUrl { get; set; }
 
         public string Footer { get; set; }
 

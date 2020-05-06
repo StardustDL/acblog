@@ -1,5 +1,5 @@
 ﻿
-<div class="loader @TypeClass">
+<div class="loading @TypeClass">
     <div>
         <div>
             <div>
@@ -21,6 +21,6 @@
 
     protected override void OnParametersSet()
     {
-        TypeClass = $"loader{Math.Max(1, Math.Min(4, Type))}";
+        TypeClass = $"loading{Math.Max(1, Math.Min(4, Type))}";
     }
 }

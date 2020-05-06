@@ -43,7 +43,7 @@ namespace AcBlog.Client.WASM
             {
                 Name = "AcBlog",
                 Description = "A blog system based on WebAssembly.",
-                IconUrl = "icon-512.png",
+                IndexIconUrl = "icon.png",
                 Footer = "",
                 StartYear = DateTimeOffset.Now.Year,
                 IsStaticServer = true

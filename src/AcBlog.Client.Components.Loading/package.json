@@ -1,7 +1,7 @@
 {
-  "name": "acblog.client.components.loader",
+  "name": "acblog.client.components.loading",
   "version": "1.0.0",
-  "description": "Loader Components for Blazor",
+  "description": "Loading Components for Blazor",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
