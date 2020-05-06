@@ -76,7 +76,6 @@ jobs:
         npm install --global gulp
         dotnet tool install --global Microsoft.Web.LibraryManager.Cli
         pwsh -c ./tools.ps1 restore
-        dotnet restore -s https://api.nuget.org/v3/index.json
         dotnet build -c Release
       shell: pwsh
     - name: Publish Client.WASM
@@ -86,7 +85,7 @@ jobs:
         dotnet publish -c Release -o ./publish
         echo "{ ""build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./publish/wwwroot/build.json
       shell: pwsh
-    - name: Upload artifact
+    - name: Upload artifacts
       uses: actions/upload-artifact@master
       with:
         name: wasmpub
@@ -104,4 +103,50 @@ jobs:
         echo "$env:DOCKER_PASSWORD" | docker login -u "$env:DOCKER_USERNAME" --password-stdin
         docker tag acblog:wasm $env:DOCKER_USERNAME/acblog:wasm
         docker push $env:DOCKER_USERNAME/acblog:wasm
+      shell: pwsh
+  pkgpub:
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: "3.1.201"
+    - name: Setup NodeJS
+      uses: actions/setup-node@v1
+      with:
+        node-version: "12.x"
+    - name: Restore & Build
+      run: |
+        npm install --global gulp
+        dotnet tool install --global Microsoft.Web.LibraryManager.Cli
+        pwsh -c ./tools.ps1 restore
+        dotnet build -c Release
+      shell: pwsh
+    - name: Pack
+      run: |
+        mkdir packages
+        dotnet pack -c Release -o ./packages
+      shell: pwsh
+    - name: Upload artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: packages
+        path: ./packages
+    - name: Deploy
+      if: github.event_name == 'push'
+      env:
+        MYGET_TOKEN: ${{ secrets.MYGET_TOKEN }}
+        VERSION: "0.0.1"
+      run: |
+        dotnet nuget push ./packages/AcBlog.Client.Components.CodeEditor.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Client.Components.Loading.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Client.Components.Markdown.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Client.Components.Slides.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Data.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.SDK.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
       shell: pwsh

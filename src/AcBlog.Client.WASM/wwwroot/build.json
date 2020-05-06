@@ -1,8 +1,8 @@
 {
   "build": {
-    "Commit": "None",
-    "Branch": "None",
+    "Commit": "",
+    "Branch": "",
     "BuildDate": "None",
-    "Repository": "acblog/acblog"
+    "Repository": "None"
   }
 }
