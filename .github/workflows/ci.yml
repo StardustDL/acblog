@@ -79,14 +79,11 @@ jobs:
         dotnet build -c Release
       shell: pwsh
     - name: Publish Client.WASM
-      env:
-        COMMIT: ${{ github.sha }}
-        BRANCH: ${{ github.ref }}
       run: |
         cd src/AcBlog.Client.WASM
         mkdir publish
         dotnet publish -c Release -o ./publish
-        echo "{ ""build"": { ""Commit"": ""$COMMIT"", ""Branch"": ""$BRANCH"", ""BuildDate"": ""$(date)"" } }" > ./publish/wwwroot/build.json
+        echo "{ ""build"": { ""Commit"": ""$GITHUB_SHA"", ""Branch"": ""$GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$GITHUB_REPOSITORY"" } }" > ./publish/wwwroot/build.json
       shell: pwsh
     - name: Upload artifact
       uses: actions/upload-artifact@master

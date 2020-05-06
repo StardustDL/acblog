@@ -1,6 +1,6 @@
 # AcBlog
 
-![CI](https://github.com/acblog/acblog/workflows/CI/badge.svg) ![](https://img.shields.io/github/license/acblog/acblog.svg) [![](https://img.shields.io/docker/pulls/stardustdl/acblog.svg)](https://hub.docker.com/r/stardustdl/acblog)
+![CI](https://github.com/acblog/acblog/workflows/CI/badge.svg) ![License](https://img.shields.io/github/license/acblog/acblog.svg) [![Docker](https://img.shields.io/docker/pulls/stardustdl/acblog.svg)](https://hub.docker.com/r/stardustdl/acblog)
 
 ## Features
 

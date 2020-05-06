@@ -16,17 +16,21 @@
             white-space: nowrap;
             line-height: 40px;">
     <div class="container-fluid">
-        <i class="mdi mdi-copyright"></i>
-        @BlogSettings.StartYear - @DateTimeOffset.Now.Year, @(BlogSettings.Onwer). All rights reserved.
-        @if (!string.IsNullOrEmpty(BlogSettings.Footer))
-        {
-            @((MarkupString)BlogSettings.Footer)
-        }
-
-        Powered by
-        <a class="text-muted" href="https://github.com/acblog/acblog" data-toggle="tooltip" data-html="true" title="Commit: @BuildStatus.Commit <br/>Branch: @BuildStatus.Branch <br/>Built Date: @BuildStatus.BuildDate">
-            AcBlog
-        </a>.
+        <div class="d-flex justify-content-between">
+            <div>
+                <i class="mdi mdi-copyright"></i>
+                @BlogSettings.StartYear - @DateTimeOffset.Now.Year, @(BlogSettings.Onwer). All rights reserved.
+                @if (!string.IsNullOrEmpty(BlogSettings.Footer))
+                {
+                    @((MarkupString)BlogSettings.Footer)
+                }
+            </div>
+            <div></div>
+            <div>
+                Powered by
+                <a class="text-muted" href="https://github.com/@BuildStatus.Repository" data-toggle="tooltip" data-html="true" title="Repository: @BuildStatus.Repository <br/>Commit: @BuildStatus.Commit <br/>Branch: @BuildStatus.Branch <br/>Built Date: @BuildStatus.BuildDate">AcBlog</a>.
+            </div>
+        </div>
     </div>
 </footer>
 

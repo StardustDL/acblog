@@ -1,5 +1,41 @@
 if ($args.Count -gt 0) {
     switch ($args[0]) {
+        "npmup?" {
+            Set-Location src/AcBlog.Client.Components.Markdown ; ncu ; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
+            Set-Location src/AcBlog.Client.Components.CodeEditor ; ncu ; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
+            Set-Location src/AcBlog.Client.Components.Loader ; ncu ; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
+            Set-Location src/AcBlog.Client.WASM ; ncu ; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
+        }
+        "npmup" {
+            Set-Location src/AcBlog.Client.Components.Markdown ; ncu -u ; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
+            Set-Location src/AcBlog.Client.Components.CodeEditor ; ncu -u ; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
+            Set-Location src/AcBlog.Client.Components.Loader ; ncu -u ; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
+            Set-Location src/AcBlog.Client.WASM ; ncu -u ; Set-Location ../..
+            if (!$?) {
+                exit 1
+            }
+        }
         "restore" {
             Write-Output "Restore npm..."
             Set-Location src/AcBlog.Client.Components.Markdown ; npm ci ; gulp ; Set-Location ../..

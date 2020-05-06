@@ -9,5 +9,7 @@ namespace AcBlog.Client.WASM.Models
         public string Branch { get; set; } = "None";
 
         public string BuildDate { get; set; } = "None";
+
+        public string Repository { get; set; } = "acblog/acblog";
     }
 }

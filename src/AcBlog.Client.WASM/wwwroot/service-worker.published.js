@@ -9,7 +9,7 @@ self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
 const cacheNamePrefix = 'offline-cache-';
 const cacheName = `${cacheNamePrefix}${self.assetsManifest.version}`;
 const offlineAssetsInclude = [/\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, /\.json$/, /\.css$/, /\.woff$/, /\.png$/, /\.jpe?g$/, /\.gif$/, /\.ico$/];
-const offlineAssetsExclude = [/^service-worker\.js$/, /^index\.html$/, /^404\.html$/, /^data\//, /^favicon\.ico$/, /appsettings\.json/, /appsettings\.Development\.json/, /manifest\.json/, /icon-512\.png/];
+const offlineAssetsExclude = [/^service-worker\.js$/, /^index\.html$/, /^404\.html$/, /^data\//, /^favicon\.ico$/, /appsettings\.json/, /build\.json/, /manifest\.json/, /icon-512\.png/];
 
 async function onInstall(event) {
     console.info('Service worker: Install');
