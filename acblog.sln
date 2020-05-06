@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.Components.Lo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{56E93FBD-A94A-4C86-B5BD-CAD4B4FEBECD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcBlog.Client.Components.Slides", "src\AcBlog.Client.Components.Slides\AcBlog.Client.Components.Slides.csproj", "{EC983A98-EBE1-44AB-8A67-6C01F2F5FF08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.Components.Slides", "src\AcBlog.Client.Components.Slides\AcBlog.Client.Components.Slides.csproj", "{EC983A98-EBE1-44AB-8A67-6C01F2F5FF08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
