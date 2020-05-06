@@ -59,46 +59,35 @@ jobs:
         path: ./reports
   wasmpub:
     needs: ci
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
-        config: [Release]
-        dotnet-version: ["3.1.201"]
-        node-version: ["12.x"]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Setup dotnet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{ matrix.dotnet-version }}
+        dotnet-version: "3.1.201"
     - name: Setup NodeJS
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: "12.x"
     - name: Restore & Build
-      env:
-        CONFIG: ${{ matrix.config }}
       run: |
         npm install --global gulp
         pwsh -c ./tools.ps1 restore
         dotnet restore -s https://api.nuget.org/v3/index.json
-        dotnet build -c $env:CONFIG
+        dotnet build -c Release
       shell: pwsh
     - name: Publish Client.WASM
-      env:
-        CONFIG: ${{ matrix.config }}
       run: |
         cd src/AcBlog.Client.WASM
         mkdir publish
-        dotnet publish -c $env:CONFIG -o ./publish
+        dotnet publish -c Release -o ./publish
       shell: pwsh
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
-        name: wasmpub-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.dotnet-version }}
+        name: wasmpub
         path: ./src/AcBlog.Client.WASM/publish
     - name: Build image
       run: |

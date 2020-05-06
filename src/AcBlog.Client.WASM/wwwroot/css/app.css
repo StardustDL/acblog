@@ -17,6 +17,16 @@ html {
     color: red;
 }
 
+#loading-info-ui {
+    bottom: 0;
+    display: none;
+    left: 0;
+    position: fixed;
+    margin-bottom: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
 #blazor-error-ui {
     bottom: 0;
     display: none;
