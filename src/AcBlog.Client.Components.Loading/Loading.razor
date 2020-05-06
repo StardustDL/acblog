@@ -14,8 +14,10 @@
 </div>
 
 @code {
+    static Random rand = new Random();
+
     [Parameter]
-    public int Type { get; set; } = 1;
+    public int Type { get; set; } = rand.Next(1, 5);
 
     private string TypeClass { get; set; }
 
