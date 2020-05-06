@@ -20,6 +20,8 @@
   - Password protection
   - Table of contents
 - Slides
+  - Preview & Full page
+- Docker deployment
 
 ## Build
 

@@ -13,16 +13,28 @@ using AcBlog.Client.WASM.Models;
 using AcBlog.SDK.StaticFile;
 using System.IO;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Configuration.Json;
 
 namespace AcBlog.Client.WASM
 {
     public class Program
     {
-        static string LastUri { get; set; } = "";
-
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+            {
+                using var client = new HttpClient()
+                {
+                    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
+                };
+                using var response = await client.GetAsync("build.json");
+                response.EnsureSuccessStatusCode();
+                using var stream = await response.Content.ReadAsStreamAsync();
+
+                builder.Configuration.AddJsonStream(stream);
+            }
+
             builder.RootComponents.Add<App>("app");
 
             string server = builder.Configuration.GetValue<string>("APIServer", null);
@@ -63,6 +75,7 @@ namespace AcBlog.Client.WASM
                 builder.Services.AddHttpClient<IBlogService, HttpApiBlogService>(
                     client => client.BaseAddress = new Uri(server));
             }
+
             await builder.Build().RunAsync();
         }
     }

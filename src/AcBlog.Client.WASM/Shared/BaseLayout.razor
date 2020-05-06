@@ -1,6 +1,9 @@
 ﻿@inherits LayoutComponentBase
 @inject BlogSettings BlogSettings
+@inject IJSRuntime JSRuntime
 @layout EmptyLayout
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 
 <div style="margin-bottom: 40px;">
     @Body
@@ -20,9 +23,25 @@
             @((MarkupString)BlogSettings.Footer)
         }
 
-        Powered by <a href="https://github.com/acblog/acblog">AcBlog</a>.
+        Powered by
+        <a class="text-muted" href="https://github.com/acblog/acblog" data-toggle="tooltip" data-html="true" title="Commit: @BuildStatus.Commit <br/>Branch: @BuildStatus.Branch <br/>Built Date: @BuildStatus.BuildDate">
+            AcBlog
+        </a>.
     </div>
 </footer>
 
 @code{
+    private BuildStatus BuildStatus { get; set; } = new BuildStatus();
+
+    protected override void OnInitialized()
+    {
+        Configuration.Bind("build", BuildStatus);
+        base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await TooltipInterop.Enable(JSRuntime);
+        await base.OnAfterRenderAsync(firstRender);
+    }
 }

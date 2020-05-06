@@ -19,3 +19,6 @@ window.acblogInteropToastAction = function (id, action) {
         m.modal(action);
     }
 };
+window.acblogInteropTooltipEnable = function () {
+    $('[data-toggle="tooltip"]').tooltip();
+};
