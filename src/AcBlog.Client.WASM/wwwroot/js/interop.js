@@ -22,3 +22,6 @@ window.acblogInteropToastAction = function (id, action) {
 window.acblogInteropTooltipEnable = function () {
     $('[data-toggle="tooltip"]').tooltip();
 };
+window.acblogInteropPopoverEnable = function () {
+    $('[data-toggle="popover"]').popover()
+};

@@ -3,6 +3,14 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Client.WASM.Interops
 {
+    public static class PopoverInterop
+    {
+        public static ValueTask Enable(IJSRuntime runtime)
+        {
+            return runtime.InvokeVoidAsync("acblogInteropPopoverEnable");
+        }
+    }
+
     public static class TooltipInterop
     {
         public static ValueTask Enable(IJSRuntime runtime)

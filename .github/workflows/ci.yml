@@ -91,7 +91,6 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: acblog/wasm
         tag_with_ref: true
-        tag_with_sha: true
         dockerfile: ./docker/client/wasm/Dockerfile
   pub-pkgs:
     needs: ci
@@ -146,12 +145,9 @@ jobs:
         repository: "acblog/mirrors"
         persist-credentials: false
     - name: Commit
-      env:
-        USER_EMAIL: ${{ secrets.USER_EMAIL }}
-        USER_NAME: ${{ secrets.USER_NAME }}
       run: |
-        git config --global user.email $env:USER_EMAIL
-        git config --global user.name $env:USER_NAME
+        git config --global user.email ""
+        git config --global user.name "Auto mirror invoker"
         git commit -m "$(date)" --allow-empty
     - name: Push changes
       uses: ad-m/github-push-action@master

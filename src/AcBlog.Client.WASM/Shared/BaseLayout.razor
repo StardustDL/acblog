@@ -28,7 +28,7 @@
                     @((MarkupString)BlogSettings.Footer)
                 }
                 Powered by
-                <a class="text-muted" href="https://github.com/acblog/acblog" data-toggle="tooltip" data-html="true" title="Repository: @BuildStatus.Repository <br/>Commit: @BuildStatus.TrimedCommit <br/>Branch: @BuildStatus.TrimedBranch <br/>Built Date: @BuildStatus.BuildDate">AcBlog</a>.
+                <a class="text-muted" data-toggle="popover" data-html="true" data-placement="top" data-trigger="hover focus click" data-content="Repository: <a href='https://github.com/@BuildStatus.Repository'>@BuildStatus.Repository</a> <br/>Commit: <a href='https://github.com/@BuildStatus.Repository/commit/@BuildStatus.Commit'>@BuildStatus.TrimedCommit</a> <br/>Branch: <a href='https://github.com/@BuildStatus.Repository/tree/@BuildStatus.Branch'>@BuildStatus.TrimedBranch</a> <br/>Built Date: @BuildStatus.BuildDate">AcBlog</a>.
             </div>
         </div>
     </div>
@@ -46,6 +46,7 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await TooltipInterop.Enable(JSRuntime);
+        await PopoverInterop.Enable(JSRuntime);
         await base.OnAfterRenderAsync(firstRender);
     }
 }

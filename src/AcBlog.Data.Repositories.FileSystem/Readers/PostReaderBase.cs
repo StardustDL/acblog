@@ -87,14 +87,14 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             }
             await EnsureConfig();
             IList<string> result = Array.Empty<string>();
-            try
+            if (query.Paging.PageNumber >= 0 && query.Paging.PageNumber < Config!.TotalPage)
             {
-                using var fs = await GetFileReadStream(GetPagePath(query.Paging.PageNumber));
-                result = await JsonSerializer.DeserializeAsync<IList<string>>(fs);
-            }
-            catch
-            {
-                return new QueryResponse<string>();
+                try
+                {
+                    using var fs = await GetFileReadStream(GetPagePath(query.Paging.PageNumber));
+                    result = await JsonSerializer.DeserializeAsync<IList<string>>(fs);
+                }
+                catch { }
             }
             var res = new QueryResponse<string>(result.ToArray(), new Pagination
             {

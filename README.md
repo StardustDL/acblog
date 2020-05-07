@@ -2,6 +2,10 @@
 
 ![CI](https://github.com/acblog/acblog/workflows/CI/badge.svg) ![License](https://img.shields.io/github/license/acblog/acblog.svg)
 
+An open source extensible static & dynamic blog system.
+
+![](https://repository-images.githubusercontent.com/259549650/50d50d00-9073-11ea-8e72-0d3f1d3a7d8c)
+
 ## Features
 
 - Based on WebAssembly
