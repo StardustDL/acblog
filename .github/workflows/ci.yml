@@ -72,9 +72,9 @@ jobs:
         dotnet tool install --global Microsoft.Web.LibraryManager.Cli
         pwsh -c ./tools.ps1 restore
         dotnet build -c Release
-    - name: Publish Client.WASM
+    - name: Publish Client.WebAssembly
       run: |
-        cd src/AcBlog.Client.WASM
+        cd src/AcBlog.Client.WebAssembly
         mkdir publish
         dotnet publish -c Release -o ./publish
         echo "{ ""build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./publish/wwwroot/build.json
@@ -82,7 +82,7 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: wasm
-        path: ./src/AcBlog.Client.WASM/publish
+        path: ./src/AcBlog.Client.WebAssembly/publish
     - name: Push image
       if: github.event_name == 'push'
       uses: docker/build-push-action@v1

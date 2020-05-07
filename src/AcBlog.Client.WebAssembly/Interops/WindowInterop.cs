@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AcBlog.Client.WASM.Interops
+namespace AcBlog.Client.WebAssembly.Interops
 {
     public static class WindowInterop
     {

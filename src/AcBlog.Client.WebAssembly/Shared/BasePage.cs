@@ -1,5 +1,5 @@
-﻿using AcBlog.Client.WASM.Interops;
-using AcBlog.Client.WASM.Models;
+﻿using AcBlog.Client.WebAssembly.Interops;
+using AcBlog.Client.WebAssembly.Models;
 using AcBlog.SDK;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
@@ -11,7 +11,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace AcBlog.Client.WASM.Shared
+namespace AcBlog.Client.WebAssembly.Shared
 {
     public class BasePage : ComponentBase, IDisposable
     {

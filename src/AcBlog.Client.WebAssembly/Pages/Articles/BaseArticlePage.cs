@@ -1,5 +1,5 @@
-﻿using AcBlog.Client.WASM.Interops;
-using AcBlog.Client.WASM.Models;
+﻿using AcBlog.Client.WebAssembly.Interops;
+using AcBlog.Client.WebAssembly.Models;
 using AcBlog.SDK;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
@@ -10,20 +10,20 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using System.Web;
-using AcBlog.Client.WASM.Shared;
+using AcBlog.Client.WebAssembly.Shared;
 
-namespace AcBlog.Client.WASM.Pages.Slides
+namespace AcBlog.Client.WebAssembly.Pages.Articles
 {
-    public class BaseSlidePage : BasePage
+    public class BaseArticlePage : BasePage
     {
         protected override string Title
         {
             get => base.Title; set
             {
                 if (string.IsNullOrEmpty(value))
-                    value = $"Slides";
+                    value = $"Articles";
                 else
-                    value = $"{value} - Slides";
+                    value = $"{value} - Articles";
                 base.Title = value;
             }
         }

@@ -13,7 +13,7 @@ if ($args.Count -gt 0) {
             if (!$?) {
                 exit 1
             }
-            Set-Location src/AcBlog.Client.WASM ; ncu ; Set-Location ../..
+            Set-Location src/AcBlog.Client.WebAssembly ; ncu ; Set-Location ../..
             if (!$?) {
                 exit 1
             }
@@ -31,7 +31,7 @@ if ($args.Count -gt 0) {
             if (!$?) {
                 exit 1
             }
-            Set-Location src/AcBlog.Client.WASM ; ncu -u ; Set-Location ../..
+            Set-Location src/AcBlog.Client.WebAssembly ; ncu -u ; Set-Location ../..
             if (!$?) {
                 exit 1
             }
@@ -54,7 +54,7 @@ if ($args.Count -gt 0) {
             if (!$?) {
                 exit 1
             }
-            Set-Location src/AcBlog.Client.WASM ; npm ci ; gulp ; Set-Location ../..
+            Set-Location src/AcBlog.Client.WebAssembly ; npm ci ; gulp ; Set-Location ../..
             if (!$?) {
                 exit 1
             }
@@ -78,15 +78,15 @@ if ($args.Count -gt 0) {
             }
         }
         "wasm" {
-            Write-Output "Run WASM..."
-            dotnet run -p ./src/AcBlog.Client.WASM
+            Write-Output "Run WebAssembly..."
+            dotnet run -p ./src/AcBlog.Client.WebAssembly
             if (!$?) {
                 exit 1
             }
         }
         "wasm-pub" {
-            Write-Output "Publish WASM..."
-            Set-Location ./src/AcBlog.Client.WASM
+            Write-Output "Publish WebAssembly..."
+            Set-Location ./src/AcBlog.Client.WebAssembly
             Move-Item ./wwwroot/data ./data
             dotnet publish -c Release
             Move-Item ./data ./wwwroot/data

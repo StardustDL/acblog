@@ -9,13 +9,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using AcBlog.SDK;
 using AcBlog.SDK.API;
-using AcBlog.Client.WASM.Models;
+using AcBlog.Client.WebAssembly.Models;
 using AcBlog.SDK.StaticFile;
 using System.IO;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration.Json;
 
-namespace AcBlog.Client.WASM
+namespace AcBlog.Client.WebAssembly
 {
     public class Program
     {

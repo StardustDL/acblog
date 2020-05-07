@@ -1,7 +1,7 @@
 ﻿using Microsoft.JSInterop;
 using System.Threading.Tasks;
 
-namespace AcBlog.Client.WASM.Interops
+namespace AcBlog.Client.WebAssembly.Interops
 {
     public static class PopoverInterop
     {

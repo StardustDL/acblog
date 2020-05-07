@@ -1,5 +1,5 @@
 {
-  "name": "acblog.client.wasm",
+  "name": "acblog.client.webassembly",
   "version": "1.0.0",
   "description": "AcBlog",
   "scripts": {

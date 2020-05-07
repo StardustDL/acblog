@@ -1,4 +1,4 @@
-﻿namespace AcBlog.Client.WASM.Models
+﻿namespace AcBlog.Client.WebAssembly.Models
 {
     public enum DataLoadingState
     {

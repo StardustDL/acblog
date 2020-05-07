@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AcBlog.Client.WASM.Models
+namespace AcBlog.Client.WebAssembly.Models
 {
     public class BlogSettings
     {

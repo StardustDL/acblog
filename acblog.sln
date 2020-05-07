@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.API", "test\Test.API\T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.SDK", "test\Test.SDK\Test.SDK.csproj", "{344AC1AE-0E0B-4495-8860-02569754AE75}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.WASM", "src\AcBlog.Client.WASM\AcBlog.Client.WASM.csproj", "{ED7DB08F-2339-4AD6-8838-4DAAC0915C1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.WebAssembly", "src\AcBlog.Client.WebAssembly\AcBlog.Client.WebAssembly.csproj", "{ED7DB08F-2339-4AD6-8838-4DAAC0915C1E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.Components.Markdown", "src\AcBlog.Client.Components.Markdown\AcBlog.Client.Components.Markdown.csproj", "{469FD464-DE5E-49D0-8F95-91ACEDE50E8C}"
 EndProject
