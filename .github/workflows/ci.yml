@@ -2,15 +2,20 @@ name: CI
 
 on: [push, pull_request]
 
+defaults:
+  run:
+    shell: pwsh
+
+env:
+  dotnet-version: "3.1.201"
+  node-version: "12.x"
+
 jobs:
   ci:
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        config: [Release]
-        dotnet-version: ["3.1.201"]
-        node-version: ["12.x"]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
@@ -18,46 +23,36 @@ jobs:
     - name: Setup dotnet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{ matrix.dotnet-version }}
+        dotnet-version: ${{ env.dotnet-version }}
     - name: Setup NodeJS
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: ${{ env.node-version }}
     - name: Restore & Build
-      env:
-        CONFIG: ${{ matrix.config }}
       run: |
         npm install --global gulp
         dotnet tool install --global Microsoft.Web.LibraryManager.Cli
         pwsh -c ./tools.ps1 restore
-        dotnet build -c $env:CONFIG
-      shell: pwsh
+        dotnet build -c Release
     - name: Test
-      env:
-        CONFIG: ${{ matrix.config }}
       run: |
         mkdir reports/test
-        dotnet test -c $env:CONFIG /p:CollectCoverage=true /p:CoverletOutput=../../reports/test/coverage.json /p:MergeWith=../../reports/test/coverage.json /maxcpucount:1
-        dotnet test -c $env:CONFIG ./test/Test.Base /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=../../reports/test/coverage.xml /p:MergeWith=../../reports/test/coverage.json
-      shell: pwsh
+        dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutput=../../reports/test/coverage.json /p:MergeWith=../../reports/test/coverage.json /maxcpucount:1
+        dotnet test -c Release ./test/Test.Base /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=../../reports/test/coverage.xml /p:MergeWith=../../reports/test/coverage.json
     - name: Benchmark
-      env:
-        CONFIG: ${{ matrix.config }}
-      run: dotnet run -c $env:CONFIG --project ./test/Benchmark.Base
-      shell: pwsh
+      run: dotnet run -c Release --project ./test/Benchmark.Base
     - name: Generate reports
       run: |
         dotnet tool install dotnet-reportgenerator-globaltool --tool-path ./tools
         ./tools/reportgenerator -reports:./reports/test/coverage.xml -targetdir:./reports/test
         mkdir reports/benchmark
         Copy-Item ./BenchmarkDotNet.Artifacts/* ./reports/benchmark -Recurse
-      shell: pwsh
     - name: Upload reports
       uses: actions/upload-artifact@master
       with:
-        name: ci-${{ matrix.os }}-${{ matrix.config }}-${{ matrix.dotnet-version }}
+        name: ci-${{ matrix.os }}
         path: ./reports
-  wasmpub:
+  pub-wasm:
     needs: ci
     runs-on: ubuntu-latest
     steps:
@@ -66,45 +61,39 @@ jobs:
     - name: Setup dotnet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: "3.1.201"
+        dotnet-version: ${{ env.dotnet-version }}
     - name: Setup NodeJS
       uses: actions/setup-node@v1
       with:
-        node-version: "12.x"
+        node-version: ${{ env.node-version }}
     - name: Restore & Build
       run: |
         npm install --global gulp
         dotnet tool install --global Microsoft.Web.LibraryManager.Cli
         pwsh -c ./tools.ps1 restore
         dotnet build -c Release
-      shell: pwsh
     - name: Publish Client.WASM
       run: |
         cd src/AcBlog.Client.WASM
         mkdir publish
         dotnet publish -c Release -o ./publish
         echo "{ ""build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./publish/wwwroot/build.json
-      shell: pwsh
     - name: Upload artifacts
       uses: actions/upload-artifact@master
       with:
-        name: wasmpub
+        name: wasm
         path: ./src/AcBlog.Client.WASM/publish
-    - name: Build image
-      run: |
-        docker build . --file ./docker/client/wasm/Dockerfile --tag acblog:wasm
-      shell: pwsh
     - name: Push image
       if: github.event_name == 'push'
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      run: |
-        echo "$env:DOCKER_PASSWORD" | docker login -u "$env:DOCKER_USERNAME" --password-stdin
-        docker tag acblog:wasm $env:DOCKER_USERNAME/acblog:wasm
-        docker push $env:DOCKER_USERNAME/acblog:wasm
-      shell: pwsh
-  pkgpub:
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: acblog/wasm
+        tag_with_ref: true
+        tag_with_sha: true
+        dockerfile: ./docker/client/wasm/Dockerfile
+  pub-pkgs:
     needs: ci
     runs-on: ubuntu-latest
     steps:
@@ -113,23 +102,21 @@ jobs:
     - name: Setup dotnet
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: "3.1.201"
+        dotnet-version: ${{ env.dotnet-version }}
     - name: Setup NodeJS
       uses: actions/setup-node@v1
       with:
-        node-version: "12.x"
+        node-version: ${{ env.node-version }}
     - name: Restore & Build
       run: |
         npm install --global gulp
         dotnet tool install --global Microsoft.Web.LibraryManager.Cli
         pwsh -c ./tools.ps1 restore
         dotnet build -c Release
-      shell: pwsh
     - name: Pack
       run: |
         mkdir packages
         dotnet pack -c Release -o ./packages
-      shell: pwsh
     - name: Upload artifacts
       uses: actions/upload-artifact@master
       with:
@@ -149,4 +136,25 @@ jobs:
         dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
         dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
         dotnet nuget push ./packages/AcBlog.SDK.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-      shell: pwsh
+  invoke-mirrors:
+    needs: pub-wasm
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        repository: "acblog/mirrors"
+    - name: Commit
+      env:
+        USER_EMAIL: ${{ secrets.USER_EMAIL }}
+        USER_NAME: ${{ secrets.USER_NAME }}
+      run: |
+        git config --global user.email 
+        git config --global user.name marsggbo
+        git commit -m "$(date)" --allow-empty
+        git config --local --unset-all "http.https://github.com/.extraheader"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        repository: "acblog/mirrors"
+        github_token: ${{ secrets.PUSH_TOKEN }}
