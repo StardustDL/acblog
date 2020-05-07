@@ -26,7 +26,7 @@ namespace AcBlog.Client.WASM.Models
                 else
                 {
                     value = value.Trim();
-                    TrimedCommit = value.Substring(0, Math.Min(6, value.Length));
+                    TrimedCommit = value.Substring(0, Math.Min(7, value.Length));
                 }
             }
         }

@@ -1,6 +1,6 @@
 # AcBlog
 
-![CI](https://github.com/acblog/acblog/workflows/CI/badge.svg) ![License](https://img.shields.io/github/license/acblog/acblog.svg) [![Docker](https://img.shields.io/docker/pulls/stardustdl/acblog.svg)](https://hub.docker.com/r/stardustdl/acblog)
+![CI](https://github.com/acblog/acblog/workflows/CI/badge.svg) ![License](https://img.shields.io/github/license/acblog/acblog.svg)
 
 ## Features
 
@@ -22,6 +22,7 @@
 - Slides
   - Preview & Full page
 - Docker deployment
+  - Client.WASM [![Docker](https://img.shields.io/docker/pulls/acblog/wasm.svg)](https://hub.docker.com/r/acblog/wasm)
 
 ## Build
 

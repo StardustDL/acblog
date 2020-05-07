@@ -144,15 +144,15 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: "acblog/mirrors"
+        persist-credentials: false
     - name: Commit
       env:
         USER_EMAIL: ${{ secrets.USER_EMAIL }}
         USER_NAME: ${{ secrets.USER_NAME }}
       run: |
-        git config --global user.email 
-        git config --global user.name marsggbo
+        git config --global user.email $env:USER_EMAIL
+        git config --global user.name $env:USER_NAME
         git commit -m "$(date)" --allow-empty
-        git config --local --unset-all "http.https://github.com/.extraheader"
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
