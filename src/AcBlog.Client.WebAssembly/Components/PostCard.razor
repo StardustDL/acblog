@@ -5,7 +5,7 @@
         <div class="card-body">
             <div class="card-title d-flex flex-row mb-1">
                 <h4>
-                    <a href="@Href" style="color:black">
+                    <a href="@Href" style="color:black" class="@TitleTypeStyle">
                         @if (IsProtected)
                         {
                             <span>Protected Post</span>
@@ -35,10 +35,15 @@
 
 @code {
     [Parameter]
+    public bool ShowType { get; set; } = false;
+
+    [Parameter]
     public string PostId { get; set; }
 
     [Parameter]
     public string Href { get; set; } = null;
+
+    private string TitleTypeStyle = "";
 
     private Post Post { get; set; }
 
@@ -55,7 +60,28 @@
 
     private async Task OnLoad()
     {
+        Post = null;
+        IsProtected = false;
+        TitleTypeStyle = "";
+
         Post = await Service.PostService.Get(PostId);
         IsProtected = await Service.PostService.Protector.IsProtected(Post);
+        if (!IsProtected && ShowType)
+        {
+            switch (Post.Type)
+            {
+                case PostType.Article:
+                    TitleTypeStyle = "mdi mdi-feather";
+                    break;
+                case PostType.Slides:
+                    TitleTypeStyle = "mdi mdi-presentation";
+                    break;
+                case PostType.Note:
+                    TitleTypeStyle = "mdi mdi-file-document";
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

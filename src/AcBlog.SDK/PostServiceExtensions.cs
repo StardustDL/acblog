@@ -13,5 +13,10 @@ namespace AcBlog.SDK
         {
             return new PostSlidesFilter(service);
         }
+
+        public static PostNoteFilter CreateNoteFilter(this IPostService service)
+        {
+            return new PostNoteFilter(service);
+        }
     }
 }

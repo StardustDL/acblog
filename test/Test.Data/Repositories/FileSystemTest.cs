@@ -1,4 +1,5 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.FileSystem;
 using AcBlog.Data.Repositories.FileSystem.Readers;
@@ -6,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,7 +64,7 @@ namespace Test.Data.Repositories
                 new Post{Title = "a", Id = Guid.NewGuid().ToString()},
             };
 
-            await PostRepositoryBuilder.Build(seedPost, root, 10);
+            await PostRepositoryBuilder.Build(seedPost.Select<Post, (Post, ProtectionKey)>(x => (x, null)).ToList(), new PostProtector(), root, 10);
 
             IPostRepository provider = new PostLocalReader(root);
 

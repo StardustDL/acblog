@@ -1,0 +1,64 @@
+﻿@page "/posts"
+@page "/posts/list"
+@page "/posts/list/{pageNumber:int}"
+@inherits BasePostPage
+
+<div class="container">
+    <div class="d-flex flex-row">
+        <h1>Posts</h1>
+    </div>
+
+    <Loader OnLoad="@OnLoad" @ref="loader">
+        <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage" OnPageTo="@OnPageTo">
+            <ItemTemplate>
+                <PostCard PostId="@context" ShowType="true"></PostCard>
+            </ItemTemplate>
+        </PagingWaterfall>
+    </Loader>
+</div>
+
+@code {
+    const int CountPerPage = 10;
+
+    QueryResponse<string> Data { get; set; }
+
+    [Parameter]
+    public int? PageNumber { get; set; } = null;
+
+    private Loader loader;
+
+    private async Task OnLoad()
+    {
+        Title = "Loading...";
+        Data = await Service.PostService.Query(new PostQueryRequest
+        {
+            Pagination = new Pagination
+            {
+                PageNumber = PageNumber ?? 0,
+                CountPerPage = CountPerPage
+            }
+        });
+        Title = $"Page {Data.CurrentPage.PageNumber + 1}";
+    }
+
+    private Task OnPageTo(int pageNumber)
+    {
+        NavigationManager.NavigateTo($"posts/list/{pageNumber}");
+        return Task.CompletedTask;
+    }
+
+    private async Task OnUpdatePage()
+    {
+        await loader.Load();
+    }
+
+    private Task OnPreviousPage()
+    {
+        return OnPageTo(Data.CurrentPage.PageNumber - 1);
+    }
+
+    private Task OnNextPage()
+    {
+        return OnPageTo(Data.CurrentPage.PageNumber + 1);
+    }
+}

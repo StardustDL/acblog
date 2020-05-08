@@ -13,17 +13,14 @@ namespace AcBlog.Tools.StaticGenerator
 {
     public class PostsLoader
     {
-        public PostsLoader(DirectoryInfo root, IProtector<Post> protector)
+        public PostsLoader(DirectoryInfo root)
         {
             Root = root;
-            Protector = protector;
         }
 
         public DirectoryInfo Root { get; }
 
-        public IProtector<Post> Protector { get; }
-
-        public async Task<Post> Load(FileInfo file)
+        public async Task<(Post, ProtectionKey)> Load(FileInfo file)
         {
             Post post = new Post();
             post.Title = Path.GetFileNameWithoutExtension(file.Name);
@@ -73,11 +70,15 @@ namespace AcBlog.Tools.StaticGenerator
                             post.Category = metadata.category.ToArray();
                         if (metadata.type != null)
                         {
-                            if (metadata.type == "slides")
-                                post.Type = PostType.Slides;
+                            post.Type = metadata.type switch
+                            {
+                                "slides" => PostType.Slides,
+                                "note" => PostType.Note,
+                                _ => PostType.Article
+                            };
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Console.WriteLine("Failed to parse post metadata.");
                         Console.WriteLine(ex);
@@ -89,33 +90,37 @@ namespace AcBlog.Tools.StaticGenerator
                 post.Content = string.Join('\n', lines[(contentBg + 1)..]);
             }
             else post.Content = "";
+            ProtectionKey key = null;
             if (metadata != null && !string.IsNullOrEmpty(metadata.password))
             {
-                post = await Protector.Protect(post, new ProtectionKey { Password = metadata.password });
+                key = new ProtectionKey
+                {
+                    Password = metadata.password
+                };
             }
-            return post;
+            return (post, key);
         }
 
-        public async Task<Post[]> LoadAll()
+        public async Task<(Post, ProtectionKey)[]> LoadAll()
         {
-            List<Post> posts = new List<Post>();
+            List<(Post, ProtectionKey)> posts = new List<(Post, ProtectionKey)>();
 
             if (Root.Exists)
             {
                 foreach (var fi in Root.GetFiles("*.md", SearchOption.AllDirectories))
                 {
-                    Post post = null;
                     try
                     {
-                        post = await Load(fi);
+                        var post = await Load(fi);
+                        Console.WriteLine($"Loaded {fi.FullName}");
+                        posts.Add(post);
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex);
                         throw ex;
                     }
-                    Console.WriteLine($"Loaded {fi.FullName}");
-                    posts.Add(post);
+
                 }
             }
 

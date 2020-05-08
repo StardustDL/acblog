@@ -78,6 +78,7 @@ namespace AcBlog.Client.WebAssembly
             }
             builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateArticleFilter());
             builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateSlidesFilter());
+            builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateNoteFilter());
 
             await builder.Build().RunAsync();
         }

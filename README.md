@@ -25,6 +25,7 @@ An open source extensible static & dynamic blog system.
   - Table of contents
 - Slides
   - Preview & Full page
+- Note
 - Docker deployment
   - Client.WebAssembly [![Docker](https://img.shields.io/docker/pulls/acblog/wasm.svg)](https://hub.docker.com/r/acblog/wasm)
 

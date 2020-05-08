@@ -45,12 +45,11 @@ namespace AcBlog.Tools.StaticGenerator
                 if (!postDist.Exists)
                     postDist.Create();
 
-                var loader = new PostsLoader(new DirectoryInfo(Path.Join(Environment.CurrentDirectory, "posts")),
-                    new PostProtector());
+                var loader = new PostsLoader(new DirectoryInfo(Path.Join(Environment.CurrentDirectory, "posts")));
 
                 var ls = await loader.LoadAll();
 
-                await PostRepositoryBuilder.Build(ls, postDist.FullName, 10);
+                await PostRepositoryBuilder.Build(ls, new PostProtector(), postDist.FullName, 10);
             }
         }
     }

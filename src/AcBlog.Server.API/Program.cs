@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AcBlog.Data.Models;
+using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories.FileSystem;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -47,14 +48,14 @@ namespace AcBlog.Server.API
                 }
             }, userRootPath, 10);
 
-            await PostRepositoryBuilder.Build(new[]
+            await PostRepositoryBuilder.Build(new (Post,ProtectionKey)[]
             {
-                new Post
+                (new Post
                 {
                     Title = "title",
                     Id = Guid.NewGuid().ToString(),
-                }
-            }, postRootPath, 10);
+                }, null)
+            }, new PostProtector(), postRootPath, 10);
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

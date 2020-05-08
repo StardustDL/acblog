@@ -45,9 +45,25 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
         {
             query.Pagination ??= new Pagination();
 
-            PagingPath paging;
+            PagingPath? paging = null;
 
-            paging = new PagingPath(Path.Join(RootPath, "pages"));
+            if(query.Type != null)
+            {
+                switch (query.Type)
+                {
+                    case PostType.Article:
+                        paging = new PagingPath(Path.Join(RootPath, "articles"));
+                        break;
+                    case PostType.Slides:
+                        paging = new PagingPath(Path.Join(RootPath, "slides"));
+                        break;
+                    case PostType.Note:
+                        paging = new PagingPath(Path.Join(RootPath, "notes"));
+                        break;
+                }
+            }
+
+            paging ??= new PagingPath(Path.Join(RootPath, "pages"));
 
             await EnsurePagingConfig(paging);
             paging.FillPagination(query.Pagination);

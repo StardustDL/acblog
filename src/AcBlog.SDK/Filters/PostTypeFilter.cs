@@ -37,4 +37,13 @@ namespace AcBlog.SDK.Filters
 
         public Task<QueryResponse<string>> Filter(Pagination? pagination) => base.Filter(PostType.Slides, pagination);
     }
+
+    public class PostNoteFilter : PostTypeFilter, IQueryFilter<IPostService>
+    {
+        public PostNoteFilter(IPostService baseService) : base(baseService)
+        {
+        }
+
+        public Task<QueryResponse<string>> Filter(Pagination? pagination) => base.Filter(PostType.Note, pagination);
+    }
 }

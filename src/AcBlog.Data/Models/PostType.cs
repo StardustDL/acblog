@@ -4,5 +4,6 @@
     {
         Article,
         Slides,
+        Note,
     }
 }
