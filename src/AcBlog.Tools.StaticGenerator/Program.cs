@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AcBlog.Tool.StaticGenerator
+namespace AcBlog.Tools.StaticGenerator
 {
     class Program
     {

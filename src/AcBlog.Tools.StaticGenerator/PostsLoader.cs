@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using YamlDotNet.Serialization;
 
-namespace AcBlog.Tool.StaticGenerator
+namespace AcBlog.Tools.StaticGenerator
 {
     public class PostsLoader
     {

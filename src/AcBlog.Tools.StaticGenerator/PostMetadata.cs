@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AcBlog.Tool.StaticGenerator
+namespace AcBlog.Tools.StaticGenerator
 {
     internal class PostMetadata
     {
