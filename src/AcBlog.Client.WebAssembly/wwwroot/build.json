@@ -1,7 +1,7 @@
 {
   "build": {
     "Commit": "",
-    "Branch": "",
+    "Branch": "master",
     "BuildDate": "None",
     "Repository": "acblog/acblog"
   }

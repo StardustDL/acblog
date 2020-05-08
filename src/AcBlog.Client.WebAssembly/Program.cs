@@ -14,6 +14,7 @@ using AcBlog.SDK.StaticFile;
 using System.IO;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration.Json;
+using AcBlog.SDK.Filters;
 
 namespace AcBlog.Client.WebAssembly
 {
@@ -75,6 +76,8 @@ namespace AcBlog.Client.WebAssembly
                 builder.Services.AddHttpClient<IBlogService, HttpApiBlogService>(
                     client => client.BaseAddress = new Uri(server));
             }
+            builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateArticleFilter());
+            builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateSlidesFilter());
 
             await builder.Build().RunAsync();
         }

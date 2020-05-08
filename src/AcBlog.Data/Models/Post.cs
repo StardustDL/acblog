@@ -2,12 +2,6 @@
 
 namespace AcBlog.Data.Models
 {
-    public enum PostType
-    {
-        Article,
-        Slides,
-    }
-
     public class Post
     {
         public string Id { get; set; } = string.Empty;

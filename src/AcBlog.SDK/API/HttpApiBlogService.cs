@@ -17,8 +17,6 @@ namespace AcBlog.SDK.API
 
         public IUserService UserService { get; private set; }
 
-        public IPostService ArticleService => throw new NotImplementedException();
-
-        public IPostService SlidesService => throw new NotImplementedException();
+        public IPostService PostService => throw new NotImplementedException();
     }
 }

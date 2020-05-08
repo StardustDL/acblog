@@ -28,8 +28,6 @@ namespace Test.SDK
 
         public Task User() => UserService(Service.UserService);
 
-        public Task Article() => PostService(Service.ArticleService);
-
-        public Task Slides() => PostService(Service.SlidesService);
+        public Task Post() => PostService(Service.PostService);
     }
 }

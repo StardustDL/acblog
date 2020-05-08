@@ -6,6 +6,8 @@ namespace AcBlog.Data.Models.Actions
 {
     public class PostQueryRequest
     {
+        public PostType? Type { get; set; } = null;
+
         public string Id { get; set; } = string.Empty;
 
         public string AuthorId { get; set; } = string.Empty;

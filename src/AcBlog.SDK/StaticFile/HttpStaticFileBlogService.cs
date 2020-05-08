@@ -16,16 +16,13 @@ namespace AcBlog.SDK.StaticFile
             HttpClient = httpClient;
 
             UserService = new UserService(this, $"{rootPath}/users", httpClient);
-            ArticleService = new PostService(this, $"{rootPath}/articles", httpClient);
-            SlidesService = new PostService(this, $"{rootPath}/slides", httpClient);
+            PostService = new PostService(this, $"{rootPath}/posts", httpClient);
         }
 
         public HttpClient HttpClient { get; }
 
         public IUserService UserService { get; private set; }
 
-        public IPostService ArticleService { get; private set; }
-
-        public IPostService SlidesService { get; private set; }
+        public IPostService PostService { get; private set; }
     }
 }

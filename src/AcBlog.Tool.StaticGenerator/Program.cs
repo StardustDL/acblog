@@ -6,7 +6,6 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace AcBlog.Tool.StaticGenerator
 {
@@ -20,26 +19,13 @@ namespace AcBlog.Tool.StaticGenerator
 
             Directory.CreateDirectory(dist);
             {
-                string postDist = Path.Join(dist, "articles");
+                string postDist = Path.Join(dist, "posts");
                 Directory.CreateDirectory(postDist);
 
-                var loader = new PostsLoader(new DirectoryInfo(Path.Join(Environment.CurrentDirectory, "articles")),
+                var loader = new PostsLoader(new DirectoryInfo(Path.Join(Environment.CurrentDirectory, "posts")),
                     new PostProtector());
 
                 var ls = await loader.LoadAll();
-                Array.ForEach(ls, x => x.Type = PostType.Article);
-
-                await PostRepositoryBuilder.Build(ls, postDist, 10);
-            }
-            {
-                string postDist = Path.Join(dist, "slides");
-                Directory.CreateDirectory(postDist);
-
-                var loader = new PostsLoader(new DirectoryInfo(Path.Join(Environment.CurrentDirectory, "slides")),
-                    new PostProtector());
-
-                var ls = await loader.LoadAll();
-                Array.ForEach(ls, x => x.Type = PostType.Slides);
 
                 await PostRepositoryBuilder.Build(ls, postDist, 10);
             }

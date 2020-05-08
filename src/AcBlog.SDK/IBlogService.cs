@@ -1,11 +1,11 @@
-﻿namespace AcBlog.SDK
+﻿using AcBlog.SDK.Filters;
+
+namespace AcBlog.SDK
 {
     public interface IBlogService
     {
         IUserService UserService { get; }
 
-        IPostService ArticleService { get; }
-
-        IPostService SlidesService { get; }
+        IPostService PostService { get; }
     }
 }

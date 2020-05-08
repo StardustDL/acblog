@@ -1,4 +1,6 @@
-﻿<Loader OnLoad="@OnLoad">
+﻿@inject IBlogService Service
+
+<Loader OnLoad="@OnLoad">
     <div class="card border-0">
         <div class="card-body">
             <div class="card-title d-flex flex-row mb-1">
@@ -36,9 +38,6 @@
     public string PostId { get; set; }
 
     [Parameter]
-    public IPostService Service { get; set; }
-
-    [Parameter]
     public string Href { get; set; }
 
     private Post Post { get; set; }
@@ -47,7 +46,7 @@
 
     private async Task OnLoad()
     {
-        Post = await Service.Get(PostId);
-        IsProtected = await Service.Protector.IsProtected(Post);
+        Post = await Service.PostService.Get(PostId);
+        IsProtected = await Service.PostService.Protector.IsProtected(Post);
     }
 }

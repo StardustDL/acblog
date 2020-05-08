@@ -67,20 +67,20 @@
 
     private async Task OnLoad()
     {
-        Post = await Service.ArticleService.Get(Id);
-        IsProtected = await Service.ArticleService.Protector.IsProtected(Post);
+        Post = await Service.PostService.Get(Id);
+        IsProtected = await Service.PostService.Protector.IsProtected(Post);
     }
 
     private async Task OnPasswordSubmit(string password)
     {
         try
         {
-            Post dep = await Service.ArticleService.Protector.Deprotect(Post, new Data.Protections.ProtectionKey
+            Post dep = await Service.PostService.Protector.Deprotect(Post, new Data.Protections.ProtectionKey
             {
                 Password = password
             });
             Post = dep;
-            IsProtected = await Service.ArticleService.Protector.IsProtected(Post);
+            IsProtected = await Service.PostService.Protector.IsProtected(Post);
             if (!IsProtected)
                 await inputPasswordModal.Hide();
         }

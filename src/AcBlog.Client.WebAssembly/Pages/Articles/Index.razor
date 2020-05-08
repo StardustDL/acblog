@@ -2,6 +2,7 @@
 @page "/articles/list"
 @page "/articles/list/{pageNumber:int}"
 @inherits BaseArticlePage
+@inject AcBlog.SDK.Filters.PostArticleFilter Article
 
 <div class="container">
     <div class="d-flex flex-row">
@@ -11,7 +12,7 @@
     <Loader OnLoad="@OnLoad" @ref="loader">
         <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage" OnPageTo="@OnPageTo">
             <ItemTemplate>
-                <PostCard PostId="@context" Service="@Service.ArticleService" Href="@($"articles/{context}")"></PostCard>
+                <PostCard PostId="@context" Href="@($"articles/{context}")"></PostCard>
             </ItemTemplate>
         </PagingWaterfall>
     </Loader>
@@ -30,13 +31,10 @@
     private async Task OnLoad()
     {
         Title = "Loading...";
-        Data = await Service.ArticleService.Query(new PostQueryRequest
+        Data = await Article.Filter(new Pagination
         {
-            Paging = new Pagination
-            {
-                PageNumber = PageNumber ?? 0,
-                CountPerPage = CountPerPage
-            }
+            PageNumber = PageNumber ?? 0,
+            CountPerPage = CountPerPage
         });
         Title = $"Page {Data.CurrentPage.PageNumber + 1}";
     }

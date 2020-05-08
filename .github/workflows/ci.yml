@@ -75,9 +75,9 @@ jobs:
     - name: Publish Client.WebAssembly
       run: |
         cd src/AcBlog.Client.WebAssembly
+        echo "{ ""build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./wwwroot/build.json
         mkdir publish
         dotnet publish -c Release -o ./publish
-        echo "{ ""build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./publish/wwwroot/build.json
     - name: Upload artifacts
       uses: actions/upload-artifact@master
       with:
@@ -135,6 +135,7 @@ jobs:
         dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
         dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
         dotnet nuget push ./packages/AcBlog.SDK.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Tools.StaticGenerator.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
   invoke-mirrors:
     needs: pub-wasm
     runs-on: ubuntu-latest
