@@ -30,7 +30,7 @@ namespace AcBlog.Data.Repositories.FileSystem
         {
             if (Config == null)
                 throw new System.Exception("No paging config loaded.");
-            if (pagination.PageNumber >= 0 && pagination.PageNumber < Config.TotalPage)
+            if (pagination.PageNumber >= 0 && (pagination.PageNumber < Config.TotalPage || Config.TotalPage == 0 && pagination.PageNumber == 0))
             {
                 return Path.Join(RootPath, $"{pagination.PageNumber}.json").Replace("\\", "/");
             }
