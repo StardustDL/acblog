@@ -87,9 +87,12 @@ namespace AcBlog.Tools.StaticGenerator
             }
             if (contentBg + 1 < lines.Length)
             {
-                post.Content = string.Join('\n', lines[(contentBg + 1)..]);
+                post.Content = new Document
+                {
+                    Raw = string.Join('\n', lines[(contentBg + 1)..])
+                };
             }
-            else post.Content = "";
+            else post.Content = new Document();
             ProtectionKey key = null;
             if (metadata != null && !string.IsNullOrEmpty(metadata.password))
             {

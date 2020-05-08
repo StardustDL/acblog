@@ -1,0 +1,6 @@
+﻿<span>@(Document?.GetPreview() ?? "")</span>
+
+@code {
+    [Parameter]
+    public Document Document { get; set; }
+}

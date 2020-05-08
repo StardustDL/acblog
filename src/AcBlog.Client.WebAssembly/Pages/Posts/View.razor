@@ -1,7 +1,6 @@
 ﻿@page "/posts/{id}"
 @inherits BasePostPage
-@using AcBlog.Client.Components.Markdown
-@using AcBlog.Client.Components.Slides
+@using AcBlog.Client.WebAssembly.Components.Renderers
 
 <Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded">
     @if (IsProtected)
@@ -27,19 +26,22 @@
             {
                 case PostType.Article:
                 case PostType.Note:
-                    <div class="col-2">
-                        <div id="post-toc" style="position: sticky; top: 1rem">
+                    <div class="col-2 border-right">
+                        <div id="post-toc">
 
                         </div>
                     </div>
-                    <article class="markdown-body col-10">
-                        <MarkdownRenderer Value="@Post.Content" TocElementId="post-toc" />
-                    </article>
+                    <div class="col-10">
+                        <div class="ml-1">
+                            <ArticleRenderer Document="@Post.Content" TocElementId="post-toc" />
+                        </div>
+                        
+                    </div>
                     break;
                 case PostType.Slides:
                     <div class="container">
                         <div>
-                            <SlidesRenderer Value="@Post.Content" Style="@SlidesStyle"></SlidesRenderer>
+                            <SlidesRenderer Document="@Post.Content" Style="@SlidesStyle"></SlidesRenderer>
                         </div>
                         <button type="button" class="btn btn-primary mt-2" style="width: 100%;" @onclick="@OnFullViewClick">Full View</button>
                     </div>

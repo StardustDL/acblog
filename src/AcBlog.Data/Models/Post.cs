@@ -10,7 +10,7 @@ namespace AcBlog.Data.Models
 
         public string AuthorId { get; set; } = string.Empty;
 
-        public string Content { get; set; } = string.Empty;
+        public Document Content { get; set; } = new Document();
 
         public string Title { get; set; } = string.Empty;
 

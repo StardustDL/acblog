@@ -76,7 +76,10 @@ namespace AcBlog.Data.Protections
             }
             var ky = Encoding.UTF8.GetBytes(key.Password);
             res.Title = ProtectFlag;
-            res.Content = Convert.ToBase64String(AesEncrypt(bs, ky));
+            res.Content = new Document
+            {
+                Raw = Convert.ToBase64String(AesEncrypt(bs, ky))
+            };
             return res;
         }
 
@@ -86,7 +89,7 @@ namespace AcBlog.Data.Protections
             {
                 return value;
             }
-            var bs = Convert.FromBase64String(value.Content);
+            var bs = Convert.FromBase64String(value.Content.Raw);
             var ky = Encoding.UTF8.GetBytes(key.Password);
             using (var ms = new MemoryStream(AesDecrypt(bs, ky)))
             {

@@ -20,15 +20,15 @@
                 <KeywordsDisplay Value="@Value.Keywords" />
             </small>
         }
-        @if (!string.IsNullOrEmpty(Value.Content))
+        @if (!string.IsNullOrEmpty(Value.Content.Raw))
         {
             <small class="m-1">|</small>
             <small>
-                <WordCountDisplay Value="@Value.Content" />
+                <WordCountDisplay Document="@Value.Content" />
             </small>
             <small class="m-1">|</small>
             <small>
-                <ReadTimeDisplay Value="@Value.Content" />
+                <ReadTimeDisplay Document="@Value.Content" />
             </small>
         }
     </div>

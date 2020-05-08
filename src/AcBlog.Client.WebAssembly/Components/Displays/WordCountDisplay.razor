@@ -4,13 +4,13 @@
 
 @code {
     [Parameter]
-    public string Value { get; set; }
+    public Document Document { get; set; }
 
     private string Count { get; set; }
 
     protected override void OnParametersSet()
     {
-        int len = Value?.Length ?? 0;
+        int len = Document.WordCount;
         if (len < 1000)
         {
             Count = len.ToString();
