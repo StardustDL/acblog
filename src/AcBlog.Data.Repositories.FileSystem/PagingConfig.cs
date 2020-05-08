@@ -2,7 +2,7 @@
 
 namespace AcBlog.Data.Repositories.FileSystem
 {
-    public class PostRepositoryConfig
+    public class PagingConfig
     {
         public int CountPerPage { get; set; } = 10;
 

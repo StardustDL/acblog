@@ -71,10 +71,16 @@ namespace AcBlog.Tools.StaticGenerator
                             post.CreationTime = metadata.date.Value.ToUniversalTime();
                         if (metadata.category != null)
                             post.Category = metadata.category.ToArray();
+                        if (metadata.type != null)
+                        {
+                            if (metadata.type == "slides")
+                                post.Type = PostType.Slides;
+                        }
                     }
-                    catch
+                    catch(Exception ex)
                     {
                         Console.WriteLine("Failed to parse post metadata.");
+                        Console.WriteLine(ex);
                     }
                 }
             }

@@ -28,6 +28,39 @@ An open source extensible static & dynamic blog system.
 - Docker deployment
   - Client.WebAssembly [![Docker](https://img.shields.io/docker/pulls/acblog/wasm.svg)](https://hub.docker.com/r/acblog/wasm)
 
+## Guide
+
+### Frontend
+
+Use AcBlog's WebAssembly client docker image:
+
+```sh
+docker pull acblog/wasm:latest
+docker run -d -p 8000:80 acblog/wasm:latest
+```
+
+You can use volumn to apply settings:
+
+```sh
+docker run -d -v $PWD/appsettings.json:/app/appsettings.json -p 8000:80 acblog/wasm:latest
+```
+
+For GitHub Pages hosting, you can use [wasm-ghpages-generate-action](https://github.com/acblog/wasm-ghpages-generate-action).
+
+### Backend
+
+#### Static
+
+Use AcBlog's static generator:
+
+```sh
+dotnet tool install -g AcBlog.Tools.StaticGenerator --version 0.0.1 --add-source https://www.myget.org/F/stardustdl/api/v3/index.json
+
+acblog-sgen -o ./dist
+```
+
+For GitHub Pages hosting, you can use [static-backend-generate-action](https://github.com/acblog/static-backend-generate-action).
+
 ## Build
 
 1. Install .NET Core SDK 3.1.201, NodeJS 12.x and npm.

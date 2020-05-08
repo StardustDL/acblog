@@ -12,7 +12,7 @@
     <Loader OnLoad="@OnLoad" @ref="loader">
         <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage" OnPageTo="@OnPageTo">
             <ItemTemplate>
-                <PostCard PostId="@context" Href="@($"slides/{context}")"></PostCard>
+                <PostCard PostId="@context"></PostCard>
             </ItemTemplate>
         </PagingWaterfall>
     </Loader>

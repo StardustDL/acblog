@@ -11,7 +11,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public override Task<bool> Exists(string id)
         {
-            return Task.FromResult(File.Exists(GetUserPath(id)));
+            return Task.FromResult(File.Exists(GetPath(id)));
         }
 
         protected override Task<Stream> GetFileReadStream(string path)

@@ -1,6 +1,7 @@
-﻿@page "/articles/{id}"
-@inherits BaseArticlePage
+﻿@page "/posts/{id}"
+@inherits BasePostPage
 @using AcBlog.Client.Components.Markdown
+@using AcBlog.Client.Components.Slides
 
 <Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded">
     @if (IsProtected)
@@ -15,22 +16,36 @@
     else
     {
         <div class="row">
-            <div class="col-2"></div>
-            <div class="col-10">
+            <div class="container">
                 <h1 class="display-4">@Post.Title</h1>
                 <PostMetadataDisplay Value="@Post" />
             </div>
         </div>
 
         <div class="row mt-3">
-            <div class="col-2">
-                <div id="post-toc" style="position: sticky; top: 1rem">
+            @switch (Post.Type)
+            {
+                case PostType.Article:
+                    <div class="col-2">
+                        <div id="post-toc" style="position: sticky; top: 1rem">
 
-                </div>
-            </div>
-            <article class="markdown-body col-10">
-                <MarkdownRenderer Value="@Post.Content" TocElementId="post-toc" />
-            </article>
+                        </div>
+                    </div>
+                    <article class="markdown-body col-10">
+                        <MarkdownRenderer Value="@Post.Content" TocElementId="post-toc" />
+                    </article>
+                    break;
+                case PostType.Slides:
+                    <div class="container">
+                        <div>
+                            <SlidesRenderer Value="@Post.Content" Style="@SlidesStyle"></SlidesRenderer>
+                        </div>
+                        <button type="button" class="btn btn-primary mt-2" style="width: 100%;" @onclick="@OnFullViewClick">Full View</button>
+                    </div>
+                    break;
+                default:
+                    break;
+            }
         </div>
     }
 </Loader>
@@ -44,6 +59,8 @@
     private bool IsProtected { get; set; } = false;
 
     private InputPasswordModal inputPasswordModal;
+
+    private string SlidesStyle { get; set; } = "border: 0; height: 500px; width: 100%";
 
     private async Task OnLoaded()
     {
@@ -93,5 +110,11 @@
     private async Task OnDeprotectClick()
     {
         await inputPasswordModal.Show();
+    }
+
+    private Task OnFullViewClick()
+    {
+        SlidesStyle = "left: 0; right: 0; top: 0; bottom: 0; margin:0; border:0; position: absolute; height: 100%; width:100%; z-index: 500;";
+        return Task.CompletedTask;
     }
 }

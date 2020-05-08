@@ -14,5 +14,7 @@ namespace AcBlog.Tools.StaticGenerator
         public IList<string> category { get; set; }
 
         public string password { get; set; }
+
+        public string type { get; set; }
     }
 }

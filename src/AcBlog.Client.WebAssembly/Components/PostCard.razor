@@ -38,11 +38,20 @@
     public string PostId { get; set; }
 
     [Parameter]
-    public string Href { get; set; }
+    public string Href { get; set; } = null;
 
     private Post Post { get; set; }
 
     private bool IsProtected { get; set; } = false;
+
+    protected override void OnParametersSet()
+    {
+        if (string.IsNullOrEmpty(Href))
+        {
+            Href = $"posts/{PostId}";
+        }
+        base.OnParametersSet();
+    }
 
     private async Task OnLoad()
     {

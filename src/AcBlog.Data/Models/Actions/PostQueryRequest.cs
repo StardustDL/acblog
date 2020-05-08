@@ -18,6 +18,6 @@ namespace AcBlog.Data.Models.Actions
 
         public PostResponseOrder Order { get; set; } = PostResponseOrder.None;
 
-        public Pagination? Paging { get; set; } = null;
+        public Pagination? Pagination { get; set; } = null;
     }
 }

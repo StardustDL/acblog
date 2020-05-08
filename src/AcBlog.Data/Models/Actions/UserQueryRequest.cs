@@ -6,6 +6,6 @@
 
         public string Nickname { get; set; } = string.Empty;
 
-        public Pagination? Paging { get; set; } = null;
+        public Pagination? Pagination { get; set; } = null;
     }
 }

@@ -8,16 +8,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Linq;
+using AcBlog.Data.Models.Actions;
 
 namespace AcBlog.Data.Repositories.FileSystem
 {
-    /* root/
-     *   config.json
-     *   pages/
-     *     0.json
-     *   id.json
-    */
-
     public static class PostRepositoryBuilder
     {
         public static async Task Build(IList<Post> data, string rootPath, int countPerPage)
@@ -27,17 +21,19 @@ namespace AcBlog.Data.Repositories.FileSystem
             data = (from x in data orderby x.CreationTime descending select x).ToArray();
 
             string pagePath = Path.Join(rootPath, "pages");
-
             if (!Directory.Exists(pagePath))
                 Directory.CreateDirectory(pagePath);
+
+            PagingPath paging = new PagingPath(pagePath);
+
             {
-                PostRepositoryConfig config = new PostRepositoryConfig
+                paging.Config = new PagingConfig
                 {
                     CountPerPage = countPerPage,
                     TotalCount = data.Count
                 };
-                using var fs = File.Open(Path.Join(rootPath, "config.json"), FileMode.Create, FileAccess.Write);
-                await JsonSerializer.SerializeAsync(fs, config);
+                using var fs = File.Open(paging.ConfigPath, FileMode.Create, FileAccess.Write);
+                await JsonSerializer.SerializeAsync(fs, paging.Config);
             }
             List<string> page = new List<string>();
             int pn = 0;
@@ -50,7 +46,11 @@ namespace AcBlog.Data.Repositories.FileSystem
                 page.Add(v.Id);
                 if (page.Count == countPerPage)
                 {
-                    using var fs = File.Open(Path.Join(pagePath, $"{pn}.json"), FileMode.Create, FileAccess.Write);
+                    Pagination pg = new Pagination
+                    {
+                        PageNumber = pn
+                    };
+                    using var fs = File.Open(paging.GetPagePath(pg), FileMode.Create, FileAccess.Write);
                     await JsonSerializer.SerializeAsync(fs, page);
                     page.Clear();
                     pn++;
@@ -58,7 +58,11 @@ namespace AcBlog.Data.Repositories.FileSystem
             }
             if (page.Count > 0)
             {
-                using var fs = File.Open(Path.Join(pagePath, $"{pn}.json"), FileMode.Create, FileAccess.Write);
+                Pagination pg = new Pagination
+                {
+                    PageNumber = pn
+                };
+                using var fs = File.Open(paging.GetPagePath(pg), FileMode.Create, FileAccess.Write);
                 await JsonSerializer.SerializeAsync(fs, page);
             }
         }

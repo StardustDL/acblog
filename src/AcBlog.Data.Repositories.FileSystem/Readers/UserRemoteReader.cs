@@ -15,7 +15,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public override async Task<bool> Exists(string id)
         {
-            var rep = await Client.GetAsync(GetUserPath(id));
+            var rep = await Client.GetAsync(GetPath(id));
             return rep.IsSuccessStatusCode;
         }
 

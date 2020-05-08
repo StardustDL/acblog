@@ -15,7 +15,7 @@ namespace AcBlog.SDK.Filters
             return BaseService.Query(new PostQueryRequest
             {
                 Type = arg,
-                Paging = pagination
+                Pagination = pagination
             });
         }
     }
