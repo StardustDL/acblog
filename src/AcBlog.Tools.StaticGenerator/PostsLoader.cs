@@ -3,6 +3,7 @@ using AcBlog.Data.Protections;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -93,20 +94,23 @@ namespace AcBlog.Tools.StaticGenerator
         {
             List<Post> posts = new List<Post>();
 
-            foreach (var fi in Root.GetFiles("*.md", SearchOption.AllDirectories))
+            if (Root.Exists)
             {
-                Post post = null;
-                try
+                foreach (var fi in Root.GetFiles("*.md", SearchOption.AllDirectories))
                 {
-                    post = await Load(fi);
+                    Post post = null;
+                    try
+                    {
+                        post = await Load(fi);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        throw ex;
+                    }
+                    Console.WriteLine($"Loaded {fi.FullName}");
+                    posts.Add(post);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                    throw ex;
-                }
-                Console.WriteLine($"Loaded {fi.FullName}");
-                posts.Add(post);
             }
 
             return posts.ToArray();

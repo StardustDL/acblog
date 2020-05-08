@@ -3,6 +3,8 @@ using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.FileSystem;
 using System;
+using System.CommandLine;
+using System.CommandLine.Invocation;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,23 +13,44 @@ namespace AcBlog.Tools.StaticGenerator
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
-            string dist = Path.Join(Environment.CurrentDirectory, "dist");
-            if (Directory.Exists(dist))
-                Directory.Delete(dist, true);
-
-            Directory.CreateDirectory(dist);
+            var rootCommand = new RootCommand
             {
-                string postDist = Path.Join(dist, "posts");
-                Directory.CreateDirectory(postDist);
+                new Option<DirectoryInfo>(
+                    new string[]{
+                        "--output",
+                        "-o"
+                    },
+                    getDefaultValue: () => new DirectoryInfo(Path.Join(Environment.CurrentDirectory, "dist")),
+                    description: "Output directory")
+            };
+
+            rootCommand.Description = "AcBlog Static Backend Generator";
+
+            // Note that the parameters of the handler method are matched according to the names of the options
+            rootCommand.Handler = CommandHandler.Create<DirectoryInfo>(Work);
+
+            // Parse the incoming args and invoke the handler
+            return await rootCommand.InvokeAsync(args);
+        }
+
+        static async Task Work(DirectoryInfo output)
+        {
+            if (!output.Exists)
+                output.Create();
+
+            {
+                DirectoryInfo postDist = new DirectoryInfo(Path.Join(output.FullName, "posts"));
+                if (!postDist.Exists)
+                    postDist.Create();
 
                 var loader = new PostsLoader(new DirectoryInfo(Path.Join(Environment.CurrentDirectory, "posts")),
                     new PostProtector());
 
                 var ls = await loader.LoadAll();
 
-                await PostRepositoryBuilder.Build(ls, postDist, 10);
+                await PostRepositoryBuilder.Build(ls, postDist.FullName, 10);
             }
         }
     }
