@@ -41,10 +41,11 @@
         Title = $"Page {Data.CurrentPage.PageNumber + 1}";
     }
 
-    private Task OnPageTo(int pageNumber)
+    private async Task OnPageTo(int pageNumber)
     {
         NavigationManager.NavigateTo($"posts/list/{pageNumber}");
-        return Task.CompletedTask;
+        PageNumber = pageNumber;
+        await OnUpdatePage();
     }
 
     private async Task OnUpdatePage()
