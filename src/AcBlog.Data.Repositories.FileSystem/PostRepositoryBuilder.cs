@@ -138,13 +138,13 @@ namespace AcBlog.Data.Repositories.FileSystem
         {
             Data = (from x in Data orderby x.Raw.CreationTime descending select x).ToArray();
 
-            await base.Build();
-
             await BuildIndexType();
 
             await BuildIndexKeyword();
 
             await BuildIndexCategory();
+
+            await base.Build();
         }
 
         protected override async Task SaveItem(PostBuildData item)
