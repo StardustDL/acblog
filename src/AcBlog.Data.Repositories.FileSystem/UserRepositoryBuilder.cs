@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem
 {
-    public static class UserRepositoryBuilder
+    public class UserRepositoryBuilder : BaseRepositoryBuilder<User>
     {
-        public static Task Build(IList<User> data, string rootPath, int countPerPage)
+        public UserRepositoryBuilder(IList<User> data, DirectoryInfo dist) : base(data, dist)
         {
-            return Task.CompletedTask;
         }
+
+        protected override string GetId(User item) => item.Id;
     }
 }

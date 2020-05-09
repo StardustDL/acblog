@@ -1,9 +1,17 @@
 ﻿@using AcBlog.Client.Components.Loading
+@inject ILogger<Loader> Logger
 
 @switch (State)
 {
     case DataLoadingState.Loading:
-        <Loading></Loading>
+        @if (UseSpin)
+        {
+            <span>Loading...</span>
+        }
+        else
+        {
+            <Loading></Loading>
+        }
         break;
     case DataLoadingState.Success:
         @ChildContent
@@ -14,6 +22,9 @@
 }
 
 @code {
+    [Parameter]
+    public bool UseSpin { get; set; } = false;
+
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
@@ -44,7 +55,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Loading failed because " + ex.ToString());
+            Logger.Log(LogLevel.Error, ex, "Loading failed");
             State = DataLoadingState.Failed;
         }
     }

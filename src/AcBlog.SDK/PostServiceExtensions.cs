@@ -18,5 +18,15 @@ namespace AcBlog.SDK
         {
             return new PostNoteFilter(service);
         }
+
+        public static PostKeywordFilter CreateKeywordFilter(this IPostService service)
+        {
+            return new PostKeywordFilter(service);
+        }
+
+        public static PostCategoryFilter CreateCategoryFilter(this IPostService service)
+        {
+            return new PostCategoryFilter(service);
+        }
     }
 }

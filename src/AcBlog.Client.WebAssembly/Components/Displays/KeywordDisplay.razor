@@ -1,0 +1,19 @@
+﻿@inject IBlogService Service
+
+<Loader OnLoad="@OnLoad" UseSpin="true">
+    <span>@Keyword.Name</span>
+</Loader>
+
+@code {
+    [Parameter]
+    public string KeywordId { get; set; }
+
+    private Keyword Keyword { get; set; }
+
+    private async Task OnLoad()
+    {
+        Keyword = null;
+
+        Keyword = await Service.KeywordService.Get(KeywordId);
+    }
+}

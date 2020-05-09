@@ -7,5 +7,9 @@ namespace AcBlog.SDK
         IUserService UserService { get; }
 
         IPostService PostService { get; }
+
+        IKeywordService KeywordService { get; }
+
+        ICategoryService CategoryService { get; }
     }
 }

@@ -1,24 +1,20 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
-using AcBlog.Data.Repositories;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Readers
 {
-    public abstract class UserReaderBase : ReaderBase<User, string>, IUserRepository
+    public abstract class CategoryReaderBase : ReaderBase<Category, string>, ICategoryRepository
     {
-        protected UserReaderBase(string rootPath) : base(rootPath)
+        protected CategoryReaderBase(string rootPath) : base(rootPath)
         {
         }
 
         protected override string GetPath(string id) => Path.Join(RootPath, $"{id}.json").Replace("\\", "/");
 
-        public override async Task<User?> Get(string id)
+        public override async Task<Category?> Get(string id)
         {
             var res = await base.Get(id);
             if (res != null)
@@ -29,7 +25,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
         public override async Task<IEnumerable<string>> All()
         {
             List<string> result = new List<string>();
-            UserQueryRequest pq = new UserQueryRequest();
+            CategoryQueryRequest pq = new CategoryQueryRequest();
             while (true)
             {
                 var req = await Query(pq);
@@ -41,7 +37,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             return result;
         }
 
-        public virtual async Task<QueryResponse<string>> Query(UserQueryRequest query)
+        public virtual async Task<QueryResponse<string>> Query(CategoryQueryRequest query)
         {
             query.Pagination ??= new Pagination();
 

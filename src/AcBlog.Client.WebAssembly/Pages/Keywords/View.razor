@@ -1,18 +1,17 @@
-﻿@page "/slides"
-@page "/slides/list"
-@page "/slides/list/{pageNumber:int}"
-@inherits BaseSlidePage
-@inject AcBlog.SDK.Filters.PostSlidesFilter Slides
+﻿@page "/keywords/{id}"
+@page "/keywords/{id}/{pageNumber:int}"
+@inherits BaseKeywordPage
+@inject AcBlog.SDK.Filters.PostKeywordFilter Keywords
 
 <div class="container">
     <div class="d-flex flex-row">
-        <h1>Slides</h1>
+        <h1>Keyword: @Keyword?.Name</h1>
     </div>
 
     <Loader OnLoad="@OnLoad" @ref="loader">
         <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage" OnPageTo="@OnPageTo">
             <ItemTemplate>
-                <PostCard PostId="@context"></PostCard>
+                <PostCard PostId="@context" ShowType="true"></PostCard>
             </ItemTemplate>
         </PagingWaterfall>
     </Loader>
@@ -24,14 +23,20 @@
     QueryResponse<string> Data { get; set; }
 
     [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
     public int? PageNumber { get; set; } = null;
+
+    private Keyword Keyword;
 
     private Loader loader;
 
     private async Task OnLoad()
     {
         Title = "Loading...";
-        Data = await Slides.Filter(new Pagination
+        Keyword = await Service.KeywordService.Get(Id);
+        Data = await Keywords.Filter(Id, new Pagination
         {
             PageNumber = PageNumber ?? 0,
             CountPerPage = CountPerPage
@@ -42,7 +47,7 @@
     private async Task OnPageTo(int pageNumber)
     {
         PageNumber = pageNumber;
-        NavigationManager.NavigateTo($"slides/list/{PageNumber}");
+        NavigationManager.NavigateTo($"keywords/{Id}/{PageNumber}");
         await OnUpdatePage();
     }
 

@@ -28,7 +28,7 @@ namespace AcBlog.Server.API
 
         static async Task SeedDataForFS(string rootPath)
         {
-            string userRootPath = Path.Join(rootPath, "users");
+            /*string userRootPath = Path.Join(rootPath, "users");
             string postRootPath = Path.Join(rootPath, "posts");
             if (!Directory.Exists(userRootPath))
             {
@@ -48,14 +48,11 @@ namespace AcBlog.Server.API
                 }
             }, userRootPath, 10);
 
-            await PostRepositoryBuilder.Build(new (Post,ProtectionKey)[]
+            await PostRepositoryBuilder.Build(new[]{ new PostBuildData(new Post
             {
-                (new Post
-                {
-                    Title = "title",
-                    Id = Guid.NewGuid().ToString(),
-                }, null)
-            }, new PostProtector(), postRootPath, 10);
+                Title = "title",
+                Id = Guid.NewGuid().ToString(),
+            }) }, new PostProtector(), new DirectoryInfo(postRootPath), 10);*/
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -6,18 +6,18 @@
         <small>
             <ItemTimeDisplay CreationTime="@Value.CreationTime" ModificationTime="@Value.ModificationTime" />
         </small>
-        @if (Value.Category != null && Value.Category.Length > 0)
+        @if (!string.IsNullOrWhiteSpace(Value.CategoryId))
         {
             <small class="m-1">|</small>
             <small>
-                <CategoryDisplay Value="@Value.Category" />
+                <CategoryDisplay CategoryId="@Value.CategoryId" />
             </small>
         }
-        @if (Value.Keywords != null && Value.Keywords.Length > 0)
+        @if (Value.KeywordIds != null && Value.KeywordIds.Length > 0)
         {
             <small class="m-1">|</small>
             <small>
-                <KeywordsDisplay Value="@Value.Keywords" />
+                <KeywordsDisplay KeywordIds="@Value.KeywordIds" />
             </small>
         }
         @if (!string.IsNullOrEmpty(Value.Content.Raw))

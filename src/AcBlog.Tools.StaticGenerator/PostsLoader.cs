@@ -1,5 +1,6 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Data.Protections;
+using AcBlog.Data.Repositories.FileSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,13 +21,14 @@ namespace AcBlog.Tools.StaticGenerator
 
         public DirectoryInfo Root { get; }
 
-        public async Task<(Post, ProtectionKey)> Load(FileInfo file)
+        public async Task<PostBuildData> Load(FileInfo file)
         {
-            Post post = new Post();
+            PostBuildData result = new PostBuildData(new Post());
+            var post = result.Raw;
             post.Title = Path.GetFileNameWithoutExtension(file.Name);
             post.CreationTime = file.CreationTimeUtc;
             post.ModificationTime = file.LastWriteTimeUtc;
-            post.Category = file.DirectoryName
+            result.Category = file.DirectoryName
                 .Replace(Root.FullName, "")
                 .Replace("\\", "/")
                 .Split("/")
@@ -42,6 +44,7 @@ namespace AcBlog.Tools.StaticGenerator
             }
             var lines = rawText.Replace("\r\n", "\n").Replace("\r", "\n").Split("\n");
             int contentBg = 0;
+
             PostMetadata metadata = null;
             if (lines.Length > 0)
             {
@@ -63,11 +66,11 @@ namespace AcBlog.Tools.StaticGenerator
                         if (metadata.title != null)
                             post.Title = metadata.title;
                         if (metadata.keywords != null)
-                            post.Keywords = metadata.keywords.ToArray();
+                            result.Keywords = metadata.keywords.ToArray();
                         if (metadata.date != null)
                             post.CreationTime = metadata.date.Value.ToUniversalTime();
                         if (metadata.category != null)
-                            post.Category = metadata.category.ToArray();
+                            result.Category = metadata.category.ToArray();
                         if (metadata.type != null)
                         {
                             post.Type = metadata.type switch
@@ -93,20 +96,19 @@ namespace AcBlog.Tools.StaticGenerator
                 };
             }
             else post.Content = new Document();
-            ProtectionKey key = null;
             if (metadata != null && !string.IsNullOrEmpty(metadata.password))
             {
-                key = new ProtectionKey
+                result.Key = new ProtectionKey
                 {
                     Password = metadata.password
                 };
             }
-            return (post, key);
+            return result;
         }
 
-        public async Task<(Post, ProtectionKey)[]> LoadAll()
+        public async Task<PostBuildData[]> LoadAll()
         {
-            List<(Post, ProtectionKey)> posts = new List<(Post, ProtectionKey)>();
+            List<PostBuildData> posts = new List<PostBuildData>();
 
             if (Root.Exists)
             {

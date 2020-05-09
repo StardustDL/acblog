@@ -1,8 +1,8 @@
 ﻿namespace AcBlog.Data.Models.Actions
 {
-    public class UserQueryRequest
+    public class CategoryQueryRequest
     {
-        public string Nickname { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         public Pagination? Pagination { get; set; } = null;
     }

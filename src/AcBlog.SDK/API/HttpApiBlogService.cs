@@ -18,5 +18,9 @@ namespace AcBlog.SDK.API
         public IUserService UserService { get; private set; }
 
         public IPostService PostService => throw new NotImplementedException();
+
+        public IKeywordService KeywordService => throw new NotImplementedException();
+
+        public ICategoryService CategoryService => throw new NotImplementedException();
     }
 }

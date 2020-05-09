@@ -16,7 +16,9 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
         {
         }
 
-        protected override string GetPath(string id) => Path.Join(RootPath, $"{id}.json").Replace("\\", "/");
+        private string PathNormalize(string path) => path.Replace("\\", "/");
+
+        protected override string GetPath(string id) => PathNormalize(Path.Join(RootPath, $"{id}.json"));
 
         public override async Task<Post?> Get(string id)
         {
@@ -47,7 +49,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
             PagingPath? paging = null;
 
-            if(query.Type != null)
+            if (query.Type != null)
             {
                 switch (query.Type)
                 {
@@ -61,6 +63,16 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
                         paging = new PagingPath(Path.Join(RootPath, "notes"));
                         break;
                 }
+            }
+            else if (!string.IsNullOrWhiteSpace(query.CategoryId))
+            {
+                var catRoot = Path.Join(RootPath, "categories");
+                paging = new PagingPath(Path.Join(catRoot, query.CategoryId));
+            }
+            else if (!string.IsNullOrWhiteSpace(query.KeywordId))
+            {
+                var catRoot = Path.Join(RootPath, "keywords");
+                paging = new PagingPath(Path.Join(catRoot, query.KeywordId));
             }
 
             paging ??= new PagingPath(Path.Join(RootPath, "pages"));

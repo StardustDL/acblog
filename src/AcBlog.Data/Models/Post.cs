@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace AcBlog.Data.Models
 {
@@ -14,9 +15,9 @@ namespace AcBlog.Data.Models
 
         public string Title { get; set; } = string.Empty;
 
-        public string[] Category { get; set; } = Array.Empty<string>();
+        public string CategoryId { get; set; } = string.Empty;
 
-        public string[] Keywords { get; set; } = Array.Empty<string>();
+        public string[] KeywordIds { get; set; } = Array.Empty<string>();
 
         public DateTimeOffset CreationTime { get; set; }
 

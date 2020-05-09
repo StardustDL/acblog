@@ -17,11 +17,17 @@ namespace AcBlog.SDK.StaticFile
 
             UserService = new UserService(this, $"{rootPath}/users", httpClient);
             PostService = new PostService(this, $"{rootPath}/posts", httpClient);
+            CategoryService = new CategoryService(this, $"{rootPath}/categories", httpClient);
+            KeywordService = new KeywordService(this, $"{rootPath}/keywords", httpClient);
         }
 
         public HttpClient HttpClient { get; }
 
         public IUserService UserService { get; private set; }
+
+        public ICategoryService CategoryService { get; private set; }
+
+        public IKeywordService KeywordService { get; private set; }
 
         public IPostService PostService { get; private set; }
     }

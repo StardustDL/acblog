@@ -43,8 +43,8 @@
 
     private async Task OnPageTo(int pageNumber)
     {
-        NavigationManager.NavigateTo($"posts/list/{pageNumber}");
         PageNumber = pageNumber;
+        NavigationManager.NavigateTo($"posts/list/{PageNumber}");
         await OnUpdatePage();
     }
 

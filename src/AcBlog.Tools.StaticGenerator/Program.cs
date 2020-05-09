@@ -40,16 +40,28 @@ namespace AcBlog.Tools.StaticGenerator
             if (!output.Exists)
                 output.Create();
 
+            DirectoryInfo postDist = output.CreateSubdirectory("posts");
+
+            var loader = new PostsLoader(new DirectoryInfo(Path.Join(Environment.CurrentDirectory, "posts")));
+
+            var ls = await loader.LoadAll();
+
+            var postBuilder = new PostRepositoryBuilder(ls, postDist)
             {
-                DirectoryInfo postDist = new DirectoryInfo(Path.Join(output.FullName, "posts"));
-                if (!postDist.Exists)
-                    postDist.Create();
+                Protector = new PostProtector(),
+                CountPerPage = 10,
+            };
 
-                var loader = new PostsLoader(new DirectoryInfo(Path.Join(Environment.CurrentDirectory, "posts")));
+            await postBuilder.Build();
 
-                var ls = await loader.LoadAll();
+            {
+                KeywordRepositoryBuilder builder = new KeywordRepositoryBuilder(postBuilder.Keywords, output.CreateSubdirectory("keywords"));
+                await builder.Build();
+            }
 
-                await PostRepositoryBuilder.Build(ls, new PostProtector(), postDist.FullName, 10);
+            {
+                CategoryRepositoryBuilder builder = new CategoryRepositoryBuilder(postBuilder.Categories, output.CreateSubdirectory("categories"));
+                await builder.Build();
             }
         }
     }

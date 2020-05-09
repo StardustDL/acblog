@@ -1,11 +1,21 @@
-﻿@if (Value != null && Value.Count != 0)
-{
+﻿@inject IBlogService Service
+
+<Loader OnLoad="@OnLoad" UseSpin="true">
     <span class="itemdisplay">
-        <span class="mdi mdi-folder">@string.Join("/", Value)</span>
+        <span class="mdi mdi-folder">@Category.Name</span>
     </span>
-}
+</Loader>
 
 @code {
     [Parameter]
-    public ICollection<string> Value { get; set; }
+    public string CategoryId { get; set; }
+
+    private Category Category { get; set; }
+
+    private async Task OnLoad()
+    {
+        Category = null;
+
+        Category = await Service.CategoryService.Get(CategoryId);
+    }
 }

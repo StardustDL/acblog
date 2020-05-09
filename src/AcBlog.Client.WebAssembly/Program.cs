@@ -36,6 +36,8 @@ namespace AcBlog.Client.WebAssembly
                 builder.Configuration.AddJsonStream(stream);
             }
 
+            builder.Logging.SetMinimumLevel(LogLevel.Warning);
+
             builder.RootComponents.Add<App>("app");
 
             string server = builder.Configuration.GetValue<string>("APIServer", null);
@@ -79,6 +81,8 @@ namespace AcBlog.Client.WebAssembly
             builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateArticleFilter());
             builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateSlidesFilter());
             builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateNoteFilter());
+            builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateKeywordFilter());
+            builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateCategoryFilter());
 
             await builder.Build().RunAsync();
         }

@@ -1,0 +1,29 @@
+﻿@inject IBlogService Service
+
+<Loader OnLoad="@OnLoad">
+    <div class="card border-0">
+        <div class="card-body">
+            <div class="card-title d-flex flex-row mb-1">
+                <h4>
+                    <a href="keywords/@KeywordId" style="color:black">
+                        <span>@Keyword.Name</span>
+                    </a>
+                </h4>
+            </div>
+        </div>
+    </div>
+</Loader>
+
+@code {
+    [Parameter]
+    public string KeywordId { get; set; }
+
+    private Keyword Keyword { get; set; }
+
+    private async Task OnLoad()
+    {
+        Keyword = null;
+
+        Keyword = await Service.KeywordService.Get(KeywordId);
+    }
+}

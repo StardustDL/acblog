@@ -10,83 +10,151 @@ using System.Threading.Tasks;
 using System.Linq;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Protections;
+using System.Security.Cryptography;
 
 namespace AcBlog.Data.Repositories.FileSystem
 {
-    public static class PostRepositoryBuilder
+    public class PostRepositoryBuilder : BaseRepositoryBuilder<PostBuildData>
     {
-        static async Task BuildPaging(IList<string> data, string pagePath, int countPerPage)
+        public PostRepositoryBuilder(IList<PostBuildData> data, DirectoryInfo dist) : base(data, dist)
         {
-            if (countPerPage <= 0) countPerPage = 10;
+        }
 
-            if (!Directory.Exists(pagePath))
-                Directory.CreateDirectory(pagePath);
+        public IProtector<Post>? Protector { get; set; }
 
-            PagingPath paging = new PagingPath(pagePath);
+        public IList<Keyword> Keywords { get; private set; } = Array.Empty<Keyword>();
+
+        public IList<Category> Categories { get; private set; } = Array.Empty<Category>();
+
+        async Task BuildIndexType()
+        {
+            await BuildPaging(Data.Where(x => x.Raw.Type == PostType.Article).ToList(),
+                Dist.CreateSubdirectory("articles"));
+
+            await BuildPaging(Data.Where(x => x.Raw.Type == PostType.Slides).ToList(),
+                Dist.CreateSubdirectory("slides"));
+
+            await BuildPaging(Data.Where(x => x.Raw.Type == PostType.Note).ToList(),
+                Dist.CreateSubdirectory("notes"));
+        }
+
+        async Task BuildIndexKeyword()
+        {
+            var kwroot = Dist.CreateSubdirectory("keywords");
+            Dictionary<string, List<PostBuildData>> dict = new Dictionary<string, List<PostBuildData>>();
+            Dictionary<string, string> mapper = new Dictionary<string, string>();
+            foreach (var v in Data)
             {
-                paging.Config = new PagingConfig
+                List<string> keyids = new List<string>();
+                foreach (var k in v.Keywords)
                 {
-                    CountPerPage = countPerPage,
-                    TotalCount = data.Count
-                };
-                using var fs = File.Open(paging.ConfigPath, FileMode.Create, FileAccess.Write);
-                await JsonSerializer.SerializeAsync(fs, paging.Config);
-            }
-
-            List<string> page = new List<string>();
-            int pn = 0;
-            foreach (var v in data)
-            {
-                page.Add(v);
-                if (page.Count == countPerPage)
-                {
-                    Pagination pg = new Pagination
+                    if (!mapper.ContainsKey(k))
                     {
-                        PageNumber = pn
-                    };
-                    using var fs = File.Open(paging.GetPagePath(pg), FileMode.Create, FileAccess.Write);
-                    await JsonSerializer.SerializeAsync(fs, page);
-                    page.Clear();
-                    pn++;
+                        string id = Guid.NewGuid().ToString();
+                        mapper.Add(k, id);
+                        var list = new List<PostBuildData>
+                        {
+                            v
+                        };
+                        dict.Add(id, list);
+                        keyids.Add(id);
+                    }
+                    else
+                    {
+                        string id = mapper[k];
+                        dict[id].Add(v);
+                        keyids.Add(id);
+                    }
                 }
+                v.Raw.KeywordIds = keyids.ToArray();
             }
-            if (page.Count > 0 || data.Count == 0)
+            foreach (var v in dict)
             {
-                Pagination pg = new Pagination
-                {
-                    PageNumber = pn
-                };
-                using var fs = File.Open(paging.GetPagePath(pg), FileMode.Create, FileAccess.Write);
-                await JsonSerializer.SerializeAsync(fs, page);
+                await BuildPaging(v.Value, kwroot.CreateSubdirectory(v.Key));
             }
+            Keywords = mapper.Select(x => new Keyword
+            {
+                Id = x.Value,
+                Name = x.Key
+            }).ToList();
         }
 
-        public static async Task Build(IList<(Post, ProtectionKey?)> data, IProtector<Post> protector, string rootPath, int countPerPage)
+        private class CategoryNode
         {
-            if (countPerPage <= 0) countPerPage = 10;
-
-            data = (from x in data orderby x.Item1.CreationTime descending select x).ToArray();
-
-            foreach (var v in data)
+            public CategoryNode(Category category)
             {
-                using var fs = File.Open(Path.Join(rootPath, $"{v.Item1.Id}.json"), FileMode.Create, FileAccess.Write);
-                if (v.Item2 != null)
-                    await JsonSerializer.SerializeAsync(fs, await protector.Protect(v.Item1, v.Item2));
-                else
-                    await JsonSerializer.SerializeAsync(fs, v.Item1);
+                Category = category;
             }
 
-            await BuildPaging((from x in data select x.Item1.Id).ToList(),
-                Path.Join(rootPath, "pages"), countPerPage);
+            public Category Category { get; set; }
 
-            await BuildPaging((from x in data where x.Item1.Type == PostType.Article select x.Item1.Id).ToList(),
-                Path.Join(rootPath, "articles"), countPerPage);
+            public IList<PostBuildData> Data { get; } = new List<PostBuildData>();
 
-            await BuildPaging((from x in data where x.Item1.Type == PostType.Slides select x.Item1.Id).ToList(),
-                Path.Join(rootPath, "slides"), countPerPage);
-
-            await BuildPaging((from x in data where x.Item1.Type == PostType.Note select x.Item1.Id).ToList(),
-                Path.Join(rootPath, "notes"), countPerPage);
+            public Dictionary<string, CategoryNode> Children { get; } = new Dictionary<string, CategoryNode>();
         }
+
+        async Task BuildIndexCategory()
+        {
+            var kwroot = Dist.CreateSubdirectory("categories");
+            Dictionary<string, CategoryNode> mapper = new Dictionary<string, CategoryNode>();
+            CategoryNode all = new CategoryNode(new Category());
+            foreach (var v in Data)
+            {
+                CategoryNode node = all;
+                foreach (var k in v.Category)
+                {
+                    if (!node.Children.ContainsKey(k))
+                    {
+                        Category c = new Category
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Name = k,
+                        };
+                        if(node != all)
+                        {
+                            c.ParentId = node.Category.Id;
+                        }
+                        var tn = new CategoryNode(c);
+                        mapper.Add(c.Id, tn);
+                        node.Children.Add(k, tn);
+                        node = tn;
+                    }
+                    else
+                    {
+                        node = node.Children[k];
+                    }
+                    node.Data.Add(v);
+                }
+                v.Raw.CategoryId = node.Category.Id;
+            }
+            foreach (var v in mapper)
+            {
+                await BuildPaging(v.Value.Data, kwroot.CreateSubdirectory(v.Key));
+            }
+            Categories = mapper.Select(x => x.Value.Category).ToList();
+        }
+
+        public override async Task Build()
+        {
+            Data = (from x in Data orderby x.Raw.CreationTime descending select x).ToArray();
+
+            await base.Build();
+
+            await BuildIndexType();
+
+            await BuildIndexKeyword();
+
+            await BuildIndexCategory();
+        }
+
+        protected override async Task SaveItem(PostBuildData item)
+        {
+            Post post = item.Raw;
+            if (item.Key != null && Protector != null)
+                post = await Protector.Protect(item.Raw, item.Key);
+            await BaseRepositoryBuilder.SaveToFile(Path.Join(Dist.FullName, $"{item.Raw.Id}.json"), post);
+        }
+
+        protected override string GetId(PostBuildData item) => item.Raw.Id;
     }
 }

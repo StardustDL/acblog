@@ -5,7 +5,7 @@
         <div class="card-body">
             <div class="card-title d-flex flex-row mb-1">
                 <h4>
-                    <a href="@Href" style="color:black" class="@TitleTypeStyle">
+                    <a href="posts/@PostId" style="color:black" class="@TitleTypeStyle">
                         @if (IsProtected)
                         {
                             <span>Protected Post</span>
@@ -28,7 +28,7 @@
                     <AcBlog.Client.WebAssembly.Components.Displays.DocumentPreviewDisplay Document="@Post.Content" />
                 </p>
             }
-            <a href="@Href" class="card-link" style="color: #555; border-bottom: 1px solid #666;">Read more</a>
+            <a href="posts/@PostId" class="card-link" style="color: #555; border-bottom: 1px solid #666;">Read more</a>
         </div>
     </div>
 </Loader>
@@ -40,23 +40,11 @@
     [Parameter]
     public string PostId { get; set; }
 
-    [Parameter]
-    public string Href { get; set; } = null;
-
     private string TitleTypeStyle = "";
 
     private Post Post { get; set; }
 
     private bool IsProtected { get; set; } = false;
-
-    protected override void OnParametersSet()
-    {
-        if (string.IsNullOrEmpty(Href))
-        {
-            Href = $"posts/{PostId}";
-        }
-        base.OnParametersSet();
-    }
 
     private async Task OnLoad()
     {

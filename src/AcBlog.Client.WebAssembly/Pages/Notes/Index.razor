@@ -41,8 +41,8 @@
 
     private async Task OnPageTo(int pageNumber)
     {
-        NavigationManager.NavigateTo($"notes/list/{pageNumber}");
         PageNumber = pageNumber;
+        NavigationManager.NavigateTo($"notes/list/{PageNumber}");
         await OnUpdatePage();
     }
 

@@ -38,7 +38,7 @@ namespace Test.Data.Repositories
         [TestMethod]
         public async Task User()
         {
-            var root = Path.Join(RootPath, "users");
+            /*var root = Path.Join(RootPath, "users");
             Directory.CreateDirectory(root);
 
             var seedUser = new User[]
@@ -50,13 +50,13 @@ namespace Test.Data.Repositories
 
             IUserRepository provider = new UserLocalReader(root);
 
-            await UserRepository(provider);
+            await UserRepository(provider);*/
         }
 
         [TestMethod]
         public async Task Post()
         {
-            var root = Path.Join(RootPath, "posts");
+            /*var root = Path.Join(RootPath, "posts");
             Directory.CreateDirectory(root);
 
             var seedPost = new Post[]
@@ -64,11 +64,11 @@ namespace Test.Data.Repositories
                 new Post{Title = "a", Id = Guid.NewGuid().ToString()},
             };
 
-            await PostRepositoryBuilder.Build(seedPost.Select<Post, (Post, ProtectionKey)>(x => (x, null)).ToList(), new PostProtector(), root, 10);
+            await PostRepositoryBuilder.Build(seedPost.Select(x => new PostBuildData(x)).ToList(), new PostProtector(), new DirectoryInfo(root), 10);
 
             IPostRepository provider = new PostLocalReader(root);
-
-            await PostRepository(provider);
+            
+            await PostRepository(provider);*/
         }
     }
 }
