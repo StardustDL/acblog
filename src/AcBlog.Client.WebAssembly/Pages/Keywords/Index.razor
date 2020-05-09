@@ -1,6 +1,6 @@
 ﻿@page "/keywords"
-@page "/keywords/list"
-@page "/keywords/list/{pageNumber:int}"
+@page "/keywords/pages"
+@page "/keywords/pages/{pageNumber:int}"
 @inherits BaseKeywordPage
 
 <div class="container">
@@ -9,9 +9,9 @@
     </div>
 
     <Loader OnLoad="@OnLoad" @ref="loader">
-        <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage" OnPageTo="@OnPageTo">
+        <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="/keywords">
             <ItemTemplate>
-                <KeywordCard KeywordId="@context" />
+                <KeywordCard Id="@context" />
             </ItemTemplate>
         </PagingWaterfall>
     </Loader>
@@ -44,22 +44,8 @@
     private async Task OnPageTo(int pageNumber)
     {
         PageNumber = pageNumber;
-        NavigationManager.NavigateTo($"keywords/list/{PageNumber}");
         await OnUpdatePage();
     }
 
-    private async Task OnUpdatePage()
-    {
-        await loader.Load();
-    }
-
-    private Task OnPreviousPage()
-    {
-        return OnPageTo(Data.CurrentPage.PageNumber - 1);
-    }
-
-    private Task OnNextPage()
-    {
-        return OnPageTo(Data.CurrentPage.PageNumber + 1);
-    }
+    private async Task OnUpdatePage() => await loader.Load();
 }

@@ -5,7 +5,7 @@
         <div class="card-body">
             <div class="card-title d-flex flex-row mb-1">
                 <h4>
-                    <a href="keywords/@KeywordId" style="color:black">
+                    <a href="keywords/@Id" style="color:black">
                         <span>@Keyword.Name</span>
                     </a>
                 </h4>
@@ -16,7 +16,7 @@
 
 @code {
     [Parameter]
-    public string KeywordId { get; set; }
+    public string Id { get; set; }
 
     private Keyword Keyword { get; set; }
 
@@ -24,6 +24,6 @@
     {
         Keyword = null;
 
-        Keyword = await Service.KeywordService.Get(KeywordId);
+        Keyword = await Service.KeywordService.Get(Id);
     }
 }

@@ -1,6 +1,6 @@
 ﻿@page "/slides"
-@page "/slides/list"
-@page "/slides/list/{pageNumber:int}"
+@page "/slides/pages"
+@page "/slides/pages/{pageNumber:int}"
 @inherits BaseSlidePage
 @inject AcBlog.SDK.Filters.PostSlidesFilter Slides
 
@@ -10,9 +10,9 @@
     </div>
 
     <Loader OnLoad="@OnLoad" @ref="loader">
-        <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage" OnPageTo="@OnPageTo">
+        <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="/slides">
             <ItemTemplate>
-                <PostCard PostId="@context"></PostCard>
+                <PostCard Id="@context"></PostCard>
             </ItemTemplate>
         </PagingWaterfall>
     </Loader>
@@ -42,22 +42,8 @@
     private async Task OnPageTo(int pageNumber)
     {
         PageNumber = pageNumber;
-        NavigationManager.NavigateTo($"slides/list/{PageNumber}");
         await OnUpdatePage();
     }
 
-    private async Task OnUpdatePage()
-    {
-        await loader.Load();
-    }
-
-    private Task OnPreviousPage()
-    {
-        return OnPageTo(Data.CurrentPage.PageNumber - 1);
-    }
-
-    private Task OnNextPage()
-    {
-        return OnPageTo(Data.CurrentPage.PageNumber + 1);
-    }
+    private async Task OnUpdatePage() => await loader.Load();
 }

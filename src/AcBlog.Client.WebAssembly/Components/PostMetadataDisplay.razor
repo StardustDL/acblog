@@ -10,14 +10,14 @@
         {
             <small class="m-1">|</small>
             <small>
-                <CategoryDisplay CategoryId="@Value.CategoryId" />
+                <CategoryDisplay Id="@Value.CategoryId" />
             </small>
         }
         @if (Value.KeywordIds != null && Value.KeywordIds.Length > 0)
         {
             <small class="m-1">|</small>
             <small>
-                <KeywordsDisplay KeywordIds="@Value.KeywordIds" />
+                <KeywordsDisplay Ids="@Value.KeywordIds" />
             </small>
         }
         @if (!string.IsNullOrEmpty(Value.Content.Raw))

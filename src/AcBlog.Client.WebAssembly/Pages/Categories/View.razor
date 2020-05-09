@@ -1,5 +1,5 @@
 ﻿@page "/categories/{id}"
-@page "/categories/{id}/{pageNumber:int}"
+@page "/categories/{id}/pages/{pageNumber:int}"
 @inherits BaseCategoryPage
 @inject AcBlog.SDK.Filters.PostCategoryFilter Categories
 
@@ -9,9 +9,9 @@
     </div>
 
     <Loader OnLoad="@OnLoad" @ref="loader">
-        <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage" OnPageTo="@OnPageTo">
+        <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="@PageNavigationUrl">
             <ItemTemplate>
-                <PostCard PostId="@context" ShowType="true"></PostCard>
+                <PostCard Id="@context" ShowType="true"></PostCard>
             </ItemTemplate>
         </PagingWaterfall>
     </Loader>
@@ -32,37 +32,26 @@
 
     private Loader loader;
 
+    private string PageNavigationUrl;
+
     private async Task OnLoad()
     {
         Title = "Loading...";
+        PageNavigationUrl = $"/categories/{Id}";
         Category = await Service.CategoryService.Get(Id);
         Data = await Categories.Filter(Id, new Pagination
         {
             PageNumber = PageNumber ?? 0,
             CountPerPage = CountPerPage
         });
-        Title = $"Page {Data.CurrentPage.PageNumber + 1}";
+        Title = $"Page {Data.CurrentPage.PageNumber + 1} - {Category.Name}";
     }
 
     private async Task OnPageTo(int pageNumber)
     {
         PageNumber = pageNumber;
-        NavigationManager.NavigateTo($"keywords/{Id}/{PageNumber}");
         await OnUpdatePage();
     }
 
-    private async Task OnUpdatePage()
-    {
-        await loader.Load();
-    }
-
-    private Task OnPreviousPage()
-    {
-        return OnPageTo(Data.CurrentPage.PageNumber - 1);
-    }
-
-    private Task OnNextPage()
-    {
-        return OnPageTo(Data.CurrentPage.PageNumber + 1);
-    }
+    private async Task OnUpdatePage() => await loader.Load();
 }

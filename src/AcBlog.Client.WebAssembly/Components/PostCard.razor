@@ -5,7 +5,7 @@
         <div class="card-body">
             <div class="card-title d-flex flex-row mb-1">
                 <h4>
-                    <a href="posts/@PostId" style="color:black" class="@TitleTypeStyle">
+                    <a href="posts/@Id" style="color:black" class="@TitleTypeStyle">
                         @if (IsProtected)
                         {
                             <span>Protected Post</span>
@@ -28,7 +28,7 @@
                     <AcBlog.Client.WebAssembly.Components.Displays.DocumentPreviewDisplay Document="@Post.Content" />
                 </p>
             }
-            <a href="posts/@PostId" class="card-link" style="color: #555; border-bottom: 1px solid #666;">Read more</a>
+            <a href="posts/@Id" class="card-link" style="color: #555; border-bottom: 1px solid #666;">Read more</a>
         </div>
     </div>
 </Loader>
@@ -38,7 +38,7 @@
     public bool ShowType { get; set; } = false;
 
     [Parameter]
-    public string PostId { get; set; }
+    public string Id { get; set; }
 
     private string TitleTypeStyle = "";
 
@@ -52,7 +52,7 @@
         IsProtected = false;
         TitleTypeStyle = "";
 
-        Post = await Service.PostService.Get(PostId);
+        Post = await Service.PostService.Get(Id);
         IsProtected = await Service.PostService.Protector.IsProtected(Post);
         if (!IsProtected && ShowType)
         {

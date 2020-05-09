@@ -1,12 +1,12 @@
 ﻿@inject IBlogService Service
 
 <Loader OnLoad="@OnLoad" UseSpin="true">
-    <span>@Keyword.Name</span>
+    <a href="keywords/@Id" style="color: inherit;">@Keyword.Name</a>
 </Loader>
 
 @code {
     [Parameter]
-    public string KeywordId { get; set; }
+    public string Id { get; set; }
 
     private Keyword Keyword { get; set; }
 
@@ -14,6 +14,6 @@
     {
         Keyword = null;
 
-        Keyword = await Service.KeywordService.Get(KeywordId);
+        Keyword = await Service.KeywordService.Get(Id);
     }
 }

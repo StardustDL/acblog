@@ -1,16 +1,13 @@
-﻿@if (KeywordIds != null && KeywordIds.Count != 0)
-{
-    <span class="itemdisplay">
-        <span class="mdi @(KeywordIds.Count == 1 ? "mdi-tag" : "mdi-tag-multiple")">
-            @foreach(var key in KeywordIds)
-            {
-                <KeywordDisplay KeywordId="@key"/><span>;</span>
-            }
-        </span>
+﻿<span class="itemdisplay">
+    <span class="mdi @(Ids.Count == 1 ? "mdi-tag" : "mdi-tag-multiple")">
+        @foreach (var key in Ids)
+        {
+            <KeywordDisplay Id="@key" /><span>;</span>
+        }
     </span>
-}
+</span>
 
 @code {
     [Parameter]
-    public ICollection<string> KeywordIds { get; set; }
+    public ICollection<string> Ids { get; set; }
 }

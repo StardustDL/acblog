@@ -1,6 +1,6 @@
 ﻿@page "/posts"
-@page "/posts/list"
-@page "/posts/list/{pageNumber:int}"
+@page "/posts/pages"
+@page "/posts/pages/{pageNumber:int}"
 @inherits BasePostPage
 
 <div class="container">
@@ -9,9 +9,9 @@
     </div>
 
     <Loader OnLoad="@OnLoad" @ref="loader">
-        <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnNextPage="@OnNextPage" OnPreviousPage="@OnPreviousPage" OnPageTo="@OnPageTo">
+        <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="/posts">
             <ItemTemplate>
-                <PostCard PostId="@context" ShowType="true"></PostCard>
+                <PostCard Id="@context" ShowType="true"></PostCard>
             </ItemTemplate>
         </PagingWaterfall>
     </Loader>
@@ -44,22 +44,8 @@
     private async Task OnPageTo(int pageNumber)
     {
         PageNumber = pageNumber;
-        NavigationManager.NavigateTo($"posts/list/{PageNumber}");
         await OnUpdatePage();
     }
 
-    private async Task OnUpdatePage()
-    {
-        await loader.Load();
-    }
-
-    private Task OnPreviousPage()
-    {
-        return OnPageTo(Data.CurrentPage.PageNumber - 1);
-    }
-
-    private Task OnNextPage()
-    {
-        return OnPageTo(Data.CurrentPage.PageNumber + 1);
-    }
+    private async Task OnUpdatePage() => await loader.Load();
 }

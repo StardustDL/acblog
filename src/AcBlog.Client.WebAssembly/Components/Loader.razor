@@ -6,7 +6,9 @@
     case DataLoadingState.Loading:
         @if (UseSpin)
         {
-            <span>Loading...</span>
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
         }
         else
         {
