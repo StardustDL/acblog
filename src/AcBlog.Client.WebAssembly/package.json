@@ -14,7 +14,7 @@
     "github-markdown-css": "^4.0.0",
     "jquery": "^3.5.1",
     "monaco-editor": "^0.20.0",
-    "popper.js": "^1.16.0"
+    "popper.js": "^1.16.1"
   },
   "devDependencies": {
     "browserify": "^16.5.1",

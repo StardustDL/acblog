@@ -19,6 +19,7 @@
     <ProjectReference Include="..\AcBlog.Client.Components.Loading\AcBlog.Client.Components.Loading.csproj" />
     <ProjectReference Include="..\AcBlog.Client.Components.Markdown\AcBlog.Client.Components.Markdown.csproj" />
     <ProjectReference Include="..\AcBlog.Client.Components.Slides\AcBlog.Client.Components.Slides.csproj" />
+    <ProjectReference Include="..\AcBlog.Client.WebAssembly.Shared\AcBlog.Client.WebAssembly.Shared.csproj" />
     <ProjectReference Include="..\AcBlog.Data\AcBlog.Data.csproj" />
     <ProjectReference Include="..\AcBlog.SDK\AcBlog.SDK.csproj" />
   </ItemGroup>
