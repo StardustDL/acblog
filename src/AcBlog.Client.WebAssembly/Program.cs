@@ -15,6 +15,7 @@ using System.IO;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration.Json;
 using AcBlog.SDK.Filters;
+using System.Net.Http.Json;
 
 namespace AcBlog.Client.WebAssembly
 {
@@ -23,68 +24,87 @@ namespace AcBlog.Client.WebAssembly
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
+            builder.Logging.SetMinimumLevel(LogLevel.Warning);
+
 
             {
                 using var client = new HttpClient()
                 {
                     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
                 };
-                using var response = await client.GetAsync("build.json");
-                response.EnsureSuccessStatusCode();
-                using var stream = await response.Content.ReadAsStreamAsync();
 
-                builder.Configuration.AddJsonStream(stream);
+                var build = await LoadBuildStatus(builder, client);
+                var server = await LoadServerSettings(builder, client);
+                var blog = await LoadBlogSettings(builder, client);
+
+                builder.Services.AddSingleton(build);
+                builder.Services.AddSingleton(server);
+                builder.Services.AddSingleton(blog);
+
+                builder.Services.AddBlogService(server, builder.HostEnvironment.BaseAddress);
             }
-
-            builder.Logging.SetMinimumLevel(LogLevel.Warning);
 
             builder.RootComponents.Add<App>("app");
 
-            string server = builder.Configuration.GetValue<string>("APIServer", null);
+            await builder.Build().RunAsync();
+        }
 
-            var blogSettings = new BlogSettings()
+        static async Task<ServerSettings> LoadServerSettings(WebAssemblyHostBuilder builder, HttpClient client)
+        {
+            using var response = await client.GetAsync("Server/Server");
+            if (response.IsSuccessStatusCode)
             {
-                Name = "AcBlog",
-                Description = "A blog system based on WebAssembly.",
-                IndexIconUrl = "icon.png",
-                Footer = "",
-                StartYear = DateTimeOffset.Now.Year,
-                IsStaticServer = true
-            };
-            builder.Configuration.Bind("BlogSettings", blogSettings);
-            builder.Services.AddSingleton(blogSettings);
-
-            if (string.IsNullOrEmpty(server))
-            {
-                builder.Services.AddHttpClient("static-file-provider", client => client.BaseAddress = new Uri(Path.Join(builder.HostEnvironment.BaseAddress, "data")));
-                builder.Services.AddSingleton<IBlogService>(sp =>
-                {
-                    return new HttpStaticFileBlogService("/data",
-                        sp.GetRequiredService<IHttpClientFactory>().CreateClient("static-file-provider"));
-                });
-            }
-            else if (blogSettings.IsStaticServer)
-            {
-                var uri = new Uri(server);
-                builder.Services.AddHttpClient("static-file-provider", client => client.BaseAddress = uri);
-                builder.Services.AddSingleton<IBlogService>(sp =>
-                {
-                    return new HttpStaticFileBlogService(uri.LocalPath,
-                        sp.GetRequiredService<IHttpClientFactory>().CreateClient("static-file-provider"));
-                });
+                return await response.Content.ReadFromJsonAsync<ServerSettings>();
             }
             else
             {
-                builder.Services.AddHttpClient<IBlogService, HttpApiBlogService>(
-                    client => client.BaseAddress = new Uri(server));
+                ServerSettings server = new ServerSettings();
+                builder.Configuration.Bind("Server", server);
+                return server;
             }
-            builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateArticleFilter());
-            builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateSlidesFilter());
-            builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateNoteFilter());
-            builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateKeywordFilter());
-            builder.Services.AddSingleton(sp => sp.GetRequiredService<IBlogService>().PostService.CreateCategoryFilter());
+        }
 
-            await builder.Build().RunAsync();
+        static async Task<BuildStatus> LoadBuildStatus(WebAssemblyHostBuilder builder, HttpClient client)
+        {
+            using var response = await client.GetAsync("/Server/Build");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<BuildStatus>();
+            }
+            else
+            {
+                using var response2 = await client.GetAsync("build.json");
+                response2.EnsureSuccessStatusCode();
+                using var stream = await response2.Content.ReadAsStreamAsync();
+                builder.Configuration.AddJsonStream(stream);
+
+                BuildStatus server = new BuildStatus();
+                builder.Configuration.Bind("Build", server);
+                return server;
+            }
+        }
+
+        static async Task<BlogSettings> LoadBlogSettings(WebAssemblyHostBuilder builder, HttpClient client)
+        {
+            using var response = await client.GetAsync("/Server/Blog");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<BlogSettings>();
+            }
+            else
+            {
+                var blogSettings = new BlogSettings()
+                {
+                    Name = "AcBlog",
+                    Description = "A blog system based on WebAssembly.",
+                    IndexIconUrl = "icon.png",
+                    Footer = "",
+                    StartYear = DateTimeOffset.Now.Year,
+                    IsStaticServer = true
+                };
+                builder.Configuration.Bind("Blog", blogSettings);
+                return blogSettings;
+            }
         }
     }
 }

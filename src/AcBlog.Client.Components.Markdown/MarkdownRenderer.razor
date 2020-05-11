@@ -1,16 +1,22 @@
 ﻿@inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 
-<div @ref="markdownContent">
+@using Markdig
 
+<div @ref="markdownContent">
+    @((MarkupString)Prerender)
 </div>
 
 @code {
+    static MarkdownPipeline Pipeline { get; } = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+
     [Parameter]
     public string Value { get; set; } = "";
 
     [Parameter]
     public string TocElementId { get; set; } = null;
+
+    private string Prerender = "";
 
     private ElementReference markdownContent;
 
@@ -22,6 +28,8 @@
         var ind = BaseUrl.IndexOf('#');
         if (ind >= 0)
             BaseUrl = BaseUrl.Remove(ind);
+
+        Prerender = Markdig.Markdown.ToHtml(Value, Pipeline);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

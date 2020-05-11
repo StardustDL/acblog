@@ -18,6 +18,10 @@ namespace AcBlog.Client.WebAssembly.Host
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((host, config) =>
+                {
+                    config.AddJsonFile("build.json");
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

@@ -2,8 +2,7 @@
 @inject BlogSettings BlogSettings
 @inject IJSRuntime JSRuntime
 @layout EmptyLayout
-@using Microsoft.Extensions.Configuration
-@inject IConfiguration Configuration
+@inject BuildStatus BuildStatus
 
 <div style="margin-bottom: 40px;">
     @Body
@@ -35,13 +34,6 @@
 </footer>
 
 @code{
-    private BuildStatus BuildStatus { get; set; } = new BuildStatus();
-
-    protected override void OnInitialized()
-    {
-        Configuration.Bind("build", BuildStatus);
-        base.OnInitialized();
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
