@@ -21,6 +21,8 @@ namespace AcBlog.Client.WebAssembly
 {
     public class Program
     {
+        public static bool HasHost { get; set; } = false;
+
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -32,6 +34,10 @@ namespace AcBlog.Client.WebAssembly
                 {
                     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
                 };
+                {
+                    using var response = await client.GetAsync("Server/Test");
+                    HasHost = response.IsSuccessStatusCode;
+                }
 
                 var build = await LoadBuildStatus(builder, client);
                 var server = await LoadServerSettings(builder, client);
@@ -51,9 +57,9 @@ namespace AcBlog.Client.WebAssembly
 
         static async Task<ServerSettings> LoadServerSettings(WebAssemblyHostBuilder builder, HttpClient client)
         {
-            using var response = await client.GetAsync("Server/Server");
-            if (response.IsSuccessStatusCode)
+            if (HasHost)
             {
+                using var response = await client.GetAsync("Server/Server");
                 return await response.Content.ReadFromJsonAsync<ServerSettings>();
             }
             else
@@ -66,9 +72,9 @@ namespace AcBlog.Client.WebAssembly
 
         static async Task<BuildStatus> LoadBuildStatus(WebAssemblyHostBuilder builder, HttpClient client)
         {
-            using var response = await client.GetAsync("/Server/Build");
-            if (response.IsSuccessStatusCode)
+            if (HasHost)
             {
+                using var response = await client.GetAsync("/Server/Build");
                 return await response.Content.ReadFromJsonAsync<BuildStatus>();
             }
             else
@@ -86,9 +92,9 @@ namespace AcBlog.Client.WebAssembly
 
         static async Task<BlogSettings> LoadBlogSettings(WebAssemblyHostBuilder builder, HttpClient client)
         {
-            using var response = await client.GetAsync("/Server/Blog");
-            if (response.IsSuccessStatusCode)
+            if (HasHost)
             {
+                using var response = await client.GetAsync("/Server/Blog");
                 return await response.Content.ReadFromJsonAsync<BlogSettings>();
             }
             else

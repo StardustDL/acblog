@@ -90,7 +90,7 @@ namespace AcBlog.Client.WebAssembly.Host.Pages
             }
         }
 
-        public async Task OnGetAsync()
+        public async Task<string> GetTitle()
         {
             string path = HttpContext.Request.Path.ToString().Trim('/');
             {
@@ -132,7 +132,19 @@ namespace AcBlog.Client.WebAssembly.Host.Pages
 
             result.Reverse();
 
-            Title = string.Join(" - ", result);
+            return string.Join(" - ", result);
+        }
+
+        public async Task OnGetAsync()
+        {
+            try
+            {
+                Title = await GetTitle().WaitAsync(TimeSpan.FromSeconds(1));
+            }
+            catch
+            {
+                Title = "Loading...";
+            }
         }
     }
 }

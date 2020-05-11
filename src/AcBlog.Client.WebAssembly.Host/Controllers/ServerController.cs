@@ -30,6 +30,9 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
         [HttpGet("Blog")]
         public BlogSettings Blog() => BlogSettings;
 
+        [HttpGet("Test")]
+        public void Test() { }
+
         [HttpGet("Server")]
         public ServerSettings Server() => ServerSettings;
 
