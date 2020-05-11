@@ -75,7 +75,7 @@ jobs:
     - name: Publish Client.WebAssembly
       run: |
         cd src/AcBlog.Client.WebAssembly
-        echo "{ ""build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./wwwroot/build.json
+        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./wwwroot/build.json
         mkdir publish
         dotnet publish -c Release -o ./publish
     - name: Upload artifacts
@@ -106,6 +106,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ env.node-version }}
+    - name: Generate build status
+      run: |
+        cd src/AcBlog.Client.WebAssembly.Host
+        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./build.json
     - name: Push image
       if: github.event_name == 'push'
       uses: docker/build-push-action@v1
