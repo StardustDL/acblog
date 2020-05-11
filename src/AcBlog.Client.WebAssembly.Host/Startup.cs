@@ -9,6 +9,7 @@ using AcBlog.SDK.StaticFile;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -54,7 +55,7 @@ namespace AcBlog.Client.WebAssembly.Host
                     StartYear = DateTimeOffset.Now.Year,
                     IsStaticServer = true
                 };
-                Configuration.Bind("BlogSettings", blogSettings);
+                Configuration.Bind("Blog", blogSettings);
                 services.AddSingleton(blogSettings);
             }
 
@@ -64,6 +65,11 @@ namespace AcBlog.Client.WebAssembly.Host
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

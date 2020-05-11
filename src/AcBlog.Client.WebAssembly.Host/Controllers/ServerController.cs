@@ -8,7 +8,7 @@ using AcBlog.Data.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AcBlog.Client.WebAssembly.Host
+namespace AcBlog.Client.WebAssembly.Host.Controllers
 {
     [Route("[controller]")]
     [ApiController]

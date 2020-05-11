@@ -66,21 +66,8 @@
     <div id="loading-info-ui" class="alert alert-info mdi mdi-information">
 
     </div>
-    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script src="_framework/blazor.webassembly.js" autostart="true"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
-    <script>
-        var loadingInfo = document.getElementById("loading-info-ui");
-        loadingInfo.style = "display: block";
-
-        Blazor.start({
-            loadBootResource: function (type, name, defaultUri, integrity) {
-                // console.log(`Will load '${type}' with name '${name}' from URI '${defaultUri}' and integrity '${integrity}'`);
-                loadingInfo.innerText = `Loading ${type}: ${name}...`;
-            }
-        });
-
-        loadingInfo.style = "display: none";
-    </script>
 
     <script src="lib/jquery/jquery.slim.min.js"></script>
     <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>

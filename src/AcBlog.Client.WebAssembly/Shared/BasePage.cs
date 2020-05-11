@@ -68,6 +68,7 @@ namespace AcBlog.Client.WebAssembly.Shared
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            await LoadingInfoInterop.Hide(JSRuntime);
             await WindowInterop.SetTitle(JSRuntime, Title);
             if (!string.IsNullOrEmpty(LocalAnchorJump))
             {

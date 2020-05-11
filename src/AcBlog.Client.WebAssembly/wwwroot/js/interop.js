@@ -25,3 +25,11 @@ window.acblogInteropTooltipEnable = function () {
 window.acblogInteropPopoverEnable = function () {
     $('[data-toggle="popover"]').popover()
 };
+window.acblogInteropLoadingInfoShow = function () {
+    var loadingInfo = document.getElementById("loading-info-ui");
+    loadingInfo.style = "display: block";
+}
+window.acblogInteropLoadingInfoHide = function () {
+    var loadingInfo = document.getElementById("loading-info-ui");
+    loadingInfo.style = "display: none";
+}
