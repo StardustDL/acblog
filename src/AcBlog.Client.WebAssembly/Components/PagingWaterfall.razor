@@ -17,20 +17,20 @@
                 @if (Data.CurrentPage.HasPreviousPage)
                 {
                     <li class="page-item">
-                        <a class="page-link mdi mdi-chevron-left" style="cursor:pointer" @onclick="@onPreviousPage"></a>
+                        <a class="page-link mdi mdi-chevron-left" href="@($"{PageNavigationUrl}/pages/{Data.CurrentPage.PageNumber-1}")" @onclick="@(async e=>await onPageTo(Data.CurrentPage.PageNumber-1))"></a>
                     </li>
                 }
                 @for (int i = Math.Max(0, Data.CurrentPage.PageNumber - 5); i < Math.Min(Data.CurrentPage.TotalPage, Data.CurrentPage.PageNumber + 5); i++)
                 {
                     int pn = i;
                     <li class="page-item @(i == Data.CurrentPage.PageNumber ? "active" : "")">
-                        <a class="page-link" style="cursor:pointer" @onclick="@(async e=>await onPageTo(pn))">@(i+1)</a>
+                        <a class="page-link" href="@($"{PageNavigationUrl}/pages/{pn}")" @onclick="@(async e=>await onPageTo(pn))">@(i+1)</a>
                     </li>
                 }
                 @if (Data.CurrentPage.HasNextPage)
                 {
                     <li class="page-item">
-                        <a class="page-link mdi mdi-chevron-right" style="cursor:pointer" @onclick="@onNextPage"></a>
+                        <a class="page-link mdi mdi-chevron-right" href="@($"{PageNavigationUrl}/pages/{Data.CurrentPage.PageNumber+1}")" @onclick="@(async e=>await onPageTo(Data.CurrentPage.PageNumber+1))"></a>
                     </li>
                 }
             </ul>
@@ -40,7 +40,7 @@
 
 @code {
     [Parameter]
-    public string PageNavigationUrl { get; set; } = null;
+    public string PageNavigationUrl { get; set; }
 
     [Parameter]
     public QueryResponse<TItem> Data { get; set; }
@@ -55,44 +55,10 @@
     public EventCallback OnUpdatePage { get; set; }
 
     [Parameter]
-    public EventCallback OnPreviousPage { get; set; }
-
-    [Parameter]
-    public EventCallback OnNextPage { get; set; }
-
-    [Parameter]
     public EventCallback<int> OnPageTo { get; set; }
-
-    private async Task onPreviousPage()
-    {
-        if (OnPreviousPage.HasDelegate)
-        {
-            await OnPreviousPage.InvokeAsync(null);
-        }
-        else
-        {
-            await onPageTo(Data.CurrentPage.PageNumber - 1);
-        }
-    }
-
-    private async Task onNextPage()
-    {
-        if (OnNextPage.HasDelegate)
-        {
-            await OnNextPage.InvokeAsync(null);
-        }
-        else
-        {
-            await onPageTo(Data.CurrentPage.PageNumber + 1);
-        }
-    }
 
     private async Task onPageTo(int pageNumber)
     {
-        if (PageNavigationUrl != null)
-        {
-            NavigationManager.NavigateTo($"{PageNavigationUrl}/pages/{pageNumber}");
-        }
         await OnPageTo.InvokeAsync(pageNumber);
     }
 }

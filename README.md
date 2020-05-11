@@ -13,7 +13,8 @@ An open source extensible static & dynamic blog system.
   - Installable
   - Offline
 - Frontend
-  - Full static files
+  - WebAssembly: full static files
+  - SPA with server prerender
 - Backend
   - Static-file backend with generator
   - Dynamic server backend
@@ -28,6 +29,7 @@ An open source extensible static & dynamic blog system.
 - Note
 - Docker deployment
   - Client.WebAssembly [![Docker](https://img.shields.io/docker/pulls/acblog/wasm.svg)](https://hub.docker.com/r/acblog/wasm)
+  - Client.WebAssembly.Host [![Docker](https://img.shields.io/docker/pulls/acblog/wasm.svg)](https://hub.docker.com/r/acblog/wasm-host)
 
 ## Guide
 
@@ -47,6 +49,21 @@ docker run -d -v $PWD/appsettings.json:/app/appsettings.json -p 8000:80 acblog/w
 ```
 
 For GitHub Pages hosting, you can use [wasm-ghpages-generate-action](https://github.com/acblog/wasm-ghpages-generate-action).
+
+---
+
+Use AcBlog's WebAssembly hosted client docker image:
+
+```sh
+docker pull acblog/wasm-host:latest
+docker run -d -p 8000:80 acblog/wasm-host:latest
+```
+
+You can use volumn to apply settings:
+
+```sh
+docker run -d -v $PWD/appsettings.json:/app/appsettings.json -p 8000:80 acblog/wasm-host:latest
+```
 
 ### Backend
 
