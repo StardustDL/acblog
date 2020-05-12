@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  client:
+    image: acblog/wasm-host:latest
+    ports:
+      - "6000:80"
+    volumes:
+      - ./client/appsettings.json:/app/appsettings.json
+      - ./client/manifest.json:/app/manifest.json
+      - ./client/background.jpg:/app/background.jpg
+      - ./client/icon.png:/app/icon.png
+    depends_on:
+      - api
+  api:
+    image: acblog/api:latest
+    ports:
+      - "6100:80"
+    environment:
+      - ConnectionStrings:IdentityConnection=Server=db;User=sa;Password=Pass@word;Database=api_identity;
+      - ConnectionStrings:DefaultConnection=Server=db;User=sa;Password=Pass@word;Database=api_default;
+    volumes:
+      - ./api/appsettings.json:/app/appsettings.json
+    depends_on:
+      - db
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - SA_PASSWORD=Pass@word
+    ports:
+      - "1433:1433"
