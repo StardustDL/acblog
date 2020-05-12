@@ -7,9 +7,9 @@ services:
       - "6000:80"
     volumes:
       - ./client/appsettings.json:/app/appsettings.json
-      - ./client/manifest.json:/app/manifest.json
-      - ./client/background.jpg:/app/background.jpg
-      - ./client/icon.png:/app/icon.png
+      - ./client/manifest.json:/app/wwwroot/manifest.json
+      - ./client/background.jpg:/app/wwwroot/background.jpg
+      - ./client/icon.png:/app/wwwroot/icon.png
     depends_on:
       - api
   api:

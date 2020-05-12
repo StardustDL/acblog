@@ -45,7 +45,10 @@ namespace AcBlog.Server.API
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<IdentityDbContext>();
 
-            services.AddIdentityServer()
+            services.AddIdentityServer(options =>
+            {
+                options.PublicOrigin = Configuration.GetValue<string>("BaseAddress");
+            })
                 .AddApiAuthorization<ApplicationUser, IdentityDbContext>();
 
             services.AddAuthentication()
