@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 using AcBlog.Data.Models;
 using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.FileSystem;
+using Microsoft.EntityFrameworkCore;
+using AcBlog.Server.API.Data;
+using AcBlog.Server.API.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -21,7 +25,7 @@ namespace AcBlog.Server.API
 {
     public class Startup
     {
-        const string _devCorsPolicy = nameof(_devCorsPolicy);
+        const string DefaultCorsPolicy = nameof(DefaultCorsPolicy);
 
         public Startup(IConfiguration configuration)
         {
@@ -33,6 +37,19 @@ namespace AcBlog.Server.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<IdentityDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("IdentityConnection")));
+
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores<IdentityDbContext>();
+
+            services.AddIdentityServer()
+                .AddApiAuthorization<ApplicationUser, IdentityDbContext>();
+
+            services.AddAuthentication()
+                .AddIdentityServerJwt();
+
             {
                 string rootPath = Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "data");
                 if (!Directory.Exists(rootPath))
@@ -43,11 +60,12 @@ namespace AcBlog.Server.API
                 string userRootPath = Path.Join(rootPath, "users");
                 string postRootPath = Path.Join(rootPath, "posts");
 
-                services.AddSingleton<IUserRepository>(sv => new Data.Repositories.FileSystem.Readers.UserLocalReader(userRootPath));
-                services.AddSingleton<IPostRepository>(sv => new Data.Repositories.FileSystem.Readers.PostLocalReader(postRootPath));
+                services.AddSingleton<IUserRepository>(sv => new AcBlog.Data.Repositories.FileSystem.Readers.UserLocalReader(userRootPath));
+                services.AddSingleton<IPostRepository>(sv => new AcBlog.Data.Repositories.FileSystem.Readers.PostLocalReader(postRootPath));
             }
 
-            services.AddControllers();
+            services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddSwaggerGen(c =>
             {
@@ -56,10 +74,11 @@ namespace AcBlog.Server.API
 
             services.AddCors(options =>
             {
-                options.AddPolicy(_devCorsPolicy,
+                options.AddPolicy(DefaultCorsPolicy,
                     builder =>
                     {
-                        builder.WithOrigins("https://localhost:5001", "http://localhost:5000");
+                        builder.AllowAnyHeader();
+                        builder.WithOrigins(Configuration.GetSection("Cors").Get<string[]>());
                     });
             });
         }
@@ -70,17 +89,19 @@ namespace AcBlog.Server.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
 
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles();
+
             app.UseRouting();
 
-            if (env.IsDevelopment())
-            {
-                app.UseCors(_devCorsPolicy);
-            }
+            app.UseCors(DefaultCorsPolicy);
 
+            app.UseIdentityServer();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseSwagger();
@@ -92,6 +113,7 @@ namespace AcBlog.Server.API
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapControllers();
             });
         }

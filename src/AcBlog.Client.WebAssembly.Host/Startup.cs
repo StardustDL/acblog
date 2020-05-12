@@ -7,6 +7,9 @@ using AcBlog.Client.WebAssembly.Models;
 using AcBlog.SDK;
 using AcBlog.SDK.StaticFile;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -46,18 +49,19 @@ namespace AcBlog.Client.WebAssembly.Host
             }
 
             {
-                var blogSettings = new BlogSettings()
-                {
-                    Name = "AcBlog",
-                    Description = "A blog system based on WebAssembly.",
-                    IndexIconUrl = "icon.png",
-                    Footer = "",
-                    StartYear = DateTimeOffset.Now.Year,
-                    IsStaticServer = true
-                };
+                var blogSettings = new BlogSettings();
                 Configuration.Bind("Blog", blogSettings);
                 services.AddSingleton(blogSettings);
             }
+
+            {
+                var identity = new IdentityProvider();
+                Configuration.Bind("IdentityProvider", identity);
+                services.AddSingleton(identity);
+            }
+
+            services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
+            services.AddScoped<SignOutSessionStateManager>();
 
             services.AddBlogService(server, Configuration.GetValue<string>("BaseAddress"));
         }

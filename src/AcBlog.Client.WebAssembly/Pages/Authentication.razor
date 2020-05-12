@@ -1,0 +1,17 @@
+@page "/authentication/{action}"
+@inherits BasePage
+@inject IdentityProvider IdentityProvider
+
+@if (IdentityProvider.Enable)
+{
+    <CustomRemoteAuthenticatorView Action="@Action" />
+}
+else
+{
+    <p>Identity is not enabled.</p>
+}
+
+@code{
+    [Parameter]
+    public string Action { get; set; }
+}

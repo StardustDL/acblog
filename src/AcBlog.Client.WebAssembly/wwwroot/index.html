@@ -57,17 +57,18 @@
             </div>
         </div>
     </app>
-
+    <div id="loading-info-ui" class="alert alert-info mdi mdi-information" style="display: block;">
+        Loading application...
+    </div>
     <div id="blazor-error-ui" class="alert alert-danger mdi mdi-alert" role="alert">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
-    <div id="loading-info-ui" class="alert alert-info mdi mdi-information">
-
-    </div>
     <script src="_framework/blazor.webassembly.js" autostart="true"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
+
+    <script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>
 
     <script src="lib/jquery/jquery.slim.min.js"></script>
     <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>

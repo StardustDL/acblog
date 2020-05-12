@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration.Json;
 using AcBlog.SDK.Filters;
 using System.Net.Http.Json;
+using System.Text.Json;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace AcBlog.Client.WebAssembly
 {
@@ -26,8 +29,11 @@ namespace AcBlog.Client.WebAssembly
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.Logging.SetMinimumLevel(LogLevel.Warning);
 
+            if (builder.HostEnvironment.IsProduction())
+            {
+                builder.Logging.SetMinimumLevel(LogLevel.Warning);
+            }
 
             {
                 using var client = new HttpClient()
@@ -35,17 +41,43 @@ namespace AcBlog.Client.WebAssembly
                     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
                 };
                 {
-                    using var response = await client.GetAsync("Server/Test");
-                    HasHost = response.IsSuccessStatusCode;
+                    try
+                    {
+                        using var response = await client.GetAsync("Server/Test");
+                        response.EnsureSuccessStatusCode();
+                        HasHost = await response.Content.ReadFromJsonAsync<bool>();
+                    }
+                    catch
+                    {
+                        HasHost = false;
+                    }
                 }
 
                 var build = await LoadBuildStatus(builder, client);
                 var server = await LoadServerSettings(builder, client);
                 var blog = await LoadBlogSettings(builder, client);
+                var identityProvider = await LoadIdentityProvider(builder, client);
 
                 builder.Services.AddSingleton(build);
                 builder.Services.AddSingleton(server);
                 builder.Services.AddSingleton(blog);
+                builder.Services.AddSingleton(identityProvider);
+
+                if (identityProvider.Enable)
+                {
+                    builder.Services.AddApiAuthorization(options =>
+                    {
+                        options.ProviderOptions.ConfigurationEndpoint = identityProvider.Endpoint;
+                        options.AuthenticationPaths.RemoteProfilePath = identityProvider.RemoteProfilePath;
+                        options.AuthenticationPaths.RemoteRegisterPath = identityProvider.RemoteRegisterPath;
+                    });
+                }
+                else
+                {
+                    builder.Services.AddAuthorizationCore();
+                    builder.Services.AddSingleton<AuthenticationStateProvider, EmptyAuthenticationStateProvider>();
+                    builder.Services.AddSingleton<SignOutSessionStateManager>();
+                }
 
                 builder.Services.AddBlogService(server, builder.HostEnvironment.BaseAddress);
             }
@@ -66,6 +98,21 @@ namespace AcBlog.Client.WebAssembly
             {
                 ServerSettings server = new ServerSettings();
                 builder.Configuration.Bind("Server", server);
+                return server;
+            }
+        }
+
+        static async Task<IdentityProvider> LoadIdentityProvider(WebAssemblyHostBuilder builder, HttpClient client)
+        {
+            if (HasHost)
+            {
+                using var response = await client.GetAsync("Server/Identity");
+                return await response.Content.ReadFromJsonAsync<IdentityProvider>();
+            }
+            else
+            {
+                IdentityProvider server = new IdentityProvider();
+                builder.Configuration.Bind("IdentityProvider", server);
                 return server;
             }
         }
@@ -99,15 +146,7 @@ namespace AcBlog.Client.WebAssembly
             }
             else
             {
-                var blogSettings = new BlogSettings()
-                {
-                    Name = "AcBlog",
-                    Description = "A blog system based on WebAssembly.",
-                    IndexIconUrl = "icon.png",
-                    Footer = "",
-                    StartYear = DateTimeOffset.Now.Year,
-                    IsStaticServer = true
-                };
+                var blogSettings = new BlogSettings();
                 builder.Configuration.Bind("Blog", blogSettings);
                 return blogSettings;
             }

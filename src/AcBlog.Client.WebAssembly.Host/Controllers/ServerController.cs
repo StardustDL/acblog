@@ -14,11 +14,12 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
     [ApiController]
     public class ServerController : ControllerBase
     {
-        public ServerController(BlogSettings blogSettings, ServerSettings serverSettings, BuildStatus buildStatus)
+        public ServerController(BlogSettings blogSettings, ServerSettings serverSettings, BuildStatus buildStatus, IdentityProvider identityProvider)
         {
             BlogSettings = blogSettings;
             ServerSettings = serverSettings;
             BuildStatus = buildStatus;
+            IdentityProvider = identityProvider;
         }
 
         public BlogSettings BlogSettings { get; }
@@ -27,11 +28,16 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
 
         public BuildStatus BuildStatus { get; }
 
+        public IdentityProvider IdentityProvider { get; }
+
         [HttpGet("Blog")]
         public BlogSettings Blog() => BlogSettings;
 
+        [HttpGet("Identity")]
+        public IdentityProvider Identity() => IdentityProvider;
+
         [HttpGet("Test")]
-        public void Test() { }
+        public bool Test() => true;
 
         [HttpGet("Server")]
         public ServerSettings Server() => ServerSettings;
