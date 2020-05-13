@@ -1,6 +1,6 @@
 # AcBlog
 
-![CI](https://github.com/acblog/acblog/workflows/CI/badge.svg) ![License](https://img.shields.io/github/license/acblog/acblog.svg)
+![CI](https://github.com/acblog/acblog/workflows/CI/badge.svg) [![Homepage](https://img.shields.io/github/workflow/status/acblog/homepage/Deploy/master?label=homepage)](https://acblog.github.io) ![Mirrors](https://img.shields.io/github/workflow/status/acblog/mirrors/Mirror/master?label=mirrors) ![License](https://img.shields.io/github/license/acblog/acblog.svg)
 
 An open source extensible static & dynamic blog system.
 
@@ -28,8 +28,9 @@ An open source extensible static & dynamic blog system.
   - Preview & Full page
 - Note
 - Docker deployment
-  - Client.WebAssembly [![Docker](https://img.shields.io/docker/pulls/acblog/wasm.svg)](https://hub.docker.com/r/acblog/wasm)
-  - Client.WebAssembly.Host [![Docker](https://img.shields.io/docker/pulls/acblog/wasm.svg)](https://hub.docker.com/r/acblog/wasm-host)
+  - [![Docker](https://img.shields.io/docker/pulls/acblog/wasm.svg)](https://hub.docker.com/r/acblog/wasm) Client.WebAssembly
+  - [![Docker](https://img.shields.io/docker/pulls/acblog/wasm-host.svg)](https://hub.docker.com/r/acblog/wasm-host) Client.WebAssembly.Host
+  - [![Docker](https://img.shields.io/docker/pulls/acblog/api.svg)](https://hub.docker.com/r/acblog/api) Server.API
 
 ## Guide
 
@@ -84,6 +85,26 @@ acblog-sgen -o ./dist
 ```
 
 For GitHub Pages hosting, you can use [static-backend-generate-action](https://github.com/acblog/static-backend-generate-action).
+
+#### Dynamic
+
+Use AcBlog's API server docker image:
+
+```sh
+docker pull acblog/api:latest
+docker run -d -p 8000:80 acblog/api:latest
+```
+
+### Compose
+
+Use docker-compose to deploy WebAssembly hosted client and API server:
+
+```sh
+cd docker/deploy
+docker-compose up
+```
+
+Maybe you need to restart api container after database initializing.
 
 ## Build
 

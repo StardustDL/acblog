@@ -7,7 +7,7 @@ defaults:
     shell: pwsh
 
 env:
-  dotnet-version: "3.1.201"
+  dotnet-version: "3.1.202"
   node-version: "12.x"
 
 jobs:

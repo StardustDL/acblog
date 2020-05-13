@@ -4,7 +4,11 @@
 
 @if (IdentityProvider.Enable)
 {
-    <CustomRemoteAuthenticatorView Action="@Action" />
+    <CustomRemoteAuthenticatorView Action="@Action">
+        <LogOutSucceeded>
+            <RedirectTo Target=""/>
+        </LogOutSucceeded>
+    </CustomRemoteAuthenticatorView>
 }
 else
 {

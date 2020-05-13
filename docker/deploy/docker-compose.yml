@@ -17,8 +17,8 @@ services:
     ports:
       - "6100:80"
     environment:
-      - ConnectionStrings:IdentityConnection=Server=db;User=sa;Password=Pass@word;Database=api_identity;
-      - ConnectionStrings:DefaultConnection=Server=db;User=sa;Password=Pass@word;Database=api_default;
+      - ConnectionStrings:IdentityConnection=Server=db;User=sa;Password=MyPassword001;Database=api_identity;
+      - ConnectionStrings:DefaultConnection=Server=db;User=sa;Password=MyPassword001;Database=api_default;
     volumes:
       - ./api/appsettings.json:/app/appsettings.json
     depends_on:
@@ -26,6 +26,6 @@ services:
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      - SA_PASSWORD=Pass@word
+      - SA_PASSWORD=MyPassword001
     ports:
       - "1433:1433"

@@ -27,13 +27,25 @@
 
 <body>
     <app>
-        @if (!HttpContext.Request.Path.StartsWithSegments("/authentication"))
+        @if (!HttpContext.Request.Path.StartsWithSegments("/authentication") && !HttpContext.Request.Path.StartsWithSegments("/settings"))
         {
             <component type="typeof(App)" render-mode="Static" />
         }
         else
         {
-            <text>Loading...</text>
+            <div class="loading loading1" style="margin: auto; bottom: 0; right:0; left: 0; top: 0; position: fixed">
+                <div>
+                    <div>
+                        <div>
+                            <div>
+                                <div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
     </app>
     <div id="loading-info-ui" class="alert alert-info mdi mdi-information" style="display: block;">

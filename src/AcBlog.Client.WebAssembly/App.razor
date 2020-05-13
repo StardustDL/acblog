@@ -11,7 +11,7 @@
                 <NotAuthorized>
                     @if (!context.User.Identity.IsAuthenticated)
                     {
-                        <RedirectToLogin />
+                        <RedirectTo Target="authentication/login" HasReturnUrl="true" />
                     }
                     else
                     {

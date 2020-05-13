@@ -15,6 +15,9 @@ namespace AcBlog.Client.WebAssembly.Shared
         [Inject]
         private NavigationManager Navigation { get; set; }
 
+        [Inject]
+        private SignOutSessionStateManager SignOutManager { get; set; }
+
         public CustomRemoteAuthenticatorView() => AuthenticationState = new RemoteAuthenticationState();
 
         private static void RegisterNotSupportedFragment(RenderTreeBuilder builder)
@@ -64,6 +67,10 @@ namespace AcBlog.Client.WebAssembly.Shared
                     }
                     Registering ??= LoggingIn;
                     await RedirectToRegister();
+                    break;
+                case "logout":
+                    await SignOutManager.SetSignOutState();
+                    await base.OnParametersSetAsync();
                     break;
                 default:
                     await base.OnParametersSetAsync();
