@@ -1,6 +1,7 @@
 ﻿using AcBlog.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace AcBlog.Data.Repositories.SQLServer.Models
@@ -52,7 +53,7 @@ namespace AcBlog.Data.Repositories.SQLServer.Models
                 ModificationTime = value.ModificationTime,
                 Title = value.Title,
                 Type = value.Type,
-                KeywordIds = value.KeywordIds.Split("$%$"),
+                KeywordIds = value.KeywordIds.Split("$%$").Where(x => !string.IsNullOrWhiteSpace(x)).ToArray(),
                 Content = new Document
                 {
                     Raw = value.Content

@@ -38,6 +38,8 @@ namespace AcBlog.Client.WebAssembly.Host
 
             services.AddHttpClient();
 
+            services.AddSingleton(new RenderStatus { IsPrerender = true });
+
             ServerSettings server = new ServerSettings();
             Configuration.Bind("Server", server);
             services.AddSingleton(server);

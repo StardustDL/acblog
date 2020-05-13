@@ -86,7 +86,15 @@ namespace AcBlog.Data.Repositories.SQLServer
 
         public async Task<bool> Update(User value)
         {
-            Data.Users.Update(value);
+            var to = value;
+
+            var item = await Data.Users.FindAsync(to.Id);
+            if (item == null)
+                return false;
+
+            item.Nickname = to.Nickname;
+
+            Data.Users.Update(item);
             await Data.SaveChangesAsync();
             return true;
         }

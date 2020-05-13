@@ -1,5 +1,6 @@
 @inject IJSRuntime JSRuntime
 @inject IdentityProvider IdentityProvider
+@inject RenderStatus RenderStatus
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly">
@@ -9,16 +10,23 @@
                     <AcBlog.Client.Components.Loading.Loading />
                 </Authorizing>
                 <NotAuthorized>
-                    @if (!context.User.Identity.IsAuthenticated)
+                    @if (RenderStatus.IsPrerender)
                     {
-                        <RedirectTo Target="authentication/login" HasReturnUrl="true" />
+                        <AcBlog.Client.Components.Loading.Loading />
                     }
                     else
                     {
-                        <p>
-                            You are not authorized to access
-                            this resource.
-                        </p>
+                        @if (!context.User.Identity.IsAuthenticated)
+                        {
+                            <RedirectTo Target="authentication/login" HasReturnUrl="true" />
+                        }
+                        else
+                        {
+                            <p>
+                                You are not authorized to access
+                                this resource.
+                            </p>
+                        }
                     }
                 </NotAuthorized>
             </AuthorizeRouteView>

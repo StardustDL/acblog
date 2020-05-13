@@ -108,7 +108,22 @@ namespace AcBlog.Data.Repositories.SQLServer
 
         public async Task<bool> Update(Post value)
         {
-            Data.Posts.Update(PostData.From(value));
+            var to = PostData.From(value);
+
+            var item = await Data.Posts.FindAsync(to.Id);
+            if (item == null)
+                return false;
+
+            item.KeywordIds = to.KeywordIds;
+            item.CategoryId = to.CategoryId;
+            item.AuthorId = to.AuthorId;
+            item.Content = to.Content;
+            item.CreationTime = to.CreationTime;
+            item.ModificationTime = to.ModificationTime;
+            item.Title = to.Title;
+            item.Type = to.Type;
+
+            Data.Posts.Update(item);
             await Data.SaveChangesAsync();
             return true;
         }

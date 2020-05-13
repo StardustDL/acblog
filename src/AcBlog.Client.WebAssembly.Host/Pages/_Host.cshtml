@@ -27,7 +27,7 @@
 
 <body>
     <app>
-        @if (!HttpContext.Request.Path.StartsWithSegments("/authentication") && !HttpContext.Request.Path.StartsWithSegments("/settings"))
+        @if (!HttpContext.Request.Path.StartsWithSegments("/authentication"))
         {
             <component type="typeof(App)" render-mode="Static" />
         }

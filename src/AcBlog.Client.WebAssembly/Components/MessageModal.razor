@@ -1,0 +1,46 @@
+﻿@inject IJSRuntime JSRuntime
+
+<div class="modal fade" id="@ModalId" tabindex="-1" role="dialog" aria-labelledby="@TitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="@TitleId">@Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>@Message</p>
+            </div>
+            <div class="modal-footer">
+                @switch (Buttons)
+                {
+                    case MessageModalButtons.Ok:
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+                        break;
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    public string ModalId { get; set; } = Guid.NewGuid().ToString();
+
+    public string TitleId { get; set; } = Guid.NewGuid().ToString();
+
+    private string Title { get; set; }
+
+    private string Message { get; set; }
+
+    private MessageModalButtons Buttons { get; set; }
+
+    public ValueTask Show(string message, string title = "Message", MessageModalButtons buttons = MessageModalButtons.Ok)
+    {
+        Title = title;
+        Message = message;
+        Buttons = buttons;
+        StateHasChanged();
+        return ModalInterop.Show(JSRuntime, ModalId);
+    }
+}

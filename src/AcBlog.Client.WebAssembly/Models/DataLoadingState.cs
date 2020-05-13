@@ -6,4 +6,9 @@
         Success,
         Failed
     }
+
+    public enum MessageModalButtons
+    {
+        Ok,
+    }
 }

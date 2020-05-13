@@ -6,7 +6,16 @@
     @if (IsProtected)
     {
         <div class="container">
-            <h1 class="display-4">Protected Post</h1>
+            <div class="d-flex flex-row justify-content-between">
+                <h1 class="display-4">Protected Post</h1>
+                <AuthorizeView>
+                    <Authorized>
+                        <div class="btn-group-toggle btn-group my-auto" role="group">
+                            <a class="btn btn-primary mdi mdi-square-edit-outline" href="posts/@Id/edit">Edit</a>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
             <button type="button" class="btn btn-primary mt-3" style="width: 100%;" @onclick="@OnDeprotectClick">Deprotect</button>
         </div>
 
@@ -16,7 +25,16 @@
     {
         <div class="row">
             <div class="container">
-                <h1 class="display-4">@Post.Title</h1>
+                <div class="d-flex flex-row justify-content-between">
+                    <h1 class="display-4">@Post.Title</h1>
+                    <AuthorizeView>
+                        <Authorized>
+                            <div class="btn-group-toggle btn-group my-auto" role="group">
+                                <a class="btn btn-primary mdi mdi-square-edit-outline" href="posts/@Id/edit">Edit</a>
+                            </div>
+                        </Authorized>
+                    </AuthorizeView>
+                </div>
                 <PostMetadataDisplay Value="@Post" />
             </div>
         </div>
@@ -35,7 +53,7 @@
                         <div class="ml-1">
                             <ArticleRenderer Document="@Post.Content" TocElementId="post-toc" />
                         </div>
-                        
+
                     </div>
                     break;
                 case PostType.Slides:

@@ -86,7 +86,17 @@ namespace AcBlog.Data.Repositories.SQLServer
 
         public async Task<bool> Update(Category value)
         {
-            Data.Categories.Update(value);
+            var to = value;
+
+            var item = await Data.Categories.FindAsync(to.Id);
+            if (item == null)
+                return false;
+
+            item.Name = to.Name;
+            item.ParentId = to.ParentId;
+
+            Data.Categories.Update(item);
+
             await Data.SaveChangesAsync();
             return true;
         }

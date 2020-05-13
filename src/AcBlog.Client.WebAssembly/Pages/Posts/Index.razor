@@ -4,8 +4,15 @@
 @inherits BasePostPage
 
 <div class="container">
-    <div class="d-flex flex-row">
+    <div class="d-flex flex-row justify-content-between">
         <h1>Posts</h1>
+        <AuthorizeView>
+            <Authorized>
+                <div class="btn-group-toggle btn-group my-auto" role="group">
+                    <a class="btn btn-success mdi mdi-plus" href="posts/new">Create</a>
+                </div>
+            </Authorized>
+        </AuthorizeView>
     </div>
 
     <Loader OnLoad="@OnLoad" @ref="loader">

@@ -35,6 +35,8 @@ namespace AcBlog.Client.WebAssembly
                 builder.Logging.SetMinimumLevel(LogLevel.Warning);
             }
 
+            builder.Services.AddSingleton(new RenderStatus { IsPrerender = false });
+
             {
                 using var client = new HttpClient()
                 {

@@ -24,8 +24,18 @@ namespace AcBlog.SDK.API
 
         public RepositoryAccessContext? Context { get; set; }
 
+        private void SetHeader()
+        {
+            if (Context != null && !string.IsNullOrWhiteSpace(Context.Token))
+            {
+                HttpClient.DefaultRequestHeaders.Remove("Authorization");
+                HttpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Context.Token);
+            }
+        }
+
         public virtual async Task<IEnumerable<string>> All()
         {
+            SetHeader();
             using var responseMessage = await HttpClient.GetAsync(PrepUrl);
             responseMessage.EnsureSuccessStatusCode();
             return await responseMessage.Content.ReadFromJsonAsync<IEnumerable<string>>();
@@ -33,6 +43,7 @@ namespace AcBlog.SDK.API
 
         public virtual async Task<bool> CanRead()
         {
+            SetHeader();
             using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/actions/read");
             responseMessage.EnsureSuccessStatusCode();
             return await responseMessage.Content.ReadFromJsonAsync<bool>();
@@ -40,6 +51,7 @@ namespace AcBlog.SDK.API
 
         public virtual async Task<bool> CanWrite()
         {
+            SetHeader();
             using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/actions/write");
             responseMessage.EnsureSuccessStatusCode();
             return await responseMessage.Content.ReadFromJsonAsync<bool>();
@@ -47,6 +59,8 @@ namespace AcBlog.SDK.API
 
         public virtual async Task<string?> Create(T value)
         {
+            SetHeader();
+
             using var responseMessage = await HttpClient.PostAsJsonAsync(PrepUrl, value);
 
             if (!responseMessage.IsSuccessStatusCode)
@@ -57,6 +71,8 @@ namespace AcBlog.SDK.API
 
         public virtual async Task<bool> Delete(string id)
         {
+            SetHeader();
+
             using var responseMessage = await HttpClient.DeleteAsync($"{PrepUrl}/{id}");
 
             if (!responseMessage.IsSuccessStatusCode)
@@ -67,12 +83,16 @@ namespace AcBlog.SDK.API
 
         public virtual async Task<bool> Exists(string id)
         {
+            SetHeader();
+
             using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{id}");
             return responseMessage.IsSuccessStatusCode;
         }
 
         public virtual async Task<T?> Get(string id)
         {
+            SetHeader();
+
             using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{id}");
             responseMessage.EnsureSuccessStatusCode();
 
@@ -85,6 +105,8 @@ namespace AcBlog.SDK.API
 
         public virtual async Task<QueryResponse<string>> Query(TQuery query)
         {
+            SetHeader();
+
             using var responseMessage = await HttpClient.PutAsJsonAsync($"{PrepUrl}/query", query);
             responseMessage.EnsureSuccessStatusCode();
 
@@ -93,6 +115,8 @@ namespace AcBlog.SDK.API
 
         public virtual async Task<bool> Update(T value)
         {
+            SetHeader();
+
             using var responseMessage = await HttpClient.PutAsJsonAsync($"{PrepUrl}/{value.Id}", value);
             responseMessage.EnsureSuccessStatusCode();
 

@@ -92,6 +92,7 @@ namespace AcBlog.Server.API
                 options.AddPolicy(DefaultCorsPolicy,
                     builder =>
                     {
+                        builder.AllowAnyMethod();
                         builder.AllowAnyHeader();
                         builder.WithOrigins(Configuration.GetSection("Cors").Get<string[]>());
                     });

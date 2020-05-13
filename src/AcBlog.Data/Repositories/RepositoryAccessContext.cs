@@ -2,6 +2,6 @@
 {
     public sealed class RepositoryAccessContext
     {
-
+        public string Token { get; set; } = string.Empty;
     }
 }

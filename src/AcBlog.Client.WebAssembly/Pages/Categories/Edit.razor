@@ -1,0 +1,119 @@
+﻿@page "/categories/new"
+@page "/categories/{id}/edit"
+@attribute [Authorize]
+@inherits BaseCategoryPage
+@inject IAccessTokenProvider TokenProvider
+
+<div class="container">
+    <Loader OnLoad="@OnLoad">
+        <div class="d-flex flex-row">
+            <h1>@(IsNew ? "Create" : "Edit") category</h1>
+        </div>
+
+        <div class="input-group mt-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputName">Name</label>
+            </div>
+            <input type="text" class="form-control" @bind-value="Model.Name" id="inputName" required />
+            <div class="input-group-append">
+                @if (IsNew)
+                {
+                    <button type="button" class="btn btn-success mdi mdi-plus" @onclick="@OnCreate">Create</button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-primary mdi mdi-content-save" @onclick="@OnUpdate">Save</button>
+                    <button type="button" class="btn btn-danger mdi mdi-trash-can" @onclick="@OnDelete">Delete</button>
+                }
+            </div>
+        </div>
+    </Loader>
+    <MessageModal @ref="message"></MessageModal>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private bool IsNew { get; set; }
+
+    private Category Model { get; set; }
+
+    private MessageModal message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Service.CategoryService.UseToken(TokenProvider);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnLoad()
+    {
+        Title = "Loading...";
+        if (string.IsNullOrWhiteSpace(Id))
+        {
+            Model = new Category();
+            IsNew = true;
+            Title = "New";
+        }
+        else
+        {
+            Model = await Service.CategoryService.Get(Id);
+            IsNew = false;
+            Title = "Edit";
+        }
+    }
+
+    private async Task<bool> CheckValidation()
+    {
+        if (string.IsNullOrWhiteSpace(Model.Name))
+        {
+            await message.Show("Name is empty.");
+            return false;
+        }
+        return true;
+    }
+
+    private async Task OnCreate()
+    {
+        if (!await CheckValidation()) return;
+
+        var id = await Service.CategoryService.Create(Model);
+        if (id == null)
+        {
+            await message.Show("Create failed");
+        }
+        else
+        {
+            NavigationManager.NavigateTo($"categories/{id}");
+        }
+    }
+
+    private async Task OnUpdate()
+    {
+        if (!await CheckValidation()) return;
+
+        var pass = await Service.CategoryService.Update(Model);
+        if (!pass)
+        {
+            await message.Show("Update failed");
+        }
+        else
+        {
+            NavigationManager.NavigateTo($"categories/{Model.Id}");
+        }
+    }
+
+    private async Task OnDelete()
+    {
+        var pass = await Service.CategoryService.Delete(Model.Id);
+        if (!pass)
+        {
+            await message.Show("Delete failed");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("categories");
+        }
+    }
+}

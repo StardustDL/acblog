@@ -46,9 +46,12 @@ window.AcBlogClientComponentsMarkdown_markdownRender = function (element, conten
         var c = ls[i];
         c.href = baseUrl + c.href.replace(document.baseURI, "");
     }
-    var ls = document.getElementsByClassName("markdownIt-TOC")[0].getElementsByTagName("a");
-    for (let i = 0; i < ls.length; i++) {
-        var c = ls[i];
-        c.href = baseUrl + decodeURI(c.href.replace(document.baseURI, ""));
+    var tocEle = document.getElementsByClassName("markdownIt-TOC")[0];
+    if (tocEle) {
+        var ls = tocEle.getElementsByTagName("a");
+        for (let i = 0; i < ls.length; i++) {
+            var c = ls[i];
+            c.href = baseUrl + decodeURI(c.href.replace(document.baseURI, ""));
+        }
     }
 }
