@@ -42,35 +42,6 @@ namespace AcBlog.Server.API
             await host.RunAsync();
         }
 
-        static async Task SeedDataForFS(string rootPath)
-        {
-            /*string userRootPath = Path.Join(rootPath, "users");
-            string postRootPath = Path.Join(rootPath, "posts");
-            if (!Directory.Exists(userRootPath))
-            {
-                Directory.CreateDirectory(userRootPath);
-            }
-            if (!Directory.Exists(postRootPath))
-            {
-                Directory.CreateDirectory(postRootPath);
-            }
-
-            await UserRepositoryBuilder.Build(new[]
-            {
-                new User
-                {
-                    Nickname = "admin",
-                    Id = Guid.NewGuid().ToString(),
-                }
-            }, userRootPath, 10);
-
-            await PostRepositoryBuilder.Build(new[]{ new PostBuildData(new Post
-            {
-                Title = "title",
-                Id = Guid.NewGuid().ToString(),
-            }) }, new PostProtector(), new DirectoryInfo(postRootPath), 10);*/
-        }
-
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>

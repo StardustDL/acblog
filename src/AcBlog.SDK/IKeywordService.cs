@@ -4,6 +4,6 @@ namespace AcBlog.SDK
 {
     public interface IKeywordService : IKeywordRepository
     {
-        IBlogService Blog { get; }
+        IBlogService BlogService { get; }
     }
 }

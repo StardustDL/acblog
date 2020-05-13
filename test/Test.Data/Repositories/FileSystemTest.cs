@@ -36,8 +36,9 @@ namespace Test.Data.Repositories
         }
 
         [TestMethod]
-        public async Task User()
+        public Task User()
         {
+            return Task.CompletedTask;
             /*var root = Path.Join(RootPath, "users");
             Directory.CreateDirectory(root);
 
@@ -54,8 +55,9 @@ namespace Test.Data.Repositories
         }
 
         [TestMethod]
-        public async Task Post()
+        public Task Post()
         {
+            return Task.CompletedTask;
             /*var root = Path.Join(RootPath, "posts");
             Directory.CreateDirectory(root);
 

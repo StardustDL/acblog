@@ -1,4 +1,5 @@
-﻿using AcBlog.Data.Models.Actions;
+﻿using AcBlog.Data.Models;
+using AcBlog.Data.Models.Actions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Readers
 {
-    public abstract class ReaderBase<T, TId> : IRecordRepository<T, TId> where TId : class where T : class
+    public abstract class ReaderBase<T, TId> : IRecordRepository<T, TId> where TId : class where T : class, IHasId<TId>
     {
         protected ReaderBase(string rootPath)
         {
@@ -64,6 +65,8 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
         {
             using var fs = await GetFileReadStream(GetPath(id));
             var result = await JsonSerializer.DeserializeAsync<T?>(fs);
+            if (result != null)
+                result.Id = id;
             return result;
         }
 

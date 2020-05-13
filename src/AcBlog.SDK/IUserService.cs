@@ -7,6 +7,6 @@ namespace AcBlog.SDK
 {
     public interface IUserService : IUserRepository
     {
-        IBlogService Blog { get; }
+        IBlogService BlogService { get; }
     }
 }

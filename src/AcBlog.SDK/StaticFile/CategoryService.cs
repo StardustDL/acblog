@@ -14,12 +14,12 @@ namespace AcBlog.SDK.StaticFile
 
         public CategoryService(IBlogService blog, string rootPath, HttpClient httpClient)
         {
-            Blog = blog;
+            BlogService = blog;
             HttpClient = httpClient;
             Reader = new CategoryRemoteReader(rootPath, httpClient);
         }
 
-        public IBlogService Blog { get; private set; }
+        public IBlogService BlogService { get; private set; }
 
         public HttpClient HttpClient { get; }
 

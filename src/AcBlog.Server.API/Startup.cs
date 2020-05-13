@@ -21,6 +21,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.HttpOverrides;
 using AcBlog.Data.Repositories.SQLServer.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace AcBlog.Server.API
 {
@@ -38,6 +40,12 @@ namespace AcBlog.Server.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            {
+                Options options = new Options();
+                Configuration.Bind("Options", options);
+                services.AddSingleton(options);
+            }
+
             {
                 /*services.AddScoped(sp => new DbContextOptionsBuilder<DataContext>()
                     .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -66,6 +74,9 @@ namespace AcBlog.Server.API
 
                 services.AddAuthentication()
                     .AddIdentityServerJwt();
+
+                services.Configure<IdentityOptions>(options =>
+                    options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier);
             }
 
             services.AddControllersWithViews();

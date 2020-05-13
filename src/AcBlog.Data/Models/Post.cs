@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace AcBlog.Data.Models
 {
-    public class Post
+    public class Post : IHasId<string>
     {
         public string Id { get; set; } = string.Empty;
 

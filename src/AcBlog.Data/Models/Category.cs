@@ -1,6 +1,6 @@
 ﻿namespace AcBlog.Data.Models
 {
-    public class Category
+    public class Category : IHasId<string>
     {
         public string ParentId { get; set; } = string.Empty;
 

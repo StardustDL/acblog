@@ -4,7 +4,10 @@ using System.Threading.Tasks;
 using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
+using AcBlog.Server.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AcBlog.Server.API.Controllers
@@ -73,6 +76,7 @@ namespace AcBlog.Server.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
+        [Authorize]
         public async Task<ActionResult<string>> Create([FromBody] Post value)
         {
             if (!await Provider.CanWrite())
@@ -86,6 +90,7 @@ namespace AcBlog.Server.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
+        [Authorize]
         public async Task<ActionResult<bool>> Update(string id, [FromBody] Post value)
         {
             if (!await Provider.CanWrite())
@@ -102,6 +107,7 @@ namespace AcBlog.Server.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
+        [Authorize]
         public async Task<ActionResult<bool>> Delete(string id)
         {
             if (!await Provider.CanWrite())

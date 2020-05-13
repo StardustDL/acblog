@@ -20,14 +20,6 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         protected override string GetPath(string id) => PathNormalize(Path.Join(RootPath, $"{id}.json"));
 
-        public override async Task<Post?> Get(string id)
-        {
-            var res = await base.Get(id);
-            if (res != null)
-                res.Id = id;
-            return res;
-        }
-
         public override async Task<IEnumerable<string>> All()
         {
             List<string> result = new List<string>();

@@ -4,6 +4,6 @@ namespace AcBlog.SDK
 {
     public interface ICategoryService : ICategoryRepository
     {
-        IBlogService Blog { get; }
+        IBlogService BlogService { get; }
     }
 }

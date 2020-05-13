@@ -18,14 +18,6 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         protected override string GetPath(string id) => Path.Join(RootPath, $"{id}.json").Replace("\\", "/");
 
-        public override async Task<User?> Get(string id)
-        {
-            var res = await base.Get(id);
-            if (res != null)
-                res.Id = id;
-            return res;
-        }
-
         public override async Task<IEnumerable<string>> All()
         {
             List<string> result = new List<string>();

@@ -1,6 +1,6 @@
 ﻿namespace AcBlog.Data.Models
 {
-    public class Keyword
+    public class Keyword : IHasId<string>
     {
         public string Id { get; set; } = string.Empty;
 

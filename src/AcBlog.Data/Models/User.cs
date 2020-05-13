@@ -3,7 +3,7 @@ using System.Text;
 
 namespace AcBlog.Data.Models
 {
-    public class User
+    public class User : IHasId<string>
     {
         public string Id { get; set; } = string.Empty;
 
