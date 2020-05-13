@@ -13,4 +13,12 @@
     <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AcBlog.Data\AcBlog.Data.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -110,7 +110,7 @@ namespace AcBlog.Data.Repositories.FileSystem
                             Id = Guid.NewGuid().ToString(),
                             Name = k,
                         };
-                        if(node != all)
+                        if (node != all)
                         {
                             c.ParentId = node.Category.Id;
                         }

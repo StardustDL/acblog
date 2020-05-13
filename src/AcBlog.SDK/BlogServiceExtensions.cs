@@ -2,6 +2,6 @@
 {
     public static class BlogServiceExtensions
     {
-        
+
     }
 }

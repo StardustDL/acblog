@@ -4,7 +4,16 @@ namespace AcBlog.Data.Models.Actions
 {
     public class Pagination
     {
-        public int CountPerPage { get; set; } = 10;
+        private int _countPerPage = 10;
+
+        public int CountPerPage
+        {
+            get => _countPerPage; set
+            {
+                if (value <= 0) value = 10;
+                _countPerPage = value;
+            }
+        }
 
         public int PageNumber { get; set; } = 0;
 

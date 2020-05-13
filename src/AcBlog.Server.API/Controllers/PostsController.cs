@@ -36,7 +36,7 @@ namespace AcBlog.Server.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<IEnumerable<Post>>> All()
+        public async Task<ActionResult<IEnumerable<string>>> All()
         {
             if (!await Provider.CanRead())
                 return BadRequest();

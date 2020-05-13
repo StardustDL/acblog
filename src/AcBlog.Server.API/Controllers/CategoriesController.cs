@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
@@ -12,11 +10,11 @@ namespace AcBlog.Server.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
-        IUserRepository Provider { get; }
+        ICategoryRepository Provider { get; }
 
-        public UsersController(IUserRepository provider)
+        public CategoriesController(ICategoryRepository provider)
         {
             Provider = provider;
         }
@@ -48,7 +46,7 @@ namespace AcBlog.Server.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<QueryResponse<string>>> Query([FromBody] UserQueryRequest query)
+        public async Task<ActionResult<QueryResponse<string>>> Query([FromBody] CategoryQueryRequest query)
         {
             if (!await Provider.CanRead())
                 return BadRequest();
@@ -60,7 +58,7 @@ namespace AcBlog.Server.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<User>> Get(string id)
+        public async Task<ActionResult<Category>> Get(string id)
         {
             if (!await Provider.CanRead())
                 return BadRequest();
@@ -74,7 +72,7 @@ namespace AcBlog.Server.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<string>> Create([FromBody] User value)
+        public async Task<ActionResult<string>> Create([FromBody] Category value)
         {
             if (!await Provider.CanWrite())
                 return BadRequest();
@@ -87,7 +85,7 @@ namespace AcBlog.Server.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<bool>> Update(string id, [FromBody] User value)
+        public async Task<ActionResult<bool>> Update(string id, [FromBody] Category value)
         {
             if (!await Provider.CanWrite())
                 return BadRequest();

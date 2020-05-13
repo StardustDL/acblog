@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using AcBlog.Data.Models;
 using AcBlog.Data.Repositories;
-using AcBlog.Data.Repositories.FileSystem;
 using Microsoft.EntityFrameworkCore;
 using AcBlog.Server.API.Data;
 using AcBlog.Server.API.Models;
@@ -21,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.HttpOverrides;
+using AcBlog.Data.Repositories.SQLServer.Models;
 
 namespace AcBlog.Server.API
 {
@@ -38,34 +38,34 @@ namespace AcBlog.Server.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<IdentityDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("IdentityConnection")));
-
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<IdentityDbContext>();
-
-            services.AddIdentityServer(options =>
             {
-                options.PublicOrigin = Configuration.GetValue<string>("BaseAddress");
-            })
-                .AddApiAuthorization<ApplicationUser, IdentityDbContext>();
+                /*services.AddScoped(sp => new DbContextOptionsBuilder<DataContext>()
+                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                services.AddScoped(sp => sp.GetRequiredService<DbContextOptionsBuilder<DataContext>>().Options);*/
 
-            services.AddAuthentication()
-                .AddIdentityServerJwt();
+                services.AddDbContext<DataContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+                services.AddScoped<IPostRepository, AcBlog.Data.Repositories.SQLServer.PostRepository>();
+                services.AddScoped<ICategoryRepository, AcBlog.Data.Repositories.SQLServer.CategoryRepository>();
+                services.AddScoped<IKeywordRepository, AcBlog.Data.Repositories.SQLServer.KeywordRepository>();
+                services.AddScoped<IUserRepository, AcBlog.Data.Repositories.SQLServer.UserRepository>();
+            }
             {
-                string rootPath = Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "data");
-                if (!Directory.Exists(rootPath))
+                services.AddDbContext<IdentityDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+
+                services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                    .AddEntityFrameworkStores<IdentityDbContext>();
+
+                services.AddIdentityServer(options =>
                 {
-                    Directory.CreateDirectory(rootPath);
-                }
+                    options.PublicOrigin = Configuration.GetValue<string>("BaseAddress");
+                })
+                    .AddApiAuthorization<ApplicationUser, IdentityDbContext>();
 
-                string userRootPath = Path.Join(rootPath, "users");
-                string postRootPath = Path.Join(rootPath, "posts");
-
-                services.AddSingleton<IUserRepository>(sv => new AcBlog.Data.Repositories.FileSystem.Readers.UserLocalReader(userRootPath));
-                services.AddSingleton<IPostRepository>(sv => new AcBlog.Data.Repositories.FileSystem.Readers.PostLocalReader(postRootPath));
+                services.AddAuthentication()
+                    .AddIdentityServerJwt();
             }
 
             services.AddControllersWithViews();
