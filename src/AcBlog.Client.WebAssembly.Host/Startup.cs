@@ -65,7 +65,7 @@ namespace AcBlog.Client.WebAssembly.Host
             services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
             services.AddScoped<SignOutSessionStateManager>();
 
-            services.AddBlogService(server, Configuration.GetValue<string>("BaseAddress"));
+            services.AddBlogService(server, Configuration.GetBaseAddress());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
