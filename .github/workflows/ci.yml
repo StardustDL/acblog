@@ -156,8 +156,9 @@ jobs:
     - name: Pack
       run: |
         mkdir packages
-        $env:LANG=en-US.UTF-8
+        export LANG=en-US.UTF-8
         dotnet pack -c Release -o ./packages
+      shell: bash
     - name: Upload artifacts
       uses: actions/upload-artifact@master
       with:

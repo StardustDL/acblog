@@ -2,6 +2,7 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,8 +21,9 @@ namespace AcBlog.Tools.SDK.Commands
             using var client = new HttpClient();
             await workspace.Connect(client);
             var service = workspace.Remote!.PostService;
-            var list = await service.All();
-            foreach(var id in list)
+            var list = (await service.All()).ToList();
+            console.Out.WriteLine($"Founded {list.Count} posts.");
+            foreach (var id in list)
             {
                 if (cancellationToken.IsCancellationRequested)
                     break;
