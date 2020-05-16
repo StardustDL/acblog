@@ -14,18 +14,21 @@ namespace AcBlog.Tools.SDK.Commands
 
         public abstract string Description { get; }
 
+        protected virtual bool DisableHandler { get; } = false;
+
         public virtual Command Configure()
         {
             var result = new Command(Name, Description);
             return result;
         }
 
-        public abstract Task<int> Handle(T argument, IConsole console, InvocationContext context, CancellationToken cancellationToken);
+        public virtual Task<int> Handle(T argument, IConsole console, InvocationContext context, CancellationToken cancellationToken) => Task.FromResult(0);
 
         public virtual Command Build()
         {
             Command command = Configure();
-            command.Handler = CommandHandler.Create<T, IConsole, InvocationContext, CancellationToken>(Handle);
+            if (!DisableHandler)
+                command.Handler = CommandHandler.Create<T, IConsole, InvocationContext, CancellationToken>(Handle);
             return command;
         }
     }

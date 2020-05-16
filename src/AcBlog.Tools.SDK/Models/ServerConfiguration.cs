@@ -4,6 +4,10 @@ namespace AcBlog.Tools.SDK.Models
 {
     public class ServerConfiguration
     {
+        public ServerConfiguration() : this(new Uri("https://localhost"), true)
+        {
+        }
+
         public ServerConfiguration(Uri uri, bool isStatic)
         {
             Uri = uri;

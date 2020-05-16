@@ -1,4 +1,5 @@
-﻿using Microsoft.JSInterop;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,11 @@ namespace AcBlog.Client.WebAssembly.Interops
         public static ValueTask ScrollTo(IJSRuntime runtime, string title)
         {
             return runtime.InvokeVoidAsync("acblogInteropScrollTo", title);
+        }
+
+        public static ValueTask CopyItem(IJSRuntime runtime, ElementReference element)
+        {
+            return runtime.InvokeVoidAsync("acblogInteropCopyItem", element);
         }
     }
 }

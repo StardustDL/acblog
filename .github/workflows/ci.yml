@@ -156,7 +156,7 @@ jobs:
     - name: Pack
       run: |
         mkdir packages
-        export LANG=en-US.UTF-8
+        $env:LANG=en-US.UTF-8
         dotnet pack -c Release -o ./packages
     - name: Upload artifacts
       uses: actions/upload-artifact@master
@@ -177,6 +177,7 @@ jobs:
         dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
         dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
         dotnet nuget push ./packages/AcBlog.SDK.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Tools.SDK.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
         dotnet nuget push ./packages/AcBlog.Tools.StaticGenerator.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
   invoke-mirrors:
     needs: [pub-client, pub-api]

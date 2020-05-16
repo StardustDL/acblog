@@ -1,4 +1,5 @@
-﻿using System.CommandLine;
+﻿using AcBlog.Tools.SDK.Models;
+using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,9 +12,13 @@ namespace AcBlog.Tools.SDK.Commands
 
         public override string Description => "Initialize AcBlog.";
 
-        public override Task<int> Handle(CArgument argument, IConsole console, InvocationContext context, CancellationToken cancellationToken)
+        public override async Task<int> Handle(CArgument argument, IConsole console, InvocationContext context, CancellationToken cancellationToken)
         {
-            return Task.FromResult(0);
+            Workspace workspace = Program.Current();
+            workspace.Configuration.Remote = null;
+            workspace.Configuration.Token = "";
+            await workspace.Save();
+            return 0;
         }
 
         public class CArgument

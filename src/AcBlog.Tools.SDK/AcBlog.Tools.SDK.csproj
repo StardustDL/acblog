@@ -4,6 +4,19 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
+    <PackAsTool>true</PackAsTool>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.0.1</Version>
+    <Authors>StardustDL</Authors>
+    <Company>AcBlog</Company>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/acblog</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/acblog/acblog</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <AssemblyName>acblog</AssemblyName>
+    <PackageId>AcBlog.Tools.SDK</PackageId>
+    <Product>AcBlog.Tools.SDK</Product>
   </PropertyGroup>
 
   <ItemGroup>

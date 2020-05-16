@@ -7,6 +7,10 @@ window.acblogInteropScrollTo = function (id) {
         window.scrollTo(0, scrollToElement.offsetTop);
     }
 };
+window.acblogInteropCopyItem = function (ele) {
+    ele.select();
+    document.execCommand('copy');
+}
 window.acblogInteropModalAction = function (id, action) {
     var m = $('#' + id);
     if (m) {

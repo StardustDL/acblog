@@ -1,6 +1,10 @@
-﻿using AcBlog.Tools.SDK.Models;
+﻿using AcBlog.SDK;
+using AcBlog.Tools.SDK.Commands;
+using AcBlog.Tools.SDK.Models;
 using System;
+using System.CommandLine;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AcBlog.Tools.SDK
@@ -16,10 +20,18 @@ namespace AcBlog.Tools.SDK
             return Workspace;
         }
 
-        static Task<int> Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            return Task.FromResult(0);
+            var rootCommand = new RootCommand("AcBlog SDK for command-line.");
+
+            rootCommand.AddCommand(new InitCommand().Build());
+            rootCommand.AddCommand(new ConnectCommand().Build());
+            rootCommand.AddCommand(new LoginCommand().Build());
+            rootCommand.AddCommand(new ListCommand().Build());
+
+            Workspace = await Workspace.Load(new DirectoryInfo(Environment.CurrentDirectory));
+
+            return await rootCommand.InvokeAsync(args);
         }
     }
 }

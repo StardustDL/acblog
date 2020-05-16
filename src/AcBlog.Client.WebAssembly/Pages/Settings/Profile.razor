@@ -1,6 +1,7 @@
 ﻿@page "/settings"
 @page "/settings/profile"
 @inherits BaseSettingsPage
+@inject IAccessTokenProvider TokenProvider
 @attribute [Authorize]
 
 <div class="container">
@@ -9,11 +10,36 @@
         <a class="btn btn-outline-primary mdi mdi-account" href="authentication/profile">Account</a>
         <a class="btn btn-outline-danger mdi mdi-logout" href="authentication/logout">Logout</a>
     </div>
+    <div class="input-group mt-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputToken">Token</label>
+        </div>
+        <input type="text" class="form-control" value="@(IsTokenShow ? Token : "*******")" id="inputToken" readonly @ref="_inputToken" />
+        <div class="input-group-append">
+            <button class="btn btn-secondary mdi @(IsTokenShow ? "mdi-eye-off" : "mdi-eye")" @onclick="@(()=>IsTokenShow = !IsTokenShow)">@(IsTokenShow ? "Hide" : "Show")</button>
+            <button class="btn btn-success mdi mdi-content-copy" @onclick="@OnCopyToken" disabled="@(!IsTokenShow)">Copy</button>
+        </div>
+    </div>
 </div>
 
 @code {
-    protected override void OnInitialized()
+    private string Token { get; set; }
+
+    private bool IsTokenShow { get; set; } = false;
+
+    private ElementReference _inputToken;
+
+    protected override async Task OnInitializedAsync()
     {
         Title = "Profile";
+        var tokenResult = await TokenProvider.RequestAccessToken();
+        if (tokenResult.TryGetToken(out var token))
+            Token = token.Value;
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnCopyToken()
+    {
+        await WindowInterop.CopyItem(JSRuntime, _inputToken);
     }
 }
