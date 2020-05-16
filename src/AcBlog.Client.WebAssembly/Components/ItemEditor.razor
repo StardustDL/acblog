@@ -1,0 +1,113 @@
+﻿
+<div class="d-flex flex-row justify-content-between">
+    <h1>@Title</h1>
+    <div class="btn-group-toggle btn-group btn-group-lg my-auto" role="group">
+        @if (IsCreate)
+        {
+            <button type="button" class="btn btn-success mdi mdi-plus" @onclick="@onCreate">Create</button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-primary mdi mdi-content-save" @onclick="@onUpdate">Save</button>
+            <button type="button" class="btn btn-danger mdi mdi-trash-can" @onclick="@onDelete">Delete</button>
+        }
+    </div>
+</div>
+@ChildContent
+<MessageModal @ref="message" OnResponse="OnMessageResponse"></MessageModal>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public bool IsCreate { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback<EventCallbackResult<bool>> OnCreate { get; set; }
+
+    [Parameter]
+    public EventCallback<EventCallbackResult<bool>> OnUpdate { get; set; }
+
+    [Parameter]
+    public EventCallback<EventCallbackResult<bool>> OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback<ModelValidation> OnCheckValidation { get; set; }
+
+    private MessageModal message;
+
+    private async Task<bool> onCheckValidation()
+    {
+        ModelValidation mv = new ModelValidation();
+        await OnCheckValidation.InvokeAsync(mv);
+        if (mv.Errors.Count > 0)
+        {
+            await message.Show(string.Join('\n', mv.Errors));
+        }
+        return mv.Errors.Count == 0;
+    }
+
+    private async Task onCreate()
+    {
+        if (!await onCheckValidation()) return;
+
+        if (OnCreate.HasDelegate)
+        {
+            EventCallbackResult<bool> result = new EventCallbackResult<bool>();
+            await OnCreate.InvokeAsync(result);
+            if (!result.Result)
+            {
+                await message.Show("Create failed");
+            }
+        }
+    }
+
+    private async Task onUpdate()
+    {
+        if (!await onCheckValidation()) return;
+
+        if (OnUpdate.HasDelegate)
+        {
+            EventCallbackResult<bool> result = new EventCallbackResult<bool>();
+            await OnUpdate.InvokeAsync(result);
+            if (!result.Result)
+            {
+                await message.Show("Update failed");
+            }
+        }
+    }
+
+    const string MS_Delete = "delete";
+
+    private string messageModalState = "";
+
+    private async Task OnMessageResponse(MessageModalButtons button)
+    {
+        if (messageModalState == MS_Delete)
+        {
+            if (button == MessageModalButtons.Yes)
+            {
+                if (OnDelete.HasDelegate)
+                {
+                    EventCallbackResult<bool> result = new EventCallbackResult<bool>();
+                    await OnDelete.InvokeAsync(result);
+                    if (!result.Result)
+                    {
+                        await message.Show("Delete failed");
+                    }
+                }
+            }
+        }
+        messageModalState = "";
+    }
+
+    private async Task onDelete()
+    {
+        messageModalState = MS_Delete;
+        await message.Show("Do you want to delete?", buttons: MessageModalButtons.Yes | MessageModalButtons.No);
+    }
+}

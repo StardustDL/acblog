@@ -20,10 +20,7 @@ namespace AcBlog.Client.WebAssembly.Pages.Posts
         {
             get => base.Title; set
             {
-                if (string.IsNullOrEmpty(value))
-                    value = $"Posts";
-                else
-                    value = $"{value} - Posts";
+                value = string.IsNullOrEmpty(value) ? $"Posts" : $"{value} - Posts";
                 base.Title = value;
             }
         }

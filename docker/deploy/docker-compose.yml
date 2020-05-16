@@ -27,5 +27,10 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
       - SA_PASSWORD=MyPassword001
+      - ACCEPT_EULA=Y
+    volumes:
+      - data:/var/opt/mssql
     ports:
       - "1433:1433"
+volumes:
+  data:

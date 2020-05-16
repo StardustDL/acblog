@@ -5,41 +5,25 @@
 @inject IAccessTokenProvider TokenProvider
 
 <div class="container">
-    <Loader OnLoad="@OnLoad">
-        <div class="d-flex flex-row">
-            <h1>@(IsNew ? "Create" : "Edit") keyword</h1>
-        </div>
-
-        <div class="input-group mt-3">
-            <div class="input-group-prepend">
-                <label class="input-group-text" for="inputName">Name</label>
+    <ItemEditor IsCreate="@IsCreate" Title="@(IsCreate ? "Create keyword" : "Edit keyword")" OnCheckValidation="@OnCheckValidation" OnCreate="@OnCreate" OnDelete="@OnDelete" OnUpdate="@OnUpdate">
+        <Loader OnLoad="@OnLoad">
+            <div class="input-group mt-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputName">Name</label>
+                </div>
+                <input type="text" class="form-control" @bind-value="Model.Name" id="inputName" required />
             </div>
-            <input type="text" class="form-control" @bind-value="Model.Name" id="inputName" required />
-            <div class="input-group-append">
-                @if (IsNew)
-                {
-                    <button type="button" class="btn btn-success mdi mdi-plus" @onclick="@OnCreate">Create</button>
-                }
-                else
-                {
-                    <button type="button" class="btn btn-primary mdi mdi-content-save" @onclick="@OnUpdate">Save</button>
-                    <button type="button" class="btn btn-danger mdi mdi-trash-can" @onclick="@OnDelete">Delete</button>
-                }
-            </div>
-        </div>
-    </Loader>
-    <MessageModal @ref="message"></MessageModal>
+        </Loader>
+    </ItemEditor>
 </div>
 
 @code {
     [Parameter]
     public string Id { get; set; }
 
-    private bool IsNew { get; set; }
+    private bool IsCreate { get; set; }
 
     private Keyword Model { get; set; }
-
-    private MessageModal message;
 
     protected override async Task OnInitializedAsync()
     {
@@ -53,65 +37,51 @@
         if (string.IsNullOrWhiteSpace(Id))
         {
             Model = new Keyword();
-            IsNew = true;
+            IsCreate = true;
             Title = "New";
         }
         else
         {
             Model = await Service.KeywordService.Get(Id);
-            IsNew = false;
+            IsCreate = false;
             Title = "Edit";
         }
     }
 
-    private async Task<bool> CheckValidation()
+    private Task OnCheckValidation(ModelValidation validation)
     {
         if (string.IsNullOrWhiteSpace(Model.Name))
         {
-            await message.Show("Name is empty.");
-            return false;
+            validation.Errors.Add("Name is empty.");
         }
-        return true;
+        return Task.CompletedTask;
     }
 
-    private async Task OnCreate()
+    private async Task OnCreate(EventCallbackResult<bool> result)
     {
-        if (!await CheckValidation()) return;
-
         var id = await Service.KeywordService.Create(Model);
-        if (id == null)
-        {
-            await message.Show("Create failed");
-        }
-        else
+        result.Result = id != null;
+        if (id != null)
         {
             NavigationManager.NavigateTo($"keywords/{id}");
         }
     }
 
-    private async Task OnUpdate()
+    private async Task OnUpdate(EventCallbackResult<bool> result)
     {
-        if (!await CheckValidation()) return;
-
         var pass = await Service.KeywordService.Update(Model);
-        if (!pass)
-        {
-            await message.Show("Update failed");
-        }
-        else
+        result.Result = pass;
+        if (pass)
         {
             NavigationManager.NavigateTo($"keywords/{Model.Id}");
         }
     }
 
-    private async Task OnDelete()
+    private async Task OnDelete(EventCallbackResult<bool> result)
     {
         var pass = await Service.KeywordService.Delete(Model.Id);
-        if (!pass)
-        {
-            await message.Show("Delete failed");
-        }
-        else
+        result.Result = pass;
+        if (pass)
         {
             NavigationManager.NavigateTo("keywords");
         }

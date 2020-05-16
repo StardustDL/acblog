@@ -197,7 +197,7 @@ jobs:
         dotnet nuget push ./packages/AcBlog.SDK.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
         dotnet nuget push ./packages/AcBlog.Tools.StaticGenerator.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
   invoke-mirrors:
-    needs: [pub-wasm, pub-wasmhost, pub-api]
+    needs: [pub-wasm, pub-wasmhost, pub-api, pub-pkgs]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
