@@ -7,7 +7,7 @@ defaults:
     shell: pwsh
 
 env:
-  dotnet-version: "3.1.201"
+  dotnet-version: "3.1.202"
   node-version: "12.x"
 
 jobs:
@@ -135,8 +135,7 @@ jobs:
         dockerfile: ./docker/server/api/Dockerfile
   pub-pkgs:
     needs: ci
-    runs-on: macOS-latest
-    continue-on-error: true
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -157,6 +156,7 @@ jobs:
     - name: Pack
       run: |
         mkdir packages
+        export LANG=en-US.UTF-8
         dotnet pack -c Release -o ./packages
     - name: Upload artifacts
       uses: actions/upload-artifact@master
