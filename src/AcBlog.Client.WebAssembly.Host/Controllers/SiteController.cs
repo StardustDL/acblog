@@ -112,6 +112,9 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
             {
                 var posts = await BlogService.PostService.All();
                 siteMapBuilder.AddUrl($"{baseAddress}/posts");
+                siteMapBuilder.AddUrl($"{baseAddress}/articles");
+                siteMapBuilder.AddUrl($"{baseAddress}/slides");
+                siteMapBuilder.AddUrl($"{baseAddress}/notes");
                 foreach (var id in posts)
                 {
                     siteMapBuilder.AddUrl($"{baseAddress}/posts/{id}");

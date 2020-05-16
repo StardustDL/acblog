@@ -79,7 +79,8 @@ docker run -d \
 Use AcBlog's static generator:
 
 ```sh
-dotnet tool install -g AcBlog.Tools.StaticGenerator --version 0.0.1 --add-source https://www.myget.org/F/stardustdl/api/v3/index.json
+dotnet tool install -g AcBlog.Tools.StaticGenerator --version 0.0.1 \
+  --add-source https://www.myget.org/F/stardustdl/api/v3/index.json
 
 acblog-sgen -o ./dist
 ```
@@ -108,7 +109,7 @@ Maybe you need to restart api container after database initializing.
 
 ## Build
 
-1. Install .NET Core SDK 3.1.201, NodeJS 12.x and npm.
+1. Install .NET Core SDK 3.1, NodeJS 12.x and npm.
 2. Install Gulp & Libman
 
 ```sh

@@ -7,7 +7,7 @@ defaults:
     shell: pwsh
 
 env:
-  dotnet-version: "3.1.202"
+  dotnet-version: "3.1.201"
   node-version: "12.x"
 
 jobs:
@@ -52,7 +52,7 @@ jobs:
       with:
         name: ci-${{ matrix.os }}
         path: ./reports
-  pub-wasm:
+  pub-client:
     needs: ci
     runs-on: ubuntu-latest
     steps:
@@ -72,6 +72,10 @@ jobs:
         dotnet tool install --global Microsoft.Web.LibraryManager.Cli
         pwsh -c ./tools.ps1 restore
         dotnet build -c Release
+    - name: Generate build status
+      run: |
+        cd src/AcBlog.Client.WebAssembly.Host
+        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./build.json
     - name: Publish Client.WebAssembly
       run: |
         cd src/AcBlog.Client.WebAssembly
@@ -92,29 +96,6 @@ jobs:
         repository: acblog/wasm
         tag_with_ref: true
         dockerfile: ./docker/client/wasm/Dockerfile
-  pub-wasmhost:
-    needs: ci
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.dotnet-version }}
-    - name: Setup NodeJS
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ env.node-version }}
-    - name: Restore
-      run: |
-        npm install --global gulp
-        dotnet tool install --global Microsoft.Web.LibraryManager.Cli
-        pwsh -c ./tools.ps1 restore
-    - name: Generate build status
-      run: |
-        cd src/AcBlog.Client.WebAssembly.Host
-        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./build.json
     - name: Push image
       if: github.event_name == 'push'
       uses: docker/build-push-action@v1
@@ -154,7 +135,8 @@ jobs:
         dockerfile: ./docker/server/api/Dockerfile
   pub-pkgs:
     needs: ci
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
+    continue-on-error: true
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -197,7 +179,7 @@ jobs:
         dotnet nuget push ./packages/AcBlog.SDK.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
         dotnet nuget push ./packages/AcBlog.Tools.StaticGenerator.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
   invoke-mirrors:
-    needs: [pub-wasm, pub-wasmhost, pub-api, pub-pkgs]
+    needs: [pub-client, pub-api]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
