@@ -12,13 +12,15 @@ namespace AcBlog.Tools.SDK.Models
 {
     public class Workspace
     {
-        private Workspace(DirectoryInfo root)
+        public Workspace(DirectoryInfo root)
         {
             Root = root;
             DbRoot = new DirectoryInfo(Path.Join(Root.FullName, ".acblog"));
         }
 
         public WorkspaceConfiguration Configuration { get; private set; } = new WorkspaceConfiguration();
+
+        public Db History { get; private set; } = new Db();
 
         public DirectoryInfo Root { get; }
 
@@ -61,19 +63,27 @@ namespace AcBlog.Tools.SDK.Models
             return Task.CompletedTask;
         }
 
-        public static async Task<Workspace> Load(DirectoryInfo root)
+        public async Task Load()
         {
-            var result = new Workspace(root);
-            if (result.DbRoot.Exists)
+            if (DbRoot.Exists)
             {
-                var fileinfo = new FileInfo(Path.Join(result.DbRoot.FullName, "config.json"));
-                if (fileinfo.Exists)
                 {
-                    using var fs = fileinfo.Open(FileMode.Open, FileAccess.Read);
-                    result.Configuration = await JsonSerializer.DeserializeAsync<WorkspaceConfiguration>(fs);
+                    var fileinfo = new FileInfo(Path.Join(DbRoot.FullName, "config.json"));
+                    if (fileinfo.Exists)
+                    {
+                        using var fs = fileinfo.Open(FileMode.Open, FileAccess.Read);
+                        Configuration = await JsonSerializer.DeserializeAsync<WorkspaceConfiguration>(fs);
+                    }
+                }
+                {
+                    var fileinfo = new FileInfo(Path.Join(DbRoot.FullName, "history.json"));
+                    if (fileinfo.Exists)
+                    {
+                        using var fs = fileinfo.Open(FileMode.Open, FileAccess.Read);
+                        History = await JsonSerializer.DeserializeAsync<Db>(fs);
+                    }
                 }
             }
-            return result;
         }
 
         public async Task Save()
@@ -84,10 +94,16 @@ namespace AcBlog.Tools.SDK.Models
                 DbRoot.Create();
                 DbRoot.Refresh();
             }
-
-            var fileinfo = new FileInfo(Path.Join(DbRoot.FullName, "config.json"));
-            using var fs = fileinfo.Open(FileMode.Create, FileAccess.Write);
-            await JsonSerializer.SerializeAsync(fs, Configuration);
+            {
+                var fileinfo = new FileInfo(Path.Join(DbRoot.FullName, "config.json"));
+                using var fs = fileinfo.Open(FileMode.Create, FileAccess.Write);
+                await JsonSerializer.SerializeAsync(fs, Configuration);
+            }
+            {
+                var fileinfo = new FileInfo(Path.Join(DbRoot.FullName, "history.json"));
+                using var fs = fileinfo.Open(FileMode.Create, FileAccess.Write);
+                await JsonSerializer.SerializeAsync(fs, History);
+            }
         }
     }
 }

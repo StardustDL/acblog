@@ -63,6 +63,23 @@ if ($args.Count -gt 0) {
                 exit 1
             }
         }
+        "pack" {
+            mkdir packages
+            dotnet pack -c Release -o ./packages
+            if ($?) {
+                exit 0
+            }
+            Write-Output "Retry packing..."
+            dotnet pack -c Release -o ./packages
+            if ($?) {
+                exit 0
+            }
+            Write-Output "Retry packing..."
+            dotnet pack -c Release -o ./packages
+            if (!$?) {
+                exit 1
+            }
+        }
         "format" {
             Write-Output "Format..."
             dotnet format

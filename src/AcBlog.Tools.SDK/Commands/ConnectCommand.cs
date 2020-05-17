@@ -24,7 +24,7 @@ namespace AcBlog.Tools.SDK.Commands
 
         public override async Task<int> Handle(CArgument argument, IConsole console, InvocationContext context, CancellationToken cancellationToken)
         {
-            Workspace workspace = Program.Current();
+            Workspace workspace = Program.Workspace;
             workspace.Configuration.Remote = new ServerConfiguration(argument.Uri!, argument.Static);
             using var client = new HttpClient();
             await workspace.Connect(client);

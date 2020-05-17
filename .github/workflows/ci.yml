@@ -88,7 +88,7 @@ jobs:
       with:
         name: wasm
         path: ./src/AcBlog.Client.WebAssembly/publish
-    - name: Push image
+    - name: Push Client.WebAssembly image
       uses: docker/build-push-action@v1
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
@@ -96,7 +96,7 @@ jobs:
         repository: acblog/wasm
         tag_with_ref: true
         dockerfile: ./docker/client/wasm/Dockerfile
-    - name: Push image
+    - name: Push Client.WebAssembly.Host image
       uses: docker/build-push-action@v1
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
@@ -104,7 +104,7 @@ jobs:
         repository: acblog/wasm-host
         tag_with_ref: true
         dockerfile: ./docker/client/wasm-host/Dockerfile
-    - name: Push image
+    - name: Push Server.API image
       uses: docker/build-push-action@v1
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
@@ -134,10 +134,7 @@ jobs:
         dotnet build -c Release
     - name: Pack
       run: |
-        mkdir packages
-        export LANG=en-US.UTF-8
-        dotnet pack -c Release -o ./packages
-      shell: bash
+        pwsh -c ./tools.ps1 pack
     - name: Upload artifacts
       uses: actions/upload-artifact@master
       with:

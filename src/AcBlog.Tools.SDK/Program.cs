@@ -11,14 +11,7 @@ namespace AcBlog.Tools.SDK
 {
     class Program
     {
-        static Workspace? Workspace { get; set; }
-
-        internal static Workspace Current()
-        {
-            if (Workspace == null)
-                throw new Exception("Workspace hasn't been loaded.");
-            return Workspace;
-        }
+        public static Workspace Workspace { get; private set; } = new Workspace(new DirectoryInfo(Environment.CurrentDirectory));
 
         static async Task<int> Main(string[] args)
         {
@@ -34,7 +27,7 @@ namespace AcBlog.Tools.SDK
             rootCommand.AddCommand(new PushCommand().Build());
             rootCommand.AddCommand(new FetchCommand().Build());
 
-            Workspace = await Workspace.Load(new DirectoryInfo(Environment.CurrentDirectory));
+            await Workspace.Load();
 
             return await rootCommand.InvokeAsync(args);
         }
