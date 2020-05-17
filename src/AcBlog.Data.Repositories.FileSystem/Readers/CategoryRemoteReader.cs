@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Readers
@@ -13,15 +14,15 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public HttpClient Client { get; }
 
-        public override async Task<bool> Exists(string id)
+        public override async Task<bool> Exists(string id, CancellationToken cancellationToken = default)
         {
-            var rep = await Client.GetAsync(GetPath(id));
+            var rep = await Client.GetAsync(GetPath(id),cancellationToken);
             return rep.IsSuccessStatusCode;
         }
 
-        protected override async Task<Stream> GetFileReadStream(string path)
+        protected override async Task<Stream> GetFileReadStream(string path, CancellationToken cancellationToken = default)
         {
-            var rep = await Client.GetAsync(path);
+            var rep = await Client.GetAsync(path, cancellationToken);
             return await rep.Content.ReadAsStreamAsync();
         }
     }

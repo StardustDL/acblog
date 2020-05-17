@@ -4,6 +4,7 @@ using AcBlog.Data.Repositories;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AcBlog.SDK.API
@@ -33,35 +34,35 @@ namespace AcBlog.SDK.API
             }
         }
 
-        public virtual async Task<IEnumerable<string>> All()
+        public virtual async Task<IEnumerable<string>> All(CancellationToken cancellationToken = default)
         {
             SetHeader();
-            using var responseMessage = await HttpClient.GetAsync(PrepUrl);
+            using var responseMessage = await HttpClient.GetAsync(PrepUrl, cancellationToken);
             responseMessage.EnsureSuccessStatusCode();
-            return await responseMessage.Content.ReadFromJsonAsync<IEnumerable<string>>();
+            return await responseMessage.Content.ReadFromJsonAsync<IEnumerable<string>>(cancellationToken: cancellationToken);
         }
 
-        public virtual async Task<bool> CanRead()
+        public virtual async Task<bool> CanRead(CancellationToken cancellationToken = default)
         {
             SetHeader();
-            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/actions/read");
+            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/actions/read", cancellationToken);
             responseMessage.EnsureSuccessStatusCode();
-            return await responseMessage.Content.ReadFromJsonAsync<bool>();
+            return await responseMessage.Content.ReadFromJsonAsync<bool>(cancellationToken: cancellationToken);
         }
 
-        public virtual async Task<bool> CanWrite()
+        public virtual async Task<bool> CanWrite(CancellationToken cancellationToken = default)
         {
             SetHeader();
-            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/actions/write");
+            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/actions/write", cancellationToken);
             responseMessage.EnsureSuccessStatusCode();
-            return await responseMessage.Content.ReadFromJsonAsync<bool>();
+            return await responseMessage.Content.ReadFromJsonAsync<bool>(cancellationToken: cancellationToken);
         }
 
-        public virtual async Task<string?> Create(T value)
+        public virtual async Task<string?> Create(T value, CancellationToken cancellationToken = default)
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.PostAsJsonAsync(PrepUrl, value);
+            using var responseMessage = await HttpClient.PostAsJsonAsync(PrepUrl, value, cancellationToken);
 
             if (!responseMessage.IsSuccessStatusCode)
                 return null;
@@ -69,58 +70,58 @@ namespace AcBlog.SDK.API
             return await responseMessage.Content.ReadAsStringAsync();
         }
 
-        public virtual async Task<bool> Delete(string id)
+        public virtual async Task<bool> Delete(string id, CancellationToken cancellationToken = default)
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.DeleteAsync($"{PrepUrl}/{id}");
+            using var responseMessage = await HttpClient.DeleteAsync($"{PrepUrl}/{id}", cancellationToken);
 
             if (!responseMessage.IsSuccessStatusCode)
                 return false;
 
-            return await responseMessage.Content.ReadFromJsonAsync<bool>();
+            return await responseMessage.Content.ReadFromJsonAsync<bool>(cancellationToken: cancellationToken);
         }
 
-        public virtual async Task<bool> Exists(string id)
+        public virtual async Task<bool> Exists(string id, CancellationToken cancellationToken = default)
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{id}");
+            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{id}", cancellationToken);
             return responseMessage.IsSuccessStatusCode;
         }
 
-        public virtual async Task<T?> Get(string id)
+        public virtual async Task<T?> Get(string id, CancellationToken cancellationToken = default)
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{id}");
+            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{id}", cancellationToken);
             responseMessage.EnsureSuccessStatusCode();
 
-            var result = await responseMessage.Content.ReadFromJsonAsync<T>();
+            var result = await responseMessage.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken);
             if (result != null)
                 result.Id = id;
 
             return result;
         }
 
-        public virtual async Task<QueryResponse<string>> Query(TQuery query)
+        public virtual async Task<QueryResponse<string>> Query(TQuery query, CancellationToken cancellationToken = default)
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.PutAsJsonAsync($"{PrepUrl}/query", query);
+            using var responseMessage = await HttpClient.PutAsJsonAsync($"{PrepUrl}/query", query, cancellationToken);
             responseMessage.EnsureSuccessStatusCode();
 
-            return await responseMessage.Content.ReadFromJsonAsync<QueryResponse<string>>();
+            return await responseMessage.Content.ReadFromJsonAsync<QueryResponse<string>>(cancellationToken: cancellationToken);
         }
 
-        public virtual async Task<bool> Update(T value)
+        public virtual async Task<bool> Update(T value, CancellationToken cancellationToken = default)
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.PutAsJsonAsync($"{PrepUrl}/{value.Id}", value);
+            using var responseMessage = await HttpClient.PutAsJsonAsync($"{PrepUrl}/{value.Id}", value, cancellationToken);
             responseMessage.EnsureSuccessStatusCode();
 
-            return await responseMessage.Content.ReadFromJsonAsync<bool>();
+            return await responseMessage.Content.ReadFromJsonAsync<bool>(cancellationToken: cancellationToken);
         }
     }
 }

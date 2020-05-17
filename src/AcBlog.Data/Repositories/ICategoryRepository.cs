@@ -1,11 +1,12 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories
 {
     public interface ICategoryRepository : IRecordRepository<Category, string>
     {
-        Task<QueryResponse<string>> Query(CategoryQueryRequest query);
+        Task<QueryResponse<string>> Query(CategoryQueryRequest query, CancellationToken cancellationToken = default);
     }
 }

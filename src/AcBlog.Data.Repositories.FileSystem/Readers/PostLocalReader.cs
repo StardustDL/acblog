@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Readers
@@ -12,12 +13,12 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
         {
         }
 
-        public override Task<bool> Exists(string id)
+        public override Task<bool> Exists(string id, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(File.Exists(GetPath(id)));
         }
 
-        protected override Task<Stream> GetFileReadStream(string path)
+        protected override Task<Stream> GetFileReadStream(string path, CancellationToken cancellationToken = default)
         {
             return Task.FromResult<Stream>(File.Open(path, FileMode.Open, FileAccess.Read));
         }

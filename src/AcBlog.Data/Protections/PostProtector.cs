@@ -4,6 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AcBlog.Data.Protections
@@ -60,18 +61,18 @@ namespace AcBlog.Data.Protections
 
         readonly static string ProtectFlag = Convert.ToBase64String(Encoding.UTF8.GetBytes("Protected Post by PostProtector"));
 
-        public Task<bool> IsProtected(Post value)
+        public Task<bool> IsProtected(Post value, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(value.Title == ProtectFlag);
         }
 
-        public async Task<Post> Protect(Post value, ProtectionKey key)
+        public async Task<Post> Protect(Post value, ProtectionKey key, CancellationToken cancellationToken = default)
         {
             var res = new Post { Id = value.Id };
             byte[] bs;
             using (var ms = new MemoryStream())
             {
-                await JsonSerializer.SerializeAsync(ms, value);
+                await JsonSerializer.SerializeAsync(ms, value, cancellationToken: cancellationToken);
                 bs = ms.ToArray();
             }
             var ky = Encoding.UTF8.GetBytes(key.Password);
@@ -83,7 +84,7 @@ namespace AcBlog.Data.Protections
             return res;
         }
 
-        public async Task<Post> Deprotect(Post value, ProtectionKey key)
+        public async Task<Post> Deprotect(Post value, ProtectionKey key, CancellationToken cancellationToken = default)
         {
             if (!await IsProtected(value))
             {
@@ -93,7 +94,7 @@ namespace AcBlog.Data.Protections
             var ky = Encoding.UTF8.GetBytes(key.Password);
             using (var ms = new MemoryStream(AesDecrypt(bs, ky)))
             {
-                return await JsonSerializer.DeserializeAsync<Post>(ms);
+                return await JsonSerializer.DeserializeAsync<Post>(ms, cancellationToken: cancellationToken);
             }
         }
     }

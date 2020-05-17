@@ -12,11 +12,17 @@ namespace AcBlog.Tools.SDK.Models
 {
     public class Workspace
     {
-        private Workspace(DirectoryInfo root) => Root = root;
+        private Workspace(DirectoryInfo root)
+        {
+            Root = root;
+            DbRoot = new DirectoryInfo(Path.Join(Root.FullName, ".acblog"));
+        }
 
         public WorkspaceConfiguration Configuration { get; private set; } = new WorkspaceConfiguration();
 
         public DirectoryInfo Root { get; }
+
+        public DirectoryInfo DbRoot { get; }
 
         public IBlogService? Local { get; private set; }
 
@@ -56,19 +62,28 @@ namespace AcBlog.Tools.SDK.Models
         public static async Task<Workspace> Load(DirectoryInfo root)
         {
             var result = new Workspace(root);
-            var fileinfo = new FileInfo(Path.Join(root.FullName, "config.json"));
-            if (fileinfo.Exists)
+            if (result.DbRoot.Exists)
             {
-                using var fs = fileinfo.Open(FileMode.Open, FileAccess.Read);
-                result.Configuration = await JsonSerializer.DeserializeAsync<WorkspaceConfiguration>(fs);
+                var fileinfo = new FileInfo(Path.Join(result.DbRoot.FullName, "config.json"));
+                if (fileinfo.Exists)
+                {
+                    using var fs = fileinfo.Open(FileMode.Open, FileAccess.Read);
+                    result.Configuration = await JsonSerializer.DeserializeAsync<WorkspaceConfiguration>(fs);
+                }
             }
             return result;
         }
 
         public async Task Save()
         {
-            var fileinfo = new FileInfo(Path.Join(Root.FullName, "config.json"));
+            DbRoot.Refresh();
+            if (!DbRoot.Exists)
+            {
+                DbRoot.Create();
+                DbRoot.Refresh();
+            }
 
+            var fileinfo = new FileInfo(Path.Join(DbRoot.FullName, "config.json"));
             using var fs = fileinfo.Open(FileMode.Create, FileAccess.Write);
             await JsonSerializer.SerializeAsync(fs, Configuration);
         }

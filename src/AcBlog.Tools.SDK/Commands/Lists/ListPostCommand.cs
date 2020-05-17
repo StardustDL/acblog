@@ -1,4 +1,8 @@
-﻿using AcBlog.Tools.SDK.Models;
+﻿using AcBlog.Data.Models;
+using AcBlog.Tools.SDK.Models;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.IO;
@@ -21,13 +25,12 @@ namespace AcBlog.Tools.SDK.Commands
             using var client = new HttpClient();
             await workspace.Connect(client);
             var service = workspace.Remote!.PostService;
-            var list = (await service.All()).ToList();
+            var list = (await service.All(cancellationToken)).ToList();
             console.Out.WriteLine($"Founded {list.Count} posts.");
             foreach (var id in list)
             {
-                if (cancellationToken.IsCancellationRequested)
-                    break;
-                var item = (await service.Get(id))!;
+                cancellationToken.ThrowIfCancellationRequested();
+                var item = (await service.Get(id, cancellationToken))!;
                 console.Out.WriteLine(item.Title);
             }
             return 0;

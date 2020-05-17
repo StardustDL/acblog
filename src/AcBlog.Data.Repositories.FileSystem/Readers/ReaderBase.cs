@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Readers
@@ -19,57 +20,53 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         protected abstract string GetPath(TId id);
 
-        protected abstract Task<Stream> GetFileReadStream(string path);
+        protected abstract Task<Stream> GetFileReadStream(string path, CancellationToken cancellationToken = default);
 
-        protected async Task EnsurePagingConfig(PagingPath paging)
+        protected async Task EnsurePagingConfig(PagingPath paging, CancellationToken cancellationToken = default)
         {
             if (paging.Config != null)
                 return;
             using var fs = await GetFileReadStream(paging.ConfigPath);
-            paging.Config = await JsonSerializer.DeserializeAsync<PagingConfig>(fs);
+            paging.Config = await JsonSerializer.DeserializeAsync<PagingConfig>(fs, cancellationToken: cancellationToken);
         }
 
-        protected async Task<IList<string>> GetPagingResult(PagingPath paging, Pagination pagination)
+        protected async Task<IList<string>> GetPagingResult(PagingPath paging, Pagination pagination, CancellationToken cancellationToken = default)
         {
             IList<string> result = Array.Empty<string>();
 
-            try
+            var path = paging.GetPagePath(pagination);
+            if (path != null)
             {
-                var path = paging.GetPagePath(pagination);
-                if (path != null)
-                {
-                    using var fs = await GetFileReadStream(path);
-                    result = await JsonSerializer.DeserializeAsync<IList<string>>(fs);
-                }
+                using var fs = await GetFileReadStream(path, cancellationToken);
+                result = await JsonSerializer.DeserializeAsync<IList<string>>(fs, cancellationToken: cancellationToken);
             }
-            catch { }
 
             return result;
         }
 
         public RepositoryAccessContext? Context { get; set; }
 
-        public abstract Task<IEnumerable<string>> All();
+        public abstract Task<IEnumerable<string>> All(CancellationToken cancellationToken = default);
 
-        public Task<bool> CanRead() => Task.FromResult(true);
+        public Task<bool> CanRead(CancellationToken cancellationToken = default) => Task.FromResult(true);
 
-        public Task<bool> CanWrite() => Task.FromResult(false);
+        public Task<bool> CanWrite(CancellationToken cancellationToken = default) => Task.FromResult(false);
 
-        public Task<TId?> Create(T value) => Task.FromResult<TId?>(null);
+        public Task<TId?> Create(T value, CancellationToken cancellationToken = default) => Task.FromResult<TId?>(null);
 
-        public Task<bool> Delete(TId id) => Task.FromResult(false);
+        public Task<bool> Delete(TId id, CancellationToken cancellationToken = default) => Task.FromResult(false);
 
-        public abstract Task<bool> Exists(TId id);
+        public abstract Task<bool> Exists(TId id, CancellationToken cancellationToken = default);
 
-        public virtual async Task<T?> Get(TId id)
+        public virtual async Task<T?> Get(TId id, CancellationToken cancellationToken = default)
         {
-            using var fs = await GetFileReadStream(GetPath(id));
-            var result = await JsonSerializer.DeserializeAsync<T?>(fs);
+            using var fs = await GetFileReadStream(GetPath(id), cancellationToken);
+            var result = await JsonSerializer.DeserializeAsync<T?>(fs, cancellationToken: cancellationToken);
             if (result != null)
                 result.Id = id;
             return result;
         }
 
-        public Task<bool> Update(T value) => Task.FromResult(false);
+        public Task<bool> Update(T value, CancellationToken cancellationToken = default) => Task.FromResult(false);
     }
 }

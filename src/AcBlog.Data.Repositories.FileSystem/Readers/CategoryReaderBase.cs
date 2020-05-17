@@ -2,6 +2,7 @@
 using AcBlog.Data.Models.Actions;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Readers
@@ -14,13 +15,14 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         protected override string GetPath(string id) => Path.Join(RootPath, $"{id}.json").Replace("\\", "/");
 
-        public override async Task<IEnumerable<string>> All()
+        public override async Task<IEnumerable<string>> All(CancellationToken cancellationToken = default)
         {
             List<string> result = new List<string>();
             CategoryQueryRequest pq = new CategoryQueryRequest();
             while (true)
             {
-                var req = await Query(pq);
+                cancellationToken.ThrowIfCancellationRequested();
+                var req = await Query(pq, cancellationToken);
                 result.AddRange(req.Results);
                 if (!req.CurrentPage.HasNextPage)
                     break;
@@ -29,7 +31,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             return result;
         }
 
-        public virtual async Task<QueryResponse<string>> Query(CategoryQueryRequest query)
+        public virtual async Task<QueryResponse<string>> Query(CategoryQueryRequest query, CancellationToken cancellationToken = default)
         {
             query.Pagination ??= new Pagination();
 
@@ -37,10 +39,10 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
             paging ??= new PagingPath(Path.Join(RootPath, "pages"));
 
-            await EnsurePagingConfig(paging);
+            await EnsurePagingConfig(paging, cancellationToken);
             paging.FillPagination(query.Pagination);
 
-            var res = new QueryResponse<string>(await GetPagingResult(paging, query.Pagination), query.Pagination);
+            var res = new QueryResponse<string>(await GetPagingResult(paging, query.Pagination, cancellationToken), query.Pagination);
             return res;
         }
     }

@@ -21,13 +21,12 @@ namespace AcBlog.Tools.SDK.Commands
             using var client = new HttpClient();
             await workspace.Connect(client);
             var service = workspace.Remote!.CategoryService;
-            var list = (await service.All()).ToList();
+            var list = (await service.All(cancellationToken)).ToList();
             console.Out.WriteLine($"Founded {list.Count} categories.");
             foreach (var id in list)
             {
-                if (cancellationToken.IsCancellationRequested)
-                    break;
-                var item = (await service.Get(id))!;
+                cancellationToken.ThrowIfCancellationRequested();
+                var item = (await service.Get(id, cancellationToken))!;
                 console.Out.WriteLine(item.Name);
             }
             return 0;
