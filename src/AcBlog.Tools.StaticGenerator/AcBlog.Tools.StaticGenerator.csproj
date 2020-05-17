@@ -16,6 +16,7 @@
     <AssemblyName>acblog-sgen</AssemblyName>
     <PackageId>AcBlog.Tools.StaticGenerator</PackageId>
     <Product>AcBlog.Tools.StaticGenerator</Product>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +27,13 @@
   <ItemGroup>
     <ProjectReference Include="..\AcBlog.Data.Repositories.FileSystem\AcBlog.Data.Repositories.FileSystem.csproj" />
     <ProjectReference Include="..\AcBlog.Data\AcBlog.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\assets\images\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

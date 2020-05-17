@@ -12,6 +12,7 @@
     <PackageProjectUrl>https://github.com/acblog</PackageProjectUrl>
     <RepositoryUrl>https://github.com/acblog/acblog</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,4 +21,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\assets\images\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 </Project>

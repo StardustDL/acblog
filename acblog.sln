@@ -45,7 +45,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{8A5E6B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.WebAssembly.Shared", "src\AcBlog.Client.WebAssembly.Shared\AcBlog.Client.WebAssembly.Shared.csproj", "{442B7279-91B4-4639-B05B-CE27B5AB3237}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcBlog.Tools.SDK", "src\AcBlog.Tools.SDK\AcBlog.Tools.SDK.csproj", "{A8D7CF4C-9692-4613-9167-7F42A88AB1F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Tools.SDK", "src\AcBlog.Tools.SDK\AcBlog.Tools.SDK.csproj", "{A8D7CF4C-9692-4613-9167-7F42A88AB1F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{2E124B69-A483-40F7-A9F9-CA2616A8C45D}"
+	ProjectSection(SolutionItems) = preProject
+		assets\images\icon.png = assets\images\icon.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

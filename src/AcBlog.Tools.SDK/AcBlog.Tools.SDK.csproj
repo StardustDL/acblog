@@ -17,6 +17,7 @@
     <AssemblyName>acblog</AssemblyName>
     <PackageId>AcBlog.Tools.SDK</PackageId>
     <Product>AcBlog.Tools.SDK</Product>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +32,13 @@
 
   <ItemGroup>
     <Folder Include="Commands\News\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\assets\images\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
