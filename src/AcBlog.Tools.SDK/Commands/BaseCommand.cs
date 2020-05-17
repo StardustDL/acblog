@@ -25,20 +25,32 @@ namespace AcBlog.Tools.SDK.Commands
 
         public virtual Task<int> Handle(T argument, IConsole console, InvocationContext context, CancellationToken cancellationToken) => Task.FromResult(0);
 
-        private async Task<int> HandleWithCancellation(T argument, IConsole console, InvocationContext context, CancellationToken cancellationToken)
+        private async Task<int> HandleWrapper(T argument, IConsole console, InvocationContext context, CancellationToken cancellationToken)
         {
             try
             {
-                return await Handle(argument, console, context, cancellationToken);
-            }
-            catch (OperationCanceledException)
-            {
-                if (cancellationToken.IsCancellationRequested)
+                try
                 {
-                    console.Error.WriteLine("Operation has been cancelled.");
-                    return -1;
+                    return await Handle(argument, console, context, cancellationToken);
                 }
+                catch (OperationCanceledException)
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        console.Error.WriteLine("Operation has been cancelled.");
+                        return -1;
+                    }
+                    throw;
+                }
+            }
+            catch(Exception ex)
+            {
+#if DEBUG
                 throw;
+#else
+                console.Error.WriteLine($"Error occurs: {ex.Message}.");
+                return 1;
+#endif
             }
         }
 
@@ -46,7 +58,7 @@ namespace AcBlog.Tools.SDK.Commands
         {
             Command command = Configure();
             if (!DisableHandler)
-                command.Handler = CommandHandler.Create<T, IConsole, InvocationContext, CancellationToken>(HandleWithCancellation);
+                command.Handler = CommandHandler.Create<T, IConsole, InvocationContext, CancellationToken>(HandleWrapper);
             return command;
         }
     }

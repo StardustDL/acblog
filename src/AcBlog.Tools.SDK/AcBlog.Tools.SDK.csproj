@@ -29,4 +29,8 @@
     <ProjectReference Include="..\AcBlog.SDK\AcBlog.SDK.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\News\" />
+  </ItemGroup>
+
 </Project>

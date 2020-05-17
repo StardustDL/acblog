@@ -52,9 +52,10 @@ jobs:
       with:
         name: ci-${{ matrix.os }}
         path: ./reports
-  pub-client:
+  pub-images:
     needs: ci
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -88,7 +89,6 @@ jobs:
         name: wasm
         path: ./src/AcBlog.Client.WebAssembly/publish
     - name: Push image
-      if: github.event_name == 'push'
       uses: docker/build-push-action@v1
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
@@ -97,7 +97,6 @@ jobs:
         tag_with_ref: true
         dockerfile: ./docker/client/wasm/Dockerfile
     - name: Push image
-      if: github.event_name == 'push'
       uses: docker/build-push-action@v1
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
@@ -105,27 +104,7 @@ jobs:
         repository: acblog/wasm-host
         tag_with_ref: true
         dockerfile: ./docker/client/wasm-host/Dockerfile
-  pub-api:
-    needs: ci
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.dotnet-version }}
-    - name: Setup NodeJS
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ env.node-version }}
-    - name: Restore
-      run: |
-        npm install --global gulp
-        dotnet tool install --global Microsoft.Web.LibraryManager.Cli
-        pwsh -c ./tools.ps1 restore
     - name: Push image
-      if: github.event_name == 'push'
       uses: docker/build-push-action@v1
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
@@ -181,7 +160,7 @@ jobs:
         dotnet nuget push ./packages/AcBlog.Tools.SDK.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
         dotnet nuget push ./packages/AcBlog.Tools.StaticGenerator.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
   invoke-mirrors:
-    needs: [pub-client, pub-api]
+    needs: [pub-images]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout

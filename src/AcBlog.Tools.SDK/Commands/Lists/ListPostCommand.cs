@@ -27,11 +27,11 @@ namespace AcBlog.Tools.SDK.Commands
             var service = workspace.Remote!.PostService;
             var list = (await service.All(cancellationToken)).ToList();
             console.Out.WriteLine($"Founded {list.Count} posts.");
-            foreach (var id in list)
+            var items = await Task.WhenAll(list.Select(id => service.Get(id, cancellationToken)));
+            foreach (var item in items)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var item = (await service.Get(id, cancellationToken))!;
-                console.Out.WriteLine(item.Title);
+                console.Out.WriteLine(item!.Title);
             }
             return 0;
         }

@@ -26,6 +26,8 @@ namespace AcBlog.Tools.SDK.Models
 
         public IBlogService? Local { get; private set; }
 
+        public bool HasInitialized => Local != null;
+
         public IBlogService? Remote { get; private set; }
 
         public Task Connect(HttpClient httpClient)

@@ -27,7 +27,12 @@ namespace AcBlog.Tools.SDK
             rootCommand.AddCommand(new InitCommand().Build());
             rootCommand.AddCommand(new ConnectCommand().Build());
             rootCommand.AddCommand(new LoginCommand().Build());
+            rootCommand.AddCommand(new LogoutCommand().Build());
             rootCommand.AddCommand(new ListCommand().Build());
+            rootCommand.AddCommand(new NewCommand().Build());
+            rootCommand.AddCommand(new PullCommand().Build());
+            rootCommand.AddCommand(new PushCommand().Build());
+            rootCommand.AddCommand(new FetchCommand().Build());
 
             Workspace = await Workspace.Load(new DirectoryInfo(Environment.CurrentDirectory));
 

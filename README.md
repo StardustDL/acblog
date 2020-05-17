@@ -107,6 +107,17 @@ docker-compose up
 
 Maybe you need to restart api container after database initializing.
 
+### SDK
+
+Use AcBlog's command-line SDK tool to communicate with AcBlog server.
+
+```sh
+dotnet tool install -g AcBlog.Tools.SDK --version 0.0.1 \
+  --add-source https://www.myget.org/F/stardustdl/api/v3/index.json
+
+acblog --help
+```
+
 ## Build
 
 1. Install .NET Core SDK 3.1, NodeJS 12.x and npm.

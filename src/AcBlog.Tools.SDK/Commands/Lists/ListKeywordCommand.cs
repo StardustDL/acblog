@@ -23,11 +23,11 @@ namespace AcBlog.Tools.SDK.Commands
             var service = workspace.Remote!.KeywordService;
             var list = (await service.All(cancellationToken)).ToList();
             console.Out.WriteLine($"Founded {list.Count} keywords.");
-            foreach (var id in list)
+            var items = await Task.WhenAll(list.Select(id => service.Get(id, cancellationToken)));
+            foreach (var item in items)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var item = (await service.Get(id, cancellationToken))!;
-                console.Out.WriteLine(item.Name);
+                console.Out.WriteLine(item!.Name);
             }
             return 0;
         }
