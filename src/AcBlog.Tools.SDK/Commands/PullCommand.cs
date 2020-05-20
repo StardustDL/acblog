@@ -23,7 +23,7 @@ namespace AcBlog.Tools.SDK.Commands
         public override Command Configure()
         {
             var result = base.Configure();
-            result.AddOption(new Option<bool>($"--{nameof(CArgument.Force).ToLowerInvariant()}", "Force update"));
+            result.AddOption(new Option<bool>($"--{nameof(CArgument.Force).ToLowerInvariant()}", "Force pull"));
             return result;
         }
 

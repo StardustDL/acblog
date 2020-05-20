@@ -1,5 +1,9 @@
-﻿using AcBlog.SDK.Filters;
+﻿using AcBlog.Data.Models;
+using AcBlog.SDK.Filters;
 using System.Collections;
+using System.Collections.Generic;
+using System.Net.WebSockets;
+using System.Threading.Tasks;
 
 namespace AcBlog.SDK
 {
@@ -28,6 +32,14 @@ namespace AcBlog.SDK
         public static PostCategoryFilter CreateCategoryFilter(this IPostService service)
         {
             return new PostCategoryFilter(service);
+        }
+
+        public static Task<Post?[]> GetPosts(this IPostService service,IEnumerable<string> ids)
+        {
+            List<Task<Post?>> posts = new List<Task<Post?>>();
+            foreach (var id in ids)
+                posts.Add(service.Get(id));
+            return Task.WhenAll(posts.ToArray());
         }
     }
 }

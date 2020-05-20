@@ -108,13 +108,13 @@
         else
         {
             Model = await Service.PostService.Get(Id);
-            SelectedKeywords = new List<Keyword>(await Service.KeywordService.GetData(Model.KeywordIds));
+            SelectedKeywords = new List<Keyword>(await Service.KeywordService.GetKeywords(Model.KeywordIds));
             IsCreate = false;
             Title = "Edit";
         }
 
         Categories = await Service.CategoryService.GetAllData();
-        Keywords = await Service.KeywordService.GetAllData();
+        Keywords = await Service.KeywordService.GetKeywords(await Service.KeywordService.All());
     }
 
     private void OnAddKeyword()

@@ -55,9 +55,5 @@ namespace AcBlog.Tools.SDK.Models.Text
         {
             Raw = datastr
         };
-
-        public Post InitialData { get; set; } = new Post();
-
-        protected override Post CreateInitialData() => InitialData;
     }
 }

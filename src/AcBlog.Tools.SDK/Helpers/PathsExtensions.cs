@@ -13,7 +13,7 @@ namespace AcBlog.Tools.SDK.Helpers
             return Path.Join(root.Root.FullName, "posts");
         }
 
-        public static IEnumerable<string> GetPosts(this Workspace root)
+        public static IEnumerable<string> GetPostFiles(this Workspace root)
         {
             return Directory.EnumerateFiles(root.GetPostRoot(), "*.md", SearchOption.AllDirectories);
         }
@@ -23,7 +23,7 @@ namespace AcBlog.Tools.SDK.Helpers
             return Path.Join(root.Root.FullName, "categories");
         }
 
-        public static IEnumerable<string> GetCategories(this Workspace root)
+        public static IEnumerable<string> GetCategoryFiles(this Workspace root)
         {
             return Directory.EnumerateFiles(root.GetCategoryRoot(), "*.md", SearchOption.AllDirectories);
         }
@@ -33,7 +33,7 @@ namespace AcBlog.Tools.SDK.Helpers
             return Path.Join(root.Root.FullName, "keywords");
         }
 
-        public static IEnumerable<string> GetKeywords(this Workspace root)
+        public static IEnumerable<string> GetKeywordFiles(this Workspace root)
         {
             return Directory.EnumerateFiles(root.GetKeywordRoot(), "*.md", SearchOption.AllDirectories);
         }

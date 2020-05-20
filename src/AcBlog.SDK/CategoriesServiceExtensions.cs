@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 namespace AcBlog.SDK
 {
-    public static class KeywordsServiceExtensions
+    public static class CategoriesServiceExtensions
     {
-        public static Task<Keyword?[]> GetKeywords(this IKeywordService service, IEnumerable<string> ids)
+        public static Task<Category?[]> GetCategories(this ICategoryService service, IEnumerable<string> ids)
         {
-            List<Task<Keyword?>> posts = new List<Task<Keyword?>>();
+            List<Task<Category?>> posts = new List<Task<Category?>>();
             foreach (var id in ids)
                 posts.Add(service.Get(id));
             return Task.WhenAll(posts.ToArray());

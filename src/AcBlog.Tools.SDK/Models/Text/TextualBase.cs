@@ -6,7 +6,7 @@ using YamlDotNet.Serialization;
 
 namespace AcBlog.Tools.SDK.Models.Text
 {
-    public abstract class TextualBase<T, TMeta> where TMeta : class
+    public abstract class TextualBase<T, TMeta> where TMeta : class where T : new()
     {
         static ISerializer YamlSerializer { get; } = new SerializerBuilder().Build();
 
@@ -14,7 +14,7 @@ namespace AcBlog.Tools.SDK.Models.Text
 
         const string MetaSplitter = "---";
 
-        protected abstract T CreateInitialData();
+        protected virtual T CreateInitialData() => new T();
 
         protected virtual string FormatMetadata(TMeta metadata)
         {

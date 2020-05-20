@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AcBlog.Data.Models;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace AcBlog.Tools.SDK.Helpers

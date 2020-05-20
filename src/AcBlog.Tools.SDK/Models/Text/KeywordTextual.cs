@@ -22,9 +22,5 @@ namespace AcBlog.Tools.SDK.Models.Text
             data.Id = meta.id;
             data.Name = meta.name;
         }
-
-        public Keyword InitialData { get; set; } = new Keyword();
-
-        protected override Keyword CreateInitialData() => InitialData;
     }
 }
