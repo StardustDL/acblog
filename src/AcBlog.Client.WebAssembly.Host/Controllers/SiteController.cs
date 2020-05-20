@@ -1,104 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.ServiceModel.Syndication;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using AcBlog.Client.WebAssembly.Host.Models;
+using AcBlog.Client.WebAssembly.Models;
+using AcBlog.Data.Models;
 using AcBlog.SDK;
+using Markdig;
+using Markdig.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace AcBlog.Client.WebAssembly.Host.Controllers
 {
+
+
     [Route("[controller]")]
     [ApiController]
     public class SiteController : ControllerBase
     {
-        public enum ChangeFrequency
-        {
-            Always,
-            Hourly,
-            Daily,
-            Weekly,
-            Monthly,
-            Yearly,
-            Never
-        }
-
-        public class SitemapUrl
-        {
-            public string Url { get; set; }
-            public DateTime? Modified { get; set; }
-            public ChangeFrequency? ChangeFrequency { get; set; }
-            public double? Priority { get; set; }
-        }
-
-        public class SitemapBuilder
-        {
-            private readonly XNamespace NS = "http://www.sitemaps.org/schemas/sitemap/0.9";
-
-            private List<SitemapUrl> _urls;
-
-            public SitemapBuilder()
-            {
-                _urls = new List<SitemapUrl>();
-            }
-
-            public void AddUrl(string url, DateTime? modified = null, ChangeFrequency? changeFrequency = null, double? priority = null)
-            {
-                _urls.Add(new SitemapUrl()
-                {
-                    Url = url,
-                    Modified = modified,
-                    ChangeFrequency = changeFrequency,
-                    Priority = priority,
-                });
-            }
-
-            public override string ToString()
-            {
-                var sitemap = new XDocument(
-                    new XDeclaration("1.0", "utf-8", "yes"),
-                    new XElement(NS + "urlset",
-                        from item in _urls
-                        select CreateItemElement(item)
-                        ));
-
-                return sitemap.ToString();
-            }
-
-            private XElement CreateItemElement(SitemapUrl url)
-            {
-                XElement itemElement = new XElement(NS + "url", new XElement(NS + "loc", url.Url.ToLower()));
-
-                if (url.Modified.HasValue)
-                {
-                    itemElement.Add(new XElement(NS + "lastmod", url.Modified.Value.ToString("yyyy-MM-ddTHH:mm:ss.f") + "+00:00"));
-                }
-
-                if (url.ChangeFrequency.HasValue)
-                {
-                    itemElement.Add(new XElement(NS + "changefreq", url.ChangeFrequency.Value.ToString().ToLower()));
-                }
-
-                if (url.Priority.HasValue)
-                {
-                    itemElement.Add(new XElement(NS + "priority", url.Priority.Value.ToString("N1")));
-                }
-
-                return itemElement;
-            }
-        }
 
         private IBlogService BlogService { get; }
 
         public IConfiguration Configuration { get; }
 
-        public SiteController(IBlogService blogService, IConfiguration configuration)
+        public BlogSettings BlogSettings { get; }
+
+        private string BaseAddress { get; }
+
+        static MarkdownPipeline Pipeline { get; } = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+
+        public SiteController(IBlogService blogService, IConfiguration configuration, BlogSettings blogSettings)
         {
             BlogService = blogService;
             Configuration = configuration;
+            BlogSettings = blogSettings;
+            BaseAddress = Configuration.GetBaseAddress().TrimEnd('/');
         }
 
         [HttpGet("sitemap")]
@@ -107,36 +51,76 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
         {
             var siteMapBuilder = new SitemapBuilder();
 
-            string baseAddress = Configuration.GetBaseAddress().TrimEnd('/');
-            siteMapBuilder.AddUrl(baseAddress);
+
+            siteMapBuilder.AddUrl(BaseAddress);
             {
                 var posts = await BlogService.PostService.All();
-                siteMapBuilder.AddUrl($"{baseAddress}/posts");
-                siteMapBuilder.AddUrl($"{baseAddress}/articles");
-                siteMapBuilder.AddUrl($"{baseAddress}/slides");
-                siteMapBuilder.AddUrl($"{baseAddress}/notes");
+                siteMapBuilder.AddUrl($"{BaseAddress}/posts");
+                siteMapBuilder.AddUrl($"{BaseAddress}/articles");
+                siteMapBuilder.AddUrl($"{BaseAddress}/slides");
+                siteMapBuilder.AddUrl($"{BaseAddress}/notes");
                 foreach (var id in posts)
                 {
-                    siteMapBuilder.AddUrl($"{baseAddress}/posts/{id}");
+                    siteMapBuilder.AddUrl($"{BaseAddress}/posts/{id}");
                 }
             };
             {
                 var keywords = await BlogService.KeywordService.All();
-                siteMapBuilder.AddUrl($"{baseAddress}/keywords");
+                siteMapBuilder.AddUrl($"{BaseAddress}/keywords");
                 foreach (var id in keywords)
                 {
-                    siteMapBuilder.AddUrl($"{baseAddress}/keywords/{id}");
+                    siteMapBuilder.AddUrl($"{BaseAddress}/keywords/{id}");
                 }
             };
             {
                 var categories = await BlogService.CategoryService.All();
-                siteMapBuilder.AddUrl($"{baseAddress}/categories");
+                siteMapBuilder.AddUrl($"{BaseAddress}/categories");
                 foreach (var id in categories)
                 {
-                    siteMapBuilder.AddUrl($"{baseAddress}/categories/{id}");
+                    siteMapBuilder.AddUrl($"{BaseAddress}/categories/{id}");
                 }
             };
             return Content(siteMapBuilder.ToString(), "text/xml");
+        }
+
+        [HttpGet("atom")]
+        [HttpGet("atom.xml")]
+        public async Task<ActionResult> GetFeed()
+        {
+            SyndicationFeed feed = new SyndicationFeed(BlogSettings.Name, BlogSettings.Description, new Uri(BaseAddress));
+            SyndicationPerson author = new SyndicationPerson("", BlogSettings.Onwer, BaseAddress);
+            feed.Authors.Add(author);
+            Dictionary<string, SyndicationCategory> categoryMap = new Dictionary<string, SyndicationCategory>();
+            {
+                var cates = await BlogService.CategoryService.GetCategories(await BlogService.CategoryService.All());
+                foreach (var p in cates)
+                {
+                    var cate = new SyndicationCategory(p.Name);
+                    categoryMap.Add(p.Id, cate);
+                    feed.Categories.Add(cate);
+                }
+            }
+            {
+                var posts = await BlogService.PostService.GetPosts(await BlogService.PostService.All());
+                List<SyndicationItem> items = new List<SyndicationItem>();
+                foreach (var p in posts)
+                {
+                    var s = new SyndicationItem(p.Title,
+                        SyndicationContent.CreateHtmlContent(Markdown.ToHtml(p.Content.Raw, Pipeline)),
+                        new Uri($"{BaseAddress}/posts/{p.Id}"), p.Id, p.ModificationTime);
+                    s.Authors.Add(author);
+                    string summary = Markdown.ToPlainText(p.Content.Raw, Pipeline);
+                    s.Summary = SyndicationContent.CreatePlaintextContent(summary.Length <= 100 ? summary : summary.Substring(0, 100));
+                    s.Categories.Add(categoryMap[p.CategoryId]);
+                    s.PublishDate = p.CreationTime;
+                    items.Add(s);
+                }
+                feed.Items = items.AsEnumerable();
+            }
+            StringBuilder sb = new StringBuilder();
+            using (var writer = XmlWriter.Create(sb))
+                feed.GetAtom10Formatter().WriteTo(writer);
+            return Content(sb.ToString(), "text/xml");
         }
     }
 }
