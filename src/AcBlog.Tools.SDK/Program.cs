@@ -25,7 +25,6 @@ namespace AcBlog.Tools.SDK
             rootCommand.AddCommand(new NewCommand().Build());
             rootCommand.AddCommand(new PullCommand().Build());
             rootCommand.AddCommand(new PushCommand().Build());
-            rootCommand.AddCommand(new FetchCommand().Build());
 
             await Workspace.Load();
 

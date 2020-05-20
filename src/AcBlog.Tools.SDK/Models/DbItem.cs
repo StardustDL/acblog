@@ -1,9 +1,11 @@
-﻿namespace AcBlog.Tools.SDK.Models
+﻿using System;
+
+namespace AcBlog.Tools.SDK.Models
 {
     public class DbItem
     {
-        public string Id { get; set; } = string.Empty;
+        public string RemoteHash { get; set; } = string.Empty;
 
-        public string OriginHash { get; set; } = string.Empty;
+        public DateTimeOffset LastUpdateTime { get; set; }
     }
 }

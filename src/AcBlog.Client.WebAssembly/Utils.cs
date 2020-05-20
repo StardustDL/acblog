@@ -14,7 +14,7 @@ namespace AcBlog.Client.WebAssembly
             var tokenResult = await provider.RequestAccessToken();
             if (tokenResult.TryGetToken(out var token))
             {
-                if (repository.Context == null)
+                if (repository.Context is null)
                     repository.Context = new RepositoryAccessContext();
                 repository.Context.Token = token.Value;
             }

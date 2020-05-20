@@ -120,7 +120,7 @@
     private void OnAddKeyword()
     {
         var k = Keywords.FirstOrDefault(x => x.Id == SelectKeywordId);
-        if (k == null)
+        if (k is null)
             return;
         SelectedKeywords.Add(k);
         StateHasChanged();
@@ -129,7 +129,7 @@
     private void OnRemoveKeyword()
     {
         var k = SelectedKeywords.FirstOrDefault(x => x.Id == SelectKeywordId);
-        if (k == null)
+        if (k is null)
             return;
         SelectedKeywords.Remove(k);
         StateHasChanged();

@@ -26,15 +26,11 @@ namespace AcBlog.Tools.SDK.Models
 
         public DirectoryInfo DbRoot { get; }
 
-        public IBlogService? Local { get; private set; }
-
-        public bool HasInitialized => Local != null;
-
         public IBlogService? Remote { get; private set; }
 
         public Task Connect(HttpClient httpClient)
         {
-            if (Configuration.Remote == null)
+            if (Configuration.Remote is null)
                 throw new Exception("No remote configured.");
             httpClient.BaseAddress = Configuration.Remote.Uri;
             if (Configuration.Remote.IsStatic)
@@ -50,7 +46,7 @@ namespace AcBlog.Tools.SDK.Models
 
         public Task Login()
         {
-            if (Remote == null)
+            if (Remote is null)
                 throw new Exception("Please connect first.");
             Remote.PostService.Context ??= new RepositoryAccessContext();
             Remote.KeywordService.Context ??= new RepositoryAccessContext();

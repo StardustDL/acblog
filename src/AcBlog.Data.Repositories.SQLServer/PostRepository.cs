@@ -40,7 +40,7 @@ namespace AcBlog.Data.Repositories.SQLServer
         public async Task<bool> Delete(string id,CancellationToken cancellationToken = default)
         {
             var item = await Data.Posts.FindAsync(new object[] { id },cancellationToken);
-            if (item == null)
+            if (item is null)
                 return false;
             Data.Posts.Remove(item);
             await Data.SaveChangesAsync(cancellationToken);
@@ -112,7 +112,7 @@ namespace AcBlog.Data.Repositories.SQLServer
             var to = PostData.From(value);
 
             var item = await Data.Posts.FindAsync(new object[] { to.Id }, cancellationToken);
-            if (item == null)
+            if (item is null)
                 return false;
 
             item.KeywordIds = to.KeywordIds;

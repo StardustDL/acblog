@@ -1,6 +1,8 @@
-﻿using AcBlog.Tools.SDK.Models;
+﻿using AcBlog.Tools.SDK.Helpers;
+using AcBlog.Tools.SDK.Models;
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +20,18 @@ namespace AcBlog.Tools.SDK.Commands
             workspace.Configuration.Remote = null;
             workspace.Configuration.Token = "";
             await workspace.Save();
+            {
+                DirectoryInfo di = new DirectoryInfo(workspace.GetPostRoot());
+                if (!di.Exists) di.Create();
+            }
+            {
+                DirectoryInfo di = new DirectoryInfo(workspace.GetCategoryRoot());
+                if (!di.Exists) di.Create();
+            }
+            {
+                DirectoryInfo di = new DirectoryInfo(workspace.GetKeywordRoot());
+                if (!di.Exists) di.Create();
+            }
             return 0;
         }
 

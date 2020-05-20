@@ -1,11 +1,8 @@
-﻿namespace AcBlog.Tools.SDK.Models
+﻿using System.Collections.Generic;
+
+namespace AcBlog.Tools.SDK.Models
 {
-    public class Db
+    public class Db : Dictionary<string, DbItem>
     {
-        public DbItemList Posts { get; set; } = new DbItemList();
-
-        public DbItemList Categories { get; set; } = new DbItemList();
-
-        public DbItemList Keywords { get; set; } = new DbItemList();
     }
 }

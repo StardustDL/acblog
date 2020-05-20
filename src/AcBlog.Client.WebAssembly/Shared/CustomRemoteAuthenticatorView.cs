@@ -51,7 +51,7 @@ namespace AcBlog.Client.WebAssembly.Shared
             switch (Action)
             {
                 case "profile":
-                    if (ApplicationPaths.RemoteProfilePath == null)
+                    if (ApplicationPaths.RemoteProfilePath is null)
                     {
                         UserProfile ??= ProfileNotSupportedFragment;
                         break;
@@ -60,7 +60,7 @@ namespace AcBlog.Client.WebAssembly.Shared
                     await RedirectToProfile();
                     break;
                 case "register":
-                    if (ApplicationPaths.RemoteRegisterPath == null)
+                    if (ApplicationPaths.RemoteRegisterPath is null)
                     {
                         Registering ??= RegisterNotSupportedFragment;
                         break;

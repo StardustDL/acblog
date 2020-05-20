@@ -18,7 +18,7 @@ namespace AcBlog.Tools.SDK.Models.Text
 
         protected virtual string FormatMetadata(TMeta metadata)
         {
-            return YamlSerializer.Serialize(metadata!);
+            return YamlSerializer.Serialize(metadata!).Trim(new char[] { '\r', '\n' });
         }
 
         protected virtual TMeta ParseMetadata(string metastr)
