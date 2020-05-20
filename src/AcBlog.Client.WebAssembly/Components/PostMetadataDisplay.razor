@@ -2,34 +2,37 @@
 
 @if (Value != null)
 {
-    <div style="color:#999">
-        <small>
-            <ItemTimeDisplay CreationTime="@Value.CreationTime" ModificationTime="@Value.ModificationTime" />
-        </small>
-        @if (!string.IsNullOrWhiteSpace(Value.CategoryId))
-        {
-            <small class="m-1">|</small>
+    <div class="d-flex flex-wrap justify-content-between" style="color:#999">
+        <div>
             <small>
-                <CategoryDisplay Id="@Value.CategoryId" />
+                <ItemTimeDisplay CreationTime="@Value.CreationTime" ModificationTime="@Value.ModificationTime" />
             </small>
-        }
-        @if (Value.KeywordIds != null && Value.KeywordIds.Length > 0)
-        {
-            <small class="m-1">|</small>
-            <small>
-                <KeywordsDisplay Ids="@Value.KeywordIds" />
-            </small>
-        }
+            @if (!string.IsNullOrWhiteSpace(Value.CategoryId))
+            {
+                <small class="m-1"></small>
+                <small>
+                    <CategoryDisplay Id="@Value.CategoryId" />
+                </small>
+            }
+            @if (Value.KeywordIds != null && Value.KeywordIds.Length > 0)
+            {
+                <small class="m-1"></small>
+                <small>
+                    <KeywordsDisplay Ids="@Value.KeywordIds" />
+                </small>
+            }
+        </div>
         @if (!string.IsNullOrEmpty(Value.Content.Raw))
         {
-            <small class="m-1">|</small>
-            <small>
-                <WordCountDisplay Document="@Value.Content" />
-            </small>
-            <small class="m-1">|</small>
-            <small>
-                <ReadTimeDisplay Document="@Value.Content" />
-            </small>
+            <div>
+                <small>
+                    <WordCountDisplay Document="@Value.Content" />
+                </small>
+                <small class="m-1"></small>
+                <small>
+                    <ReadTimeDisplay Document="@Value.Content" />
+                </small>
+            </div>
         }
     </div>
 }

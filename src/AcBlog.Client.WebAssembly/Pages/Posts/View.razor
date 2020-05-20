@@ -44,16 +44,22 @@
             {
                 case PostType.Article:
                 case PostType.Note:
-                    <div class="col-2 border-right">
-                        <div id="post-toc">
+                    @*
+                        <div class="col-2 border-right">
+                            <div id="post-toc">
 
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-10">
-                        <div class="ml-1">
-                            <ArticleRenderer Document="@Post.Content" TocElementId="post-toc" />
+                        <div class="col-10">
+                            <div class="ml-1">
+                                <ArticleRenderer Document="@Post.Content" TocElementId="post-toc" />
+                            </div>
                         </div>
-
+                    *@
+                    <div class="container">
+                        <div>
+                            <ArticleRenderer Document="@Post.Content"></ArticleRenderer>
+                        </div>
                     </div>
                     break;
                 case PostType.Slides:
