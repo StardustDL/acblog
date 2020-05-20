@@ -9,8 +9,8 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
-    "@mdi/font": "^5.1.45",
-    "bootstrap": "^4.4.1",
+    "@mdi/font": "^5.2.45",
+    "bootstrap": "^4.5.0",
     "github-markdown-css": "^4.0.0",
     "jquery": "^3.5.1",
     "monaco-editor": "^0.20.0",

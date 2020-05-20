@@ -19,5 +19,9 @@ namespace AcBlog.Tools.SDK.Models.Text
             if (!string.IsNullOrWhiteSpace(meta.name))
                 data.Name = meta.name;
         }
+
+        public Category InitialData { get; set; } = new Category();
+
+        protected override Category CreateInitialData() => InitialData;
     }
 }

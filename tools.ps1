@@ -19,19 +19,19 @@ if ($args.Count -gt 0) {
             }
         }
         "npmup" {
-            Set-Location src/AcBlog.Client.Components.Markdown ; ncu -u ; Set-Location ../..
+            Set-Location src/AcBlog.Client.Components.Markdown ; ncu -u ; npm install ; Set-Location ../..
             if (!$?) {
                 exit 1
             }
-            Set-Location src/AcBlog.Client.Components.CodeEditor ; ncu -u ; Set-Location ../..
+            Set-Location src/AcBlog.Client.Components.CodeEditor ; ncu -u ; npm install ; Set-Location ../..
             if (!$?) {
                 exit 1
             }
-            Set-Location src/AcBlog.Client.Components.Loading ; ncu -u ; Set-Location ../..
+            Set-Location src/AcBlog.Client.Components.Loading ; ncu -u ; npm install ; Set-Location ../..
             if (!$?) {
                 exit 1
             }
-            Set-Location src/AcBlog.Client.WebAssembly ; ncu -u ; Set-Location ../..
+            Set-Location src/AcBlog.Client.WebAssembly ; ncu -u ; npm install ; Set-Location ../..
             if (!$?) {
                 exit 1
             }

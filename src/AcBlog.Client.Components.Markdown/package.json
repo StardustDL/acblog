@@ -10,9 +10,9 @@
   "private": true,
   "dependencies": {
     "@iktakahiro/markdown-it-katex": "^3.1.0",
-    "highlight.js": "^10.0.2",
+    "highlight.js": "^10.0.3",
     "katex": "^0.11.1",
-    "markdown-it": "^10.0.0",
+    "markdown-it": "^11.0.0",
     "markdown-it-abbr": "^1.0.4",
     "markdown-it-container": "^2.0.0",
     "markdown-it-deflist": "^2.0.3",

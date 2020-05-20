@@ -10,7 +10,7 @@ namespace AcBlog.Tools.SDK.Models.Text
     {
         static ISerializer YamlSerializer { get; } = new SerializerBuilder().Build();
 
-        static IDeserializer YamlDeserializer { get; } = new DeserializerBuilder().WithNamingConvention(.Build();
+        static IDeserializer YamlDeserializer { get; } = new DeserializerBuilder().Build();
 
         const string MetaSplitter = "---";
 
@@ -48,7 +48,7 @@ namespace AcBlog.Tools.SDK.Models.Text
 
         public virtual T Parse(string rawText)
         {
-            T result = new T();
+            T result = CreateInitialData();
 
             var lines = rawText.Replace("\r\n", "\n").Replace("\r", "\n").Split("\n");
             int contentBg = 0;
