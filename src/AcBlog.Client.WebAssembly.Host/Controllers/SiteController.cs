@@ -111,7 +111,8 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
                     s.Authors.Add(author);
                     string summary = Markdown.ToPlainText(p.Content.Raw, Pipeline);
                     s.Summary = SyndicationContent.CreatePlaintextContent(summary.Length <= 100 ? summary : summary.Substring(0, 100));
-                    s.Categories.Add(categoryMap[p.CategoryId]);
+                    if (categoryMap.TryGetValue(p.CategoryId, out var cate))
+                        s.Categories.Add(cate);
                     s.PublishDate = p.CreationTime;
                     items.Add(s);
                 }

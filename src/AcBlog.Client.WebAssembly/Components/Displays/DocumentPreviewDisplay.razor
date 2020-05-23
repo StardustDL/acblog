@@ -1,6 +1,22 @@
-﻿<span>@(Document?.GetPreview() ?? "")</span>
+﻿@using Markdig;
+
+<span>@Preview</span>
 
 @code {
     [Parameter]
     public Document Document { get; set; }
+
+    private string Preview { get; set; } = string.Empty;
+
+    // static MarkdownPipeline Pipeline { get; } = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+
+    protected override void OnParametersSet()
+    {
+        if (Document != null)
+        {
+            string pre = Markdown.ToPlainText(Document.Raw);
+            Preview = pre.Length <= 300 ? pre : pre.Substring(0, 300);
+        }
+        base.OnParametersSet();
+    }
 }

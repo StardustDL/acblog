@@ -4,19 +4,16 @@
 @using Markdig
 
 <div @ref="markdownContent">
-    @((MarkupString)Prerender)
+    @((MarkupString)Html)
 </div>
 
 @code {
-    static MarkdownPipeline Pipeline { get; } = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+    static MarkdownPipeline Pipeline { get; } = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseTaskLists().Build();
 
     [Parameter]
     public string Value { get; set; } = "";
 
-    [Parameter]
-    public string TocElementId { get; set; } = null;
-
-    private string Prerender = "";
+    private string Html = "";
 
     private ElementReference markdownContent;
 
@@ -28,18 +25,17 @@
         var ind = BaseUrl.IndexOf('#');
         if (ind >= 0)
             BaseUrl = BaseUrl.Remove(ind);
+    }
 
-        Prerender = Markdig.Markdown.ToHtml(Value, Pipeline);
+    protected override void OnParametersSet()
+    {
+        Html = Markdig.Markdown.ToHtml(Value, Pipeline);
+        base.OnParametersSet();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await Render(Value);
-    }
-
-    public async Task Render(string value)
-    {
-        Value = value;
-        await JSRuntime.InvokeVoidAsync("AcBlogClientComponentsMarkdown_markdownRender", markdownContent, Value, TocElementId, BaseUrl);
+        await JSRuntime.InvokeVoidAsync("AcBlogClientComponentsMarkdown_highlight");
+        await JSRuntime.InvokeVoidAsync("AcBlogClientComponentsMarkdown_math");
     }
 }

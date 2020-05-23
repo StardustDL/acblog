@@ -9,13 +9,5 @@ namespace AcBlog.Data.Models
         public string Raw { get; set; } = "";
 
         public int WordCount => Raw.Length;
-
-        public string GetPreview()
-        {
-            if (Raw.Length <= 300)
-                return Raw;
-            else
-                return Raw.Substring(0, 300);
-        }
     }
 }

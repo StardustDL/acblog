@@ -1,13 +1,10 @@
 ﻿@using AcBlog.Client.Components.Markdown
 
 <article class="markdown-body">
-    <MarkdownRenderer Value="@Document.Raw" TocElementId="@TocElementId" />
+    <MarkdownRenderer Value="@Document.Raw" />
 </article>
 
 @code {
     [Parameter]
     public Document Document { get; set; }
-
-    [Parameter]
-    public string TocElementId { get; set; } = null;
 }
