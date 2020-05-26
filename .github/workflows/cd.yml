@@ -1,0 +1,128 @@
+name: CD
+
+on:
+  repository_dispatch:
+    types: [cd]
+
+defaults:
+  run:
+    shell: pwsh
+
+env:
+  dotnet-version: "3.1.300"
+  node-version: "12.x"
+
+jobs:
+  pub-images:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.dotnet-version }}
+    - name: Setup NodeJS
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.node-version }}
+    - name: Restore & Build
+      run: |
+        npm install --global gulp
+        dotnet tool install --global Microsoft.Web.LibraryManager.Cli
+        pwsh -c ./tools.ps1 restore
+        dotnet build -c Release
+    - name: Generate build status
+      run: |
+        cd src/AcBlog.Client.WebAssembly.Host
+        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./build.json
+    - name: Publish Client.WebAssembly
+      run: |
+        cd src/AcBlog.Client.WebAssembly
+        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./wwwroot/build.json
+        mkdir publish
+        dotnet publish -c Release -o ./publish
+    - name: Upload artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: wasm
+        path: ./src/AcBlog.Client.WebAssembly/publish
+    - name: Push Client.WebAssembly image
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: acblog/wasm
+        tag_with_ref: true
+        dockerfile: ./docker/client/wasm/Dockerfile
+    - name: Push Client.WebAssembly.Host image
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: acblog/wasm-host
+        tag_with_ref: true
+        dockerfile: ./docker/client/wasm-host/Dockerfile
+    - name: Push Server.API image
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: acblog/api
+        tag_with_ref: true
+        dockerfile: ./docker/server/api/Dockerfile
+  pub-pkgs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.dotnet-version }}
+    - name: Setup NodeJS
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.node-version }}
+    - name: Restore & Build
+      run: |
+        npm install --global gulp
+        dotnet tool install --global Microsoft.Web.LibraryManager.Cli
+        pwsh -c ./tools.ps1 restore
+        dotnet build -c Release
+    - name: Pack
+      run: |
+        pwsh -c ./tools.ps1 pack
+    - name: Upload artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: packages
+        path: ./packages
+    - name: Deploy
+      env:
+        MYGET_TOKEN: ${{ secrets.MYGET_TOKEN }}
+        VERSION: "0.0.1"
+      run: |
+        dotnet nuget push ./packages/AcBlog.Client.Components.CodeEditor.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Client.Components.Loading.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Client.Components.Markdown.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Client.Components.Slides.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Data.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.SDK.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Tools.SDK.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Tools.StaticGenerator.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+  invoke-repo-update:
+    needs: [pub-images, pub-pkgs]
+    strategy:
+      matrix:
+        repo: ['acblog/mirrors', 'acblog/acblog.github.io']
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.PUSH_TOKEN }}
+          repository: ${{ matrix.repo }}
+          event-type: update

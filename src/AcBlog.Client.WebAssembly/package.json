@@ -9,7 +9,7 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
-    "@mdi/font": "^5.2.45",
+    "@mdi/font": "^5.3.45",
     "bootstrap": "^4.5.0",
     "github-markdown-css": "^4.0.0",
     "jquery": "^3.5.1",

@@ -1,10 +1,12 @@
 # AcBlog
 
-![CI](https://github.com/acblog/acblog/workflows/CI/badge.svg) [![Homepage](https://img.shields.io/github/workflow/status/acblog/homepage/Deploy/master?label=homepage)](https://acblog.github.io) ![Mirrors](https://img.shields.io/github/workflow/status/acblog/mirrors/Mirror/master?label=mirrors) ![License](https://img.shields.io/github/license/acblog/acblog.svg)
+![CI](https://github.com/acblog/acblog/workflows/CI/badge.svg) ![CD](https://github.com/acblog/acblog/workflows/CD/badge.svg) [![Homepage](https://img.shields.io/github/workflow/status/acblog/acblog.github.io/Deploy/src?label=homepage)](https://github.com/acblog/acblog.github.io) ![Mirrors](https://img.shields.io/github/workflow/status/acblog/mirrors/Mirror/master?label=mirrors) ![License](https://img.shields.io/github/license/acblog/acblog.svg)
 
 An open source extensible static & dynamic blog system.
 
 ![](https://repository-images.githubusercontent.com/259549650/50d50d00-9073-11ea-8e72-0d3f1d3a7d8c)
+
+The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub Pages.
 
 ## Features
 
