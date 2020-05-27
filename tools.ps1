@@ -65,17 +65,17 @@ if ($args.Count -gt 0) {
         }
         "pack" {
             mkdir packages
-            dotnet pack -c Release -o ./packages
+            dotnet pack -c Release /p:Version=${env:build_version} -o ./packages
             if ($?) {
                 exit 0
             }
             Write-Output "Retry packing..."
-            dotnet pack -c Release -o ./packages
+            dotnet pack -c Release /p:Version=${env:build_version} -o ./packages
             if ($?) {
                 exit 0
             }
             Write-Output "Retry packing..."
-            dotnet pack -c Release -o ./packages
+            dotnet pack -c Release /p:Version=${env:build_version} -o ./packages
             if (!$?) {
                 exit 1
             }

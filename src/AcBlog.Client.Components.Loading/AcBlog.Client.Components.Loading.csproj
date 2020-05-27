@@ -5,7 +5,7 @@
     <RazorLangVersion>3.0</RazorLangVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.1</Version>
+    
     <Authors>StardustDL</Authors>
     <Company>AcBlog</Company>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

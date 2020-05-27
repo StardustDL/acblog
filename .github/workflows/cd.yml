@@ -11,6 +11,7 @@ defaults:
 env:
   dotnet-version: "3.1.300"
   node-version: "12.x"
+  build_version: "0.0.1.${{ github.run_number }}-preview"
 
 jobs:
   pub-images:
@@ -89,7 +90,7 @@ jobs:
         npm install --global gulp
         dotnet tool install --global Microsoft.Web.LibraryManager.Cli
         pwsh -c ./tools.ps1 restore
-        dotnet build -c Release
+        dotnet build -c Release /p:Version=${env:build_version}
     - name: Pack
       run: |
         pwsh -c ./tools.ps1 pack
@@ -101,18 +102,17 @@ jobs:
     - name: Deploy
       env:
         MYGET_TOKEN: ${{ secrets.MYGET_TOKEN }}
-        VERSION: "0.0.1"
       run: |
-        dotnet nuget push ./packages/AcBlog.Client.Components.CodeEditor.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Client.Components.Loading.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Client.Components.Markdown.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Client.Components.Slides.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Data.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.SDK.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Tools.SDK.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Tools.StaticGenerator.$env:VERSION.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Client.Components.CodeEditor.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Client.Components.Loading.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Client.Components.Markdown.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Client.Components.Slides.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Data.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.SDK.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Tools.SDK.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Tools.StaticGenerator.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
   invoke-repo-update:
     needs: [pub-images, pub-pkgs]
     strategy:
