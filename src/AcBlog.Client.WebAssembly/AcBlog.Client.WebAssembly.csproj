@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AcBlog.Client.Components.CodeEditor" Version="0.0.1.1-preview" />
+    <PackageReference Include="AcBlog.Client.Components.Loading" Version="0.0.1.1-preview" />
+    <PackageReference Include="AcBlog.Client.Components.Markdown" Version="0.0.1.1-preview" />
+    <PackageReference Include="AcBlog.Client.Components.Slides" Version="0.0.1.1-preview" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.0" PrivateAssets="all" />
@@ -15,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AcBlog.Client.Components.CodeEditor\AcBlog.Client.Components.CodeEditor.csproj" />
-    <ProjectReference Include="..\AcBlog.Client.Components.Loading\AcBlog.Client.Components.Loading.csproj" />
-    <ProjectReference Include="..\AcBlog.Client.Components.Markdown\AcBlog.Client.Components.Markdown.csproj" />
-    <ProjectReference Include="..\AcBlog.Client.Components.Slides\AcBlog.Client.Components.Slides.csproj" />
     <ProjectReference Include="..\AcBlog.Client.WebAssembly.Shared\AcBlog.Client.WebAssembly.Shared.csproj" />
     <ProjectReference Include="..\AcBlog.Data\AcBlog.Data.csproj" />
     <ProjectReference Include="..\AcBlog.SDK\AcBlog.SDK.csproj" />

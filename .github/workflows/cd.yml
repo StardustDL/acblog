@@ -103,10 +103,6 @@ jobs:
       env:
         MYGET_TOKEN: ${{ secrets.MYGET_TOKEN }}
       run: |
-        dotnet nuget push ./packages/AcBlog.Client.Components.CodeEditor.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Client.Components.Loading.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Client.Components.Markdown.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Client.Components.Slides.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
         dotnet nuget push ./packages/AcBlog.Data.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
         dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
         dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
