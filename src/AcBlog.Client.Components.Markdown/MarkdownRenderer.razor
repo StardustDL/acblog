@@ -8,7 +8,7 @@
 </div>
 
 @code {
-    static MarkdownPipeline Pipeline { get; } = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseTaskLists().Build();
+    static MarkdownPipeline Pipeline { get; set; } = CustomPipeline.Build();
 
     [Parameter]
     public string Value { get; set; } = "";
@@ -35,7 +35,9 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await JSRuntime.InvokeVoidAsync("AcBlogClientComponentsMarkdown_highlight");
-        await JSRuntime.InvokeVoidAsync("AcBlogClientComponentsMarkdown_math");
+        await JSRuntime.InvokeVoidAsync("AcBlogClientComponentsMarkdown_highlight", markdownContent);
+        await JSRuntime.InvokeVoidAsync("AcBlogClientComponentsMarkdown_math", markdownContent);
+        await JSRuntime.InvokeVoidAsync("AcBlogClientComponentsMarkdown_diagram", markdownContent);
+        await JSRuntime.InvokeVoidAsync("AcBlogClientComponentsMarkdown_fixAnchor", markdownContent, BaseUrl);
     }
 }

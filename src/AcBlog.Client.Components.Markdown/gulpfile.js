@@ -37,8 +37,12 @@ gulp.task('highlight', function () {
     return gulp.src("./node_modules/highlight.js/styles/*").pipe(gulp.dest('wwwroot/highlight.js/'));
 });
 
+gulp.task('mermaid', function () {
+    return gulp.src("./node_modules/mermaid/dist/*").pipe(gulp.dest('wwwroot/mermaid/'));
+});
+
 gulp.task('katex', function () {
     return gulp.src("./node_modules/katex/dist/**/*").pipe(gulp.dest('wwwroot/katex/'));
 });
 
-gulp.task('default', gulp.parallel('markdown', 'highlight', 'katex'));
+gulp.task('default', gulp.parallel('markdown', 'highlight', 'katex', 'mermaid'));

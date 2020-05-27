@@ -24,6 +24,7 @@ The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub P
   - Category & Keywords
   - Markdown rendering
   - LaTeX math rendering
+  - Diagram rendering
   - Password protection
   - Table of contents
 - Slides
@@ -149,3 +150,10 @@ pwsh -c tools.ps1 test
 
 pwsh -c tools.ps1 benchmark
 ```
+
+## Dependencies
+
+- Markdig
+- katex
+- remark.js
+- mermaid.js

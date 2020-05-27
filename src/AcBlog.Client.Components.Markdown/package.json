@@ -10,7 +10,8 @@
   "private": true,
   "dependencies": {
     "highlight.js": "^10.0.3",
-    "katex": "^0.11.1"
+    "katex": "^0.11.1",
+    "mermaid": "^8.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
