@@ -74,9 +74,6 @@ namespace AcBlog.Server.API
 
                 services.AddAuthentication()
                     .AddIdentityServerJwt();
-
-                services.Configure<IdentityOptions>(options =>
-                    options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier);
             }
 
             services.AddControllersWithViews();

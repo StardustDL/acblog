@@ -19,6 +19,10 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
+using AcBlog.UI.Components;
+using AcBlog.UI.Components.Loading;
+using AcBlog.UI.Components.Markdown;
+using AcBlog.UI.Components.Slides;
 
 namespace AcBlog.Client.WebAssembly
 {
@@ -36,6 +40,13 @@ namespace AcBlog.Client.WebAssembly
             }
 
             builder.Services.AddSingleton(new RenderStatus { IsPrerender = false });
+
+            builder.AddUIComponents()
+                .AddUIComponent<ClientUIComponent>()
+                .AddUIComponent(new LoadingUIComponent(false))
+                .AddUIComponent<MarkdownUIComponent>()
+                .AddUIComponent<SlidesUIComponent>()
+                ;
 
             {
                 using var client = new HttpClient()
@@ -85,6 +96,8 @@ namespace AcBlog.Client.WebAssembly
             }
 
             builder.RootComponents.Add<App>("app");
+
+            await builder.UseUIComponents();
 
             await builder.Build().RunAsync();
         }
