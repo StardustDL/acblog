@@ -1,0 +1,26 @@
+﻿@inject IModalService Modal
+
+<div class="modal-content">
+    <div class="modal-body">
+        <p>@Message</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" @onclick="Yes">Yes</button>
+        <button type="button" class="btn btn-danger" @onclick="No">No</button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Message { get; set; }
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    private void Yes() => BlazoredModal.Close();
+
+    private void No() => BlazoredModal.Cancel();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+}

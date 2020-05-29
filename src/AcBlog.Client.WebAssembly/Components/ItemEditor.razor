@@ -1,4 +1,6 @@
-﻿
+﻿@inject IToastService Toast
+@inject IModalService Modal
+
 <div class="d-flex flex-row justify-content-between">
     <h1>@Title</h1>
     <div class="btn-group-toggle btn-group btn-group-lg my-auto" role="group">
@@ -13,8 +15,8 @@
         }
     </div>
 </div>
+
 @ChildContent
-<MessageModal @ref="message" OnResponse="OnMessageResponse"></MessageModal>
 
 @code {
     [Parameter]
@@ -38,15 +40,13 @@
     [Parameter]
     public EventCallback<ModelValidation> OnCheckValidation { get; set; }
 
-    private MessageModal message;
-
     private async Task<bool> onCheckValidation()
     {
         ModelValidation mv = new ModelValidation();
         await OnCheckValidation.InvokeAsync(mv);
         if (mv.Errors.Count > 0)
         {
-            await message.Show(string.Join('\n', mv.Errors));
+            Toast.ShowError(string.Join('\n', mv.Errors), "Invalid data");
         }
         return mv.Errors.Count == 0;
     }
@@ -59,9 +59,13 @@
         {
             EventCallbackResult<bool> result = new EventCallbackResult<bool>();
             await OnCreate.InvokeAsync(result);
-            if (!result.Result)
+            if (result.Result)
             {
-                await message.Show("Create failed");
+                Toast.ShowSuccess("", "Created");
+            }
+            else
+            {
+                Toast.ShowError("", "Create failed");
             }
         }
     }
@@ -74,40 +78,47 @@
         {
             EventCallbackResult<bool> result = new EventCallbackResult<bool>();
             await OnUpdate.InvokeAsync(result);
-            if (!result.Result)
+            if (result.Result)
             {
-                await message.Show("Update failed");
+                Toast.ShowSuccess("", "Updated");
+            }
+            else
+            {
+                Toast.ShowError("", "Update failed");
             }
         }
-    }
-
-    const string MS_Delete = "delete";
-
-    private string messageModalState = "";
-
-    private async Task OnMessageResponse(MessageModalButtons button)
-    {
-        if (messageModalState == MS_Delete)
-        {
-            if (button == MessageModalButtons.Yes)
-            {
-                if (OnDelete.HasDelegate)
-                {
-                    EventCallbackResult<bool> result = new EventCallbackResult<bool>();
-                    await OnDelete.InvokeAsync(result);
-                    if (!result.Result)
-                    {
-                        await message.Show("Delete failed");
-                    }
-                }
-            }
-        }
-        messageModalState = "";
     }
 
     private async Task onDelete()
     {
-        messageModalState = MS_Delete;
-        await message.Show("Do you want to delete?", buttons: MessageModalButtons.Yes | MessageModalButtons.No);
+        var options = new ModalOptions
+        {
+            HideCloseButton = true,
+            DisableBackgroundCancel = true,
+        };
+
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(Modals.Confirm.Message), "Do you want to delete?");
+
+        var modal = Modal.Show<Modals.Confirm>("Delete confirm", parameters, options);
+        var result = await modal.Result;
+
+        Console.WriteLine(result.Cancelled);
+        if (result.Cancelled)
+            return;
+
+        if (OnDelete.HasDelegate)
+        {
+            EventCallbackResult<bool> r = new EventCallbackResult<bool>();
+            await OnDelete.InvokeAsync(r);
+            if (r.Result)
+            {
+                Toast.ShowSuccess("", "Deleted");
+            }
+            else
+            {
+                Toast.ShowError("", "Delete failed");
+            }
+        }
     }
 }
