@@ -23,6 +23,8 @@ using AcBlog.UI.Components;
 using AcBlog.UI.Components.Loading;
 using AcBlog.UI.Components.Markdown;
 using AcBlog.UI.Components.Slides;
+using AcBlog.UI.Components.Modal;
+using AcBlog.UI.Components.Toast;
 
 namespace AcBlog.Client.WebAssembly
 {
@@ -41,12 +43,13 @@ namespace AcBlog.Client.WebAssembly
 
             builder.Services.AddSingleton(new RenderStatus { IsPrerender = false });
 
-            builder.AddUIComponents()
+            builder.Services.AddUIComponents()
                 .AddUIComponent<ClientUIComponent>()
-                .AddUIComponent(new LoadingUIComponent(false))
+                .AddUIComponent<LoadingUIComponent>()
                 .AddUIComponent<MarkdownUIComponent>()
                 .AddUIComponent<SlidesUIComponent>()
-                ;
+                .AddUIComponent<ModalUIComponent>()
+                .AddUIComponent<ToastUIComponent>();
 
             {
                 using var client = new HttpClient()

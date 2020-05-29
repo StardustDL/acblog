@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 using AcBlog.Client.WebAssembly.Models;
 using AcBlog.SDK;
 using AcBlog.SDK.StaticFile;
+using AcBlog.UI.Components;
+using AcBlog.UI.Components.Loading;
+using AcBlog.UI.Components.Markdown;
+using AcBlog.UI.Components.Modal;
+using AcBlog.UI.Components.Slides;
+using AcBlog.UI.Components.Toast;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
@@ -33,6 +39,14 @@ namespace AcBlog.Client.WebAssembly.Host
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddUIComponents()
+                .AddUIComponent<ClientUIComponent>()
+                .AddUIComponent<LoadingUIComponent>()
+                .AddUIComponent<MarkdownUIComponent>()
+                .AddUIComponent<SlidesUIComponent>()
+                .AddUIComponent<ModalUIComponent>()
+                .AddUIComponent<ToastUIComponent>();
+
             services.AddRazorPages();
 
             services.AddControllers();
