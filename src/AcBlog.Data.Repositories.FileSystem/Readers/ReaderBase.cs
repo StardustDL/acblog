@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Readers
 {
-    public abstract class ReaderBase<T, TId, TQuery> : IRecordRepository<T, TId, TQuery> where TId : class where T : class, IHasId<TId>
+    public abstract class ReaderBase<T, TId, TQuery> : IRecordRepository<T, TId, TQuery> where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
     {
         protected ReaderBase(string rootPath)
         {
@@ -18,7 +18,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public string RootPath { get; }
 
-        protected abstract string GetPath(TId id);
+        protected virtual string GetPath(TId id) => Path.Join(RootPath, $"{id}.json").Replace("\\", "/");
 
         protected abstract Task<Stream> GetFileReadStream(string path, CancellationToken cancellationToken = default);
 
@@ -30,15 +30,15 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             paging.Config = await JsonSerializer.DeserializeAsync<PagingConfig>(fs, cancellationToken: cancellationToken);
         }
 
-        protected async Task<IList<string>> GetPagingResult(PagingPath paging, Pagination pagination, CancellationToken cancellationToken = default)
+        protected async Task<IList<TId>> GetPagingResult(PagingPath paging, Pagination pagination, CancellationToken cancellationToken = default)
         {
-            IList<string> result = Array.Empty<string>();
+            IList<TId> result = Array.Empty<TId>();
 
             var path = paging.GetPagePath(pagination);
             if (path != null)
             {
                 using var fs = await GetFileReadStream(path, cancellationToken);
-                result = await JsonSerializer.DeserializeAsync<IList<string>>(fs, cancellationToken: cancellationToken);
+                result = await JsonSerializer.DeserializeAsync<IList<TId>>(fs, cancellationToken: cancellationToken);
             }
 
             return result;
@@ -46,9 +46,36 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public RepositoryAccessContext? Context { get; set; }
 
-        public abstract Task<IEnumerable<TId>> All(CancellationToken cancellationToken = default);
+        public virtual async Task<IEnumerable<TId>> All(CancellationToken cancellationToken = default)
+        {
+            List<TId> result = new List<TId>();
+            TQuery pq = new TQuery();
+            while (true)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var req = await Query(pq, cancellationToken);
+                result.AddRange(req.Results);
+                if (!req.CurrentPage.HasNextPage)
+                    break;
+                pq.Pagination = req.CurrentPage.NextPage();
+            }
+            return result;
+        }
 
-        public abstract Task<QueryResponse<TId>> Query(TQuery query, CancellationToken cancellationToken = default);
+        public virtual async Task<QueryResponse<TId>> Query(TQuery query, CancellationToken cancellationToken = default)
+        {
+            query.Pagination ??= new Pagination();
+
+            PagingPath? paging = null;
+
+            paging ??= new PagingPath(Path.Join(RootPath, "pages"));
+
+            await EnsurePagingConfig(paging, cancellationToken);
+            paging.FillPagination(query.Pagination);
+
+            var res = new QueryResponse<TId>(await GetPagingResult(paging, query.Pagination, cancellationToken), query.Pagination);
+            return res;
+        }
 
         public Task<bool> CanRead(CancellationToken cancellationToken = default) => Task.FromResult(true);
 

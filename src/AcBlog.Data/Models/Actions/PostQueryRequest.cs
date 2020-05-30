@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AcBlog.Data.Models.Actions
 {
-    public class PostQueryRequest
+    public class PostQueryRequest : QueryRequest
     {
         public PostType? Type { get; set; } = null;
 
@@ -19,7 +19,5 @@ namespace AcBlog.Data.Models.Actions
         public string CategoryId { get; set; } = string.Empty;
 
         public PostResponseOrder Order { get; set; } = PostResponseOrder.None;
-
-        public Pagination? Pagination { get; set; } = null;
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AcBlog.Server.API.Controllers
 {
-    public class BaseRecordController<T, TId, TRepo, TQuery> : ControllerBase where TId : class where T : class, IHasId<TId> where TRepo : IRecordRepository<T, TId, TQuery>
+    public class BaseRecordController<T, TId, TRepo, TQuery> : ControllerBase where TId : class where T : class, IHasId<TId> where TRepo : IRecordRepository<T, TId, TQuery> where TQuery : QueryRequest, new()
     {
         TRepo Repository { get; }
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,26 +16,6 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
     {
         protected PostReaderBase(string rootPath) : base(rootPath)
         {
-        }
-
-        private string PathNormalize(string path) => path.Replace("\\", "/");
-
-        protected override string GetPath(string id) => PathNormalize(Path.Join(RootPath, $"{id}.json"));
-
-        public override async Task<IEnumerable<string>> All(CancellationToken cancellationToken = default)
-        {
-            List<string> result = new List<string>();
-            PostQueryRequest pq = new PostQueryRequest();
-            while (true)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                var req = await Query(pq, cancellationToken);
-                result.AddRange(req.Results);
-                if (!req.CurrentPage.HasNextPage)
-                    break;
-                pq.Pagination = req.CurrentPage.NextPage();
-            }
-            return result;
         }
 
         public override async Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
@@ -76,6 +57,46 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
             var res = new QueryResponse<string>(await GetPagingResult(paging, query.Pagination, cancellationToken), query.Pagination);
             return res;
+        }
+    }
+
+    public class PostLocalReader : PostReaderBase
+    {
+        public PostLocalReader(string rootPath) : base(rootPath)
+        {
+        }
+
+        public override Task<bool> Exists(string id, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(File.Exists(GetPath(id)));
+        }
+
+        protected override Task<Stream> GetFileReadStream(string path, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult<Stream>(File.Open(path, FileMode.Open, FileAccess.Read));
+        }
+    }
+
+    public class PostRemoteReader : PostReaderBase
+    {
+        public PostRemoteReader(string rootPath, HttpClient client) : base(rootPath)
+        {
+            Client = client;
+        }
+
+        public HttpClient Client { get; }
+
+        public override async Task<bool> Exists(string id, CancellationToken cancellationToken = default)
+        {
+            var rep = await Client.GetAsync(GetPath(id), cancellationToken);
+            return rep.IsSuccessStatusCode;
+        }
+
+        protected override async Task<Stream> GetFileReadStream(string path, CancellationToken cancellationToken = default)
+        {
+            var rep = await Client.GetAsync(path, cancellationToken);
+            rep.EnsureSuccessStatusCode();
+            return await rep.Content.ReadAsStreamAsync();
         }
     }
 }
