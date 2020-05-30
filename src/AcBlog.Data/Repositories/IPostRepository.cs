@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories
 {
-    public interface IPostRepository : IRecordRepository<Post, string>
+    public interface IPostRepository : IRecordRepository<Post, string,PostQueryRequest>
     {
-        Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default);
     }
 }

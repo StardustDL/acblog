@@ -1,23 +1,18 @@
 ﻿using AcBlog.Data.Models;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AcBlog.SDK
 {
     public static class CategoryServiceExtensions
     {
-        public static async Task<IEnumerable<Category>> GetAllData(this ICategoryService service) => await service.GetData(await service.All());
-
-        public static async Task<IEnumerable<Category>> GetData(this ICategoryService service, IEnumerable<string> ids)
+        public static Task<Category?[]> GetCategories(this ICategoryService service, IEnumerable<string> ids, CancellationToken cancellationToken = default)
         {
-            List<Category> result = new List<Category>();
+            List<Task<Category?>> posts = new List<Task<Category?>>();
             foreach (var id in ids)
-            {
-                var item = await service.Get(id);
-                if (item != null)
-                    result.Add(item);
-            }
-            return result;
+                posts.Add(service.Get(id, cancellationToken));
+            return Task.WhenAll(posts.ToArray());
         }
     }
 }

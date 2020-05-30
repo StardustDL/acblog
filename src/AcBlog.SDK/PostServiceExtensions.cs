@@ -3,6 +3,7 @@ using AcBlog.SDK.Filters;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.WebSockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AcBlog.SDK
@@ -34,11 +35,11 @@ namespace AcBlog.SDK
             return new PostCategoryFilter(service);
         }
 
-        public static Task<Post?[]> GetPosts(this IPostService service,IEnumerable<string> ids)
+        public static Task<Post?[]> GetPosts(this IPostService service, IEnumerable<string> ids, CancellationToken cancellationToken = default)
         {
             List<Task<Post?>> posts = new List<Task<Post?>>();
             foreach (var id in ids)
-                posts.Add(service.Get(id));
+                posts.Add(service.Get(id, cancellationToken));
             return Task.WhenAll(posts.ToArray());
         }
     }

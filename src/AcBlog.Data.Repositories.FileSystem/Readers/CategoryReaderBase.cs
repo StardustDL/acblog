@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Readers
 {
-    public abstract class CategoryReaderBase : ReaderBase<Category, string>, ICategoryRepository
+    public abstract class CategoryReaderBase : ReaderBase<Category, string, CategoryQueryRequest>, ICategoryRepository
     {
         protected CategoryReaderBase(string rootPath) : base(rootPath)
         {
@@ -31,7 +31,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             return result;
         }
 
-        public virtual async Task<QueryResponse<string>> Query(CategoryQueryRequest query, CancellationToken cancellationToken = default)
+        public override async Task<QueryResponse<string>> Query(CategoryQueryRequest query, CancellationToken cancellationToken = default)
         {
             query.Pagination ??= new Pagination();
 

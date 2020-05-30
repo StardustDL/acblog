@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Readers
 {
-    public abstract class ReaderBase<T, TId> : IRecordRepository<T, TId> where TId : class where T : class, IHasId<TId>
+    public abstract class ReaderBase<T, TId, TQuery> : IRecordRepository<T, TId, TQuery> where TId : class where T : class, IHasId<TId>
     {
         protected ReaderBase(string rootPath)
         {
@@ -46,7 +46,9 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public RepositoryAccessContext? Context { get; set; }
 
-        public abstract Task<IEnumerable<string>> All(CancellationToken cancellationToken = default);
+        public abstract Task<IEnumerable<TId>> All(CancellationToken cancellationToken = default);
+
+        public abstract Task<QueryResponse<TId>> Query(TQuery query, CancellationToken cancellationToken = default);
 
         public Task<bool> CanRead(CancellationToken cancellationToken = default) => Task.FromResult(true);
 

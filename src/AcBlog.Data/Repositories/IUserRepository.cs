@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories
 {
-    public interface IUserRepository : IRecordRepository<User, string>
+    public interface IUserRepository : IRecordRepository<User, string, UserQueryRequest>
     {
-        Task<QueryResponse<string>> Query(UserQueryRequest query, CancellationToken cancellationToken = default);
     }
 }

@@ -113,7 +113,7 @@
             Title = "Edit";
         }
 
-        Categories = await Service.CategoryService.GetAllData();
+        Categories = await Service.CategoryService.GetCategories(await Service.CategoryService.All());
         Keywords = await Service.KeywordService.GetKeywords(await Service.KeywordService.All());
     }
 

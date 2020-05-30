@@ -11,108 +11,11 @@ namespace AcBlog.Server.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class CategoriesController : BaseRecordController<Category, string, ICategoryRepository, CategoryQueryRequest>
     {
-        ICategoryRepository Provider { get; }
-
-        public CategoriesController(ICategoryRepository provider)
+        public CategoriesController(ICategoryRepository repository) : base(repository)
         {
-            Provider = provider;
-        }
 
-        [HttpGet("actions/read")]
-        public async Task<ActionResult<bool>> CanRead()
-        {
-            return await Provider.CanRead();
-        }
-
-        [HttpGet("actions/write")]
-        public async Task<ActionResult<bool>> CanWrite()
-        {
-            return await Provider.CanWrite();
-        }
-
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult<IEnumerable<string>>> All()
-        {
-            if (!await Provider.CanRead())
-                return BadRequest();
-            return Ok(await Provider.All());
-        }
-
-        [HttpPut("query")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult<QueryResponse<string>>> Query([FromBody] CategoryQueryRequest query)
-        {
-            if (!await Provider.CanRead())
-                return BadRequest();
-            return Ok(await Provider.Query(query));
-        }
-
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult<Category>> Get(string id)
-        {
-            if (!await Provider.CanRead())
-                return BadRequest();
-            if (await Provider.Exists(id))
-                return Ok(await Provider.Get(id));
-            else
-                return NotFound();
-        }
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesDefaultResponseType]
-        [Authorize]
-        public async Task<ActionResult<string>> Create([FromBody] Category value)
-        {
-            if (!await Provider.CanWrite())
-                return BadRequest();
-            var result = await Provider.Create(value);
-            return Created(result, result);
-        }
-
-        [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesDefaultResponseType]
-        [Authorize]
-        public async Task<ActionResult<bool>> Update(string id, [FromBody] Category value)
-        {
-            if (!await Provider.CanWrite())
-                return BadRequest();
-            value.Id = id;
-            if (await Provider.Exists(value.Id))
-                return Ok(await Provider.Update(value));
-            else
-                return NotFound();
-        }
-
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesDefaultResponseType]
-        [Authorize]
-        public async Task<ActionResult<bool>> Delete(string id)
-        {
-            if (!await Provider.CanWrite())
-                return BadRequest();
-            if (await Provider.Exists(id))
-                return Ok(await Provider.Delete(id));
-            else
-                return NotFound();
         }
     }
 }

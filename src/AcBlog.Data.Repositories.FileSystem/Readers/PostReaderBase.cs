@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Readers
 {
-    public abstract class PostReaderBase : ReaderBase<Post, string>, IPostRepository
+    public abstract class PostReaderBase : ReaderBase<Post, string, PostQueryRequest>, IPostRepository
     {
         protected PostReaderBase(string rootPath) : base(rootPath)
         {
@@ -37,7 +37,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             return result;
         }
 
-        public virtual async Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
+        public override async Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
         {
             query.Pagination ??= new Pagination();
 
