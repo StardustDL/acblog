@@ -1,6 +1,4 @@
-﻿@using Markdig;
-
-<span>@Preview</span>
+﻿<span>@Preview</span>
 
 @code {
     [Parameter]
@@ -14,8 +12,7 @@
     {
         if (Document != null)
         {
-            string pre = Markdown.ToPlainText(Document.Raw);
-            Preview = pre.Length <= 300 ? pre : pre.Substring(0, 300);
+            Preview = Document.GetPreview();
         }
         base.OnParametersSet();
     }

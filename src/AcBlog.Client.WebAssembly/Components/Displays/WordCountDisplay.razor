@@ -10,7 +10,7 @@
 
     protected override void OnParametersSet()
     {
-        int len = Document.WordCount;
+        int len = Document.CountWords();
         if (len < 1000)
         {
             Count = len.ToString();

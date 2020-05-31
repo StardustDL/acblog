@@ -42,6 +42,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{2E124B
 		assets\images\icon.png = assets\images\icon.png
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcBlog.Data.Documents", "src\AcBlog.Data.Documents\AcBlog.Data.Documents.csproj", "{BF489295-A9F1-4AEE-98A3-FEF07453E0F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +110,10 @@ Global
 		{A8D7CF4C-9692-4613-9167-7F42A88AB1F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8D7CF4C-9692-4613-9167-7F42A88AB1F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8D7CF4C-9692-4613-9167-7F42A88AB1F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF489295-A9F1-4AEE-98A3-FEF07453E0F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF489295-A9F1-4AEE-98A3-FEF07453E0F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF489295-A9F1-4AEE-98A3-FEF07453E0F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF489295-A9F1-4AEE-98A3-FEF07453E0F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

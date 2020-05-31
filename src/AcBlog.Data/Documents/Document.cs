@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AcBlog.Data.Models
+namespace AcBlog.Data.Documents
 {
     public class Document
     {
         public string Raw { get; set; } = "";
-
-        public int WordCount => Raw.Length;
     }
 }

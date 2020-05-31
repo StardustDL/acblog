@@ -12,7 +12,7 @@
 
     protected override void OnParametersSet()
     {
-        int time = (int)Math.Round(Document.WordCount / (double)WordPerMinute);
+        int time = (int)Document.GetReadTime().TotalMinutes;
         if (time <= 1)
         {
             Time = "1 minute";
