@@ -55,7 +55,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: acblog/wasm
         tag_with_ref: true
-        dockerfile: ./docker/client/wasm/Dockerfile
+        dockerfile: ./src/AcBlog.Client.WebAssembly/Dockerfile
     - name: Push Client.WebAssembly.Host image
       uses: docker/build-push-action@v1
       with:
@@ -63,7 +63,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: acblog/wasm-host
         tag_with_ref: true
-        dockerfile: ./docker/client/wasm-host/Dockerfile
+        dockerfile: ./src/AcBlog.Client.WebAssembly.Host/Dockerfile
     - name: Push Server.API image
       uses: docker/build-push-action@v1
       with:
@@ -71,7 +71,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: acblog/api
         tag_with_ref: true
-        dockerfile: ./docker/server/api/Dockerfile
+        dockerfile: ./src/AcBlog.Server.API/Dockerfile
   pub-pkgs:
     runs-on: ubuntu-latest
     steps:

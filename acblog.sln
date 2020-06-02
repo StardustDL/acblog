@@ -42,7 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{2E124B
 		assets\images\icon.png = assets\images\icon.png
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcBlog.Data.Documents", "src\AcBlog.Data.Documents\AcBlog.Data.Documents.csproj", "{BF489295-A9F1-4AEE-98A3-FEF07453E0F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Data.Documents", "src\AcBlog.Data.Documents\AcBlog.Data.Documents.csproj", "{BF489295-A9F1-4AEE-98A3-FEF07453E0F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
