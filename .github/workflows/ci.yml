@@ -55,6 +55,7 @@ jobs:
   invoke-cd:
     needs: ci
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     steps:
     - name: Repository Dispatch
       uses: peter-evans/repository-dispatch@v1
