@@ -3,10 +3,6 @@
 
 var gulp = require('gulp');
 
-gulp.task('monaco-editor', function () {
-    return gulp.src("./node_modules/monaco-editor/min/**/*").pipe(gulp.dest('wwwroot/lib/monaco-editor'));
-});
-
 gulp.task('jquery', function () {
     return gulp.src("./node_modules/jquery/dist/*.min.*").pipe(gulp.dest('wwwroot/lib/jquery'));
 });
@@ -23,4 +19,4 @@ gulp.task('markdown-css', function () {
     return gulp.src("./node_modules/github-markdown-css/*.css").pipe(gulp.dest('wwwroot/lib/markdown-css'));
 });
 
-gulp.task('default', gulp.parallel('monaco-editor', 'bootstrap', 'mdi', 'jquery', 'markdown-css'));
+gulp.task('default', gulp.parallel('bootstrap', 'mdi', 'jquery', 'markdown-css'));
