@@ -28,7 +28,10 @@ jobs:
       with:
         node-version: ${{ env.node-version }}
     - name: Restore & Build
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
       run: |
+        dotnet nuget add source https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json -n aza -u sparkshine -p $env:NUGET_AUTH_TOKEN --store-password-in-clear-text
         npm install --global gulp
         dotnet tool install --global Microsoft.Web.LibraryManager.Cli
         pwsh -c ./tools.ps1 restore

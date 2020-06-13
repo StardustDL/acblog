@@ -10,7 +10,7 @@ WORKDIR /src
 COPY ["src/AcBlog.Server.API/AcBlog.Server.API.csproj", "src/AcBlog.Server.API/"]
 COPY ["src/AcBlog.Data/AcBlog.Data.csproj", "src/AcBlog.Data/"]
 COPY ["src/AcBlog.Data.Repositories.SQLServer/AcBlog.Data.Repositories.SQLServer.csproj", "src/AcBlog.Data.Repositories.SQLServer/"]
-RUN dotnet restore "src/AcBlog.Server.API/AcBlog.Server.API.csproj" -s https://www.myget.org/F/stardustdl/api/v3/index.json -s https://api.nuget.org/v3/index.json
+RUN dotnet restore "src/AcBlog.Server.API/AcBlog.Server.API.csproj" -s https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json -s https://api.nuget.org/v3/index.json
 COPY . .
 WORKDIR "/src/src/AcBlog.Server.API"
 RUN dotnet build "AcBlog.Server.API.csproj" -c Release -o /app/build
