@@ -1,24 +1,24 @@
 if ($args.Count -gt 0) {
     switch ($args[0]) {
         "npmup?" {
-            Set-Location src/AcBlog.Client.WebAssembly ; ncu ; Set-Location ../..
+            Set-Location src/AcBlog.Client.WebAssembly && ncu && Set-Location ../..
             if (!$?) {
                 exit 1
             }
         }
         "npmup" {
-            Set-Location src/AcBlog.Client.WebAssembly ; ncu -u ; npm install ; Set-Location ../..
+            Set-Location src/AcBlog.Client.WebAssembly && ncu -u && npm install && Set-Location ../..
             if (!$?) {
                 exit 1
             }
         }
         "restore" {
             Write-Output "Restore npm..."
-            Set-Location src/AcBlog.Client.WebAssembly ; npm ci ; gulp ; Set-Location ../..
+            Set-Location src/AcBlog.Client.WebAssembly && npm ci && gulp && Set-Location ../..
             if (!$?) {
                 exit 1
             }
-            dotnet restore -s https://www.myget.org/F/stardustdl/api/v3/index.json -s https://api.nuget.org/v3/index.json
+            dotnet restore
             if (!$?) {
                 exit 1
             }

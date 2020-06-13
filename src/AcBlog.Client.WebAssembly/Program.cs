@@ -25,6 +25,7 @@ using AcBlog.UI.Components.Markdown;
 using AcBlog.UI.Components.Slides;
 using AcBlog.UI.Components.Modal;
 using AcBlog.UI.Components.Toast;
+using AcBlog.Extensions;
 
 namespace AcBlog.Client.WebAssembly
 {
@@ -43,13 +44,13 @@ namespace AcBlog.Client.WebAssembly
 
             builder.Services.AddSingleton(new RenderStatus { IsPrerender = false });
 
-            builder.Services.AddUIComponents()
-                .AddUIComponent<ClientUIComponent>()
-                .AddUIComponent<LoadingUIComponent>()
-                .AddUIComponent<MarkdownUIComponent>()
-                .AddUIComponent<SlidesUIComponent>()
-                .AddUIComponent<ModalUIComponent>()
-                .AddUIComponent<ToastUIComponent>();
+            builder.Services.AddExtensions()
+                .AddExtension<ClientUIComponent>()
+                .AddExtension<LoadingUIComponent>()
+                .AddExtension<MarkdownUIComponent>()
+                .AddExtension<SlidesUIComponent>()
+                .AddExtension<ModalUIComponent>()
+                .AddExtension<ToastUIComponent>();
 
             {
                 using var client = new HttpClient()
@@ -100,7 +101,7 @@ namespace AcBlog.Client.WebAssembly
 
             builder.RootComponents.Add<App>("app");
 
-            await builder.UseUIComponents();
+            await builder.UseExtensions();
 
             await builder.Build().RunAsync();
         }

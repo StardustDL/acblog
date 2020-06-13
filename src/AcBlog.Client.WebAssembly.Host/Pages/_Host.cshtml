@@ -14,7 +14,7 @@
     <link rel="icon" href="icon.png" />
     <link href="manifest.json" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon.png" />
-    <component type="typeof(AcBlog.UI.Components.StyleSheetDeclare)" render-mode="Static" />
+    <component type="typeof(AcBlog.Extensions.StyleSheetDeclare)" render-mode="Static" />
 </head>
 
 <body>
@@ -51,9 +51,9 @@
     <script src="_framework/blazor.webassembly.js" autostart="true"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 
-    <script src="_content/AcBlog.UI.Components.Core/component.js"></script>
+    <script src="_content/AcBlog.Extensions.Core/component.js"></script>
 
-    <component type="typeof(AcBlog.UI.Components.ScriptDeclare)" render-mode="Static" />
+    <component type="typeof(AcBlog.Extensions.ScriptDeclare)" render-mode="Static" />
 </body>
 
 </html>

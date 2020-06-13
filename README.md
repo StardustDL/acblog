@@ -83,7 +83,7 @@ Use AcBlog's static generator:
 
 ```sh
 dotnet tool install -g AcBlog.Tools.StaticGenerator --version 0.0.1 \
-  --add-source https://www.myget.org/F/stardustdl/api/v3/index.json
+  --add-source https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json
 
 acblog-sgen -o ./dist
 ```
@@ -116,7 +116,7 @@ Use AcBlog's command-line SDK tool to communicate with AcBlog server.
 
 ```sh
 dotnet tool install -g AcBlog.Tools.SDK --version 0.0.1 \
-  --add-source https://www.myget.org/F/stardustdl/api/v3/index.json
+  --add-source https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json
 
 acblog --help
 ```
@@ -150,10 +150,3 @@ pwsh -c tools.ps1 test
 
 pwsh -c tools.ps1 benchmark
 ```
-
-## Dependencies
-
-- Markdig
-- katex
-- remark.js
-- mermaid.js

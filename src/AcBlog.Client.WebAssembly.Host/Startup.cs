@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AcBlog.Client.WebAssembly.Models;
+using AcBlog.Extensions;
 using AcBlog.SDK;
 using AcBlog.SDK.StaticFile;
 using AcBlog.UI.Components;
@@ -39,13 +40,13 @@ namespace AcBlog.Client.WebAssembly.Host
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddUIComponents()
-                .AddUIComponent<ClientUIComponent>()
-                .AddUIComponent<LoadingUIComponent>()
-                .AddUIComponent<MarkdownUIComponent>()
-                .AddUIComponent<SlidesUIComponent>()
-                .AddUIComponent<ModalUIComponent>()
-                .AddUIComponent<ToastUIComponent>();
+            services.AddExtensions()
+                .AddExtension<ClientUIComponent>()
+                .AddExtension<LoadingUIComponent>()
+                .AddExtension<MarkdownUIComponent>()
+                .AddExtension<SlidesUIComponent>()
+                .AddExtension<ModalUIComponent>()
+                .AddExtension<ToastUIComponent>();
 
             services.AddRazorPages();
 

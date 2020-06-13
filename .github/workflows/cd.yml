@@ -9,7 +9,7 @@ defaults:
     shell: pwsh
 
 env:
-  dotnet-version: "3.1.300"
+  dotnet-version: "3.1.x"
   node-version: "12.x"
   build_version: "0.0.1.${{ github.run_number }}-preview"
 
@@ -86,7 +86,10 @@ jobs:
       with:
         node-version: ${{ env.node-version }}
     - name: Restore & Build
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
       run: |
+        dotnet nuget add source https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json -n aza -u sparkshine -p $env:NUGET_AUTH_TOKEN --store-password-in-clear-text
         npm install --global gulp
         dotnet tool install --global Microsoft.Web.LibraryManager.Cli
         pwsh -c ./tools.ps1 restore
@@ -100,26 +103,24 @@ jobs:
         name: packages
         path: ./packages
     - name: Deploy
-      env:
-        MYGET_TOKEN: ${{ secrets.MYGET_TOKEN }}
       run: |
-        dotnet nuget push ./packages/AcBlog.Data.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Data.Documents.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.SDK.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Tools.SDK.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
-        dotnet nuget push ./packages/AcBlog.Tools.StaticGenerator.$env:build_version.nupkg -k $env:MYGET_TOKEN -s https://www.myget.org/F/stardustdl/api/v2/package
+        dotnet nuget push ./packages/AcBlog.Data.$env:build_version.nupkg -s aza -k az
+        dotnet nuget push ./packages/AcBlog.Data.Documents.$env:build_version.nupkg -s aza -k az
+        dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$env:build_version.nupkg -s aza -k az
+        dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$env:build_version.nupkg -s aza -k az
+        dotnet nuget push ./packages/AcBlog.SDK.$env:build_version.nupkg -s aza -k az
+        dotnet nuget push ./packages/AcBlog.Tools.SDK.$env:build_version.nupkg -s aza -k az
+        dotnet nuget push ./packages/AcBlog.Tools.StaticGenerator.$env:build_version.nupkg -s aza -k az
   invoke-repo-update:
     needs: [pub-images, pub-pkgs]
     strategy:
       matrix:
-        repo: ['acblog/mirrors', 'acblog/acblog.github.io']
+        repo: ['acblog/mirrors', 'acblog/acblog.github.io', 'acblog/cdn']
     runs-on: ubuntu-latest
     steps:
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.PUSH_TOKEN }}
+          token: ${{ secrets.PA_TOKEN }}
           repository: ${{ matrix.repo }}
           event-type: update
