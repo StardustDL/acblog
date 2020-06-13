@@ -52,11 +52,13 @@ namespace AcBlog.Client.WebAssembly
                 .AddExtension<ModalUIComponent>()
                 .AddExtension<ToastUIComponent>();
 
+            var client = new HttpClient()
             {
-                using var client = new HttpClient()
-                {
-                    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
-                };
+                BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
+            };
+            builder.Services.AddSingleton(client);
+
+            {
                 {
                     try
                     {

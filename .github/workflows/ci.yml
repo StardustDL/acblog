@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
@@ -28,28 +28,20 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ env.node-version }}
-    - name: Restore & Build
+    - name: Install dev deps
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
-      run: |
-        dotnet nuget add source https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json -n aza -u sparkshine -p $env:NUGET_AUTH_TOKEN --store-password-in-clear-text
-        npm install --global gulp
-        dotnet tool install --global Microsoft.Web.LibraryManager.Cli
-        pwsh -c ./tools.ps1 restore
-        dotnet build -c Release
+      run: pwsh -c ./tools.ps1 dev-deps
+    - name: Restore
+      run: pwsh -c ./tools.ps1 restore
+    - name: Build
+      run: dotnet build -c Release
     - name: Test
-      run: |
-        mkdir reports/test
-        dotnet test -c Release /p:CollectCoverage=true /p:CoverletOutput=../../reports/test/coverage.json /p:MergeWith=../../reports/test/coverage.json /maxcpucount:1
-        dotnet test -c Release ./test/Test.Base /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=../../reports/test/coverage.xml /p:MergeWith=../../reports/test/coverage.json
+      run: pwsh -c ./tools.ps1 test
     - name: Benchmark
-      run: dotnet run -c Release --project ./test/Benchmark.Base
+      run: pwsh -c ./tools.ps1 benchmark
     - name: Generate reports
-      run: |
-        dotnet tool install dotnet-reportgenerator-globaltool --tool-path ./tools
-        ./tools/reportgenerator -reports:./reports/test/coverage.xml -targetdir:./reports/test
-        mkdir reports/benchmark
-        Copy-Item ./BenchmarkDotNet.Artifacts/* ./reports/benchmark -Recurse
+      run: pwsh -c ./tools.ps1 report
     - name: Upload reports
       uses: actions/upload-artifact@master
       with:
