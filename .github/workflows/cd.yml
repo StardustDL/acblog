@@ -27,32 +27,24 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ env.node-version }}
-    - name: Install dev deps
+    - name: Setup psake
+      run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake
+    - name: CD
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
-      run: pwsh -c ./tools.ps1 dev-deps
-    - name: Restore
-      run: pwsh -c ./tools.ps1 restore
-    - name: Build
-      run: dotnet build -c Release /p:Version=${env:build_version}
+      run: Invoke-psake cd-build -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
     - name: Generate build status
       run: |
-        cd src/AcBlog.Client.WebAssembly.Host
-        if (!$?) { exit 1 }
-        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./build.json
-        if (!$?) { exit 1 }
+        cd src/AcBlog.Client.WebAssembly.Host || exit $LASTEXITCODE
+        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./build.json || exit $LASTEXITCODE
     - name: Publish Client.WebAssembly
       run: |
-        cd src/AcBlog.Client.WebAssembly
-        if (!$?) { exit 1 }
-        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./wwwroot/build.json
-        if (!$?) { exit 1 }
-        mkdir publish
-        if (!$?) { exit 1 }
-        dotnet publish -c Release -o ./publish
-        if (!$?) { exit 1 }
+        cd src/AcBlog.Client.WebAssembly || exit $LASTEXITCODE
+        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./wwwroot/build.json || exit $LASTEXITCODE
+        mkdir publish || exit $LASTEXITCODE
+        dotnet publish -c Release -o ./publish || exit $LASTEXITCODE
     - name: Upload artifacts
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@v2
       with:
         name: wasm
         path: ./src/AcBlog.Client.WebAssembly/publish
@@ -93,37 +85,17 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ env.node-version }}
-    - name: Install dev deps
+    - name: Setup psake
+      run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake
+    - name: CD
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
-      run: pwsh -c ./tools.ps1 dev-deps
-    - name: Restore
-      run: pwsh -c ./tools.ps1 restore
-    - name: Build
-      run: dotnet build -c Release /p:Version=${env:build_version}
-    - name: Pack
-      run: pwsh -c ./tools.ps1 pack
+      run: Invoke-psake cd -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
     - name: Upload artifacts
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@v2
       with:
         name: packages
         path: ./packages
-    - name: Deploy
-      run: |
-        dotnet nuget push ./packages/AcBlog.Data.$env:build_version.nupkg -s aza -k az
-        if (!$?) { exit 1 }
-        dotnet nuget push ./packages/AcBlog.Data.Documents.$env:build_version.nupkg -s aza -k az
-        if (!$?) { exit 1 }
-        dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$env:build_version.nupkg -s aza -k az
-        if (!$?) { exit 1 }
-        dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$env:build_version.nupkg -s aza -k az
-        if (!$?) { exit 1 }
-        dotnet nuget push ./packages/AcBlog.SDK.$env:build_version.nupkg -s aza -k az
-        if (!$?) { exit 1 }
-        dotnet nuget push ./packages/AcBlog.Tools.SDK.$env:build_version.nupkg -s aza -k az
-        if (!$?) { exit 1 }
-        dotnet nuget push ./packages/AcBlog.Tools.StaticGenerator.$env:build_version.nupkg -s aza -k az
-        if (!$?) { exit 1 }
   invoke-repo-update:
     needs: [pub-images, pub-pkgs]
     strategy:

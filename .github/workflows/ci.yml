@@ -9,6 +9,7 @@ defaults:
 env:
   dotnet-version: "3.1.x"
   node-version: "12.x"
+  build_version: "0.0.1.${{ github.run_number }}-preview"
 
 jobs:
   ci:
@@ -28,22 +29,14 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ env.node-version }}
-    - name: Install dev deps
+    - name: Setup psake
+      run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake
+    - name: CI
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
-      run: pwsh -c ./tools.ps1 dev-deps
-    - name: Restore
-      run: pwsh -c ./tools.ps1 restore
-    - name: Build
-      run: dotnet build -c Release
-    - name: Test
-      run: pwsh -c ./tools.ps1 test
-    - name: Benchmark
-      run: pwsh -c ./tools.ps1 benchmark
-    - name: Generate reports
-      run: pwsh -c ./tools.ps1 report
+      run: Invoke-psake ci -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
     - name: Upload reports
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@v2
       with:
         name: ci-${{ matrix.os }}
         path: ./reports
