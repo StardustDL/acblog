@@ -16,11 +16,11 @@
     </div>
 
     <Loader OnLoad="@OnLoad" @ref="loader">
-        <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="/posts">
+        <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="/posts">
             <ItemTemplate>
                 <PostCard Id="@context" ShowType="true"></PostCard>
             </ItemTemplate>
-        </PagingWaterfall>
+        </PagingList>
     </Loader>
 </div>
 

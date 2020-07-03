@@ -10,11 +10,11 @@
     </div>
 
     <Loader OnLoad="@OnLoad" @ref="loader">
-        <PagingWaterfall Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="/articles">
+        <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="/articles">
             <ItemTemplate>
                 <PostCard Id="@context"></PostCard>
             </ItemTemplate>
-        </PagingWaterfall>
+        </PagingList>
     </Loader>
 </div>
 

@@ -17,19 +17,22 @@
                     <SpaceItem>
                         <Space>
                             <SpaceItem>
-                                <Button Size="@ButtonSize.Large">
+                                <Button Size="@ButtonSize.Large"
+                                        OnClick="@(e=>NavigationManager.NavigateTo("articles"))">
                                     <MdiIcon Type="feather" />
                                     <a href="articles">Articles</a>
                                 </Button>
                             </SpaceItem>
                             <SpaceItem>
-                                <Button Size="@ButtonSize.Large">
+                                <Button Size="@ButtonSize.Large"
+                                        OnClick="@(e=>NavigationManager.NavigateTo("slides"))">
                                     <MdiIcon Type="presentation" />
                                     <a href="slides">Slides</a>
                                 </Button>
                             </SpaceItem>
                             <SpaceItem>
-                                <Button Size="@ButtonSize.Large">
+                                <Button Size="@ButtonSize.Large"
+                                        OnClick="@(e=>NavigationManager.NavigateTo("notes"))">
                                     <MdiIcon Type="file-document" />
                                     <a href="notes">Notes</a>
                                 </Button>

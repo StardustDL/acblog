@@ -2,29 +2,48 @@
 @inject ILogger<Loader> Logger
 @inject NotificationService NotificationService
 
-@switch (State)
+@if (UseSkeleton)
 {
-    case DataLoadingState.Loading:
-        @if (UseSpin)
+    <Skeleton Loading="State == DataLoadingState.Loading" Active>
+        @switch (State)
         {
-            <div class="spinner-border spinner-border-sm" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
+            case DataLoadingState.Success:
+                @ChildContent
+                break;
+            case DataLoadingState.Failed:
+                <Alert Message="Loading Failed" Type="@AlertType.Error" OnClose="@Load" CloseText="Reload" ShowIcon Closable />
+                break;
         }
-        else
-        {
-            <Loading></Loading>
-        }
-        break;
-    case DataLoadingState.Success:
-        @ChildContent
-        break;
-    case DataLoadingState.Failed:
-        <LoadFailingAlert OnReload="@Load"></LoadFailingAlert>
-        break;
+    </Skeleton>
+}
+else
+{
+    @switch (State)
+    {
+        case DataLoadingState.Loading:
+            @if (UseSpin)
+            {
+                <Spin Size="small" />
+            }
+            else
+            {
+                <Loading></Loading>
+            }
+            break;
+        case DataLoadingState.Success:
+            @ChildContent
+            break;
+        case DataLoadingState.Failed:
+            <Alert Message="Loading Failed" Type="@AlertType.Error" OnClose="@Load" CloseText="Reload" ShowIcon Closable />
+            break;
+    }
 }
 
+
 @code {
+    [Parameter]
+    public bool UseSkeleton { get; set; } = false;
+
     [Parameter]
     public bool UseSpin { get; set; } = false;
 

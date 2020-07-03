@@ -1,0 +1,63 @@
+﻿@typeparam TItem
+@inject NavigationManager NavigationManager
+
+@if (Data != null)
+{
+    <AntList DataSource="Data.Results" ItemLayout="@AntDirectionVHType.Vertical">
+        <Item Context="item">
+            @ItemTemplate(item)
+        </Item>
+    </AntList>
+
+    @if (Data.CurrentPage != null)
+    {
+        <div class="text-center">
+            <Pagination Total="Data.CurrentPage.TotalPage" Current="Data.CurrentPage.PageNumber + 1"
+                        PageSize="Data.CurrentPage.CountPerPage" ShowQuickJumper HideOnSinglePage
+                        CurrentChanged="onPageTo" ItemRender="PaginationItemRenderer"></Pagination>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public string PageNavigationUrl { get; set; }
+
+    [Parameter]
+    public QueryResponse<TItem> Data { get; set; }
+
+    [Parameter]
+    public int? Column { get; set; } = null;
+
+    [Parameter]
+    public RenderFragment<TItem> ItemTemplate { get; set; }
+
+    [Parameter]
+    public EventCallback OnUpdatePage { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnPageTo { get; set; }
+
+    RenderFragment<PaginationItemRenderContext> PaginationItemRenderer = ctx => ctx.DefaultRender(ctx);
+
+    private async Task onPageTo(int pageNumber)
+    {
+        await OnPageTo.InvokeAsync(pageNumber - 1);
+    }
+
+    protected override void OnParametersSet()
+    {
+        PaginationItemRenderer = ctx =>
+    @<Template>
+        @if (ctx.Type == "page")
+        {
+            <a href="@($"{PageNavigationUrl}/pages/{ctx.Page - 1}")" @onclick:preventDefault>@(ctx.Page)</a>
+        }
+        else
+        {
+            @ctx.DefaultRender(ctx)
+        }
+    </Template>;
+        base.OnParametersSet();
+    }
+}

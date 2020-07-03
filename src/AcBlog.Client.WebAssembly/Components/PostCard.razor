@@ -1,9 +1,9 @@
 ﻿@inject IBlogService Service
 
-<Loader OnLoad="@OnLoad">
-    <div class="card border-0">
-        <div class="card-body">
-            <div class="card-title d-flex flex-row mb-1">
+<Loader OnLoad="@OnLoad" UseSkeleton>
+    <AntListItem>
+        <AntListItemMeta Avatar="@("")">
+            <Title>
                 <h4>
                     <a href="posts/@Id" style="color:black" class="@TitleTypeStyle">
                         @if (IsProtected)
@@ -16,21 +16,21 @@
                         }
                     </a>
                 </h4>
-            </div>
-
-            @if (!IsProtected)
-            {
-                <div class="card-subtitle mb-2">
-                    <PostMetadataDisplay Value="@Post" />
-                </div>
-
-                <p class="card-text mb-1">
-                    <AcBlog.Client.WebAssembly.Components.Displays.DocumentPreviewDisplay Document="@Post.Content" />
-                </p>
-            }
-            <a href="posts/@Id" class="card-link" style="color: #555; border-bottom: 1px solid #666;">Read more</a>
-        </div>
-    </div>
+                @if (!IsProtected)
+                {
+                    <div>
+                        <PostMetadataDisplay Value="@Post" />
+                    </div>
+                }
+            </Title>
+        </AntListItemMeta>
+        @if (!IsProtected)
+        {
+            <p>
+                <AcBlog.Client.WebAssembly.Components.Displays.DocumentPreviewDisplay Document="@Post.Content" />
+            </p>
+        }
+    </AntListItem>
 </Loader>
 
 @code {

@@ -81,8 +81,8 @@
         </Menu>
     </Sider>
     <Layout Style="@MainContentStyle">
-        <Content>@Body</Content>
-        <Footer Class="text-center">
+        <Content Class="mb-4">@Body</Content>
+        <Footer Class="text-center" Style="padding: 5px">
             <MdiIcon Type="copyright" />
             @BlogSettings.StartYear - @DateTimeOffset.Now.Year, @(BlogSettings.Onwer). All rights reserved.
             @if (!string.IsNullOrEmpty(BlogSettings.Footer))
