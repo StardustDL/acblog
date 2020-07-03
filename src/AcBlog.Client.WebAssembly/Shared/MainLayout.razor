@@ -1,51 +1,105 @@
 ﻿@inherits LayoutComponentBase
-@layout BaseLayout
+@layout EmptyLayout
+@inject IJSRuntime JSRuntime
 @inject BlogSettings BlogSettings
+@inject BuildStatus BuildStatus
 
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="">
+<Layout Style="min-height: 100vh; background: initial">
+    <Sider Collapsible Theme="SiderTheme.Light" Collapsed="@true" Breakpoint="BreakpointType.Md">
+        <Menu Mode="MenuMode.Inline" Theme="MenuTheme.Light">
+            <MenuItem Style="text-align: center; padding: 0;">
                 @BlogSettings.Name
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            </MenuItem>
+            <MenuItem>
+                <MdiIcon Type="home" />
+                <span>
+                    <MenuLink href="" Match="NavLinkMatch.All">
+                        Home
+                    </MenuLink>
+                </span>
+            </MenuItem>
+            @{
+                RenderFragment PostsSubMenuTitle = @<span>
+                    <MdiIcon Type="archive" />
+                    <span>
+                        <MenuLink href="posts">
+                            Posts
+                        </MenuLink>
+                    </span>
+                </span>;
+            }
+            <SubMenu Title="@PostsSubMenuTitle">
+                <MenuItem>
+                    <MdiIcon Type="feather" />
+                    <span>
+                        <MenuLink href="articles">
+                            Articles
+                        </MenuLink>
+                    </span>
+                </MenuItem>
+                <MenuItem>
+                    <MdiIcon Type="presentation" />
+                    <span>
+                        <MenuLink href="slides">
+                            Slides
+                        </MenuLink>
+                    </span>
+                </MenuItem>
+                <MenuItem>
+                    <MdiIcon Type="file-document" />
+                    <span>
+                        <MenuLink href="notes">
+                            Notes
+                        </MenuLink>
+                    </span>
+                </MenuItem>
+            </SubMenu>
+            <MenuItem>
+                <MdiIcon Type="folder" />
+                <span>
+                    <MenuLink href="categories">
+                        Categories
+                    </MenuLink>
+                </span>
+            </MenuItem>
+            <MenuItem>
+                <MdiIcon Type="tag-multiple" />
+                <span>
+                    <MenuLink href="keywords">
+                        Keywords
+                    </MenuLink>
+                </span>
+            </MenuItem>
+            <MenuItem>
+                <MdiIcon Type="cog" />
+                <span>
+                    <MenuLink href="settings">
+                        Settings
+                    </MenuLink>
+                </span>
+            </MenuItem>
+        </Menu>
+    </Sider>
+    <Layout Style="background: initial">
+        <Content Style="margin: 24px 16px">@Body</Content>
+        <Footer Style="text-align: center">
+            <MdiIcon Type="copyright" />
+            @BlogSettings.StartYear - @DateTimeOffset.Now.Year, @(BlogSettings.Onwer). All rights reserved.
+            @if (!string.IsNullOrEmpty(BlogSettings.Footer))
+            {
+                @((MarkupString)BlogSettings.Footer)
+            }
+            Powered by
+            <a class="text-muted" data-toggle="popover" data-html="true" data-placement="top" data-trigger="hover focus click" data-content="Repository: <a href='https://github.com/@BuildStatus.Repository'>@BuildStatus.Repository</a> <br/>Commit: <a href='https://github.com/@BuildStatus.Repository/commit/@BuildStatus.Commit'>@BuildStatus.TrimedCommit</a> <br/>Branch: <a href='https://github.com/@BuildStatus.Repository/tree/@BuildStatus.Branch'>@BuildStatus.TrimedBranch</a> <br/>Built Date: @BuildStatus.BuildDate">AcBlog</a>.
+        </Footer>
+    </Layout>
+</Layout>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <NavLink class="nav-link mdi mdi-home" href="" Match="NavLinkMatch.All">Home</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link mdi mdi-archive" href="posts" Match="NavLinkMatch.Prefix">Posts</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link mdi mdi-feather" href="articles" Match="NavLinkMatch.Prefix">Articles</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link mdi mdi-presentation" href="slides" Match="NavLinkMatch.Prefix">Slides</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link mdi mdi-file-document" href="notes" Match="NavLinkMatch.Prefix">Notes</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link mdi mdi-folder" href="categories" Match="NavLinkMatch.Prefix">Categories</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link mdi mdi-tag-multiple" href="keywords" Match="NavLinkMatch.Prefix">Keywords</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link mdi mdi-cog" href="settings" Match="NavLinkMatch.Prefix">Settings</NavLink>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="container-fluid mt-3">
-    <main role="main" class="pb-1 pt-1">
-        @Body
-    </main>
-</div>
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await TooltipInterop.Enable(JSRuntime);
+        await PopoverInterop.Enable(JSRuntime);
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}
