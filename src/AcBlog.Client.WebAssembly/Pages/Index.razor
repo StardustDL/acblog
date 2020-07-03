@@ -1,28 +1,45 @@
 ﻿@page "/"
 @inherits BasePage
 
-<div class="jumbotron jumbotron-fluid p-0" style="background-image: url(@BlogSettings.IndexBackgroundUrl); background-size: 100% 100%; margin-bottom: 0;">
-    <div class="container">
-        <div class="d-flex flex-column justify-content-center" style="height: 100vh;">
-            <div class="d-flex flex-row mx-auto p-5 flex-wrap" style="background-color: #f0f8ffeb; border-radius: 20px;">
+<div style="background-image: url(@BlogSettings.IndexBackgroundUrl); background-size: 100% 100%; margin-bottom: 0;">
+    <Row Align="middle" Justify="center" Style="height: 80vh;">
+        <Space Style="background-color: #f0f8ffeb; border-radius: 20px; padding: 42px 49px;">
+            <SpaceItem>
                 <img src="@BlogSettings.IndexIconUrl" class="img-fluid mx-auto" style="border-radius: 20px; max-height: 256px; max-width: 256px;" />
-                <div class="d-flex flex-column justify-content-center ml-md-5 flex-wrap">
-                    <h1 class="display-4 text-center mt-3 pb-4 border-bottom">@BlogSettings.Name</h1>
-                    <p class="lead text-center">@BlogSettings.Description</p>
-                    <div class="d-none d-md-block btn-group-toggle btn-group-lg mt-3 mx-auto" role="group">
-                        <a class="btn btn-outline-primary mdi mdi-feather" href="articles">Articles</a>
-                        <a class="btn btn-outline-warning mdi mdi-presentation" href="slides">Slides</a>
-                        <a class="btn btn-outline-success mdi mdi-file-document" href="notes">Notes</a>
-                    </div>
-                    <div class="d-sm-none btn-group-toggle btn-group-lg mt-3 btn-group-vertical mx-auto" role="group">
-                        <a class="btn btn-outline-primary mdi mdi-feather" href="articles">Articles</a>
-                        <a class="btn btn-outline-warning mdi mdi-presentation" href="slides">Slides</a>
-                        <a class="btn btn-outline-success mdi mdi-file-document" href="notes">Notes</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+            </SpaceItem>
+            <SpaceItem></SpaceItem>
+            <SpaceItem>
+                <Space Direction="vertical">
+                    <SpaceItem>
+                        <h1 class="display-4 text-center">@BlogSettings.Name</h1>
+                        <Divider></Divider>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Space>
+                            <SpaceItem>
+                                <Button Size="@ButtonSize.Large">
+                                    <MdiIcon Type="feather" />
+                                    <a href="articles">Articles</a>
+                                </Button>
+                            </SpaceItem>
+                            <SpaceItem>
+                                <Button Size="@ButtonSize.Large">
+                                    <MdiIcon Type="presentation" />
+                                    <a href="slides">Slides</a>
+                                </Button>
+                            </SpaceItem>
+                            <SpaceItem>
+                                <Button Size="@ButtonSize.Large">
+                                    <MdiIcon Type="file-document" />
+                                    <a href="notes">Notes</a>
+                                </Button>
+                            </SpaceItem>
+                        </Space>
+                    </SpaceItem>
+                </Space>
+            </SpaceItem>
+        </Space>
+    </Row>
 </div>
 
 @code

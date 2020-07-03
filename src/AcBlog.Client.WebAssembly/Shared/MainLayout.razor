@@ -1,13 +1,13 @@
 ﻿@inherits LayoutComponentBase
 @layout EmptyLayout
-@inject IJSRuntime JSRuntime
 @inject BlogSettings BlogSettings
 @inject BuildStatus BuildStatus
 
 <Layout Style="min-height: 100vh; background: initial">
-    <Sider Collapsible Theme="SiderTheme.Light" Collapsed="@true" Breakpoint="BreakpointType.Md">
+    <Sider Collapsible Theme="SiderTheme.Light" Breakpoint="BreakpointType.Lg"
+           Style="overflow: auto; height: 100vh; position: fixed; left: 0;" OnCollapse="@onCollapse">
         <Menu Mode="MenuMode.Inline" Theme="MenuTheme.Light">
-            <MenuItem Style="text-align: center; padding: 0;">
+            <MenuItem Class="text-center p-0">
                 @BlogSettings.Name
             </MenuItem>
             <MenuItem>
@@ -80,9 +80,9 @@
             </MenuItem>
         </Menu>
     </Sider>
-    <Layout Style="background: initial">
-        <Content Style="margin: 24px 16px">@Body</Content>
-        <Footer Style="text-align: center">
+    <Layout Style="@MainContentStyle">
+        <Content>@Body</Content>
+        <Footer Class="text-center">
             <MdiIcon Type="copyright" />
             @BlogSettings.StartYear - @DateTimeOffset.Now.Year, @(BlogSettings.Onwer). All rights reserved.
             @if (!string.IsNullOrEmpty(BlogSettings.Footer))
@@ -90,16 +90,39 @@
                 @((MarkupString)BlogSettings.Footer)
             }
             Powered by
-            <a class="text-muted" data-toggle="popover" data-html="true" data-placement="top" data-trigger="hover focus click" data-content="Repository: <a href='https://github.com/@BuildStatus.Repository'>@BuildStatus.Repository</a> <br/>Commit: <a href='https://github.com/@BuildStatus.Repository/commit/@BuildStatus.Commit'>@BuildStatus.TrimedCommit</a> <br/>Branch: <a href='https://github.com/@BuildStatus.Repository/tree/@BuildStatus.Branch'>@BuildStatus.TrimedBranch</a> <br/>Built Date: @BuildStatus.BuildDate">AcBlog</a>.
+
+            @{
+                RenderFragment AcBlogInfo = @<div>
+                    Repository: <a href="https://github.com/@BuildStatus.Repository">@BuildStatus.Repository</a>
+                    <br />
+                    Commit: <a href="https://github.com/@BuildStatus.Repository/commit/@BuildStatus.Commit">@BuildStatus.TrimedCommit</a>
+                    <br />
+                    Branch: <a href="https://github.com/@BuildStatus.Repository/tree/@BuildStatus.Branch">@BuildStatus.TrimedBranch</a>
+                    <br />
+                    Built Date: @BuildStatus.BuildDate
+                </div>;
+            }
+            <Popover Content="AcBlogInfo" Title="@("AcBlog")">
+                <a href="https://github.com/acblog/acblog">AcBlog</a>
+            </Popover>
         </Footer>
     </Layout>
 </Layout>
 
 @code {
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private string MainContentStyle = "background: initial; margin-left: 200px;";
+
+    private void onCollapse(bool isCollapsed)
     {
-        await TooltipInterop.Enable(JSRuntime);
-        await PopoverInterop.Enable(JSRuntime);
-        await base.OnAfterRenderAsync(firstRender);
+        // TODO: Wait for bug fix in antd https://github.com/ant-design-blazor/ant-design-blazor/issues/283
+
+        if (isCollapsed)
+        {
+            MainContentStyle = "background: initial; margin-left: 80px;";
+        }
+        else
+        {
+            MainContentStyle = "background: initial; margin-left: 200px;";
+        }
     }
 }
