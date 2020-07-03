@@ -46,7 +46,7 @@
         Title = "Loading...";
         PageNavigationUrl = $"/keywords/{Id}";
         Keyword = await Service.KeywordService.Get(Id);
-        Data = await Keywords.Filter(Id, new Pagination
+        Data = await Keywords.Filter(Id, new Data.Models.Actions.Pagination
         {
             PageNumber = PageNumber ?? 0,
             CountPerPage = CountPerPage

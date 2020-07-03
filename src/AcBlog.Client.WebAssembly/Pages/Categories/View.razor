@@ -46,7 +46,7 @@
         Title = "Loading...";
         PageNavigationUrl = $"/categories/{Id}";
         Category = await Service.CategoryService.Get(Id);
-        Data = await Categories.Filter(Id, new Pagination
+        Data = await Categories.Filter(Id, new Data.Models.Actions.Pagination
         {
             PageNumber = PageNumber ?? 0,
             CountPerPage = CountPerPage

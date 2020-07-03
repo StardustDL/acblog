@@ -1,5 +1,5 @@
-﻿@inject IToastService Toast
-@inject IModalService Modal
+﻿@inject NotificationService NotificationService
+@inject ModalService ModalService
 
 <div class="d-flex flex-row justify-content-between">
     <h1>@Title</h1>
@@ -46,7 +46,11 @@
         await OnCheckValidation.InvokeAsync(mv);
         if (mv.Errors.Count > 0)
         {
-            Toast.ShowError(string.Join('\n', mv.Errors), "Invalid data");
+            await NotificationService.Error(new NotificationConfig
+            {
+                Message = "Invalid data",
+                Description = string.Join('\n', mv.Errors)
+            });
         }
         return mv.Errors.Count == 0;
     }
@@ -61,11 +65,17 @@
             await OnCreate.InvokeAsync(result);
             if (result.Result)
             {
-                Toast.ShowSuccess("", "Created");
+                await NotificationService.Success(new NotificationConfig
+                {
+                    Message = "Created",
+                });
             }
             else
             {
-                Toast.ShowError("", "Create failed");
+                await NotificationService.Error(new NotificationConfig
+                {
+                    Message = "Create failed",
+                });
             }
         }
     }
@@ -80,45 +90,54 @@
             await OnUpdate.InvokeAsync(result);
             if (result.Result)
             {
-                Toast.ShowSuccess("", "Updated");
+                await NotificationService.Success(new NotificationConfig
+                {
+                    Message = "Updated",
+                });
             }
             else
             {
-                Toast.ShowError("", "Update failed");
+                await NotificationService.Error(new NotificationConfig
+                {
+                    Message = "Update failed",
+                });
             }
         }
     }
 
     private async Task onDelete()
     {
-        var options = new ModalOptions
+        async Task OnOk(MouseEventArgs e)
         {
-            HideCloseButton = true,
-            DisableBackgroundCancel = true,
-        };
-
-        var parameters = new ModalParameters();
-        parameters.Add(nameof(Modals.Confirm.Message), "Do you want to delete?");
-
-        var modal = Modal.Show<Modals.Confirm>("Delete confirm", parameters, options);
-        var result = await modal.Result;
-
-        Console.WriteLine(result.Cancelled);
-        if (result.Cancelled)
-            return;
-
-        if (OnDelete.HasDelegate)
-        {
-            EventCallbackResult<bool> r = new EventCallbackResult<bool>();
-            await OnDelete.InvokeAsync(r);
-            if (r.Result)
+            if (OnDelete.HasDelegate)
             {
-                Toast.ShowSuccess("", "Deleted");
-            }
-            else
-            {
-                Toast.ShowError("", "Delete failed");
+                EventCallbackResult<bool> r = new EventCallbackResult<bool>();
+                await OnDelete.InvokeAsync(r);
+                if (r.Result)
+                {
+                    await NotificationService.Success(new NotificationConfig
+                    {
+                        Message = "Deleted",
+                    });
+                }
+                else
+                {
+                    await NotificationService.Error(new NotificationConfig
+                    {
+                        Message = "Delete failed",
+                    });
+                }
             }
         }
+
+        await ModalService.Confirm(new ConfirmOptions()
+        {
+            Title = "Are you sure delete?",
+            Content = "Delete confirm",
+            OnOk = OnOk,
+            OkText = "Yes",
+            OkType = "danger",
+            CancelText = "No",
+        });
     }
 }

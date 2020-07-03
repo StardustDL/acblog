@@ -1,6 +1,6 @@
 ﻿@using AcBlog.UI.Components.Loading
 @inject ILogger<Loader> Logger
-@inject IToastService Toast
+@inject NotificationService NotificationService
 
 @switch (State)
 {
@@ -59,7 +59,10 @@
         catch (Exception ex)
         {
             Logger.Log(LogLevel.Error, ex, "Loading failed");
-            Toast.ShowError("", "Loading failed");
+            await NotificationService.Error(new NotificationConfig
+            {
+                Message = "Loading failed",
+            });
             State = DataLoadingState.Failed;
         }
     }

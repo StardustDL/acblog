@@ -23,8 +23,7 @@ using AcBlog.UI.Components;
 using AcBlog.UI.Components.Loading;
 using AcBlog.UI.Components.Markdown;
 using AcBlog.UI.Components.Slides;
-using AcBlog.UI.Components.Modal;
-using AcBlog.UI.Components.Toast;
+using AcBlog.UI.Components.AntDesigns;
 using AcBlog.Extensions;
 
 namespace AcBlog.Client.WebAssembly
@@ -49,8 +48,7 @@ namespace AcBlog.Client.WebAssembly
                 .AddExtension<LoadingUIComponent>()
                 .AddExtension<MarkdownUIComponent>()
                 .AddExtension<SlidesUIComponent>()
-                .AddExtension<ModalUIComponent>()
-                .AddExtension<ToastUIComponent>();
+                .AddExtension<AntDesignUIComponent>();
 
             var client = new HttpClient()
             {

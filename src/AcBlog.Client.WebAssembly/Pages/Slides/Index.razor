@@ -31,7 +31,7 @@
     private async Task OnLoad()
     {
         Title = "Loading...";
-        Data = await Slides.Filter(new Pagination
+        Data = await Slides.Filter(new Data.Models.Actions.Pagination
         {
             PageNumber = PageNumber ?? 0,
             CountPerPage = CountPerPage

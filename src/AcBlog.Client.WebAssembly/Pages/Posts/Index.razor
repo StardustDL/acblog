@@ -39,7 +39,7 @@
         Title = "Loading...";
         Data = await Service.PostService.Query(new PostQueryRequest
         {
-            Pagination = new Pagination
+            Pagination = new Data.Models.Actions.Pagination
             {
                 PageNumber = PageNumber ?? 0,
                 CountPerPage = CountPerPage

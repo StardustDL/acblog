@@ -31,7 +31,7 @@
     private async Task OnLoad()
     {
         Title = "Loading...";
-        Data = await Article.Filter(new Pagination
+        Data = await Article.Filter(new Data.Models.Actions.Pagination
         {
             PageNumber = PageNumber ?? 0,
             CountPerPage = CountPerPage
