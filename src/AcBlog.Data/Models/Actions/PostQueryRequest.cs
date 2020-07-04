@@ -14,9 +14,9 @@ namespace AcBlog.Data.Models.Actions
 
         public string Title { get; set; } = string.Empty;
 
-        public string Keywords { get; set; } = string.Empty;
+        public Keyword? Keywords { get; set; } = null;
 
-        public string Category { get; set; } = string.Empty;
+        public Category? Category { get; set; } = null;
 
         public PostResponseOrder Order { get; set; } = PostResponseOrder.None;
     }

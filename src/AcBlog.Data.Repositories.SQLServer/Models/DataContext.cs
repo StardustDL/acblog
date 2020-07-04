@@ -12,12 +12,6 @@ namespace AcBlog.Data.Repositories.SQLServer.Models
         {
         }
 
-        public DbSet<User> Users { get; set; }
-
-        public DbSet<PostData> Posts { get; set; }
-
-        public DbSet<Category> Categories { get; set; }
-
-        public DbSet<Keyword> Keywords { get; set; }
+        public DbSet<RawPost> Posts { get; set; }
     }
 }

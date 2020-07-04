@@ -19,7 +19,7 @@ namespace AcBlog.Data.Models
 
         public Category Category { get; set; } = Category.Empty;
 
-        public Keyword KeywordIds { get; set; } = Keyword.Empty;
+        public Keyword Keywords { get; set; } = Keyword.Empty;
 
         public DateTimeOffset CreationTime { get; set; }
 

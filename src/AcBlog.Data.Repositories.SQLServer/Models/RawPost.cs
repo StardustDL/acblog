@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 
 namespace AcBlog.Data.Repositories.SQLServer.Models
 {
-    public class PostData
+    public class RawPost
     {
         public string Id { get; set; } = string.Empty;
 
@@ -19,46 +20,43 @@ namespace AcBlog.Data.Repositories.SQLServer.Models
 
         public string Title { get; set; } = string.Empty;
 
-        public string CategoryId { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
 
-        public string KeywordIds { get; set; } = string.Empty;
+        public string Keywords { get; set; } = string.Empty;
 
         public DateTimeOffset CreationTime { get; set; }
 
         public DateTimeOffset ModificationTime { get; set; }
 
-        public static PostData From(Post value)
+        public static RawPost From(Post value)
         {
-            return new PostData
+            return new RawPost
             {
                 Id = value.Id,
                 AuthorId = value.AuthorId,
-                CategoryId = value.CategoryId,
+                Category = value.Category.ToString(),
                 CreationTime = value.CreationTime,
                 ModificationTime = value.ModificationTime,
                 Title = value.Title,
                 Type = value.Type,
-                KeywordIds = string.Join("$%$", value.KeywordIds),
-                Content = value.Content.Raw,
+                Keywords = value.Keywords.ToString(),
+                Content = JsonSerializer.Serialize(value.Content),
             };
         }
 
-        public static Post To(PostData value)
+        public static Post To(RawPost value)
         {
             return new Post
             {
                 Id = value.Id,
                 AuthorId = value.AuthorId,
-                CategoryId = value.CategoryId,
+                Category = AcBlog.Data.Models.Category.Parse(value.Category),
                 CreationTime = value.CreationTime,
                 ModificationTime = value.ModificationTime,
                 Title = value.Title,
                 Type = value.Type,
-                KeywordIds = value.KeywordIds.Split("$%$").Where(x => !string.IsNullOrWhiteSpace(x)).ToArray(),
-                Content = new Document
-                {
-                    Raw = value.Content
-                },
+                Keywords = AcBlog.Data.Models.Keyword.Parse(value.Keywords),
+                Content = JsonSerializer.Deserialize<Document>(value.Content),
             };
         }
     }

@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,7 +34,7 @@ namespace AcBlog.Data.Repositories.SQLServer
         {
             if (string.IsNullOrWhiteSpace(value.Id))
                 value.Id = Guid.NewGuid().ToString();
-            Data.Posts.Add(PostData.From(value));
+            Data.Posts.Add(RawPost.From(value));
             await Data.SaveChangesAsync(cancellationToken);
             return value.Id;
         }
@@ -56,7 +58,7 @@ namespace AcBlog.Data.Repositories.SQLServer
         public async Task<Post> Get(string id, CancellationToken cancellationToken = default)
         {
             var item = await Data.Posts.FindAsync(new object[] { id }, cancellationToken);
-            return PostData.To(item);
+            return RawPost.To(item);
         }
 
         public async Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
@@ -67,16 +69,17 @@ namespace AcBlog.Data.Repositories.SQLServer
                 qr = qr.Where(x => x.Type == query.Type);
             if (!string.IsNullOrWhiteSpace(query.AuthorId))
                 qr = qr.Where(x => x.AuthorId == query.AuthorId);
-            if (!string.IsNullOrWhiteSpace(query.CategoryId))
-                qr = qr.Where(x => x.CategoryId == query.CategoryId);
-            if (!string.IsNullOrWhiteSpace(query.KeywordId))
-                qr = qr.Where(x => x.KeywordIds.Contains(query.KeywordId));
-            if (!string.IsNullOrWhiteSpace(query.CategoryId))
-                qr = qr.Where(x => x.CategoryId == query.CategoryId);
+            if (query.Category != null)
+                qr = qr.Where(x => x.Category.StartsWith(query.Category.ToString()));
+            if (query.Keywords != null)
+                qr = qr.Where(x => x.Keywords.StartsWith(query.Keywords.ToString()));
             if (!string.IsNullOrWhiteSpace(query.Title))
                 qr = qr.Where(x => x.Title.Contains(query.Title));
             if (!string.IsNullOrWhiteSpace(query.Content))
-                qr = qr.Where(x => x.Content.Contains(query.Content));
+            {
+                string jsonContent = JsonSerializer.Serialize(query.Content);
+                qr = qr.Where(x => x.Content.Contains(jsonContent));
+            }
             qr = query.Order switch
             {
                 PostResponseOrder.None => qr,
@@ -109,14 +112,14 @@ namespace AcBlog.Data.Repositories.SQLServer
 
         public async Task<bool> Update(Post value, CancellationToken cancellationToken = default)
         {
-            var to = PostData.From(value);
+            var to = RawPost.From(value);
 
             var item = await Data.Posts.FindAsync(new object[] { to.Id }, cancellationToken);
             if (item is null)
                 return false;
 
-            item.KeywordIds = to.KeywordIds;
-            item.CategoryId = to.CategoryId;
+            item.Keywords = to.Keywords;
+            item.Category = to.Category;
             item.AuthorId = to.AuthorId;
             item.Content = to.Content;
             item.CreationTime = to.CreationTime;
