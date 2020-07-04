@@ -94,14 +94,14 @@ namespace AcBlog.Data.Repositories.SQLServer
 
             if (query.Pagination != null)
             {
-                qr = qr.Skip(query.Pagination.Offset).Take(query.Pagination.CountPerPage);
-                pagination.PageNumber = query.Pagination.PageNumber;
-                pagination.CountPerPage = query.Pagination.CountPerPage;
+                qr = qr.Skip(query.Pagination.Offset).Take(query.Pagination.PageSize);
+                pagination.CurrentPage = query.Pagination.CurrentPage;
+                pagination.PageSize = query.Pagination.PageSize;
             }
             else
             {
-                pagination.PageNumber = 0;
-                pagination.CountPerPage = pagination.TotalCount;
+                pagination.CurrentPage = 0;
+                pagination.PageSize = pagination.TotalCount;
             }
 
             return new QueryResponse<string>(await qr.Select(x => x.Id).ToArrayAsync(cancellationToken), pagination);

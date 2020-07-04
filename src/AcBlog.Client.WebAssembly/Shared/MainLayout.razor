@@ -4,7 +4,7 @@
 @inject BuildStatus BuildStatus
 
 <Layout Style="min-height: 100vh; background: initial">
-    <Sider Collapsible Theme="SiderTheme.Light" Breakpoint="BreakpointType.Lg"
+    <Sider Collapsible Theme="SiderTheme.Light" Breakpoint="BreakpointType.Lg" CollapsedWidth="0"
            Style="height: 100vh; position: fixed; left: 0;" OnCollapse="@onCollapse">
         <Menu Mode="MenuMode.Inline" Theme="MenuTheme.Light">
             <MenuItem Class="text-center p-0">
@@ -81,7 +81,7 @@
         </Menu>
     </Sider>
     <Layout Style="@MainContentStyle">
-        <Content Class="mb-4">@Body</Content>
+        <Content>@Body</Content>
         <Footer Class="text-center" Style="padding: 5px">
             <MdiIcon Type="copyright" />
             @BlogSettings.StartYear - @DateTimeOffset.Now.Year, @(BlogSettings.Onwer). All rights reserved.

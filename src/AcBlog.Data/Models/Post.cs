@@ -17,9 +17,9 @@ namespace AcBlog.Data.Models
 
         public string Title { get; set; } = string.Empty;
 
-        public string CategoryId { get; set; } = string.Empty;
+        public Category Category { get; set; } = Category.Empty;
 
-        public string[] KeywordIds { get; set; } = Array.Empty<string>();
+        public Keyword KeywordIds { get; set; } = Keyword.Empty;
 
         public DateTimeOffset CreationTime { get; set; }
 

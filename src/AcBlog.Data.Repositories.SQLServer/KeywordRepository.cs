@@ -73,13 +73,13 @@ namespace AcBlog.Data.Repositories.SQLServer
             if (query.Pagination != null)
             {
                 qr = qr.Skip(query.Pagination.Offset).Take(query.Pagination.CountPerPage);
-                pagination.PageNumber = query.Pagination.PageNumber;
-                pagination.CountPerPage = query.Pagination.CountPerPage;
+                pagination.CurrentPage = query.Pagination.PageNumber;
+                pagination.PageSize = query.Pagination.CountPerPage;
             }
             else
             {
-                pagination.PageNumber = 0;
-                pagination.CountPerPage = pagination.TotalCount;
+                pagination.CurrentPage = 0;
+                pagination.PageSize = pagination.TotalCount;
             }
 
             return new QueryResponse<string>(await qr.Select(x => x.Id).ToArrayAsync(cancellationToken), pagination);

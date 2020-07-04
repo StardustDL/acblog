@@ -4,28 +4,28 @@ namespace AcBlog.Data.Models.Actions
 {
     public class Pagination
     {
-        private int _countPerPage = 10;
+        private int _pageSize = 10;
 
-        public int CountPerPage
+        public int PageSize
         {
-            get => _countPerPage; set
+            get => _pageSize; set
             {
                 if (value <= 0) value = 10;
-                _countPerPage = value;
+                _pageSize = value;
             }
         }
 
-        public int PageNumber { get; set; } = 0;
+        public int CurrentPage { get; set; } = 0;
 
         public int TotalCount { get; set; } = 0;
 
-        public int Offset => CountPerPage * PageNumber;
+        public int Offset => PageSize * CurrentPage;
 
-        public int TotalPage => (int)Math.Ceiling((double)TotalCount / CountPerPage);
+        public int TotalPage => (int)Math.Ceiling((double)TotalCount / PageSize);
 
         public bool HasPreviousPage => Offset > 0;
 
-        public bool HasNextPage => Offset + CountPerPage < TotalCount;
+        public bool HasNextPage => Offset + PageSize < TotalCount;
 
         public Pagination PreviousPage()
         {
@@ -33,8 +33,8 @@ namespace AcBlog.Data.Models.Actions
                 throw new System.Exception("No previous page");
             return new Pagination
             {
-                CountPerPage = CountPerPage,
-                PageNumber = PageNumber - 1,
+                PageSize = PageSize,
+                CurrentPage = CurrentPage - 1,
                 TotalCount = TotalCount
             };
         }
@@ -45,8 +45,8 @@ namespace AcBlog.Data.Models.Actions
                 throw new System.Exception("No next page");
             return new Pagination
             {
-                CountPerPage = CountPerPage,
-                PageNumber = PageNumber + 1,
+                PageSize = PageSize,
+                CurrentPage = CurrentPage + 1,
                 TotalCount = TotalCount
             };
         }

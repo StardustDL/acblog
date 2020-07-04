@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories
 {
-    public interface IPostRepository : IRecordRepository<Post, string,PostQueryRequest>
+    public interface IPostRepository : IRecordRepository<Post, string, PostQueryRequest>
     {
     }
 }

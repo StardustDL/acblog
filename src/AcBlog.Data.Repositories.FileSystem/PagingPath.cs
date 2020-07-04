@@ -30,9 +30,9 @@ namespace AcBlog.Data.Repositories.FileSystem
         {
             if (Config is null)
                 throw new System.Exception("No paging config loaded.");
-            if (pagination.PageNumber >= 0 && (pagination.PageNumber < Config.TotalPage || Config.TotalPage == 0 && pagination.PageNumber == 0))
+            if (pagination.CurrentPage >= 0 && (pagination.CurrentPage < Config.TotalPage || Config.TotalPage == 0 && pagination.CurrentPage == 0))
             {
-                return Path.Join(RootPath, $"{pagination.PageNumber}.json").Replace("\\", "/");
+                return Path.Join(RootPath, $"{pagination.CurrentPage}.json").Replace("\\", "/");
             }
             else
             {
@@ -44,7 +44,7 @@ namespace AcBlog.Data.Repositories.FileSystem
         {
             if (Config is null)
                 throw new System.Exception("No paging config loaded.");
-            pagination.CountPerPage = Config.CountPerPage;
+            pagination.PageSize = Config.CountPerPage;
             pagination.TotalCount = Config.TotalCount;
         }
     }

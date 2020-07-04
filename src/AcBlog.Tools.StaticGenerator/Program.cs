@@ -48,7 +48,7 @@ namespace AcBlog.Tools.StaticGenerator
 
             var postBuilder = new PostRepositoryBuilder(ls, postDist)
             {
-                Protector = new PostProtector(),
+                Protector = new DocumentProtector(),
                 CountPerPage = 10,
             };
 

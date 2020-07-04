@@ -74,7 +74,7 @@ namespace AcBlog.Data.Repositories.FileSystem
                 {
                     Pagination pg = new Pagination
                     {
-                        PageNumber = pn
+                        CurrentPage = pn
                     };
                     await BaseRepositoryBuilder.SaveToFile(paging.GetPagePath(pg)!, page);
                     page.Clear();
@@ -85,7 +85,7 @@ namespace AcBlog.Data.Repositories.FileSystem
             {
                 Pagination pg = new Pagination
                 {
-                    PageNumber = pn
+                    CurrentPage = pn
                 };
                 await BaseRepositoryBuilder.SaveToFile(paging.GetPagePath(pg)!, page);
             }

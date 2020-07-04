@@ -1,4 +1,5 @@
-﻿using AcBlog.Data.Models;
+﻿using AcBlog.Data.Documents;
+using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories;
@@ -13,10 +14,10 @@ namespace AcBlog.SDK.API
     {
         public PostService(IBlogService blog, HttpClient httpClient) : base(blog, httpClient)
         {
-            Protector = new PostProtector();
+            Protector = new DocumentProtector();
         }
 
-        public IProtector<Post> Protector { get; }
+        public IProtector<Document> Protector { get; }
 
         protected override string PrepUrl => "/Posts";
     }

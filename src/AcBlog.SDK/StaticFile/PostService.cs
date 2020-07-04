@@ -1,4 +1,5 @@
-﻿using AcBlog.Data.Models;
+﻿using AcBlog.Data.Documents;
+using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories;
@@ -18,7 +19,7 @@ namespace AcBlog.SDK.StaticFile
         {
             BlogService = blog;
             HttpClient = httpClient;
-            Protector = new PostProtector();
+            Protector = new DocumentProtector();
             Reader = new PostRemoteReader(rootPath, httpClient);
         }
 
@@ -32,7 +33,7 @@ namespace AcBlog.SDK.StaticFile
 
         public IBlogService BlogService { get; }
 
-        public IProtector<Post> Protector { get; }
+        public IProtector<Document> Protector { get; }
 
         public Task<IEnumerable<string>> All(CancellationToken cancellationToken = default) => Reader.All(cancellationToken);
 
