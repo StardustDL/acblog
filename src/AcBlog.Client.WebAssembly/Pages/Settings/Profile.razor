@@ -4,12 +4,21 @@
 @inject IAccessTokenProvider TokenProvider
 @attribute [Authorize]
 
+<PageHeader>
+    <PageHeaderTitle>Profile</PageHeaderTitle>
+    <PageHeaderExtra>
+        <AuthorizeView>
+            <Authorized>
+                <div class="btn-group-toggle mx-auto" role="group">
+                    <a class="btn btn-outline-primary mdi mdi-account" href="authentication/profile">Account</a>
+                    <a class="btn btn-outline-danger mdi mdi-logout" href="authentication/logout">Logout</a>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+    </PageHeaderExtra>
+</PageHeader>
+
 <div class="container">
-    <h1 class="display-4">Profile</h1>
-    <div class="btn-group-toggle mt-3 mx-auto" role="group">
-        <a class="btn btn-outline-primary mdi mdi-account" href="authentication/profile">Account</a>
-        <a class="btn btn-outline-danger mdi mdi-logout" href="authentication/logout">Logout</a>
-    </div>
     <div class="input-group mt-3">
         <div class="input-group-prepend">
             <label class="input-group-text" for="inputToken">Token</label>

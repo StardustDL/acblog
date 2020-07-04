@@ -3,22 +3,24 @@
 @page "/posts/pages/{pageNumber:int}"
 @inherits BasePostPage
 
-<div class="container">
-    <div class="d-flex flex-row justify-content-between">
-        <h1>Posts</h1>
+<PageHeader>
+    <PageHeaderTitle>Posts</PageHeaderTitle>
+    <PageHeaderExtra>
         <AuthorizeView>
             <Authorized>
-                <div class="btn-group-toggle btn-group-lg btn-group my-auto" role="group">
+                <div class="btn-group-toggle mx-auto" role="group">
                     <a class="btn btn-success mdi mdi-plus" href="posts/new">Create</a>
                 </div>
             </Authorized>
         </AuthorizeView>
-    </div>
+    </PageHeaderExtra>
+</PageHeader>
 
+<div class="container">
     <Loader OnLoad="@OnLoad" @ref="loader">
         <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="/posts">
             <ItemTemplate>
-                <PostCard Id="@context" ShowType="true"></PostCard>
+                <PostListItem Id="@context" ShowType="true"></PostListItem>
             </ItemTemplate>
         </PagingList>
     </Loader>

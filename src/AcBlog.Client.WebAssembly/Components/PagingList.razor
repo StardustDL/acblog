@@ -12,9 +12,9 @@
     @if (Data.CurrentPage != null)
     {
         <div class="text-center">
-            <Pagination Total="Data.CurrentPage.TotalPage" Current="Data.CurrentPage.PageNumber + 1"
+            <AntDesign.Pagination Total="Data.CurrentPage.TotalCount" Current="Data.CurrentPage.PageNumber + 1"
                         PageSize="Data.CurrentPage.CountPerPage" ShowQuickJumper HideOnSinglePage
-                        CurrentChanged="onPageTo" ItemRender="PaginationItemRenderer"></Pagination>
+                        CurrentChanged="onPageTo" ItemRender="PaginationItemRenderer" ShowSizeChanger="@false"></AntDesign.Pagination>
         </div>
     }
 }

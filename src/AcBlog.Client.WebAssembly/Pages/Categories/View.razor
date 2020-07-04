@@ -18,7 +18,7 @@
     <Loader OnLoad="@OnLoad" @ref="loader">
         <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="@PageNavigationUrl">
             <ItemTemplate>
-                <PostCard Id="@context" ShowType="true"></PostCard>
+                <PostListItem Id="@context" ShowType="true"></PostListItem>
             </ItemTemplate>
         </PagingList>
     </Loader>

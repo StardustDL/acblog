@@ -5,7 +5,7 @@
 
 <Layout Style="min-height: 100vh; background: initial">
     <Sider Collapsible Theme="SiderTheme.Light" Breakpoint="BreakpointType.Lg"
-           Style="overflow: auto; height: 100vh; position: fixed; left: 0;" OnCollapse="@onCollapse">
+           Style="height: 100vh; position: fixed; left: 0;" OnCollapse="@onCollapse">
         <Menu Mode="MenuMode.Inline" Theme="MenuTheme.Light">
             <MenuItem Class="text-center p-0">
                 @BlogSettings.Name
@@ -118,7 +118,7 @@
 
         if (isCollapsed)
         {
-            MainContentStyle = "background: initial; margin-left: 80px;";
+            MainContentStyle = "background: initial; margin-left: 0px;";
         }
         else
         {

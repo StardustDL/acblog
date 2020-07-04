@@ -1,4 +1,5 @@
 ﻿using AcBlog.UI.Components;
+using AntDesign;
 
 namespace AcBlog.Client.WebAssembly
 {
@@ -14,7 +15,7 @@ namespace AcBlog.Client.WebAssembly
             AddScriptResource("js/interop.js");
             AddScriptResource("_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js");
             AddScriptResource("lib/jquery/jquery.slim.min.js");
-            AddScriptResource("lib/bootstrap/js/bootstrap.bundle.min.js");
+            // AddScriptResource("lib/bootstrap/js/bootstrap.bundle.min.js");
         }
     }
 }

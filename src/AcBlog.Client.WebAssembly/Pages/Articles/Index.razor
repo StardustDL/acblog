@@ -4,15 +4,24 @@
 @inherits BaseArticlePage
 @inject AcBlog.SDK.Filters.PostArticleFilter Article
 
-<div class="container">
-    <div class="d-flex flex-row">
-        <h1>Articles</h1>
-    </div>
+<PageHeader>
+    <PageHeaderTitle>Articles</PageHeaderTitle>
+    <PageHeaderExtra>
+        <AuthorizeView>
+            <Authorized>
+                <div class="btn-group-toggle mx-auto" role="group">
+                    <a class="btn btn-success mdi mdi-plus" href="posts/new">Create</a>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+    </PageHeaderExtra>
+</PageHeader>
 
+<div class="container">
     <Loader OnLoad="@OnLoad" @ref="loader">
         <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="/articles">
             <ItemTemplate>
-                <PostCard Id="@context"></PostCard>
+                <PostListItem Id="@context"></PostListItem>
             </ItemTemplate>
         </PagingList>
     </Loader>

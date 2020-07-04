@@ -5,7 +5,24 @@
         <AntListItemMeta Avatar="@("")">
             <Title>
                 <h4>
-                    <a href="posts/@Id" style="color:black" class="@TitleTypeStyle">
+                    @if (!IsProtected && ShowType)
+                    {
+                        switch (Post.Type)
+                        {
+                            case PostType.Article:
+                                <MdiIcon Type="feather" />
+                                break;
+                            case PostType.Slides:
+                                <MdiIcon Type="presentation" />
+                                break;
+                            case PostType.Note:
+                                <MdiIcon Type="file-document" />
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    <a href="posts/@Id" style="color:black">
                         @if (IsProtected)
                         {
                             <span>Protected Post</span>
@@ -40,8 +57,6 @@
     [Parameter]
     public string Id { get; set; }
 
-    private string TitleTypeStyle = "";
-
     private Post Post { get; set; }
 
     private bool IsProtected { get; set; } = false;
@@ -50,26 +65,8 @@
     {
         Post = null;
         IsProtected = false;
-        TitleTypeStyle = "";
 
         Post = await Service.PostService.Get(Id);
         IsProtected = await Service.PostService.Protector.IsProtected(Post);
-        if (!IsProtected && ShowType)
-        {
-            switch (Post.Type)
-            {
-                case PostType.Article:
-                    TitleTypeStyle = "mdi mdi-feather";
-                    break;
-                case PostType.Slides:
-                    TitleTypeStyle = "mdi mdi-presentation";
-                    break;
-                case PostType.Note:
-                    TitleTypeStyle = "mdi mdi-file-document";
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 }
