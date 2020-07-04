@@ -17,8 +17,8 @@ namespace AcBlog.Data.Repositories.FileSystem
         {
             get => _config; set
             {
-                if (value != null && value.CountPerPage <= 0)
-                    value.CountPerPage = 10;
+                if (value != null && value.PageSize <= 0)
+                    value.PageSize = 10;
                 _config = value;
             }
         }
@@ -44,7 +44,7 @@ namespace AcBlog.Data.Repositories.FileSystem
         {
             if (Config is null)
                 throw new System.Exception("No paging config loaded.");
-            pagination.PageSize = Config.CountPerPage;
+            pagination.PageSize = Config.PageSize;
             pagination.TotalCount = Config.TotalCount;
         }
     }

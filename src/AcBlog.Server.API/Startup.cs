@@ -55,9 +55,6 @@ namespace AcBlog.Server.API
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
                 services.AddScoped<IPostRepository, AcBlog.Data.Repositories.SQLServer.PostRepository>();
-                services.AddScoped<ICategoryRepository, AcBlog.Data.Repositories.SQLServer.CategoryRepository>();
-                services.AddScoped<IKeywordRepository, AcBlog.Data.Repositories.SQLServer.KeywordRepository>();
-                services.AddScoped<IUserRepository, AcBlog.Data.Repositories.SQLServer.UserRepository>();
             }
             {
                 services.AddDbContext<IdentityDbContext>(options =>

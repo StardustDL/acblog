@@ -59,7 +59,7 @@ namespace AcBlog.Data.Repositories.FileSystem
             {
                 paging.Config = new PagingConfig
                 {
-                    CountPerPage = CountPerPage,
+                    PageSize = CountPerPage,
                     TotalCount = ids.Count
                 };
                 await BaseRepositoryBuilder.SaveToFile(paging.ConfigPath, paging.Config);

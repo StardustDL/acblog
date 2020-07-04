@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <Authors>StardustDL</Authors>
+    <Company>StardustDL</Company>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/StardustDL/Extensions.FileProviders.Http</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/StardustDL/Extensions.FileProviders.Http</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageId>StardustDL.Extensions.FileProviders.Http</PackageId>
+    <Product>StardustDL.Extensions.FileProviders.Http</Product>
+    <Description>File provider for HTTP files for Microsoft.Extensions.FileProviders.</Description>
+    <RootNamespace>StardustDL.Extensions.FileProviders.Http</RootNamespace>
+    <AssemblyName>StardustDL.Extensions.FileProviders.Http</AssemblyName>
+    <PackageTags>files; filesystem; http</PackageTags>
+    <Copyright>StardustDL</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="3.1.5" />
+  </ItemGroup>
+
+</Project>

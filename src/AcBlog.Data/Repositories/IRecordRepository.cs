@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories
 {
+
     public interface IRecordRepository<T, TId, TQuery> : IRepository where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
     {
-        Task<bool> CanRead(CancellationToken cancellationToken = default);
-
-        Task<bool> CanWrite(CancellationToken cancellationToken = default);
+        Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default);
 
         Task<IEnumerable<TId>> All(CancellationToken cancellationToken = default);
 
