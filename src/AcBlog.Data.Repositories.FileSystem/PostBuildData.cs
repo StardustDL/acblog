@@ -14,9 +14,5 @@ namespace AcBlog.Data.Repositories.FileSystem
         public Post Raw { get; set; }
 
         public ProtectionKey? Key { get; set; }
-
-        public string[] Keywords { get; set; } = Array.Empty<string>();
-
-        public string[] Category { get; set; } = Array.Empty<string>();
     }
 }

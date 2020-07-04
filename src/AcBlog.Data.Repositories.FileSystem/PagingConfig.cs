@@ -4,7 +4,17 @@ namespace AcBlog.Data.Repositories.FileSystem
 {
     public class PagingConfig
     {
-        public int PageSize { get; set; } = 10;
+        private int _pageSize = 10;
+
+        public int PageSize
+        {
+            get => _pageSize; set
+            {
+                if (value <= 0)
+                    value = 10;
+                _pageSize = value;
+            }
+        }
 
         public int TotalCount { get; set; } = 0;
 

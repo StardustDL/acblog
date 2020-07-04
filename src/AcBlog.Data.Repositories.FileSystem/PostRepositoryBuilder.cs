@@ -11,72 +11,95 @@ using System.Linq;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Protections;
 using System.Security.Cryptography;
+using AcBlog.Data.Documents;
+using Microsoft.Extensions.FileProviders;
 
 namespace AcBlog.Data.Repositories.FileSystem
 {
-    public class PostRepositoryBuilder : BaseRepositoryBuilder<PostBuildData>
+    public class PostRepositoryBuilder
     {
-        public PostRepositoryBuilder(IList<PostBuildData> data, DirectoryInfo dist) : base(data, dist)
+        public PostRepositoryBuilder(IList<PostBuildData> data, string rootPath)
         {
+            RootPath = rootPath;
+
+            Data = data;
+
+            FsBuilder = new FSBuilder(rootPath);
         }
 
-        public IProtector<Post>? Protector { get; set; }
+        public PagingConfig PagingConfig { get; set; } = new PagingConfig();
 
-        public IList<Keyword> Keywords { get; private set; } = Array.Empty<Keyword>();
+        public IProtector<Document>? Protector { get; set; }
 
-        public IList<Category> Categories { get; private set; } = Array.Empty<Category>();
+        public string RootPath { get; }
+
+        protected IList<PostBuildData> Data { get; set; }
+
+        FSBuilder FsBuilder { get; }
 
         async Task BuildIndexType()
         {
-            await BuildPaging(Data.Where(x => x.Raw.Type == PostType.Article).ToList(),
-                Dist.CreateSubdirectory("articles"));
+            {
+                PagingProvider<string> paging = new PagingProvider<string>(Path.Join(RootPath, "articles"));
 
-            await BuildPaging(Data.Where(x => x.Raw.Type == PostType.Slides).ToList(),
-                Dist.CreateSubdirectory("slides"));
+                await paging.Build(Data.Where(
+                    x => x.Raw.Type == PostType.Article).ToList().Select(x => x.Raw.Id).ToArray(),
+                    PagingConfig).ConfigureAwait(false);
+            }
 
-            await BuildPaging(Data.Where(x => x.Raw.Type == PostType.Note).ToList(),
-                Dist.CreateSubdirectory("notes"));
+            {
+                PagingProvider<string> paging = new PagingProvider<string>(Path.Join(RootPath, "slides"));
+
+                await paging.Build(Data.Where(
+                    x => x.Raw.Type == PostType.Slides).ToList().Select(x => x.Raw.Id).ToArray(),
+                    PagingConfig).ConfigureAwait(false);
+            }
+
+            {
+                PagingProvider<string> paging = new PagingProvider<string>(Path.Join(RootPath, "notes"));
+
+                await paging.Build(Data.Where(
+                    x => x.Raw.Type == PostType.Note).ToList().Select(x => x.Raw.Id).ToArray(),
+                    PagingConfig).ConfigureAwait(false);
+            }
         }
 
         async Task BuildIndexKeyword()
         {
-            var kwroot = Dist.CreateSubdirectory("keywords");
+            FsBuilder.EnsureDirectoryEmpty("keywords");
+
             Dictionary<string, List<PostBuildData>> dict = new Dictionary<string, List<PostBuildData>>();
-            Dictionary<string, string> mapper = new Dictionary<string, string>();
             foreach (var v in Data)
             {
                 List<string> keyids = new List<string>();
-                foreach (var k in v.Keywords)
+                foreach (var k in v.Raw.Keywords)
                 {
-                    if (!mapper.ContainsKey(k))
+                    if (!dict.ContainsKey(k))
                     {
-                        string id = Guid.NewGuid().ToString();
-                        mapper.Add(k, id);
                         var list = new List<PostBuildData>
                         {
                             v
                         };
-                        dict.Add(id, list);
-                        keyids.Add(id);
+                        dict.Add(k, list);
                     }
                     else
                     {
-                        string id = mapper[k];
-                        dict[id].Add(v);
-                        keyids.Add(id);
+                        dict[k].Add(v);
                     }
                 }
-                v.Raw.KeywordIds = keyids.ToArray();
             }
+
             foreach (var v in dict)
             {
-                await BuildPaging(v.Value, kwroot.CreateSubdirectory(v.Key));
+                string subdir = Path.Join("keywords", v.Key);
+
+                PagingProvider<string> paging = new PagingProvider<string>(Path.Join(RootPath, subdir));
+
+                await paging.Build(v.Value.Select(x => x.Raw.Id).ToArray(),
+                    PagingConfig).ConfigureAwait(false);
             }
-            Keywords = mapper.Select(x => new Keyword
-            {
-                Id = x.Value,
-                Name = x.Key
-            }).ToList();
+
+            // TODO Add All keyword api
         }
 
         private class CategoryNode
@@ -95,27 +118,21 @@ namespace AcBlog.Data.Repositories.FileSystem
 
         async Task BuildIndexCategory()
         {
-            var kwroot = Dist.CreateSubdirectory("categories");
-            Dictionary<string, CategoryNode> mapper = new Dictionary<string, CategoryNode>();
-            CategoryNode all = new CategoryNode(new Category());
+            FsBuilder.EnsureDirectoryEmpty("categories");
+
+            CategoryNode root = new CategoryNode(new Category());
             foreach (var v in Data)
             {
-                CategoryNode node = all;
-                foreach (var k in v.Category)
+                CategoryNode node = root;
+                foreach (var k in v.Raw.Category)
                 {
                     if (!node.Children.ContainsKey(k))
                     {
                         Category c = new Category
                         {
-                            Id = Guid.NewGuid().ToString(),
-                            Name = k,
+                            Items = node.Category.Items.Concat(new[] { k }),
                         };
-                        if (node != all)
-                        {
-                            c.ParentId = node.Category.Id;
-                        }
                         var tn = new CategoryNode(c);
-                        mapper.Add(c.Id, tn);
                         node.Children.Add(k, tn);
                         node = tn;
                     }
@@ -125,16 +142,31 @@ namespace AcBlog.Data.Repositories.FileSystem
                     }
                     node.Data.Add(v);
                 }
-                v.Raw.CategoryId = node.Category.Id;
             }
-            foreach (var v in mapper)
+
+            Queue<CategoryNode> q = new Queue<CategoryNode>();
+            foreach (var v in root.Children.Values)
+                q.Enqueue(v);
+
+            while(q.Count > 0)
             {
-                await BuildPaging(v.Value.Data, kwroot.CreateSubdirectory(v.Key));
+                var node = q.Dequeue();
+
+                string subdir = Path.Join("categories", Path.Combine(node.Category.ToArray()));
+
+                PagingProvider<string> paging = new PagingProvider<string>(Path.Join(RootPath, subdir));
+
+                await paging.Build(node.Data.Select(x => x.Raw.Id).ToArray(),
+                    PagingConfig).ConfigureAwait(false);
+
+                foreach (var v in node.Children.Values)
+                    q.Enqueue(v);
             }
-            Categories = mapper.Select(x => x.Value.Category).ToList();
+
+            // TODO Add All category api
         }
 
-        public override async Task Build()
+        public async Task Build()
         {
             Data = (from x in Data orderby x.Raw.CreationTime descending select x).ToArray();
 
@@ -144,17 +176,21 @@ namespace AcBlog.Data.Repositories.FileSystem
 
             await BuildIndexCategory();
 
-            await base.Build();
-        }
+            foreach (var v in Data)
+            {
+                Post post = v.Raw;
+                if (v.Key != null && Protector != null)
+                    post.Content = await Protector.Protect(post.Content, v.Key);
 
-        protected override async Task SaveItem(PostBuildData item)
-        {
-            Post post = item.Raw;
-            if (item.Key != null && Protector != null)
-                post = await Protector.Protect(item.Raw, item.Key);
-            await BaseRepositoryBuilder.SaveToFile(Path.Join(Dist.FullName, $"{item.Raw.Id}.json"), post);
-        }
+                await JsonSerializer.SerializeAsync(FsBuilder.GetFileRewriteStream($"{post.Id}.json"), post);
+            }
 
-        protected override string GetId(PostBuildData item) => item.Raw.Id;
+            {
+                PagingProvider<string> paging = new PagingProvider<string>(Path.Join(RootPath, "pages"));
+
+                await paging.Build(Data.Select(x => x.Raw.Id).ToArray(),
+                    PagingConfig).ConfigureAwait(false);
+            }
+        }
     }
 }

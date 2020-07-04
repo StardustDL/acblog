@@ -40,7 +40,7 @@ namespace AcBlog.Client.WebAssembly
                 serviceCollection.AddHttpClient("api-provider", client => client.BaseAddress = uri);
                 serviceCollection.AddScoped<IBlogService>(sp =>
                 {
-                    return new HttpApiBlogService(sp.GetRequiredService<IHttpClientFactory>().CreateClient("api-provider"));
+                    return new ApiBlogService(sp.GetRequiredService<IHttpClientFactory>().CreateClient("api-provider"));
                 });
             }
             serviceCollection.AddScoped(sp => sp.GetRequiredService<IBlogService>().PostService.CreateArticleFilter());

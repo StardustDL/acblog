@@ -10,8 +10,4 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.5" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AcBlog.SDK\AcBlog.SDK.csproj" />
-  </ItemGroup>
-
 </Project>

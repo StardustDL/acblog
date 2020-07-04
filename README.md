@@ -92,7 +92,7 @@ For GitHub Pages hosting, you can use [static-backend-generate-action](https://g
 
 #### Dynamic
 
-Use AcBlog's API server docker image:
+Use AcBlog's Api server docker image:
 
 ```sh
 docker pull acblog/api:latest
@@ -101,7 +101,7 @@ docker run -d -p 8000:80 acblog/api:latest
 
 ### Compose
 
-Use docker-compose to deploy WebAssembly hosted client and API server:
+Use docker-compose to deploy WebAssembly hosted client and Api server:
 
 ```sh
 cd docker/deploy
@@ -112,10 +112,10 @@ Maybe you need to restart api container after database initializing.
 
 ### SDK
 
-Use AcBlog's command-line SDK tool to communicate with AcBlog server.
+Use AcBlog's command-line Sdk tool to communicate with AcBlog server.
 
 ```sh
-dotnet tool install -g AcBlog.Tools.SDK --version 0.0.1 \
+dotnet tool install -g AcBlog.Tools.Sdk --version 0.0.1 \
   --add-source https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json
 
 acblog --help
@@ -125,28 +125,30 @@ acblog --help
 
 1. Install .NET Core SDK 3.1, NodeJS 12.x and npm.
 2. Install Gulp & Libman
+3. Install psake
 
-```sh
+```ps1
 npm install -g gulp
 dotnet tool install --global Microsoft.Web.LibraryManager.Cli
+Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake
 ```
 
-3. Restore dependencies
+4. Restore dependencies
 
-```sh
-pwsh -c tools.ps1 restore
+Add NuGet source: https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json.
+
+```ps1
+Invoke-psake Restore
 ```
 
-4. Build project
+1. Build project
 
-```sh
-dotnet build
+```ps1
+Invoke-psake Build
 ```
 
 ## Test & Benchmark
 
 ```sh
-pwsh -c tools.ps1 test
-
-pwsh -c tools.ps1 benchmark
+Invoke-psake CI
 ```

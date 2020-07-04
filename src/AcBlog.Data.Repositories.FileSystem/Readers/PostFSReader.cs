@@ -13,54 +13,51 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Readers
 {
-    public abstract class PostFSReader : RecordFSReader<Post, string, PostQueryRequest>, IPostRepository
+    public class PostFSReader : RecordFSReaderBase<Post, string, PostQueryRequest>, IPostRepository
     {
-        protected PostFSReader(string rootPath, IFileProvider fileProvider) : base(rootPath, fileProvider)
+        public PostFSReader(string rootPath, IFileProvider fileProvider) : base(rootPath, fileProvider)
         {
         }
 
-        public override async Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
+        public override Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
         {
             query.Pagination ??= new Pagination();
 
-            PagingPath? paging = null;
+            var paging = PagingProvider;
 
             if (query.Type != null)
             {
                 switch (query.Type)
                 {
                     case PostType.Article:
-                        paging = new PagingPath(Path.Join(RootPath, "articles"));
+                        paging = new PagingProvider<string>(Path.Join(RootPath, "articles"), FileProvider);
                         break;
                     case PostType.Slides:
-                        paging = new PagingPath(Path.Join(RootPath, "slides"));
+                        paging = new PagingProvider<string>(Path.Join(RootPath, "slides"), FileProvider);
                         break;
                     case PostType.Note:
-                        paging = new PagingPath(Path.Join(RootPath, "notes"));
+                        paging = new PagingProvider<string>(Path.Join(RootPath, "notes"), FileProvider);
                         break;
                 }
             }
-            else if (!string.IsNullOrWhiteSpace(query.CategoryId))
+            else if (query.Category != null && query.Category.Any())
             {
                 var catRoot = Path.Join(RootPath, "categories");
-                paging = new PagingPath(Path.Join(catRoot, query.CategoryId));
+                catRoot = Path.Join(catRoot, Path.Combine(query.Category.ToArray()));
+                paging = new PagingProvider<string>(catRoot, FileProvider);
             }
-            else if (!string.IsNullOrWhiteSpace(query.KeywordId))
+            else if (query.Keywords != null && query.Keywords.Any())
             {
                 var catRoot = Path.Join(RootPath, "keywords");
-                paging = new PagingPath(Path.Join(catRoot, query.KeywordId));
+                paging = new PagingProvider<string>(Path.Join(catRoot, query.Keywords.First()), FileProvider);
             }
 
-            paging ??= new PagingPath(Path.Join(RootPath, "pages"));
-
-            await EnsurePagingConfig(paging)
-                .ConfigureAwait(false);
             paging.FillPagination(query.Pagination);
 
             var res = new QueryResponse<string>(
-                await GetPagingResult(paging, query.Pagination, cancellationToken).ConfigureAwait(false), 
+                paging.GetPaging(query.Pagination),
                 query.Pagination);
-            return res;
+            return Task.FromResult(res);
         }
     }
 }

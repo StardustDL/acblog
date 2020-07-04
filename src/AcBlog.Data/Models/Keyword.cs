@@ -1,12 +1,13 @@
 ﻿using AcBlog.Data.Models.Builders;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace AcBlog.Data.Models
 {
-    public class Keyword
+    public class Keyword : IEnumerable<string>
     {
         public static Keyword Empty => new Keyword();
 
@@ -40,5 +41,9 @@ namespace AcBlog.Data.Models
                 return false;
             }
         }
+
+        public IEnumerator<string> GetEnumerator() => Items.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

@@ -11,13 +11,13 @@ namespace Test.SDK
     {
         WebApplicationFactory<AcBlog.Server.API.Program> Factory { get; set; }
 
-        HttpApiBlogService Service { get; set; }
+        ApiBlogService Service { get; set; }
 
         [TestInitialize]
         public void Setup()
         {
             Factory = new WebApplicationFactory<AcBlog.Server.API.Program>();
-            Service = new HttpApiBlogService(Factory.CreateClient());
+            Service = new ApiBlogService(Factory.CreateClient());
         }
 
         [TestCleanup]
