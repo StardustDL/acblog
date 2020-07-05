@@ -24,6 +24,8 @@ namespace AcBlog.Tools.Sdk.Models.Text
 
         public string type { get; set; } = Enum.GetName(typeof(PostType), PostType.Article)?.ToLowerInvariant() ?? "article";
 
+        public string password { get; set; } = string.Empty;
+
         public PostMetadata() { }
 
         public PostMetadata(Post data)

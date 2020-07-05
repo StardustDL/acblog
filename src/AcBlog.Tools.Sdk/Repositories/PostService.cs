@@ -14,9 +14,9 @@ namespace AcBlog.Tools.Sdk
 {
     internal class PostService : IPostService
     {
-        PostFSRepo Reader { get; }
+        PostFSRepo Repo { get; }
 
-        public RepositoryAccessContext Context { get => Reader.Context; set => Reader.Context = value; }
+        public RepositoryAccessContext Context { get => Repo.Context; set => Repo.Context = value; }
 
         public IBlogService BlogService { get; }
 
@@ -26,23 +26,23 @@ namespace AcBlog.Tools.Sdk
         {
             BlogService = blog;
             Protector = new DocumentProtector();
-            Reader = new PostFSRepo(rootPath, fileProvider);
+            Repo = new PostFSRepo(rootPath, fileProvider, Protector);
         }
 
-        public Task<IEnumerable<string>> All(CancellationToken cancellationToken = default) => Reader.All(cancellationToken);
+        public Task<IEnumerable<string>> All(CancellationToken cancellationToken = default) => Repo.All(cancellationToken);
 
-        public Task<string?> Create(Post value, CancellationToken cancellationToken = default) => Reader.Create(value, cancellationToken);
+        public Task<string?> Create(Post value, CancellationToken cancellationToken = default) => Repo.Create(value, cancellationToken);
 
-        public Task<bool> Delete(string id, CancellationToken cancellationToken = default) => Reader.Delete(id, cancellationToken);
+        public Task<bool> Delete(string id, CancellationToken cancellationToken = default) => Repo.Delete(id, cancellationToken);
 
-        public Task<bool> Exists(string id, CancellationToken cancellationToken = default) => Reader.Exists(id, cancellationToken);
+        public Task<bool> Exists(string id, CancellationToken cancellationToken = default) => Repo.Exists(id, cancellationToken);
 
-        public Task<Post?> Get(string id, CancellationToken cancellationToken = default) => Reader.Get(id, cancellationToken);
+        public Task<Post?> Get(string id, CancellationToken cancellationToken = default) => Repo.Get(id, cancellationToken);
 
-        public Task<bool> Update(Post value, CancellationToken cancellationToken = default) => Reader.Update(value, cancellationToken);
+        public Task<bool> Update(Post value, CancellationToken cancellationToken = default) => Repo.Update(value, cancellationToken);
 
-        public Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default) => Reader.Query(query, cancellationToken);
+        public Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default) => Repo.Query(query, cancellationToken);
 
-        public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Reader.GetStatus(cancellationToken);
+        public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Repo.GetStatus(cancellationToken);
     }
 }

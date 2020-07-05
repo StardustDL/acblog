@@ -1,6 +1,7 @@
 ﻿using AcBlog.Data.Documents;
 using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
+using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.FileSystem;
 using AcBlog.Data.Repositories.FileSystem.Readers;
@@ -20,9 +21,12 @@ namespace AcBlog.Tools.Sdk.Repositories
 
     internal class PostFSRepo : RecordFSRepository<Post, string, PostQueryRequest>, IPostRepository
     {
-        public PostFSRepo(string rootPath, IFileProvider fileProvider) : base(rootPath, fileProvider)
+        public PostFSRepo(string rootPath, IFileProvider fileProvider, IProtector<Document> protector) : base(rootPath, fileProvider)
         {
+            Protector = protector;
         }
+
+        public IProtector<Document> Protector { get; }
 
         protected virtual string GetPath(string id)
         {
@@ -56,6 +60,14 @@ namespace AcBlog.Tools.Sdk.Repositories
             {
                 Raw = content
             };
+
+            if (!string.IsNullOrEmpty(metadata.password))
+            {
+                result.Content = await Protector.Protect(result.Content, new ProtectionKey
+                {
+                    Password = metadata.password
+                });
+            }
 
             if (string.IsNullOrEmpty(result.Id))
                 result.Id = id;
