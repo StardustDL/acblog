@@ -5,6 +5,7 @@ using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -20,8 +21,6 @@ using Microsoft.Extensions.Configuration;
 
 namespace AcBlog.Client.WebAssembly.Host.Controllers
 {
-
-
     [Route("[controller]")]
     [ApiController]
     public class SiteController : ControllerBase
@@ -61,7 +60,7 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
                 siteMapBuilder.AddUrl($"{BaseAddress}/notes");
                 foreach (var id in posts)
                 {
-                    siteMapBuilder.AddUrl($"{BaseAddress}/posts/{id}");
+                    siteMapBuilder.AddUrl($"{BaseAddress}/posts/{HttpUtility.UrlEncode(id)}");
                 }
             };
             /*{
@@ -107,10 +106,20 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
                 {
                     var s = new SyndicationItem(p.Title,
                         SyndicationContent.CreateHtmlContent(Markdown.ToHtml(p.Content.Raw, Pipeline)),
-                        new Uri($"{BaseAddress}/posts/{p.Id}"), p.Id, p.ModificationTime);
+                        new Uri($"{BaseAddress}/posts/{HttpUtility.UrlEncode(p.Id)}"), p.Id, p.ModificationTime);
                     s.Authors.Add(author);
-                    string summary = Markdown.ToPlainText(p.Content.Raw, Pipeline);
+
+                    string summary = "";
+                    if(await BlogService.PostService.Protector.IsProtected(p.Content))
+                    {
+                        summary = "Protected Post";
+                    }
+                    else
+                    {
+                        summary = Markdown.ToPlainText(p.Content.Raw, Pipeline);
+                    }
                     s.Summary = SyndicationContent.CreatePlaintextContent(summary.Length <= 100 ? summary : summary.Substring(0, 100));
+                    s.Categories.Add(new SyndicationCategory(p.Category.ToString()));
                     /*if (categoryMap.TryGetValue(p.CategoryId, out var cate))
                         s.Categories.Add(cate);*/
                     s.PublishDate = p.CreationTime;

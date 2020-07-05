@@ -79,13 +79,15 @@ docker run -d \
 
 #### Static
 
-Use AcBlog's static generator:
+Use AcBlog's SDK:
 
 ```sh
-dotnet tool install -g AcBlog.Tools.StaticGenerator --version 0.0.1 \
+dotnet tool install -g AcBlog.Tools.Sdk --version 0.0.1 \
   --add-source https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json
 
-acblog-sgen -o ./dist
+acblog init
+acblog remote add origin "./dist"
+acblog push
 ```
 
 For GitHub Pages hosting, you can use [static-backend-generate-action](https://github.com/acblog/static-backend-generate-action).
