@@ -36,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AcBlog.Data.Documents\AcBlog.Data.Documents.csproj" />
     <ProjectReference Include="..\AcBlog.Data.Repositories.FileSystem\AcBlog.Data.Repositories.FileSystem.csproj" />
     <ProjectReference Include="..\AcBlog.Data\AcBlog.Data.csproj" />
     <ProjectReference Include="..\AcBlog.Sdk\AcBlog.Sdk.csproj" />

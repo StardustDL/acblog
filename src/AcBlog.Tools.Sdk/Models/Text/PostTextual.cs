@@ -2,6 +2,7 @@
 using AcBlog.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AcBlog.Tools.Sdk.Models.Text
 {
@@ -21,7 +22,7 @@ namespace AcBlog.Tools.Sdk.Models.Text
 
             public string[] keywords { get; set; } = Array.Empty<string>();
 
-            public string category { get; set; } = string.Empty;
+            public string[] category { get; set; } = Array.Empty<string>();
 
             public string type { get; set; } = string.Empty;
         }
@@ -33,8 +34,8 @@ namespace AcBlog.Tools.Sdk.Models.Text
             author = data.AuthorId,
             creationTime = data.CreationTime.ToString(),
             modificationTime = data.ModificationTime.ToString(),
-            category = data.CategoryId,
-            keywords = data.KeywordIds,
+            category = data.Category.ToArray(),
+            keywords = data.Keywords.ToArray(),
             type = Enum.GetName(typeof(PostType), data.Type)!,
         };
 
@@ -42,8 +43,8 @@ namespace AcBlog.Tools.Sdk.Models.Text
         {
             data.Id = meta.id;
             data.Title = meta.title;
-            data.CategoryId = meta.category;
-            data.KeywordIds = meta.keywords;
+            data.Category = new Category(meta.category);
+            data.Keywords = new Keyword(meta.keywords);
             data.CreationTime = DateTimeOffset.Parse(meta.creationTime);
             data.Type = Enum.Parse<PostType>(meta.type);
             data.ModificationTime = DateTimeOffset.Parse(meta.modificationTime);

@@ -6,6 +6,8 @@ namespace AcBlog.Tools.Sdk.Models
 {
     public class WorkspaceOption
     {
-        public Dictionary<string, RemoteConfiguration> Remotes { get; set; } = new Dictionary<string, RemoteConfiguration>();
+        public string CurrentRemote { get; set; } = string.Empty;
+
+        public Dictionary<string, RemoteOption> Remotes { get; set; } = new Dictionary<string, RemoteOption>();
     }
 }

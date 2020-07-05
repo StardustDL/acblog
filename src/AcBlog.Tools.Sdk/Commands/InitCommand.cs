@@ -1,5 +1,6 @@
 ﻿using AcBlog.Tools.Sdk.Helpers;
 using AcBlog.Tools.Sdk.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.CommandLine;
 using System.CommandLine.Invocation;
@@ -17,22 +18,8 @@ namespace AcBlog.Tools.Sdk.Commands
 
         public override async Task<int> Handle(CArgument argument, IHost host, CancellationToken cancellationToken)
         {
-            Workspace workspace = Program.Workspace;
-            workspace.Configuration.Remote = null;
-            workspace.Configuration.Token = "";
+            Workspace workspace = host.Services.GetRequiredService<Workspace>();
             await workspace.Save();
-            {
-                DirectoryInfo di = new DirectoryInfo(workspace.GetPostRoot());
-                if (!di.Exists) di.Create();
-            }
-            {
-                DirectoryInfo di = new DirectoryInfo(workspace.GetCategoryRoot());
-                if (!di.Exists) di.Create();
-            }
-            {
-                DirectoryInfo di = new DirectoryInfo(workspace.GetKeywordRoot());
-                if (!di.Exists) di.Create();
-            }
             return 0;
         }
 

@@ -7,7 +7,7 @@
         Api
     }
 
-    public class RemoteConfiguration
+    public class RemoteOption
     {
         public string Name { get; set; } = string.Empty;
 

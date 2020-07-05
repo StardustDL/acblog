@@ -15,6 +15,10 @@ namespace AcBlog.Data.Models
 
         public static bool IsValidName(string name) => !name.Contains(KeywordSeperator);
 
+        public Keyword() { }
+
+        public Keyword(IEnumerable<string> items) => Items = items;
+
         public IEnumerable<string> Items { get; set; } = Array.Empty<string>();
 
         public override string ToString() => string.Join(KeywordSeperator, Items);

@@ -13,6 +13,10 @@ namespace AcBlog.Data.Models
 
         public const char CategorySeperator = '/';
 
+        public Category() { }
+
+        public Category(IEnumerable<string> items) => Items = items;
+
         public static bool IsValidName(string name) => !name.Contains(CategorySeperator);
 
         public IEnumerable<string> Items { get; set; } = Array.Empty<string>();

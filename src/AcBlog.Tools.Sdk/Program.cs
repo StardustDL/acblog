@@ -4,6 +4,7 @@ using AcBlog.Tools.Sdk.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.CommandLine;
 using System.CommandLine.Builder;
@@ -17,6 +18,8 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Tools.Sdk
 {
+    // remote add/remove config uri, token 
+    // push, pull
     class Program
     {
         static async Task<int> Main(string[] args)
@@ -24,15 +27,11 @@ namespace AcBlog.Tools.Sdk
             var rootCommand = new RootCommand("AcBlog SDK for command-line.");
 
             rootCommand.AddCommand(new InitCommand().Build());
-            rootCommand.AddCommand(new ConnectCommand().Build());
-            rootCommand.AddCommand(new LoginCommand().Build());
-            rootCommand.AddCommand(new LogoutCommand().Build());
+            rootCommand.AddCommand(new RemoteCommand().Build());
             rootCommand.AddCommand(new ListCommand().Build());
             rootCommand.AddCommand(new NewCommand().Build());
-            rootCommand.AddCommand(new PullCommand().Build());
-            rootCommand.AddCommand(new PushCommand().Build());
 
-            var parser = new CommandLineBuilder(rootCommand)
+            var parser = new CommandLineBuilder(rootCommand).UseDefaults()
                 .UseHost(args =>
                 {
                     var host = Host.CreateDefaultBuilder();
@@ -48,13 +47,16 @@ namespace AcBlog.Tools.Sdk
                         config.AddEnvironmentVariables("ACBLOG_");
                         config.AddCommandLine(args);
                     });
+                    host.ConfigureLogging(log =>
+                    {
+                        log.SetMinimumLevel(LogLevel.Warning);
+                    });
 
                     return host;
                 }, host =>
                 {
                     host.ConfigureServices((context, services) =>
                     {
-                        services.AddLogging();
                         services.AddHttpClient();
                         services.AddOptions()
                             .Configure<WorkspaceOption>(context.Configuration.GetSection("acblog"))
@@ -63,8 +65,23 @@ namespace AcBlog.Tools.Sdk
                     });
                 })
                 .Build();
-
+#if DEBUG
+            while (true)
+            {
+                Console.Write("> ");
+                string str = Console.ReadLine();
+                try
+                {
+                    await parser.InvokeAsync(str);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+#else
             return await parser.InvokeAsync(args);
+#endif
         }
     }
 }

@@ -24,21 +24,43 @@ namespace AcBlog.Tools.Sdk.Models
         public Workspace(IOptions<WorkspaceOption> option, IOptions<DB> db, IHttpClientFactory httpClientFactory)
         {
             HttpClientFactory = httpClientFactory;
-            BlogService = new AcBlog.Sdk.FileSystem.FileSystemBlogService(new PhysicalFileProvider(Environment.CurrentDirectory));
+            BlogService = new FileSystemBlogService(
+                new PhysicalFileProvider(Environment.CurrentDirectory));
             Option = option.Value;
             DB = db.Value;
         }
 
-        private WorkspaceOption Option { get; }
+        public WorkspaceOption Option { get; }
 
-        private DB DB { get; }
+        public DB DB { get; }
 
         private IHttpClientFactory HttpClientFactory { get; }
 
+        async Task SaveDb()
+        {
+            using var st = File.Open(DBPath, FileMode.Create, FileAccess.Write);
+            await JsonSerializer.SerializeAsync(st, new { db = DB });
+        }
+
+        async Task SaveOption()
+        {
+            using var st = File.Open(OptionPath, FileMode.Create, FileAccess.Write);
+            await JsonSerializer.SerializeAsync(st, new { acblog = Option });
+        }
+
         public IBlogService BlogService { get; private set; }
 
-        public Task Connect(string name)
+        public async Task Save()
         {
+            await SaveOption();
+            await SaveDb();
+        }
+
+        public async Task Connect(string name = "")
+        {
+            if (string.IsNullOrEmpty(name))
+                name = Option.CurrentRemote;
+
             if (Option.Remotes.TryGetValue(name, out var remote))
             {
                 switch (remote.Type)
@@ -64,12 +86,14 @@ namespace AcBlog.Tools.Sdk.Models
                     break;
                 }
                 BlogService.PostService.Context.Token = remote.Token;
+
+                Option.CurrentRemote = name;
+                await SaveOption();
             }
             else
             {
                 throw new Exception("No remote");
             }
-            return Task.CompletedTask;
         }
     }
 }

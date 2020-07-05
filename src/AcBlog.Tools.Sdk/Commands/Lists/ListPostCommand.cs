@@ -1,5 +1,6 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Tools.Sdk.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Concurrent;
@@ -22,7 +23,11 @@ namespace AcBlog.Tools.Sdk.Commands
 
         public override async Task<int> Handle(CArgument argument, IHost host, CancellationToken cancellationToken)
         {
-            Workspace workspace = Program.Workspace;
+            Workspace workspace = host.Services.GetRequiredService<Workspace>();
+            await workspace.Connect();
+            Console.WriteLine(workspace.BlogService);
+
+            /*Workspace workspace = Program.Workspace;
             using var client = new HttpClient();
             await workspace.Connect(client);
             var service = workspace.Remote!.PostService;
@@ -34,6 +39,7 @@ namespace AcBlog.Tools.Sdk.Commands
                 cancellationToken.ThrowIfCancellationRequested();
                 console.Out.WriteLine(item!.Title);
             }
+            return 0;*/
             return 0;
         }
 

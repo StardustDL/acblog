@@ -2,18 +2,17 @@
 
 namespace AcBlog.Tools.Sdk.Commands
 {
-    public class ListCommand : BaseCommand<ListCommand.CArgument>
+    public class NewCommand : BaseCommand<NewCommand.CArgument>
     {
-        public override string Name => "list";
+        public override string Name => "new";
 
-        public override string Description => "List blog contents.";
+        public override string Description => "Create new contents.";
 
         protected override bool DisableHandler => true;
 
         public override Command Configure()
         {
             var result = base.Configure();
-            result.AddCommand(new ListPostCommand().Build());
             return result;
         }
 

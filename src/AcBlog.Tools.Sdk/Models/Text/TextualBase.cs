@@ -12,6 +12,7 @@ namespace AcBlog.Tools.Sdk.Models.Text
 
         static IDeserializer YamlDeserializer { get; } = new DeserializerBuilder().Build();
 
+
         const string MetaSplitter = "---";
 
         protected virtual T CreateInitialData() => new T();

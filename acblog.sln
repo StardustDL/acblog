@@ -36,15 +36,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{2E124B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Data.Documents", "src\AcBlog.Data.Documents\AcBlog.Data.Documents.csproj", "{BF489295-A9F1-4AEE-98A3-FEF07453E0F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardustDL.Extensions.FileProviders.Http", "src\StardustDL.Extensions.FileProviders.Http\StardustDL.Extensions.FileProviders.Http.csproj", "{9AB83D80-E2BE-4B75-91BF-5D794E918E24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StardustDL.Extensions.FileProviders.Http", "src\StardustDL.Extensions.FileProviders.Http\StardustDL.Extensions.FileProviders.Http.csproj", "{9AB83D80-E2BE-4B75-91BF-5D794E918E24}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Sdk", "src\AcBlog.Sdk\AcBlog.Sdk.csproj", "{F92B5718-AF1A-43D5-8912-4B61D3BA18D3}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Tools.Sdk", "src\AcBlog.Tools.Sdk\AcBlog.Tools.Sdk.csproj", "{B5E71DF5-BE74-4C26-B85A-3FD84B5CCA63}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Server.Api", "src\AcBlog.Server.Api\AcBlog.Server.Api.csproj", "{6840DF2B-FEC0-4158-B404-54C95F36AB54}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Data.Repositories.SqlServer", "src\AcBlog.Data.Repositories.SqlServer\AcBlog.Data.Repositories.SqlServer.csproj", "{BCC7FB90-38EA-4B66-8581-AE192EBA5C50}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Tools.Sdk", "src\AcBlog.Tools.Sdk\AcBlog.Tools.Sdk.csproj", "{228145E6-E82B-40E5-BA57-CFB6E3ADC038}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -108,10 +108,6 @@ Global
 		{F92B5718-AF1A-43D5-8912-4B61D3BA18D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F92B5718-AF1A-43D5-8912-4B61D3BA18D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F92B5718-AF1A-43D5-8912-4B61D3BA18D3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B5E71DF5-BE74-4C26-B85A-3FD84B5CCA63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B5E71DF5-BE74-4C26-B85A-3FD84B5CCA63}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B5E71DF5-BE74-4C26-B85A-3FD84B5CCA63}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B5E71DF5-BE74-4C26-B85A-3FD84B5CCA63}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6840DF2B-FEC0-4158-B404-54C95F36AB54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6840DF2B-FEC0-4158-B404-54C95F36AB54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6840DF2B-FEC0-4158-B404-54C95F36AB54}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -120,6 +116,10 @@ Global
 		{BCC7FB90-38EA-4B66-8581-AE192EBA5C50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCC7FB90-38EA-4B66-8581-AE192EBA5C50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCC7FB90-38EA-4B66-8581-AE192EBA5C50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{228145E6-E82B-40E5-BA57-CFB6E3ADC038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{228145E6-E82B-40E5-BA57-CFB6E3ADC038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{228145E6-E82B-40E5-BA57-CFB6E3ADC038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{228145E6-E82B-40E5-BA57-CFB6E3ADC038}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
