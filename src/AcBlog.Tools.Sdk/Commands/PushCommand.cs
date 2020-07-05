@@ -320,19 +320,20 @@ namespace AcBlog.Tools.Sdk.Commands
         public override Command Configure()
         {
             var result = base.Configure();
+            result.AddOption(new Option<bool>($"--{nameof(CArgument.Full).ToLowerInvariant()}", "Delete diff data (only for API remote)"));
             return result;
         }
 
         public override async Task<int> Handle(CArgument argument, IHost host, CancellationToken cancellationToken)
         {
             Workspace workspace = host.Services.GetRequiredService<Workspace>();
-            await workspace.Push();
-
+            await workspace.Push(full: argument.Full);
             return 0;
         }
 
         public class CArgument
         {
+            public bool Full { get; set; }
         }
     }
 }

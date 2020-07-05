@@ -91,7 +91,7 @@ namespace AcBlog.Data.Repositories.FileSystem
 
             foreach (var v in dict)
             {
-                string subdir = Path.Join("keywords", v.Key);
+                string subdir = Path.Join("keywords", NameUtility.Encode(v.Key));
 
                 PagingProvider<string> paging = new PagingProvider<string>(Path.Join(RootPath, subdir));
 
@@ -148,11 +148,11 @@ namespace AcBlog.Data.Repositories.FileSystem
             foreach (var v in root.Children.Values)
                 q.Enqueue(v);
 
-            while(q.Count > 0)
+            while (q.Count > 0)
             {
                 var node = q.Dequeue();
 
-                string subdir = Path.Join("categories", Path.Combine(node.Category.Items.ToArray()));
+                string subdir = Path.Join("categories", Path.Combine(node.Category.Items.Select(NameUtility.Encode).ToArray()));
 
                 PagingProvider<string> paging = new PagingProvider<string>(Path.Join(RootPath, subdir));
 
@@ -181,7 +181,7 @@ namespace AcBlog.Data.Repositories.FileSystem
             foreach (var v in Data)
             {
                 Post post = v;
-                using var st = FsBuilder.GetFileRewriteStream($"{post.Id}.json");
+                using var st = FsBuilder.GetFileRewriteStream($"{NameUtility.Encode(post.Id)}.json");
                 await JsonSerializer.SerializeAsync(st, post);
             }
 

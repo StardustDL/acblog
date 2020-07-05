@@ -35,9 +35,9 @@ namespace AcBlog.Tools.Sdk.Models
             DB = db.Value;
         }
 
-        public WorkspaceOption Option { get; }
+        public WorkspaceOption Option { get; private set; }
 
-        public DB DB { get; }
+        public DB DB { get; private set; }
 
         private IHttpClientFactory HttpClientFactory { get; }
 
@@ -65,6 +65,8 @@ namespace AcBlog.Tools.Sdk.Models
 
         public async Task Initialize()
         {
+            Option = new WorkspaceOption();
+            DB = new DB();
             await Save();
             FSBuilder builder = new FSBuilder(Environment.CurrentDirectory);
             builder.EnsureDirectoryExists("posts");
@@ -116,7 +118,8 @@ namespace AcBlog.Tools.Sdk.Models
             }
         }
 
-        public async Task Push(string name = "")
+        // full: delete diff post for api remote
+        public async Task Push(string name = "", bool full = false)
         {
             if (string.IsNullOrEmpty(name))
                 name = Option.CurrentRemote;
@@ -143,12 +146,35 @@ namespace AcBlog.Tools.Sdk.Models
                     break;
                     case RemoteType.RemoteFS:
                     {
-                        throw new Exception("Not support pushing to remote fs");
+                        throw new NotSupportedException("Not support pushing to remote file system, please push to local file system and sync to remote.");
                     }
                     case RemoteType.Api:
                     {
-                        throw new Exception("Not support pushing to api");
+                        await Connect(name);
+                        HashSet<string> remoteIds = (await Remote.PostService.All()).ToHashSet();
+                        foreach (var item in await Local.PostService.GetAllPosts())
+                        {
+                            if (item is null)
+                                continue;
+                            if (remoteIds.Contains(item.Id))
+                            {
+                                await Remote.PostService.Update(item);
+                            }
+                            else
+                            {
+                                await Remote.PostService.Create(item);
+                            }
+                            remoteIds.Remove(item.Id);
+                        }
+                        if (full)
+                        {
+                            foreach(var v in remoteIds)
+                            {
+                                await Remote.PostService.Delete(v);
+                            }
+                        }
                     }
+                    break;
                 }
             }
             else

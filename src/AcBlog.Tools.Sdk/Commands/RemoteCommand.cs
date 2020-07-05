@@ -21,23 +21,32 @@ namespace AcBlog.Tools.Sdk.Commands
             result.AddCommand(new Remotes.AddCommand().Build());
             result.AddCommand(new Remotes.RemoveCommand().Build());
             result.AddCommand(new Remotes.ConfigCommand().Build());
+            result.AddArgument(new Argument<string?>(nameof(CArgument.Current).ToLowerInvariant(), () => null, "Current remote name"));
             return result;
         }
 
-        public override Task<int> Handle(CArgument argument, IHost host, CancellationToken cancellationToken)
+        public override async Task<int> Handle(CArgument argument, IHost host, CancellationToken cancellationToken)
         {
             Workspace workspace = host.Services.GetRequiredService<Workspace>();
-            IConsole console = host.Services.GetRequiredService<IConsole>();
-            console.Out.WriteLine($"Current: {workspace.Option.CurrentRemote}");
-            foreach (var item in workspace.Option.Remotes.Values)
+            if (argument.Current is null)
             {
-                console.Out.WriteLine($"{item.Name} ({Enum.GetName(typeof(RemoteType), item.Type)}): {item.Uri}");
+                Console.WriteLine($"Current: {workspace.Option.CurrentRemote}");
+                foreach (var item in workspace.Option.Remotes.Values)
+                {
+                    Console.WriteLine($"{item.Name} ({Enum.GetName(typeof(RemoteType), item.Type)}): {item.Uri}");
+                }
             }
-            return Task.FromResult(0);
+            else
+            {
+                workspace.Option.CurrentRemote = argument.Current;
+                await workspace.Save();
+            }
+            return 0;
         }
 
         public class CArgument
         {
+            public string? Current { get; set; }
         }
     }
 }

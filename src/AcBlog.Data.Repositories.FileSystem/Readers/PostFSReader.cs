@@ -19,6 +19,8 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
         {
         }
 
+        protected override string GetPath(string id) => Path.Join(RootPath, $"{NameUtility.Encode(id)}.json");
+
         public override Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
         {
             query.Pagination ??= new Pagination();
@@ -43,13 +45,13 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             else if (query.Category != null && query.Category.Items.Any())
             {
                 var catRoot = Path.Join(RootPath, "categories");
-                catRoot = Path.Join(catRoot, Path.Combine(query.Category.Items.ToArray()));
+                catRoot = Path.Join(catRoot, Path.Combine(query.Category.Items.Select(NameUtility.Encode).ToArray()));
                 paging = new PagingProvider<string>(catRoot, FileProvider);
             }
             else if (query.Keywords != null && query.Keywords.Items.Any())
             {
                 var catRoot = Path.Join(RootPath, "keywords");
-                paging = new PagingProvider<string>(Path.Join(catRoot, query.Keywords.Items.First()), FileProvider);
+                paging = new PagingProvider<string>(Path.Join(catRoot, query.Keywords.Items.Select(NameUtility.Encode).First()), FileProvider);
             }
 
             paging.FillPagination(query.Pagination);
