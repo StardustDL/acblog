@@ -1,6 +1,6 @@
 ﻿namespace AcBlog.Server.Api.Models
 {
-    public class Options
+    public class AppOption
     {
         public bool DisableRegisterNewUser { get; set; } = true;
     }

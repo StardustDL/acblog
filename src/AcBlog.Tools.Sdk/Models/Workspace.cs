@@ -158,11 +158,19 @@ namespace AcBlog.Tools.Sdk.Models
                                 continue;
                             if (remoteIds.Contains(item.Id))
                             {
-                                await Remote.PostService.Update(item);
+                                var result = await Remote.PostService.Update(item);
+                                if (!result)
+                                {
+                                    Console.WriteLine($"Failed to update {item.Id}");
+                                }
                             }
                             else
                             {
-                                await Remote.PostService.Create(item);
+                                var result = await Remote.PostService.Create(item);
+                                if (result is null)
+                                {
+                                    Console.WriteLine($"Failed to create {item.Id}");
+                                }
                             }
                             remoteIds.Remove(item.Id);
                         }

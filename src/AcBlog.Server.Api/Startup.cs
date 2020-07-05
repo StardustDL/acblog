@@ -41,9 +41,8 @@ namespace AcBlog.Server.Api
         public void ConfigureServices(IServiceCollection services)
         {
             {
-                Options options = new Options();
-                Configuration.Bind("Options", options);
-                services.AddSingleton(options);
+                services.AddOptions()
+                    .Configure<AppOption>(Configuration.GetSection("Options"));
             }
 
             {
