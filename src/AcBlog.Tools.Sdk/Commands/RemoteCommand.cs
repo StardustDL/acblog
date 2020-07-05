@@ -20,6 +20,7 @@ namespace AcBlog.Tools.Sdk.Commands
             var result = base.Configure();
             result.AddCommand(new Remotes.AddCommand().Build());
             result.AddCommand(new Remotes.RemoveCommand().Build());
+            result.AddCommand(new Remotes.ConfigCommand().Build());
             return result;
         }
 

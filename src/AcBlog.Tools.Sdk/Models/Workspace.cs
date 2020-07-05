@@ -121,40 +121,40 @@ namespace AcBlog.Tools.Sdk.Models
             if (string.IsNullOrEmpty(name))
                 name = Option.CurrentRemote;
 
-            await Connect(name);
-
-            var remote = Option.Remotes[name];
-            switch (remote.Type)
+            if (Option.Remotes.TryGetValue(name, out var remote))
             {
-                case RemoteType.LocalFS:
+                switch (remote.Type)
                 {
-                    FSBuilder fsBuilder = new FSBuilder(remote.Uri);
-                    fsBuilder.EnsureDirectoryEmpty();
-
-                    List<Post> posts = new List<Post>();
-                    foreach(var item in await Local.PostService.GetAllPosts())
+                    case RemoteType.LocalFS:
                     {
-                        if (item is null)
-                            continue;
-                        posts.Add(item);
+                        FSBuilder fsBuilder = new FSBuilder(remote.Uri);
+                        fsBuilder.EnsureDirectoryEmpty();
+
+                        List<Post> posts = new List<Post>();
+                        foreach (var item in await Local.PostService.GetAllPosts())
+                        {
+                            if (item is null)
+                                continue;
+                            posts.Add(item);
+                        }
+                        PostRepositoryBuilder builder = new PostRepositoryBuilder(posts, Path.Join(remote.Uri, "posts"));
+                        await builder.Build();
                     }
-                    PostRepositoryBuilder builder = new PostRepositoryBuilder(posts, Path.Join(remote.Uri, "posts"));
-                    await builder.Build();
-                }
-                break;
-                case RemoteType.RemoteFS:
-                {
-                    throw new Exception("Not support pushing to remote fs");
-                }
-                case RemoteType.Api:
-                {
-                    throw new Exception("Not support pushing to api");
+                    break;
+                    case RemoteType.RemoteFS:
+                    {
+                        throw new Exception("Not support pushing to remote fs");
+                    }
+                    case RemoteType.Api:
+                    {
+                        throw new Exception("Not support pushing to api");
+                    }
                 }
             }
-            Remote.PostService.Context.Token = remote.Token;
-
-            Option.CurrentRemote = name;
-            await SaveOption();
+            else
+            {
+                throw new Exception("No remote");
+            }
         }
     }
 }

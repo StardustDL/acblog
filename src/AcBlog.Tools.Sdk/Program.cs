@@ -20,8 +20,6 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Tools.Sdk
 {
-    // remote add/remove config uri, token 
-    // push, pull
     class Program
     {
         static async Task<int> Main(string[] args)

@@ -49,7 +49,7 @@ namespace AcBlog.Tools.Sdk.Commands
 #if DEBUG
                 throw;
 #else
-                console.Error.WriteLine($"Error occurs: {ex.Message}.");
+                console.Error.WriteLine($"Error occurs: {ex}.");
                 return 1;
 #endif
             }
