@@ -1,7 +1,12 @@
 ﻿using AcBlog.Data.Repositories;
+using AcBlog.Data.Repositories.FileSystem;
 using AcBlog.Sdk;
-using AcBlog.Sdk.API;
-using AcBlog.Sdk.StaticFile;
+using AcBlog.Sdk.Api;
+using AcBlog.Sdk.FileSystem;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
+using StardustDL.Extensions.FileProviders.Http;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -12,94 +17,59 @@ namespace AcBlog.Tools.Sdk.Models
 {
     public class Workspace
     {
-        public Workspace(DirectoryInfo root)
+        public const string OptionPath = "acblog.json";
+
+        public const string DBPath = "db.json";
+
+        public Workspace(IOptions<WorkspaceOption> option, IOptions<DB> db, IHttpClientFactory httpClientFactory)
         {
-            Root = root;
-            DbRoot = new DirectoryInfo(Path.Join(Root.FullName, ".acblog"));
+            HttpClientFactory = httpClientFactory;
+            BlogService = new AcBlog.Sdk.FileSystem.FileSystemBlogService(new PhysicalFileProvider(Environment.CurrentDirectory));
+            Option = option.Value;
+            DB = db.Value;
         }
 
-        public WorkspaceConfiguration Configuration { get; private set; } = new WorkspaceConfiguration();
+        private WorkspaceOption Option { get; }
 
-        public Db History { get; private set; } = new Db();
+        private DB DB { get; }
 
-        public DirectoryInfo Root { get; }
+        private IHttpClientFactory HttpClientFactory { get; }
 
-        public DirectoryInfo DbRoot { get; }
+        public IBlogService BlogService { get; private set; }
 
-        public IBlogService? Remote { get; private set; }
-
-        public Task Connect(HttpClient httpClient)
+        public Task Connect(string name)
         {
-            if (Configuration.Remote is null)
-                throw new Exception("No remote configured.");
-            httpClient.BaseAddress = Configuration.Remote.Uri;
-            if (Configuration.Remote.IsStatic)
+            if (Option.Remotes.TryGetValue(name, out var remote))
             {
-                Remote = new HttpStaticFileBlogService(Configuration.Remote.Uri.LocalPath, httpClient);
+                switch (remote.Type)
+                {
+                    case RemoteType.LocalFS:
+                        BlogService = new FileSystemBlogService(
+                            new PhysicalFileProvider(remote.Uri));
+                        break;
+                    case RemoteType.RemoteFS:
+                    {
+                        var client = HttpClientFactory.CreateClient();
+                        client.BaseAddress = new Uri(remote.Uri);
+                        BlogService = new FileSystemBlogService(
+                            new HttpFileProvider(client));
+                    }
+                    break;
+                    case RemoteType.Api:
+                    {
+                        var client = HttpClientFactory.CreateClient();
+                        client.BaseAddress = new Uri(remote.Uri);
+                        BlogService = new ApiBlogService(client);
+                    }
+                    break;
+                }
+                BlogService.PostService.Context.Token = remote.Token;
             }
             else
             {
-                Remote = new ApiBlogService(httpClient);
+                throw new Exception("No remote");
             }
             return Task.CompletedTask;
-        }
-
-        public Task Login()
-        {
-            if (Remote is null)
-                throw new Exception("Please connect first.");
-            Remote.PostService.Context ??= new RepositoryAccessContext();
-            Remote.KeywordService.Context ??= new RepositoryAccessContext();
-            Remote.CategoryService.Context ??= new RepositoryAccessContext();
-            Remote.UserService.Context ??= new RepositoryAccessContext();
-            Remote.PostService.Context.Token = Configuration.Token;
-            Remote.KeywordService.Context.Token = Configuration.Token;
-            Remote.CategoryService.Context.Token = Configuration.Token;
-            Remote.UserService.Context.Token = Configuration.Token;
-            return Task.CompletedTask;
-        }
-
-        public async Task Load()
-        {
-            if (DbRoot.Exists)
-            {
-                {
-                    var fileinfo = new FileInfo(Path.Join(DbRoot.FullName, "config.json"));
-                    if (fileinfo.Exists)
-                    {
-                        using var fs = fileinfo.Open(FileMode.Open, FileAccess.Read);
-                        Configuration = await JsonSerializer.DeserializeAsync<WorkspaceConfiguration>(fs);
-                    }
-                }
-                {
-                    var fileinfo = new FileInfo(Path.Join(DbRoot.FullName, "history.json"));
-                    if (fileinfo.Exists)
-                    {
-                        using var fs = fileinfo.Open(FileMode.Open, FileAccess.Read);
-                        History = await JsonSerializer.DeserializeAsync<Db>(fs);
-                    }
-                }
-            }
-        }
-
-        public async Task Save()
-        {
-            DbRoot.Refresh();
-            if (!DbRoot.Exists)
-            {
-                DbRoot.Create();
-                DbRoot.Refresh();
-            }
-            {
-                var fileinfo = new FileInfo(Path.Join(DbRoot.FullName, "config.json"));
-                using var fs = fileinfo.Open(FileMode.Create, FileAccess.Write);
-                await JsonSerializer.SerializeAsync(fs, Configuration);
-            }
-            {
-                var fileinfo = new FileInfo(Path.Join(DbRoot.FullName, "history.json"));
-                using var fs = fileinfo.Open(FileMode.Create, FileAccess.Write);
-                await JsonSerializer.SerializeAsync(fs, History);
-            }
         }
     }
 }

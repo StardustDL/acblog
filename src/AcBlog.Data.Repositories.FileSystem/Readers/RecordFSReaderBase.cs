@@ -33,7 +33,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         protected virtual string GetPath(TId id) => Path.Join(RootPath, $"{id}.json");
 
-        public RepositoryAccessContext? Context { get; set; }
+        public RepositoryAccessContext Context { get; set; } = new RepositoryAccessContext();
 
         public virtual async Task<IEnumerable<TId>> All(CancellationToken cancellationToken = default)
         {

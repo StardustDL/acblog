@@ -1,6 +1,7 @@
 ﻿using AcBlog.Tools.Sdk.Helpers;
 using AcBlog.Tools.Sdk.Models;
 using AcBlog.Tools.Sdk.Models.Text;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
@@ -26,7 +27,7 @@ namespace AcBlog.Tools.Sdk.Commands
             return result;
         }
 
-        public override async Task<int> Handle(CArgument argument, IConsole console, InvocationContext context, CancellationToken cancellationToken)
+        public override async Task<int> Handle(CArgument argument, IHost host, CancellationToken cancellationToken)
         {
             Workspace workspace = Program.Workspace;
             using var client = new HttpClient();

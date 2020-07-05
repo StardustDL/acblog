@@ -2,7 +2,7 @@
 
 namespace AcBlog.Tools.Sdk.Models
 {
-    public class Db : Dictionary<string, DbItem>
+    public class DB
     {
     }
 }

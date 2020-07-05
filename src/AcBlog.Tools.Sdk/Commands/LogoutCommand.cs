@@ -1,4 +1,5 @@
 ﻿using AcBlog.Tools.Sdk.Models;
+using Microsoft.Extensions.Hosting;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Threading;
@@ -12,7 +13,7 @@ namespace AcBlog.Tools.Sdk.Commands
 
         public override string Description => "Logout AcBlog server.";
 
-        public override async Task<int> Handle(CArgument argument, IConsole console, InvocationContext context, CancellationToken cancellationToken)
+        public override async Task<int> Handle(CArgument argument, IHost host, CancellationToken cancellationToken)
         {
             Workspace workspace = Program.Workspace;
             workspace.Configuration.Token = "";

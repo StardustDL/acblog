@@ -23,7 +23,7 @@ namespace AcBlog.Sdk.Api
 
         public HttpClient HttpClient { get; }
 
-        public RepositoryAccessContext? Context { get; set; }
+        public RepositoryAccessContext Context { get; set; } = new RepositoryAccessContext();
 
         private void SetHeader()
         {

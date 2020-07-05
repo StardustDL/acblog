@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Hosting;
+using System;
 using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Invocation;
@@ -23,15 +24,15 @@ namespace AcBlog.Tools.Sdk.Commands
             return result;
         }
 
-        public virtual Task<int> Handle(T argument, IConsole console, InvocationContext context, CancellationToken cancellationToken) => Task.FromResult(0);
+        public virtual Task<int> Handle(T argument, IHost host, CancellationToken cancellationToken) => Task.FromResult(0);
 
-        private async Task<int> HandleWrapper(T argument, IConsole console, InvocationContext context, CancellationToken cancellationToken)
+        private async Task<int> HandleWrapper(T argument, IHost host, IConsole console, CancellationToken cancellationToken)
         {
             try
             {
                 try
                 {
-                    return await Handle(argument, console, context, cancellationToken);
+                    return await Handle(argument, host, cancellationToken);
                 }
                 catch (OperationCanceledException)
                 {
@@ -43,7 +44,7 @@ namespace AcBlog.Tools.Sdk.Commands
                     throw;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 #if DEBUG
                 throw;
@@ -58,7 +59,7 @@ namespace AcBlog.Tools.Sdk.Commands
         {
             Command command = Configure();
             if (!DisableHandler)
-                command.Handler = CommandHandler.Create<T, IConsole, InvocationContext, CancellationToken>(HandleWrapper);
+                command.Handler = CommandHandler.Create<T, IHost, IConsole, CancellationToken>(HandleWrapper);
             return command;
         }
     }

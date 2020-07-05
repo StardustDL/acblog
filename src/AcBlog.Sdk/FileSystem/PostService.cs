@@ -15,7 +15,7 @@ namespace AcBlog.Sdk.FileSystem
     {
         PostFSReader Reader { get; }
 
-        public RepositoryAccessContext? Context { get => Reader.Context; set => Reader.Context = value; }
+        public RepositoryAccessContext Context { get => Reader.Context; set => Reader.Context = value; }
 
         public IBlogService BlogService { get; }
 

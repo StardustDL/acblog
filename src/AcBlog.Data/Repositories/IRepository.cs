@@ -3,6 +3,6 @@
     public interface IRepository
     {
 
-        RepositoryAccessContext? Context { get; set; }
+        RepositoryAccessContext Context { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Tools.Sdk.Models;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace AcBlog.Tools.Sdk.Commands
 
         public override string Description => "List posts.";
 
-        public override async Task<int> Handle(CArgument argument, IConsole console, InvocationContext context, CancellationToken cancellationToken)
+        public override async Task<int> Handle(CArgument argument, IHost host, CancellationToken cancellationToken)
         {
             Workspace workspace = Program.Workspace;
             using var client = new HttpClient();

@@ -1,9 +1,17 @@
 ﻿using AcBlog.Sdk;
 using AcBlog.Tools.Sdk.Commands;
 using AcBlog.Tools.Sdk.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.CommandLine;
+using System.CommandLine.Builder;
+using System.CommandLine.Hosting;
+using System.CommandLine.Invocation;
+using System.CommandLine.Parsing;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -11,8 +19,6 @@ namespace AcBlog.Tools.Sdk
 {
     class Program
     {
-        public static Workspace Workspace { get; private set; } = new Workspace(new DirectoryInfo(Environment.CurrentDirectory));
-
         static async Task<int> Main(string[] args)
         {
             var rootCommand = new RootCommand("AcBlog SDK for command-line.");
@@ -26,9 +32,39 @@ namespace AcBlog.Tools.Sdk
             rootCommand.AddCommand(new PullCommand().Build());
             rootCommand.AddCommand(new PushCommand().Build());
 
-            await Workspace.Load();
+            var parser = new CommandLineBuilder(rootCommand)
+                .UseHost(args =>
+                {
+                    var host = Host.CreateDefaultBuilder();
 
-            return await rootCommand.InvokeAsync(args);
+                    host.ConfigureAppConfiguration((context, config) =>
+                    {
+                        config.AddJsonFile(Workspace.OptionPath,
+                            optional: true,
+                            reloadOnChange: true);
+                        config.AddJsonFile(Workspace.DBPath,
+                            optional: true,
+                            reloadOnChange: true);
+                        config.AddEnvironmentVariables("ACBLOG_");
+                        config.AddCommandLine(args);
+                    });
+
+                    return host;
+                }, host =>
+                {
+                    host.ConfigureServices((context, services) =>
+                    {
+                        services.AddLogging();
+                        services.AddHttpClient();
+                        services.AddOptions()
+                            .Configure<WorkspaceOption>(context.Configuration.GetSection("acblog"))
+                            .Configure<DB>(context.Configuration.GetSection("db"));
+                        services.AddSingleton<Workspace>();
+                    });
+                })
+                .Build();
+
+            return await parser.InvokeAsync(args);
         }
     }
 }
