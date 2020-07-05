@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace AcBlog.Data.Models
 {
-    public class Keyword : IEnumerable<string>
+    public class Keyword
     {
         public static Keyword Empty => new Keyword();
 
@@ -45,9 +45,5 @@ namespace AcBlog.Data.Models
                 return false;
             }
         }
-
-        public IEnumerator<string> GetEnumerator() => Items.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

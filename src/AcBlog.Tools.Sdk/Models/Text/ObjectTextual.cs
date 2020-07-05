@@ -6,53 +6,34 @@ using YamlDotNet.Serialization;
 
 namespace AcBlog.Tools.Sdk.Models.Text
 {
-    public abstract class TextualBase<T, TMeta> where TMeta : class where T : new()
+    public static class ObjectTextual
     {
         static ISerializer YamlSerializer { get; } = new SerializerBuilder().Build();
 
         static IDeserializer YamlDeserializer { get; } = new DeserializerBuilder().Build();
 
 
-        const string MetaSplitter = "---";
+        public const string MetaSplitter = "---";
 
-        protected virtual T CreateInitialData() => new T();
-
-        protected virtual string FormatMetadata(TMeta metadata)
-        {
-            return YamlSerializer.Serialize(metadata!).Trim(new char[] { '\r', '\n' });
-        }
-
-        protected virtual TMeta ParseMetadata(string metastr)
-        {
-            return YamlDeserializer.Deserialize<TMeta>(metastr);
-        }
-
-        protected virtual string FormatData(T data) => string.Empty;
-
-        protected virtual TMeta? GetMetadata(T data) => null;
-
-        protected virtual void SetMetadata(T data, TMeta meta) { }
-
-        protected virtual void SetData(T data, string datastr) { }
-
-        public virtual string Format(T data)
+        public static string Format<TMeta>(TMeta metadata, string data)
         {
             StringBuilder sb = new StringBuilder();
-            var meta = GetMetadata(data);
-            if (meta != null)
+            if (metadata != null)
             {
-                sb.Append($"{MetaSplitter}\n{FormatMetadata(meta)}\n{MetaSplitter}\n");
+                string metastr = YamlSerializer.Serialize(metadata).Trim(new char[] { '\r', '\n' });
+                sb.Append($"{MetaSplitter}\n{metastr}\n{MetaSplitter}\n");
             }
-            sb.Append(FormatData(data));
+            sb.Append(data);
             return sb.ToString();
         }
 
-        public virtual T Parse(string rawText)
+        public static (TMeta, string) Parse<TMeta>(string rawText) where TMeta : new()
         {
-            T result = CreateInitialData();
+            TMeta meta = new TMeta();
 
             var lines = rawText.Replace("\r\n", "\n").Replace("\r", "\n").Split("\n");
             int contentBg = 0;
+
             if (lines.Length > 0)
             {
                 if (lines[0] == MetaSplitter)
@@ -67,26 +48,23 @@ namespace AcBlog.Tools.Sdk.Models.Text
                     contentBg = r;
                     try
                     {
-                        var meta = ParseMetadata(metastr);
-                        SetMetadata(result, meta);
+                        meta = YamlDeserializer.Deserialize<TMeta>(metastr);
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception("Failed to set metadata.", ex);
+                        throw new Exception("Failed to parse metadata.", ex);
                     }
                 }
             }
             if (contentBg + 1 < lines.Length)
             {
                 var datastr = string.Join('\n', lines[(contentBg + 1)..]);
-                SetData(result, datastr);
+                return (meta, datastr);
             }
             else
             {
-                SetData(result, string.Empty);
+                return (meta, string.Empty);
             }
-
-            return result;
         }
     }
 }

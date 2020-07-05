@@ -40,16 +40,16 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
                         break;
                 }
             }
-            else if (query.Category != null && query.Category.Any())
+            else if (query.Category != null && query.Category.Items.Any())
             {
                 var catRoot = Path.Join(RootPath, "categories");
-                catRoot = Path.Join(catRoot, Path.Combine(query.Category.ToArray()));
+                catRoot = Path.Join(catRoot, Path.Combine(query.Category.Items.ToArray()));
                 paging = new PagingProvider<string>(catRoot, FileProvider);
             }
-            else if (query.Keywords != null && query.Keywords.Any())
+            else if (query.Keywords != null && query.Keywords.Items.Any())
             {
                 var catRoot = Path.Join(RootPath, "keywords");
-                paging = new PagingProvider<string>(Path.Join(catRoot, query.Keywords.First()), FileProvider);
+                paging = new PagingProvider<string>(Path.Join(catRoot, query.Keywords.Items.First()), FileProvider);
             }
 
             paging.FillPagination(query.Pagination);

@@ -4,6 +4,6 @@ namespace AcBlog.Sdk
 {
     public interface IBlogService
     {
-        IPostService PostService { get; }
+        IPostService PostService { get; } 
     }
 }

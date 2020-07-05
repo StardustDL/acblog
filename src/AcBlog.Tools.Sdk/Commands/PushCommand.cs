@@ -2,6 +2,7 @@
 using AcBlog.Tools.Sdk.Helpers;
 using AcBlog.Tools.Sdk.Models;
 using AcBlog.Tools.Sdk.Models.Text;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.CommandLine;
@@ -309,4 +310,29 @@ namespace AcBlog.Tools.Sdk.Commands
     }
 
     */
+
+    public class PushCommand : BaseCommand<PushCommand.CArgument>
+    {
+        public override string Name => "push";
+
+        public override string Description => "Push data to server.";
+
+        public override Command Configure()
+        {
+            var result = base.Configure();
+            return result;
+        }
+
+        public override async Task<int> Handle(CArgument argument, IHost host, CancellationToken cancellationToken)
+        {
+            Workspace workspace = host.Services.GetRequiredService<Workspace>();
+            await workspace.Push();
+
+            return 0;
+        }
+
+        public class CArgument
+        {
+        }
+    }
 }

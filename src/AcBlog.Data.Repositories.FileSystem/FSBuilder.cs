@@ -31,8 +31,15 @@ namespace AcBlog.Data.Repositories.FileSystem
         public void EnsureDirectoryEmpty(string subpath = "")
         {
             string path = Path.Join(RootPath, subpath);
-            EnsureDirectoryExists(subpath, false);
-            Directory.CreateDirectory(path);
+            EnsureDirectoryExists(subpath);
+            foreach (var v in Directory.GetFiles(path))
+            {
+                File.Delete(v);
+            }
+            foreach (var v in Directory.GetDirectories(path))
+            {
+                Directory.Delete(v, true);
+            }
         }
 
         public void EnsureFileExists(string subpath, bool isExists = true, byte[]? initialData = null)

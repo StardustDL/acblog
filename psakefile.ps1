@@ -84,7 +84,6 @@ Task Deploy-packages {
     Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$build_version.nupkg -s aza -k az }
     Exec { dotnet nuget push ./packages/AcBlog.Sdk.$build_version.nupkg -s aza -k az }
     Exec { dotnet nuget push ./packages/AcBlog.Tools.Sdk.$build_version.nupkg -s aza -k az }
-    Exec { dotnet nuget push ./packages/AcBlog.Tools.StaticGenerator.$build_version.nupkg -s aza -k az }
 }
 
 Task Restore-WASM {

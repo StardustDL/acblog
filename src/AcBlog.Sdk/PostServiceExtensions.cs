@@ -42,5 +42,10 @@ namespace AcBlog.Sdk
                 posts.Add(service.Get(id, cancellationToken));
             return Task.WhenAll(posts.ToArray());
         }
+
+        public static async Task<Post?[]> GetAllPosts(this IPostService service, CancellationToken cancellationToken = default)
+        {
+            return await service.GetPosts(await service.All());
+        }
     }
 }

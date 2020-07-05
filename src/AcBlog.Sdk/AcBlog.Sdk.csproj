@@ -12,7 +12,6 @@
     <PackageProjectUrl>https://github.com/acblog</PackageProjectUrl>
     <RepositoryUrl>https://github.com/acblog/acblog</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-    <AssemblyName>acblog</AssemblyName>
     <PackageId>AcBlog.Sdk</PackageId>
     <Product>AcBlog.Sdk</Product>
     <PackageIcon>icon.png</PackageIcon>

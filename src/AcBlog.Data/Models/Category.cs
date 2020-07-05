@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace AcBlog.Data.Models
 {
-    public class Category : IEnumerable<string>
+    public class Category
     {
         public static Category Empty => new Category();
 
@@ -45,9 +45,5 @@ namespace AcBlog.Data.Models
                 return false;
             }
         }
-
-        public IEnumerator<string> GetEnumerator() => Items.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

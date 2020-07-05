@@ -1,14 +1,18 @@
-﻿using AcBlog.Data.Repositories;
+﻿using AcBlog.Data.Models;
+using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.FileSystem;
 using AcBlog.Sdk;
 using AcBlog.Sdk.Api;
 using AcBlog.Sdk.FileSystem;
+using AcBlog.Tools.Sdk.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using StardustDL.Extensions.FileProviders.Http;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -21,11 +25,12 @@ namespace AcBlog.Tools.Sdk.Models
 
         public const string DBPath = "db.json";
 
-        public Workspace(IOptions<WorkspaceOption> option, IOptions<DB> db, IHttpClientFactory httpClientFactory)
+        public Workspace(IOptions<WorkspaceOption> option, IOptions<DB> db, LocalBlogService localBlogService, IHttpClientFactory httpClientFactory)
         {
             HttpClientFactory = httpClientFactory;
-            BlogService = new FileSystemBlogService(
+            Remote = new FileSystemBlogService(
                 new PhysicalFileProvider(Environment.CurrentDirectory));
+            Local = localBlogService;
             Option = option.Value;
             DB = db.Value;
         }
@@ -39,16 +44,31 @@ namespace AcBlog.Tools.Sdk.Models
         async Task SaveDb()
         {
             using var st = File.Open(DBPath, FileMode.Create, FileAccess.Write);
-            await JsonSerializer.SerializeAsync(st, new { db = DB });
+            await JsonSerializer.SerializeAsync(st, new { db = DB }, options: new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
         }
 
         async Task SaveOption()
         {
             using var st = File.Open(OptionPath, FileMode.Create, FileAccess.Write);
-            await JsonSerializer.SerializeAsync(st, new { acblog = Option });
+            await JsonSerializer.SerializeAsync(st, new { acblog = Option }, options: new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
         }
 
-        public IBlogService BlogService { get; private set; }
+        public IBlogService Remote { get; private set; }
+
+        public LocalBlogService Local { get; private set; }
+
+        public async Task Initialize()
+        {
+            await Save();
+            FSBuilder builder = new FSBuilder(Environment.CurrentDirectory);
+            builder.EnsureDirectoryExists("posts");
+        }
 
         public async Task Save()
         {
@@ -66,14 +86,14 @@ namespace AcBlog.Tools.Sdk.Models
                 switch (remote.Type)
                 {
                     case RemoteType.LocalFS:
-                        BlogService = new FileSystemBlogService(
+                        Remote = new FileSystemBlogService(
                             new PhysicalFileProvider(remote.Uri));
                         break;
                     case RemoteType.RemoteFS:
                     {
                         var client = HttpClientFactory.CreateClient();
                         client.BaseAddress = new Uri(remote.Uri);
-                        BlogService = new FileSystemBlogService(
+                        Remote = new FileSystemBlogService(
                             new HttpFileProvider(client));
                     }
                     break;
@@ -81,11 +101,11 @@ namespace AcBlog.Tools.Sdk.Models
                     {
                         var client = HttpClientFactory.CreateClient();
                         client.BaseAddress = new Uri(remote.Uri);
-                        BlogService = new ApiBlogService(client);
+                        Remote = new ApiBlogService(client);
                     }
                     break;
                 }
-                BlogService.PostService.Context.Token = remote.Token;
+                Remote.PostService.Context.Token = remote.Token;
 
                 Option.CurrentRemote = name;
                 await SaveOption();
@@ -94,6 +114,47 @@ namespace AcBlog.Tools.Sdk.Models
             {
                 throw new Exception("No remote");
             }
+        }
+
+        public async Task Push(string name = "")
+        {
+            if (string.IsNullOrEmpty(name))
+                name = Option.CurrentRemote;
+
+            await Connect(name);
+
+            var remote = Option.Remotes[name];
+            switch (remote.Type)
+            {
+                case RemoteType.LocalFS:
+                {
+                    FSBuilder fsBuilder = new FSBuilder(remote.Uri);
+                    fsBuilder.EnsureDirectoryEmpty();
+
+                    List<Post> posts = new List<Post>();
+                    foreach(var item in await Local.PostService.GetAllPosts())
+                    {
+                        if (item is null)
+                            continue;
+                        posts.Add(item);
+                    }
+                    PostRepositoryBuilder builder = new PostRepositoryBuilder(posts, Path.Join(remote.Uri, "posts"));
+                    await builder.Build();
+                }
+                break;
+                case RemoteType.RemoteFS:
+                {
+                    throw new Exception("Not support pushing to remote fs");
+                }
+                case RemoteType.Api:
+                {
+                    throw new Exception("Not support pushing to api");
+                }
+            }
+            Remote.PostService.Context.Token = remote.Token;
+
+            Option.CurrentRemote = name;
+            await SaveOption();
         }
     }
 }

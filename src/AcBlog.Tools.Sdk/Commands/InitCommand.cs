@@ -19,7 +19,7 @@ namespace AcBlog.Tools.Sdk.Commands
         public override async Task<int> Handle(CArgument argument, IHost host, CancellationToken cancellationToken)
         {
             Workspace workspace = host.Services.GetRequiredService<Workspace>();
-            await workspace.Save();
+            await workspace.Initialize();
             return 0;
         }
 
