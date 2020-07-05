@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AcBlog.Client.WebAssembly.Models;
 using AcBlog.Data.Models;
-using AcBlog.SDK;
+using AcBlog.Sdk;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -50,7 +50,7 @@ namespace AcBlog.Client.WebAssembly.Host.Pages
             }
         }
 
-        private async Task GenerateCategoryTitle(string[] path, List<string> result)
+        /*private async Task GenerateCategoryTitle(string[] path, List<string> result)
         {
             result.Add("Categories");
             if (path.Length > 0)
@@ -88,7 +88,7 @@ namespace AcBlog.Client.WebAssembly.Host.Pages
                         await GeneratePageTitle(path[2..], result);
                 }
             }
-        }
+        }*/
 
         public async Task<string> GetTitle()
         {
@@ -122,10 +122,10 @@ namespace AcBlog.Client.WebAssembly.Host.Pages
                         await GeneratePostTitle(pathSegs[1..], result, "Notes");
                         break;
                     case "categories":
-                        await GenerateCategoryTitle(pathSegs[1..], result);
+                        // await GenerateCategoryTitle(pathSegs[1..], result);
                         break;
                     case "keywords":
-                        await GenerateKeywordTitle(pathSegs[1..], result);
+                        // await GenerateKeywordTitle(pathSegs[1..], result);
                         break;
                 }
             }

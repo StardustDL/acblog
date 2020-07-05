@@ -50,7 +50,13 @@ namespace AcBlog.Tools.Sdk
                     });
                     host.ConfigureLogging(log =>
                     {
-                        log.SetMinimumLevel(LogLevel.Warning);
+                        log.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Warning);
+                        log.AddFilter((category, level) =>
+                        {
+                            if (category.StartsWith("System."))
+                                return level >= LogLevel.Warning;
+                            return level >= LogLevel.Information;
+                        });
                     });
 
                     return host;

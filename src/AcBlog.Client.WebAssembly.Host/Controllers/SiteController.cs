@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 using AcBlog.Client.WebAssembly.Host.Models;
 using AcBlog.Client.WebAssembly.Models;
 using AcBlog.Data.Models;
-using AcBlog.SDK;
+using AcBlog.Sdk;
 using Markdig;
 using Markdig.Helpers;
 using Microsoft.AspNetCore.Http;
@@ -64,7 +64,7 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
                     siteMapBuilder.AddUrl($"{BaseAddress}/posts/{id}");
                 }
             };
-            {
+            /*{
                 var keywords = await BlogService.KeywordService.All();
                 siteMapBuilder.AddUrl($"{BaseAddress}/keywords");
                 foreach (var id in keywords)
@@ -79,7 +79,7 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
                 {
                     siteMapBuilder.AddUrl($"{BaseAddress}/categories/{id}");
                 }
-            };
+            };*/
             return Content(siteMapBuilder.ToString(), "text/xml");
         }
 
@@ -92,13 +92,13 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
             feed.Authors.Add(author);
             Dictionary<string, SyndicationCategory> categoryMap = new Dictionary<string, SyndicationCategory>();
             {
-                var cates = await BlogService.CategoryService.GetCategories(await BlogService.CategoryService.All());
+                /*var cates = await BlogService.CategoryService.GetCategories(await BlogService.CategoryService.All());
                 foreach (var p in cates)
                 {
                     var cate = new SyndicationCategory(p.Name);
                     categoryMap.Add(p.Id, cate);
                     feed.Categories.Add(cate);
-                }
+                }*/
             }
             {
                 var posts = await BlogService.PostService.GetPosts(await BlogService.PostService.All());
@@ -111,8 +111,8 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
                     s.Authors.Add(author);
                     string summary = Markdown.ToPlainText(p.Content.Raw, Pipeline);
                     s.Summary = SyndicationContent.CreatePlaintextContent(summary.Length <= 100 ? summary : summary.Substring(0, 100));
-                    if (categoryMap.TryGetValue(p.CategoryId, out var cate))
-                        s.Categories.Add(cate);
+                    /*if (categoryMap.TryGetValue(p.CategoryId, out var cate))
+                        s.Categories.Add(cate);*/
                     s.PublishDate = p.CreationTime;
                     items.Add(s);
                 }

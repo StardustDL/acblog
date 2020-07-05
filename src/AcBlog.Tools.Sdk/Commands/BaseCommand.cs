@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
@@ -49,7 +51,8 @@ namespace AcBlog.Tools.Sdk.Commands
 #if DEBUG
                 throw;
 #else
-                console.Error.WriteLine($"Error occurs: {ex}.");
+                var logger = host.Services.GetRequiredService<ILogger>();
+                logger.LogError(ex, "Error occurs");
                 return 1;
 #endif
             }

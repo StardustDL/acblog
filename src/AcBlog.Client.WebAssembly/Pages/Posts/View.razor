@@ -1,44 +1,38 @@
 ﻿@page "/posts/{id}"
+@inject NotificationService NotificationService
 @inherits BasePostPage
 @using AcBlog.Client.WebAssembly.Components.Renderers
 
 <Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded">
-    @if (IsProtected)
-    {
+
+    <div class="row">
         <div class="container">
             <div class="d-flex flex-row justify-content-between">
-                <h1 class="display-4">Protected Post</h1>
-                <AuthorizeView>
-                    <Authorized>
-                        <div class="btn-group-toggle btn-group-lg btn-group my-auto" role="group">
-                            <a class="btn btn-primary mdi mdi-square-edit-outline" href="posts/@Id/edit">Edit</a>
-                        </div>
-                    </Authorized>
-                </AuthorizeView>
-            </div>
-            <button type="button" class="btn btn-primary mt-3" style="width: 100%;" @onclick="@OnDeprotectClick">Deprotect</button>
-        </div>
-
-        <InputPasswordModal @ref="inputPasswordModal" OnPasswordSubmit="@OnPasswordSubmit"></InputPasswordModal>
-    }
-    else
-    {
-        <div class="row">
-            <div class="container">
-                <div class="d-flex flex-row justify-content-between">
-                    <h1 class="display-4">@Post.Title</h1>
+                <h1 class="display-4">@Post.Title</h1>
+                <div class="btn-group-toggle my-auto" role="group">
+                    @if (IsProtected)
+                    {
+                        <button class="btn btn-success mdi mdi-shield-key-outline" @onclick="e => inputPasswordModalVisible = true">Deprotect</button>
+                    }
                     <AuthorizeView>
                         <Authorized>
-                            <div class="btn-group-toggle btn-group-lg btn-group my-auto" role="group">
-                                <a class="btn btn-primary mdi mdi-square-edit-outline" href="posts/@Id/edit">Edit</a>
-                            </div>
+                            <a class="btn btn-primary mdi mdi-square-edit-outline" href="posts/@HttpUtility.UrlEncode(Id)/edit">Edit</a>
                         </Authorized>
                     </AuthorizeView>
                 </div>
-                <PostMetadataDisplay Value="@Post" />
             </div>
+            <PostMetadataDisplay Value="@Post" />
         </div>
+    </div>
 
+    @if (IsProtected)
+    {
+        <Modal Title="@("Input Password")" Visible="inputPasswordModalVisible" OnOk="e=>OnPasswordSubmit()" OnCancel="e => inputPasswordModalVisible = false">
+            <InputPassword @bind-Value="@Password" Size="@InputSize.Large" OnPressEnter="e=>OnPasswordSubmit()" />
+        </Modal>
+    }
+    else
+    {
         <div class="row mt-3">
             @switch (Post.Type)
             {
@@ -85,11 +79,13 @@
 
     private bool IsProtected { get; set; } = false;
 
-    private InputPasswordModal inputPasswordModal;
+    private bool inputPasswordModalVisible = false;
+
+    private string Password { get; set; } = string.Empty;
 
     private string SlidesStyle { get; set; } = "border: 0; height: 500px; width: 100%";
 
-    private async Task OnLoaded()
+    private Task OnLoaded()
     {
         if (Post is null)
         {
@@ -100,13 +96,14 @@
             if (IsProtected)
             {
                 Title = "Protected Post";
-                await inputPasswordModal.Show();
+                inputPasswordModalVisible = true;
             }
             else
             {
                 Title = Post.Title;
             }
         }
+        return Task.CompletedTask;
     }
 
     private async Task OnLoad()
@@ -115,28 +112,28 @@
         IsProtected = await Service.PostService.Protector.IsProtected(Post.Content);
     }
 
-    private async Task OnPasswordSubmit(string password)
+    private async Task OnPasswordSubmit()
     {
         try
         {
             Document dep = await Service.PostService.Protector.Deprotect(Post.Content, new Data.Protections.ProtectionKey
             {
-                Password = password
+                Password = Password
             });
             Post.Content = dep;
             IsProtected = await Service.PostService.Protector.IsProtected(Post.Content);
             if (!IsProtected)
-                await inputPasswordModal.Hide();
+                inputPasswordModalVisible = false;
         }
         catch
         {
-            throw new WrongPasswordException();
-        }
-    }
+            inputPasswordModalVisible = true;
 
-    private async Task OnDeprotectClick()
-    {
-        await inputPasswordModal.Show();
+            await NotificationService.Error(new NotificationConfig
+            {
+                Message = "Wrong password",
+            });
+        }
     }
 
     private Task OnFullViewClick()

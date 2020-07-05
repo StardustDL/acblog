@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace AcBlog.Sdk.Api
 {
@@ -66,7 +67,7 @@ namespace AcBlog.Sdk.Api
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.DeleteAsync($"{PrepUrl}/{id}", cancellationToken).ConfigureAwait(false);
+            using var responseMessage = await HttpClient.DeleteAsync($"{PrepUrl}/{HttpUtility.UrlEncode(id)}", cancellationToken).ConfigureAwait(false);
 
             if (!responseMessage.IsSuccessStatusCode)
                 return false;
@@ -78,7 +79,7 @@ namespace AcBlog.Sdk.Api
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{id}", cancellationToken).ConfigureAwait(false);
+            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{HttpUtility.UrlEncode(id)}", cancellationToken).ConfigureAwait(false);
             return responseMessage.IsSuccessStatusCode;
         }
 
@@ -86,7 +87,7 @@ namespace AcBlog.Sdk.Api
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{id}", cancellationToken).ConfigureAwait(false);
+            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{HttpUtility.UrlEncode(id)}", cancellationToken).ConfigureAwait(false);
             responseMessage.EnsureSuccessStatusCode();
 
             var result = await responseMessage.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -110,7 +111,7 @@ namespace AcBlog.Sdk.Api
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.PutAsJsonAsync($"{PrepUrl}/{value.Id}", value, cancellationToken).ConfigureAwait(false);
+            using var responseMessage = await HttpClient.PutAsJsonAsync($"{PrepUrl}/{HttpUtility.UrlEncode(value.Id)}", value, cancellationToken).ConfigureAwait(false);
             responseMessage.EnsureSuccessStatusCode();
 
             return await responseMessage.Content.ReadFromJsonAsync<bool>(cancellationToken: cancellationToken).ConfigureAwait(false);

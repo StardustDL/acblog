@@ -7,6 +7,7 @@ using AcBlog.Sdk.FileSystem;
 using AcBlog.Tools.Sdk.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StardustDL.Extensions.FileProviders;
 using StardustDL.Extensions.FileProviders.Http;
@@ -26,9 +27,10 @@ namespace AcBlog.Tools.Sdk.Models
 
         public const string DBPath = "db.json";
 
-        public Workspace(IOptions<WorkspaceOption> option, IOptions<DB> db, LocalBlogService localBlogService, IHttpClientFactory httpClientFactory)
+        public Workspace(IOptions<WorkspaceOption> option, IOptions<DB> db, LocalBlogService localBlogService, IHttpClientFactory httpClientFactory, ILogger<Workspace> logger)
         {
             HttpClientFactory = httpClientFactory;
+            Logger = logger;
             Remote = new FileSystemBlogService(
                 new PhysicalFileProvider(Environment.CurrentDirectory).AsFileProvider());
             Local = localBlogService;
@@ -41,6 +43,8 @@ namespace AcBlog.Tools.Sdk.Models
         public DB DB { get; private set; }
 
         private IHttpClientFactory HttpClientFactory { get; }
+
+        private ILogger<Workspace> Logger { get; }
 
         async Task SaveDb()
         {
@@ -75,6 +79,7 @@ namespace AcBlog.Tools.Sdk.Models
 
         public async Task Save()
         {
+            Logger.LogInformation("Save data.");
             await SaveOption();
             await SaveDb();
         }
@@ -84,8 +89,11 @@ namespace AcBlog.Tools.Sdk.Models
             if (string.IsNullOrEmpty(name))
                 name = Option.CurrentRemote;
 
+            Logger.LogInformation($"Connect to remote {name}.");
+
             if (Option.Remotes.TryGetValue(name, out var remote))
             {
+                Logger.LogInformation($"Detect remote {remote.Name} ({Enum.GetName(typeof(RemoteType), remote.Type)}).");
                 switch (remote.Type)
                 {
                     case RemoteType.LocalFS:
@@ -125,8 +133,11 @@ namespace AcBlog.Tools.Sdk.Models
             if (string.IsNullOrEmpty(name))
                 name = Option.CurrentRemote;
 
+            Logger.LogInformation($"Push to remote {name}.");
+
             if (Option.Remotes.TryGetValue(name, out var remote))
             {
+                Logger.LogInformation($"Detect remote {remote.Name} ({Enum.GetName(typeof(RemoteType), remote.Type)}).");
                 switch (remote.Type)
                 {
                     case RemoteType.LocalFS:
@@ -139,8 +150,11 @@ namespace AcBlog.Tools.Sdk.Models
                         {
                             if (item is null)
                                 continue;
+                            Logger.LogInformation($"Loaded {item.Id}: {item.Title}");
                             posts.Add(item);
                         }
+
+                        Logger.LogInformation("Build data.");
                         PostRepositoryBuilder builder = new PostRepositoryBuilder(posts, Path.Join(remote.Uri, "posts"));
                         await builder.Build();
                     }
@@ -152,17 +166,23 @@ namespace AcBlog.Tools.Sdk.Models
                     case RemoteType.Api:
                     {
                         await Connect(name);
+                        Logger.LogInformation($"Fetch remote posts.");
                         HashSet<string> remoteIds = (await Remote.PostService.All()).ToHashSet();
                         foreach (var item in await Local.PostService.GetAllPosts())
                         {
                             if (item is null)
                                 continue;
+                            Logger.LogInformation($"Loaded {item.Id}: {item.Title}");
                             if (remoteIds.Contains(item.Id))
                             {
                                 var result = await Remote.PostService.Update(item);
-                                if (!result)
+                                if (result)
                                 {
-                                    Console.WriteLine($"Failed to update {item.Id}");
+                                    Logger.LogInformation($"Updated {item.Id}");
+                                }
+                                else
+                                {
+                                    Logger.LogError($"Failed to update {item.Id}");
                                 }
                             }
                             else
@@ -170,16 +190,28 @@ namespace AcBlog.Tools.Sdk.Models
                                 var result = await Remote.PostService.Create(item);
                                 if (result is null)
                                 {
-                                    Console.WriteLine($"Failed to create {item.Id}");
+                                    Logger.LogError($"Failed to create {item.Id}");
+                                }
+                                else
+                                {
+                                    Logger.LogInformation($"Created {item.Id}");
                                 }
                             }
                             remoteIds.Remove(item.Id);
                         }
                         if (full)
                         {
-                            foreach(var v in remoteIds)
+                            foreach (var v in remoteIds)
                             {
-                                await Remote.PostService.Delete(v);
+                                var result = await Remote.PostService.Delete(v);
+                                if (result)
+                                {
+                                    Logger.LogInformation($"Deleted {v}");
+                                }
+                                else
+                                {
+                                    Logger.LogError($"Failed to deleted {v}");
+                                }
                             }
                         }
                     }

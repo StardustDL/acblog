@@ -95,7 +95,7 @@
         result.Result = id != null;
         if (id != null)
         {
-            NavigationManager.NavigateTo($"posts/{id}");
+            NavigationManager.NavigateTo($"posts/{HttpUtility.UrlEncode(id)}");
         }
     }
 
@@ -106,7 +106,7 @@
         result.Result = pass;
         if (pass)
         {
-            NavigationManager.NavigateTo($"posts/{Model.Id}");
+            NavigationManager.NavigateTo($"posts/{HttpUtility.UrlEncode(Model.Id)}");
         }
     }
 

@@ -22,7 +22,7 @@
                                 break;
                         }
                     }
-                    <a href="posts/@Id" style="color:black">
+                    <a href="posts/@HttpUtility.UrlEncode(Id)" style="color:black">
                         <span>@Post.Title</span>
                     </a>
                 </h4>
@@ -36,6 +36,10 @@
             <p>
                 <AcBlog.Client.WebAssembly.Components.Displays.DocumentPreviewDisplay Document="@Post.Content" />
             </p>
+        }
+        else
+        {
+            <p>Protected Post</p>
         }
     </AntListItem>
 </Loader>
