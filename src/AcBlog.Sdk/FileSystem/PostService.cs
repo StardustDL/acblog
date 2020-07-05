@@ -4,7 +4,7 @@ using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.FileSystem.Readers;
-using Microsoft.Extensions.FileProviders;
+using StardustDL.Extensions.FileProviders;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

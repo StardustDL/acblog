@@ -18,6 +18,7 @@
     <PackageId>AcBlog.Tools.Sdk</PackageId>
     <Product>AcBlog.Tools.Sdk</Product>
     <PackageIcon>icon.png</PackageIcon>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

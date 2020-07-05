@@ -1,7 +1,7 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
-using Microsoft.Extensions.FileProviders;
+using StardustDL.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,7 +21,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         protected override string GetPath(string id) => Path.Join(RootPath, $"{NameUtility.Encode(id)}.json");
 
-        public override Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
+        public async override Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
         {
             query.Pagination ??= new Pagination();
 
@@ -54,12 +54,12 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
                 paging = new PagingProvider<string>(Path.Join(catRoot, query.Keywords.Items.Select(NameUtility.Encode).First()), FileProvider);
             }
 
-            paging.FillPagination(query.Pagination);
+            await paging.FillPagination(query.Pagination);
 
             var res = new QueryResponse<string>(
-                paging.GetPaging(query.Pagination),
+                await paging.GetPaging(query.Pagination),
                 query.Pagination);
-            return Task.FromResult(res);
+            return res;
         }
     }
 }

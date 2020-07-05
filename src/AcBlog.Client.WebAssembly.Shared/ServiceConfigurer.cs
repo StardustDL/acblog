@@ -1,13 +1,14 @@
 ﻿using AcBlog.Client.WebAssembly.Models;
-using AcBlog.SDK;
-using AcBlog.SDK.API;
-using AcBlog.SDK.StaticFile;
+using AcBlog.Sdk;
+using AcBlog.Sdk.Api;
+using AcBlog.Sdk.FileSystem;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using StardustDL.Extensions.FileProviders.Http;
 
 namespace AcBlog.Client.WebAssembly
 {
@@ -17,21 +18,23 @@ namespace AcBlog.Client.WebAssembly
         {
             if (string.IsNullOrEmpty(server.Url))
             {
-                serviceCollection.AddHttpClient("static-file-provider", client => client.BaseAddress = new Uri(baseAddress));
+                serviceCollection.AddHttpClient("static-file-provider", client => client.BaseAddress = new Uri($"{baseAddress.TrimEnd('/')}/data/"));
                 serviceCollection.AddScoped<IBlogService>(sp =>
                 {
-                    return new HttpStaticFileBlogService("/data",
-                        sp.GetRequiredService<IHttpClientFactory>().CreateClient("static-file-provider"));
+                    return new FileSystemBlogService(new HttpFileProvider(
+                        sp.GetRequiredService<IHttpClientFactory>().CreateClient("static-file-provider")));
                 });
             }
             else if (server.IsStatic)
             {
+                if (!server.Url.EndsWith("/"))
+                    server.Url += "/";
                 var uri = new Uri(server.Url);
                 serviceCollection.AddHttpClient("static-file-provider", client => client.BaseAddress = uri);
                 serviceCollection.AddScoped<IBlogService>(sp =>
                 {
-                    return new HttpStaticFileBlogService(uri.LocalPath,
-                        sp.GetRequiredService<IHttpClientFactory>().CreateClient("static-file-provider"));
+                    return new FileSystemBlogService(new HttpFileProvider(
+                        sp.GetRequiredService<IHttpClientFactory>().CreateClient("static-file-provider")));
                 });
             }
             else

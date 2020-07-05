@@ -1,6 +1,6 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
-using Microsoft.Extensions.FileProviders;
+using StardustDL.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,30 +43,30 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             return result;
         }
 
-        public override Task<QueryResponse<TId>> Query(TQuery query, CancellationToken cancellationToken = default)
+        public override async Task<QueryResponse<TId>> Query(TQuery query, CancellationToken cancellationToken = default)
         {
             query.Pagination ??= new Pagination();
 
-            PagingProvider.FillPagination(query.Pagination);
+            await PagingProvider.FillPagination(query.Pagination);
 
             var res = new QueryResponse<TId>(
-                PagingProvider.GetPaging(query.Pagination),
+                await PagingProvider.GetPaging(query.Pagination).ConfigureAwait(false),
                 query.Pagination);
-            return Task.FromResult(res);
+            return res;
         }
 
         public override Task<TId?> Create(T value, CancellationToken cancellationToken = default) => Task.FromResult<TId?>(null);
 
         public override Task<bool> Delete(TId id, CancellationToken cancellationToken = default) => Task.FromResult(false);
 
-        public override Task<bool> Exists(TId id, CancellationToken cancellationToken = default)
+        public override async Task<bool> Exists(TId id, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(FileProvider.GetFileInfo(GetPath(id)).Exists);
+            return await (await FileProvider.GetFileInfo(GetPath(id)).ConfigureAwait(false)).Exists();
         }
 
         public override async Task<T?> Get(TId id, CancellationToken cancellationToken = default)
         {
-            using var fs = FileProvider.GetFileInfo(GetPath(id)).CreateReadStream();
+            using var fs = await (await FileProvider.GetFileInfo(GetPath(id)).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
             var result = await JsonSerializer.DeserializeAsync<T?>(fs, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             if (result != null)

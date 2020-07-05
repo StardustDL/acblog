@@ -7,18 +7,18 @@
             <small>
                 <ItemTimeDisplay CreationTime="@Value.CreationTime" ModificationTime="@Value.ModificationTime" />
             </small>
-            @if (!string.IsNullOrWhiteSpace(Value.CategoryId))
+            @if (Value.Category != null && Value.Category.Items.Any())
             {
                 <small class="m-1"></small>
                 <small>
-                    <CategoryDisplay Id="@Value.CategoryId" />
+                    <CategoryDisplay Data="@Value.Category" />
                 </small>
             }
-            @if (Value.KeywordIds != null && Value.KeywordIds.Length > 0)
+            @if (Value.Keywords != null && Value.Keywords.Items.Any())
             {
                 <small class="m-1"></small>
                 <small>
-                    <KeywordsDisplay Ids="@Value.KeywordIds" />
+                    <KeywordDisplay Data="@Value.Keywords" />
                 </small>
             }
         </div>

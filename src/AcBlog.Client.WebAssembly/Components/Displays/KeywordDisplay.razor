@@ -1,19 +1,17 @@
 ﻿@inject IBlogService Service
 
-<Loader OnLoad="@OnLoad" UseSpin="true">
-    <a href="keywords/@Id" style="color: inherit;">@Keyword.Name</a>
-</Loader>
+<span class="itemdisplay">
+    <span class="mdi @(Data.Items.Count() == 1 ? "mdi-tag" : "mdi-tag-multiple")">
+        @foreach (var key in Data.Items)
+        {
+            <a href="keywords" style="color: inherit;">@key</a>
+        }
+    </span>
+</span>
+
+
 
 @code {
     [Parameter]
-    public string Id { get; set; }
-
-    private Keyword Keyword { get; set; }
-
-    private async Task OnLoad()
-    {
-        Keyword = null;
-
-        Keyword = await Service.KeywordService.Get(Id);
-    }
+    public Keyword Data { get; set; }
 }

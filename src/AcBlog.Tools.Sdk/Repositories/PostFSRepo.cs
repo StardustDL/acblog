@@ -6,7 +6,7 @@ using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.FileSystem;
 using AcBlog.Data.Repositories.FileSystem.Readers;
 using AcBlog.Tools.Sdk.Models.Text;
-using Microsoft.Extensions.FileProviders;
+using StardustDL.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,23 +33,21 @@ namespace AcBlog.Tools.Sdk.Repositories
             return Path.Join(RootPath, $"{id}.md");
         }
 
-        public override Task<IEnumerable<string>> All(CancellationToken cancellationToken = default)
+        public override async Task<IEnumerable<string>> All(CancellationToken cancellationToken = default)
         {
-            IEnumerable<string> getAll()
+            List<string> result = new List<string>();
+            await foreach (var file in (await FileProvider.GetDirectoryContents(RootPath)).Children())
             {
-                foreach (var file in FileProvider.GetDirectoryContents(RootPath))
-                {
-                    if (file.IsDirectory || !file.Name.EndsWith(".md"))
-                        continue;
-                    yield return Path.GetFileNameWithoutExtension(file.Name);
-                }
+                if (file.IsDirectory || !file.Name.EndsWith(".md"))
+                    continue;
+                result.Add(Path.GetFileNameWithoutExtension(file.Name));
             }
-            return Task.FromResult(getAll());
+            return result.AsEnumerable();
         }
 
         public override async Task<Post?> Get(string id, CancellationToken cancellationToken = default)
         {
-            using var fs = FileProvider.GetFileInfo(GetPath(id)).CreateReadStream();
+            using var fs = await (await FileProvider.GetFileInfo(GetPath(id))).CreateReadStream();
             using var sr = new StreamReader(fs);
             var src = await sr.ReadToEndAsync();
             var (metadata, content) = ObjectTextual.Parse<PostMetadata>(src);
@@ -84,9 +82,9 @@ namespace AcBlog.Tools.Sdk.Repositories
 
         public override Task<bool> Delete(string id, CancellationToken cancellationToken = default) => throw new NotImplementedException();
 
-        public override Task<bool> Exists(string id, CancellationToken cancellationToken = default)
+        public override async Task<bool> Exists(string id, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(FileProvider.GetFileInfo(GetPath(id)).Exists);
+            return await (await FileProvider.GetFileInfo(GetPath(id))).Exists();
         }
 
         public override Task<bool> Update(Post value, CancellationToken cancellationToken = default) => throw new NotImplementedException();

@@ -2,7 +2,7 @@
 @page "/notes/pages"
 @page "/notes/pages/{pageNumber:int}"
 @inherits BaseNotePage
-@inject AcBlog.SDK.Filters.PostNoteFilter Notes
+@inject AcBlog.Sdk.Filters.PostNoteFilter Notes
 
 <PageHeader>
     <PageHeaderTitle>Notes</PageHeaderTitle>
@@ -28,7 +28,7 @@
 </div>
 
 @code {
-    const int CountPerPage = 10;
+    const int PageSize = 10;
 
     QueryResponse<string> Data { get; set; }
 
@@ -42,10 +42,10 @@
         Title = "Loading...";
         Data = await Notes.Filter(new Data.Models.Actions.Pagination
         {
-            PageNumber = PageNumber ?? 0,
-            CountPerPage = CountPerPage
+            CurrentPage = PageNumber ?? 0,
+            PageSize = PageSize
         });
-        Title = $"Page {Data.CurrentPage.PageNumber + 1}";
+        Title = $"Page {Data.CurrentPage.CurrentPage + 1}";
     }
 
     private async Task OnPageTo(int pageNumber)

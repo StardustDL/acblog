@@ -1,5 +1,5 @@
 ﻿using AcBlog.Sdk;
-using Microsoft.Extensions.FileProviders;
+using StardustDL.Extensions.FileProviders;
 
 namespace AcBlog.Tools.Sdk.Repositories
 {

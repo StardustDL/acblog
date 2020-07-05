@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace StardustDL.Extensions.FileProviders.Http
 {
@@ -14,21 +15,21 @@ namespace StardustDL.Extensions.FileProviders.Http
             Response = response;
         }
 
-        public bool Exists => Response.IsSuccessStatusCode;
+        public Task<bool> Exists() => Task.FromResult(Response.IsSuccessStatusCode);
 
-        public long Length => Response.Content.Headers.ContentLength ?? 0;
+        public Task<long> Length() => Task.FromResult(Response.Content.Headers.ContentLength ?? 0);
 
         public string PhysicalPath => Response.Content.Headers.ContentLocation.AbsoluteUri;
 
         public string Name => Response.Content.Headers.ContentLocation.LocalPath;
 
-        public DateTimeOffset LastModified => Response.Content.Headers.LastModified ?? DateTimeOffset.MinValue;
+        // public DateTimeOffset LastModified => Response.Content.Headers.LastModified ?? DateTimeOffset.MinValue;
 
         public bool IsDirectory => false;
 
-        public Stream CreateReadStream()
+        public async Task<Stream> CreateReadStream()
         {
-            return Response.Content.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            return await Response.Content.ReadAsStreamAsync().ConfigureAwait(false);
         }
     }
 }

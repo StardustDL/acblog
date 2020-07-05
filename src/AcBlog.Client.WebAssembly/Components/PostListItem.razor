@@ -5,7 +5,7 @@
         <AntListItemMeta Avatar="@("")">
             <Title>
                 <h4>
-                    @if (!IsProtected && ShowType)
+                    @if (ShowType)
                     {
                         switch (Post.Type)
                         {
@@ -23,22 +23,12 @@
                         }
                     }
                     <a href="posts/@Id" style="color:black">
-                        @if (IsProtected)
-                        {
-                            <span>Protected Post</span>
-                        }
-                        else
-                        {
-                            <span>@Post.Title</span>
-                        }
+                        <span>@Post.Title</span>
                     </a>
                 </h4>
-                @if (!IsProtected)
-                {
-                    <div>
-                        <PostMetadataDisplay Value="@Post" />
-                    </div>
-                }
+                <div>
+                    <PostMetadataDisplay Value="@Post" />
+                </div>
             </Title>
         </AntListItemMeta>
         @if (!IsProtected)
@@ -67,6 +57,6 @@
         IsProtected = false;
 
         Post = await Service.PostService.Get(Id);
-        IsProtected = await Service.PostService.Protector.IsProtected(Post);
+        IsProtected = await Service.PostService.Protector.IsProtected(Post.Content);
     }
 }

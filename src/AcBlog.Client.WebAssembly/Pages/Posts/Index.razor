@@ -27,7 +27,7 @@
 </div>
 
 @code {
-    const int CountPerPage = 10;
+    const int PageSize = 10;
 
     QueryResponse<string> Data { get; set; }
 
@@ -43,11 +43,11 @@
         {
             Pagination = new Data.Models.Actions.Pagination
             {
-                PageNumber = PageNumber ?? 0,
-                CountPerPage = CountPerPage
+                CurrentPage = PageNumber ?? 0,
+                PageSize = PageSize
             }
         });
-        Title = $"Page {Data.CurrentPage.PageNumber + 1}";
+        Title = $"Page {Data.CurrentPage.CurrentPage + 1}";
     }
 
     private async Task OnPageTo(int pageNumber)

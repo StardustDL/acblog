@@ -24,6 +24,7 @@
     <ProjectReference Include="..\AcBlog.Client.WebAssembly.Shared\AcBlog.Client.WebAssembly.Shared.csproj" />
     <ProjectReference Include="..\AcBlog.Data.Documents\AcBlog.Data.Documents.csproj" />
     <ProjectReference Include="..\AcBlog.Data\AcBlog.Data.csproj" />
+    <ProjectReference Include="..\AcBlog.Sdk\AcBlog.Sdk.csproj" />
   </ItemGroup>
 
   <ItemGroup>

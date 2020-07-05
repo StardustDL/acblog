@@ -8,6 +8,7 @@ using AcBlog.Tools.Sdk.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using StardustDL.Extensions.FileProviders;
 using StardustDL.Extensions.FileProviders.Http;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace AcBlog.Tools.Sdk.Models
         {
             HttpClientFactory = httpClientFactory;
             Remote = new FileSystemBlogService(
-                new PhysicalFileProvider(Environment.CurrentDirectory));
+                new PhysicalFileProvider(Environment.CurrentDirectory).AsFileProvider());
             Local = localBlogService;
             Option = option.Value;
             DB = db.Value;
@@ -89,7 +90,7 @@ namespace AcBlog.Tools.Sdk.Models
                 {
                     case RemoteType.LocalFS:
                         Remote = new FileSystemBlogService(
-                            new PhysicalFileProvider(remote.Uri));
+                            new PhysicalFileProvider(remote.Uri).AsFileProvider());
                         break;
                     case RemoteType.RemoteFS:
                     {

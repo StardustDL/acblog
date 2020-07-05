@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StardustDL.Extensions.FileProviders;
 using System;
 using System.CommandLine;
 using System.CommandLine.Builder;
@@ -63,7 +64,7 @@ namespace AcBlog.Tools.Sdk
                             .Configure<DB>(context.Configuration.GetSection("db"));
                         services.AddSingleton((services) =>
                         {
-                            return new LocalBlogService(new PhysicalFileProvider(Environment.CurrentDirectory));
+                            return new LocalBlogService(new PhysicalFileProvider(Environment.CurrentDirectory).AsFileProvider());
                         });
                         services.AddSingleton<Workspace>();
                     });

@@ -172,11 +172,11 @@ namespace AcBlog.Data.Repositories.FileSystem
 
             Data = (from x in Data orderby x.CreationTime descending select x).ToArray();
 
-            await BuildIndexType();
+            await BuildIndexType().ConfigureAwait(false);
 
-            await BuildIndexKeyword();
+            await BuildIndexKeyword().ConfigureAwait(false);
 
-            await BuildIndexCategory();
+            await BuildIndexCategory().ConfigureAwait(false);
 
             foreach (var v in Data)
             {

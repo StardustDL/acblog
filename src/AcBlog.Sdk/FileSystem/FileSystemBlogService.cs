@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.FileProviders;
+﻿using StardustDL.Extensions.FileProviders;
 using System;
 using System.Text;
 

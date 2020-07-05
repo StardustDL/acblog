@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace StardustDL.Extensions.FileProviders.Http
 {
@@ -11,14 +12,12 @@ namespace StardustDL.Extensions.FileProviders.Http
 
         public HttpClient Client { get; }
 
-        public IDirectoryContents GetDirectoryContents(string subpath) => throw new NotImplementedException();
+        public Task<IDirectoryContents> GetDirectoryContents(string subpath) => throw new NotImplementedException();
         
-        public IFileInfo GetFileInfo(string subpath)
+        public async Task<IFileInfo> GetFileInfo(string subpath)
         {
-            var result = Client.GetAsync(subpath).ConfigureAwait(false).GetAwaiter().GetResult();
+            var result = await Client.GetAsync(subpath).ConfigureAwait(false);
             return new HttpFileInfo(result);
         }
-
-        public IChangeToken Watch(string filter) => throw new NotImplementedException();
     }
 }

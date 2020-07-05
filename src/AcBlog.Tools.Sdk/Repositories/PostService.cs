@@ -5,7 +5,7 @@ using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories;
 using AcBlog.Sdk;
 using AcBlog.Tools.Sdk.Repositories;
-using Microsoft.Extensions.FileProviders;
+using StardustDL.Extensions.FileProviders;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

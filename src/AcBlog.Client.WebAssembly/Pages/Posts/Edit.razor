@@ -29,40 +29,15 @@
                 <div class="input-group-prepend">
                     <label class="input-group-text" for="inputCategory">Category</label>
                 </div>
-                <select class="custom-select" id="inputCategory" @bind="Model.CategoryId">
+                <select class="custom-select" id="inputCategory">
                     <option value="@string.Empty"></option>
-                    @foreach (var item in Categories)
-                    {
-                        <option value="@item.Id">@item.Name</option>
-                    }
                 </select>
             </div>
 
             <div class="form-group mt-3">
                 <label class="col-form-label">Keywords</label>
                 <span class="form-control">
-                    @foreach (var item in SelectedKeywords)
-                    {
-                        <text>@item.Name;</text>
-                    }
                 </span>
-            </div>
-
-            <div class="input-group mt-3">
-                <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputKeyword">Keyword</label>
-                </div>
-                <select class="custom-select" id="inputKeyword" @bind="SelectKeywordId">
-                    <option value="@string.Empty"></option>
-                    @foreach (var item in Keywords)
-                    {
-                        <option value="@item.Id">@item.Name</option>
-                    }
-                </select>
-                <div class="input-group-append">
-                    <button type="button" class="btn btn-success mdi mdi-plus" @onclick="@OnAddKeyword">Add</button>
-                    <button type="button" class="btn btn-secondary mdi mdi-minus" @onclick="@OnRemoveKeyword">Remove</button>
-                </div>
             </div>
 
             <div class="form-group mt-3">
@@ -81,14 +56,6 @@
 
     private bool IsCreate { get; set; }
 
-    private string SelectKeywordId { get; set; } = "";
-
-    private IEnumerable<Category> Categories { get; set; }
-
-    private IEnumerable<Keyword> Keywords { get; set; }
-
-    private List<Keyword> SelectedKeywords { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
         await Service.PostService.UseToken(TokenProvider);
@@ -101,38 +68,15 @@
         if (string.IsNullOrWhiteSpace(Id))
         {
             Model = new Post();
-            SelectedKeywords = new List<Keyword>();
             IsCreate = true;
             Title = "New";
         }
         else
         {
             Model = await Service.PostService.Get(Id);
-            SelectedKeywords = new List<Keyword>(await Service.KeywordService.GetKeywords(Model.KeywordIds));
             IsCreate = false;
             Title = "Edit";
         }
-
-        Categories = await Service.CategoryService.GetCategories(await Service.CategoryService.All());
-        Keywords = await Service.KeywordService.GetKeywords(await Service.KeywordService.All());
-    }
-
-    private void OnAddKeyword()
-    {
-        var k = Keywords.FirstOrDefault(x => x.Id == SelectKeywordId);
-        if (k is null)
-            return;
-        SelectedKeywords.Add(k);
-        StateHasChanged();
-    }
-
-    private void OnRemoveKeyword()
-    {
-        var k = SelectedKeywords.FirstOrDefault(x => x.Id == SelectKeywordId);
-        if (k is null)
-            return;
-        SelectedKeywords.Remove(k);
-        StateHasChanged();
     }
 
     private Task OnCheckValidation(ModelValidation validation)
@@ -146,7 +90,6 @@
 
     private async Task OnCreate(EventCallbackResult<bool> result)
     {
-        Model.KeywordIds = SelectedKeywords.Select(x => x.Id).ToArray();
         Model.CreationTime = DateTimeOffset.Now;
         var id = await Service.PostService.Create(Model);
         result.Result = id != null;
@@ -158,7 +101,6 @@
 
     private async Task OnUpdate(EventCallbackResult<bool> result)
     {
-        Model.KeywordIds = SelectedKeywords.Select(x => x.Id).ToArray();
         Model.ModificationTime = DateTimeOffset.Now;
         var pass = await Service.PostService.Update(Model);
         result.Result = pass;

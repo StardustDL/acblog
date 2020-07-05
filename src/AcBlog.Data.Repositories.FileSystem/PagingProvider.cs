@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AcBlog.Data.Models.Actions;
-using Microsoft.Extensions.FileProviders;
+using StardustDL.Extensions.FileProviders;
 
 namespace AcBlog.Data.Repositories.FileSystem
 {
@@ -13,43 +13,45 @@ namespace AcBlog.Data.Repositories.FileSystem
 
     public class PagingProvider<TId>
     {
-        Lazy<PagingConfig> _config;
-
         public PagingProvider(string rootPath, IFileProvider? fileProvider = null)
         {
             RootPath = rootPath;
-            FileProvider = fileProvider ?? new NullFileProvider();
-            _config = new Lazy<PagingConfig>(() =>
-            {
-                using var fs = FileProvider.GetFileInfo(GetConfigPath()).CreateReadStream();
-                return JsonSerializer.DeserializeAsync<PagingConfig>(fs).ConfigureAwait(false).GetAwaiter().GetResult();
-            });
+            FileProvider = fileProvider ?? new Microsoft.Extensions.FileProviders.NullFileProvider().AsFileProvider();
+        }
+
+        public async Task EnsureConfig()
+        {
+            using var fs = await (await FileProvider.GetFileInfo(GetConfigPath()).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
+            Config = await JsonSerializer.DeserializeAsync<PagingConfig>(fs).ConfigureAwait(false);
         }
 
         public string RootPath { get; }
 
         protected IFileProvider FileProvider { get; }
 
-        public PagingConfig Config => _config.Value;
+        public PagingConfig? Config { get; private set; } = null;
 
         public string GetConfigPath() => Path.Join(RootPath, "config.json");
 
         public string GetPagePath(int pageNumber) => Path.Join(RootPath, $"{pageNumber}.json");
 
-        public void FillPagination(Pagination pagination)
+        public async Task FillPagination(Pagination pagination)
         {
-            pagination.PageSize = Config.PageSize;
+            await EnsureConfig();
+            pagination.PageSize = Config!.PageSize;
             pagination.TotalCount = Config.TotalCount;
         }
 
-        public IList<TId> GetPaging(Pagination pagination)
+        public async Task<IList<TId>> GetPaging(Pagination pagination)
         {
+            await EnsureConfig();
+
             if (pagination.CurrentPage >= 0 &&
-                (pagination.CurrentPage < Config.TotalPage ||
+                (pagination.CurrentPage < Config!.TotalPage ||
                 Config.TotalPage == 0 && pagination.CurrentPage == 0))
             {
                 string path = GetPagePath(pagination.CurrentPage);
-                using var fs = FileProvider.GetFileInfo(path).CreateReadStream();
+                using var fs = await (await FileProvider.GetFileInfo(path).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
                 return JsonSerializer.DeserializeAsync<IList<TId>>(fs)
                     .ConfigureAwait(false).GetAwaiter().GetResult();
             }

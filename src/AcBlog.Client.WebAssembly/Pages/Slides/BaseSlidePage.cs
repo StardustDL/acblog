@@ -1,6 +1,6 @@
 ﻿using AcBlog.Client.WebAssembly.Interops;
 using AcBlog.Client.WebAssembly.Models;
-using AcBlog.SDK;
+using AcBlog.Sdk;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;

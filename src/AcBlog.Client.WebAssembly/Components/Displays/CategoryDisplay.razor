@@ -1,23 +1,12 @@
 ﻿@inject IBlogService Service
 
-<Loader OnLoad="@OnLoad" UseSpin="true">
-    <span class="itemdisplay">
-        <span class="mdi mdi-folder">
-            <a href="categories/@Id" style="color: inherit;">@Category.Name</a>
-        </span>
+<span class="itemdisplay">
+    <span class="mdi mdi-folder">
+        <a href="categories" style="color: inherit;">@Data.ToString()</a>
     </span>
-</Loader>
+</span>
 
 @code {
     [Parameter]
-    public string Id { get; set; }
-
-    private Category Category { get; set; }
-
-    private async Task OnLoad()
-    {
-        Category = null;
-
-        Category = await Service.CategoryService.Get(Id);
-    }
+    public Category Data { get; set; }
 }
