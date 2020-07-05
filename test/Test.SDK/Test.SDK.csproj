@@ -18,6 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\AcBlog.Sdk\AcBlog.Sdk.csproj" />
+    <ProjectReference Include="..\..\src\AcBlog.Server.Api\AcBlog.Server.Api.csproj" />
     <ProjectReference Include="..\Test.Data\Test.Data.csproj" />
   </ItemGroup>
 

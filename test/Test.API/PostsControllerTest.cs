@@ -11,12 +11,12 @@ namespace Test.API
     {
         const string _prepUrl = "/Posts";
 
-        WebApplicationFactory<AcBlog.Server.API.Program> Factory { get; set; }
+        WebApplicationFactory<AcBlog.Server.Api.Program> Factory { get; set; }
 
         [TestInitialize]
         public void Setup()
         {
-            Factory = new WebApplicationFactory<AcBlog.Server.API.Program>();
+            Factory = new WebApplicationFactory<AcBlog.Server.Api.Program>();
         }
 
         [TestCleanup]

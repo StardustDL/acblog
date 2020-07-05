@@ -36,25 +36,6 @@ namespace Test.Data.Repositories
         }
 
         [TestMethod]
-        public Task User()
-        {
-            return Task.CompletedTask;
-            /*var root = Path.Join(RootPath, "users");
-            Directory.CreateDirectory(root);
-
-            var seedUser = new User[]
-            {
-                new User{Nickname = "a", Id = Guid.NewGuid().ToString()},
-            };
-
-            await UserRepositoryBuilder.Build(seedUser, root, 10);
-
-            IUserRepository provider = new UserLocalReader(root);
-
-            await UserRepository(provider);*/
-        }
-
-        [TestMethod]
         public Task Post()
         {
             return Task.CompletedTask;

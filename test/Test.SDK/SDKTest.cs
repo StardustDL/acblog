@@ -1,16 +1,11 @@
-﻿using AcBlog.SDK;
+﻿using AcBlog.Sdk;
 using System.Threading.Tasks;
 using Test.Data.Repositories;
 
 namespace Test.SDK
 {
-    public abstract class SDKTest : RepositoriyTest
+    public abstract class SdkTest : RepositoriyTest
     {
-        protected async Task UserService(IUserService service)
-        {
-            await UserRepository(service);
-        }
-
         protected async Task PostService(IPostService service)
         {
             await PostRepository(service);
@@ -18,7 +13,6 @@ namespace Test.SDK
 
         protected async Task BlogService(IBlogService service)
         {
-            await UserService(service.UserService);
             await PostService(service.PostService);
         }
     }

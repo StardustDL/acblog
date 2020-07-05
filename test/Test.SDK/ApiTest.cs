@@ -1,5 +1,5 @@
 using AcBlog.Data.Models;
-using AcBlog.SDK.API;
+using AcBlog.Sdk.Api;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 namespace Test.SDK
 {
     [TestClass]
-    public class ApiTest : SDKTest
+    public class ApiTest : SdkTest
     {
-        WebApplicationFactory<AcBlog.Server.API.Program> Factory { get; set; }
+        WebApplicationFactory<AcBlog.Server.Api.Program> Factory { get; set; }
 
         ApiBlogService Service { get; set; }
 
         [TestInitialize]
         public void Setup()
         {
-            Factory = new WebApplicationFactory<AcBlog.Server.API.Program>();
+            Factory = new WebApplicationFactory<AcBlog.Server.Api.Program>();
             Service = new ApiBlogService(Factory.CreateClient());
         }
 
@@ -26,8 +26,6 @@ namespace Test.SDK
             Service.HttpClient.Dispose();
             Factory.Dispose();
         }
-
-        public Task User() => UserService(Service.UserService);
 
         public Task Post() => PostService(Service.PostService);
     }

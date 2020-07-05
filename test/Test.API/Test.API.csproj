@@ -18,4 +18,8 @@
     <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\AcBlog.Server.Api\AcBlog.Server.Api.csproj" />
+  </ItemGroup>
+
 </Project>
