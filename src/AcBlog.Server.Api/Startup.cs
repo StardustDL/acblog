@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using AcBlog.Data.Repositories.SqlServer.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 
 namespace AcBlog.Server.Api
 {
@@ -41,8 +42,7 @@ namespace AcBlog.Server.Api
         public void ConfigureServices(IServiceCollection services)
         {
             {
-                services.AddOptions()
-                    .Configure<AppOption>(Configuration.GetSection("Options"));
+                services.Configure<AppOption>(Configuration.GetSection("Options"));
             }
 
             {
@@ -62,11 +62,11 @@ namespace AcBlog.Server.Api
                 services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                     .AddEntityFrameworkStores<IdentityDbContext>();
 
-                services.AddIdentityServer(options =>
-                {
-                    options.PublicOrigin = Configuration.GetValue<string>("BaseAddress");
-                })
+                services.AddIdentityServer(Configuration.GetSection("IdentityServer:Options"))
                     .AddApiAuthorization<ApplicationUser, IdentityDbContext>();
+
+                services.Configure<ApiAuthorizationOptions>(
+                    Configuration.GetSection("IdentityServer:ApiAuthorization"));
 
                 services.AddAuthentication()
                     .AddIdentityServerJwt();

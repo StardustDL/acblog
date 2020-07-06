@@ -22,10 +22,9 @@
                         }
                         else
                         {
-                            <p>
-                                You are not authorized to access
-                                this resource.
-                            </p>
+                            <Result Status="403"
+                                    Title=@("Forbidden")
+                                    SubTitle=@("Sorry, you are not authorized to access this page.") />
                         }
                     }
                 </NotAuthorized>
@@ -33,7 +32,9 @@
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p>Sorry, there's nothing at this address.</p>
+                <Result Status="404"
+                        Title=@("Not Found")
+                        SubTitle=@("Sorry, the page you visited does not exist.")/>
             </LayoutView>
         </NotFound>
     </Router>

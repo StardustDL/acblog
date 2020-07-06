@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Test.Data.Repositories;
 
-namespace Test.SDK
+namespace Test.Sdk
 {
     public abstract class SdkTest : RepositoriyTest
     {

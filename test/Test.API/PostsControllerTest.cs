@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace Test.API
+namespace Test.Api
 {
     [TestClass]
     public class PostsControllerTest

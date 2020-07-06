@@ -13,19 +13,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{3A06F815-F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Data", "test\Test.Data\Test.Data.csproj", "{EDFE6F90-0E8F-46FB-A476-6FE31894115B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.API", "test\Test.API\Test.API.csproj", "{B145E313-B21D-4FE6-907F-41EF6E6FCC81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Api", "test\Test.Api\Test.Api.csproj", "{B145E313-B21D-4FE6-907F-41EF6E6FCC81}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.SDK", "test\Test.SDK\Test.SDK.csproj", "{344AC1AE-0E0B-4495-8860-02569754AE75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Sdk", "test\Test.Sdk\Test.Sdk.csproj", "{344AC1AE-0E0B-4495-8860-02569754AE75}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.WebAssembly", "src\AcBlog.Client.WebAssembly\AcBlog.Client.WebAssembly.csproj", "{ED7DB08F-2339-4AD6-8838-4DAAC0915C1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.WebAssembly", "src\client\AcBlog.Client.WebAssembly\AcBlog.Client.WebAssembly.csproj", "{ED7DB08F-2339-4AD6-8838-4DAAC0915C1E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Data.Repositories.FileSystem", "src\AcBlog.Data.Repositories.FileSystem\AcBlog.Data.Repositories.FileSystem.csproj", "{CAE6F1D5-EE34-44ED-8779-CBA959AB398A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.WebAssembly.Host", "src\AcBlog.Client.WebAssembly.Host\AcBlog.Client.WebAssembly.Host.csproj", "{B687C30E-64CD-4283-BC66-B1398473D823}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.WebAssembly.Host", "src\client\AcBlog.Client.WebAssembly.Host\AcBlog.Client.WebAssembly.Host.csproj", "{B687C30E-64CD-4283-BC66-B1398473D823}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{8A5E6B5F-A6B3-4951-B998-0B029F07776D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.WebAssembly.Shared", "src\AcBlog.Client.WebAssembly.Shared\AcBlog.Client.WebAssembly.Shared.csproj", "{442B7279-91B4-4639-B05B-CE27B5AB3237}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.WebAssembly.Shared", "src\client\AcBlog.Client.WebAssembly.Shared\AcBlog.Client.WebAssembly.Shared.csproj", "{442B7279-91B4-4639-B05B-CE27B5AB3237}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{2E124B69-A483-40F7-A9F9-CA2616A8C45D}"
 	ProjectSection(SolutionItems) = preProject

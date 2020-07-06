@@ -57,24 +57,24 @@ Task Pack {
 }
 
 Task Publish {
-    Set-Location ./src/AcBlog.Client.WebAssembly
+    Set-Location ./src/client/AcBlog.Client.WebAssembly
     Move-Item ./wwwroot/data ./data
     Exec { dotnet publish -c Release /p:Version=$build_version }
     Move-Item ./data ./wwwroot/data
-    Set-Location ../..
+    Set-Location ../../..
 }
 
 Task NPMUP? {
-    Set-Location src/AcBlog.Client.WebAssembly
+    Set-Location src/client/AcBlog.Client.WebAssembly
     Exec { ncu }
-    Set-Location ../..
+    Set-Location ../../..
 }
 
 Task NPMUP {
-    Set-Location src/AcBlog.Client.WebAssembly
+    Set-Location src/client/AcBlog.Client.WebAssembly
     Exec { ncu -u }
     Exec { npm i }
-    Set-Location ../..
+    Set-Location ../../..
 }
 
 Task Deploy-packages {
@@ -87,10 +87,10 @@ Task Deploy-packages {
 }
 
 Task Restore-WASM {
-    Set-Location src/AcBlog.Client.WebAssembly
+    Set-Location src/client/AcBlog.Client.WebAssembly
     Exec { npm ci }
     Exec { gulp }
-    Set-Location ../..
+    Set-Location ../../..
 }
 
 Task Api {
@@ -98,5 +98,5 @@ Task Api {
 }
 
 Task Wasm {
-    Exec { dotnet run -p ./src/AcBlog.Client.WebAssembly }
+    Exec { dotnet run -p ./src/client/AcBlog.Client.WebAssembly }
 }

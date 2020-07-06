@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["src/AcBlog.Client.WebAssembly.Host/AcBlog.Client.WebAssembly.Host.csproj", "src/AcBlog.Client.WebAssembly.Host/"]
-COPY ["src/AcBlog.Client.WebAssembly/AcBlog.Client.WebAssembly.csproj", "src/AcBlog.Client.WebAssembly/"]
+COPY ["src/client/AcBlog.Client.WebAssembly.Host/AcBlog.Client.WebAssembly.Host.csproj", "src/client/AcBlog.Client.WebAssembly.Host/"]
+COPY ["src/client/AcBlog.Client.WebAssembly/AcBlog.Client.WebAssembly.csproj", "src/client/AcBlog.Client.WebAssembly/"]
 COPY ["src/AcBlog.Data.Documents/AcBlog.Data.Documents.csproj", "src/AcBlog.Data.Documents/"]
 COPY ["src/AcBlog.Data/AcBlog.Data.csproj", "src/AcBlog.Data/"]
 COPY ["src/AcBlog.Sdk/AcBlog.Sdk.csproj", "src/AcBlog.Sdk/"]
 COPY ["src/AcBlog.Data.Repositories.FileSystem/AcBlog.Data.Repositories.FileSystem.csproj", "src/AcBlog.Data.Repositories.FileSystem/"]
-COPY ["src/AcBlog.Client.WebAssembly.Shared/AcBlog.Client.WebAssembly.Shared.csproj", "src/AcBlog.Client.WebAssembly.Shared/"]
+COPY ["src/client/AcBlog.Client.WebAssembly.Shared/AcBlog.Client.WebAssembly.Shared.csproj", "src/client/AcBlog.Client.WebAssembly.Shared/"]
 RUN dotnet restore "src/AcBlog.Client.WebAssembly.Host/AcBlog.Client.WebAssembly.Host.csproj" -s https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json -s https://api.nuget.org/v3/index.json
 COPY . .
-WORKDIR "/src/src/AcBlog.Client.WebAssembly.Host"
+WORKDIR "/src/src/client/AcBlog.Client.WebAssembly.Host"
 RUN dotnet build "AcBlog.Client.WebAssembly.Host.csproj" -c Release -o /app/build
 
 FROM build AS publish
