@@ -9,7 +9,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["src/AcBlog.Server.Api/AcBlog.Server.Api.csproj", "src/AcBlog.Server.Api/"]
 COPY ["src/AcBlog.Data/AcBlog.Data.csproj", "src/AcBlog.Data/"]
-COPY ["src/AcBlog.Data.Repositories.SQLServer/AcBlog.Data.Repositories.SQLServer.csproj", "src/AcBlog.Data.Repositories.SQLServer/"]
+COPY ["src/AcBlog.Data.Repositories.SqlServer/AcBlog.Data.Repositories.SqlServer.csproj", "src/AcBlog.Data.Repositories.SqlServer/"]
 RUN dotnet restore "src/AcBlog.Server.Api/AcBlog.Server.Api.csproj" -s https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json -s https://api.nuget.org/v3/index.json
 COPY . .
 WORKDIR "/src/src/AcBlog.Server.Api"

@@ -56,11 +56,14 @@ Task Pack {
     Exec -maxRetries 3 { dotnet pack -c Release /p:Version=$build_version -o ./packages }
 }
 
-Task Publish {
+Task Publish-wasm {
     Set-Location ./src/client/AcBlog.Client.WebAssembly
-    Move-Item ./wwwroot/data ./data
-    Exec { dotnet publish -c Release /p:Version=$build_version }
-    Move-Item ./data ./wwwroot/data
+    if (-not (Test-Path -Path "publish")) {
+        New-Item -Path "publish" -ItemType Directory
+    }
+    # Move-Item ./wwwroot/data ./data
+    Exec { dotnet publish -c Release /p:Version=$build_version -o ./publish }
+    # Move-Item ./data ./wwwroot/data
     Set-Location ../../..
 }
 

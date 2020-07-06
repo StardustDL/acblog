@@ -36,13 +36,13 @@ jobs:
     - name: Generate build status
       run: |
         cd src/client/AcBlog.Client.WebAssembly.Host || exit $LASTEXITCODE
-        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./build.json || exit $LASTEXITCODE
+        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./build.json || exit $LASTEXITCODE
+        cd ../AcBlog.Client.WebAssembly || exit $LASTEXITCODE
+        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./wwwroot/build.json || exit $LASTEXITCODE
     - name: Publish Client.WebAssembly
-      run: |
-        cd src/client/AcBlog.Client.WebAssembly || exit $LASTEXITCODE
-        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./wwwroot/build.json || exit $LASTEXITCODE
-        mkdir publish || exit $LASTEXITCODE
-        dotnet publish -c Release -o ./publish || exit $LASTEXITCODE
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
+      run: Invoke-psake publish-wasm -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
