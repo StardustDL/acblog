@@ -35,11 +35,11 @@ jobs:
       run: Invoke-psake cd-build -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
     - name: Generate build status
       run: |
-        cd src/AcBlog.Client.WebAssembly.Host || exit $LASTEXITCODE
+        cd src/client/AcBlog.Client.WebAssembly.Host || exit $LASTEXITCODE
         echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./build.json || exit $LASTEXITCODE
     - name: Publish Client.WebAssembly
       run: |
-        cd src/AcBlog.Client.WebAssembly || exit $LASTEXITCODE
+        cd src/client/AcBlog.Client.WebAssembly || exit $LASTEXITCODE
         echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"" } }" > ./wwwroot/build.json || exit $LASTEXITCODE
         mkdir publish || exit $LASTEXITCODE
         dotnet publish -c Release -o ./publish || exit $LASTEXITCODE
@@ -47,7 +47,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: wasm
-        path: ./src/AcBlog.Client.WebAssembly/publish
+        path: ./src/client/AcBlog.Client.WebAssembly/publish
     - name: Push Client.WebAssembly image
       uses: docker/build-push-action@v1
       with:
@@ -55,7 +55,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: acblog/wasm
         tag_with_ref: true
-        dockerfile: ./src/AcBlog.Client.WebAssembly/Dockerfile
+        dockerfile: ./src/client/AcBlog.Client.WebAssembly/Dockerfile
     - name: Push Client.WebAssembly.Host image
       uses: docker/build-push-action@v1
       with:
@@ -63,7 +63,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: acblog/wasm-host
         tag_with_ref: true
-        dockerfile: ./src/AcBlog.Client.WebAssembly.Host/Dockerfile
+        dockerfile: ./src/client/AcBlog.Client.WebAssembly.Host/Dockerfile
     - name: Push Server.Api image
       uses: docker/build-push-action@v1
       with:

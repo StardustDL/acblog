@@ -14,7 +14,7 @@ COPY ["src/AcBlog.Data/AcBlog.Data.csproj", "src/AcBlog.Data/"]
 COPY ["src/AcBlog.Sdk/AcBlog.Sdk.csproj", "src/AcBlog.Sdk/"]
 COPY ["src/AcBlog.Data.Repositories.FileSystem/AcBlog.Data.Repositories.FileSystem.csproj", "src/AcBlog.Data.Repositories.FileSystem/"]
 COPY ["src/client/AcBlog.Client.WebAssembly.Shared/AcBlog.Client.WebAssembly.Shared.csproj", "src/client/AcBlog.Client.WebAssembly.Shared/"]
-RUN dotnet restore "src/AcBlog.Client.WebAssembly.Host/AcBlog.Client.WebAssembly.Host.csproj" -s https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json -s https://api.nuget.org/v3/index.json
+RUN dotnet restore "src/client/AcBlog.Client.WebAssembly.Host/AcBlog.Client.WebAssembly.Host.csproj" -s https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json -s https://api.nuget.org/v3/index.json
 COPY . .
 WORKDIR "/src/src/client/AcBlog.Client.WebAssembly.Host"
 RUN dotnet build "AcBlog.Client.WebAssembly.Host.csproj" -c Release -o /app/build
