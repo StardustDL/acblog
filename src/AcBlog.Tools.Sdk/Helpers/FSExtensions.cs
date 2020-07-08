@@ -15,8 +15,6 @@ namespace AcBlog.Tools.Sdk.Helpers
             foreach (string file in files)
             {
                 string pFilePath = Path.Join(saveDirPath, Path.GetFileName(file));
-                if (File.Exists(pFilePath))
-                    continue;
                 File.Copy(file, pFilePath, true);
             }
 
