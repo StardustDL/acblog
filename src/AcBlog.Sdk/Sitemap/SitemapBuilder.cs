@@ -27,7 +27,7 @@ namespace AcBlog.Sdk.Sitemap
             });
         }
 
-        public override string ToString()
+        public XDocument Build()
         {
             var sitemap = new XDocument(
                 new XDeclaration("1.0", "utf-8", "yes"),
@@ -36,7 +36,7 @@ namespace AcBlog.Sdk.Sitemap
                     select CreateItemElement(item)
                     ));
 
-            return sitemap.ToString();
+            return sitemap;
         }
 
         private XElement CreateItemElement(SitemapUrl url)

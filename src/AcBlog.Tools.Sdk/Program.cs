@@ -32,6 +32,7 @@ namespace AcBlog.Tools.Sdk
             rootCommand.AddCommand(new NewCommand().Build());
             rootCommand.AddCommand(new ListCommand().Build());
             rootCommand.AddCommand(new PushCommand().Build());
+            rootCommand.AddCommand(new CleanCommand().Build());
 
             var parser = new CommandLineBuilder(rootCommand).UseDefaults()
                 .UseHost(args =>

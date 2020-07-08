@@ -128,7 +128,7 @@ namespace AcBlog.Data.Repositories.FileSystem
             {
                 Post post = v;
                 using var st = FsBuilder.GetFileRewriteStream($"{NameUtility.Encode(post.Id)}.json");
-                await JsonSerializer.SerializeAsync(st, post);
+                await JsonSerializer.SerializeAsync(st, post).ConfigureAwait(false);
             }
 
             {

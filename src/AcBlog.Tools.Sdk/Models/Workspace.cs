@@ -327,12 +327,11 @@ namespace AcBlog.Tools.Sdk.Models
                         {
                             var siteMapBuilder = await Local.BuildSitemap(baseAddress);
                             using var st = sub.GetFileRewriteStream("sitemap.xml");
-                            using var writer = new StreamWriter(st);
-                            await writer.WriteAsync(siteMapBuilder.ToString());
+                            using var writer = XmlWriter.Create(st);
+                            siteMapBuilder.Build().WriteTo(writer);
                         }
                         {
                             var feed = await Local.BuildSyndication(baseAddress);
-                            StringBuilder sb = new StringBuilder();
                             using var st = sub.GetFileRewriteStream("atom.xml");
                             using var writer = XmlWriter.Create(st);
                             feed.GetAtom10Formatter().WriteTo(writer);

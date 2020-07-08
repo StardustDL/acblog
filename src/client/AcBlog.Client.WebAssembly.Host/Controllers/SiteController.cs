@@ -48,8 +48,10 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
         public async Task<ActionResult> GetSitemap()
         {
             var siteMapBuilder = await BlogService.BuildSitemap(BaseAddress);
-            
-            return Content(siteMapBuilder.ToString(), "text/xml");
+            StringBuilder sb = new StringBuilder();
+            using (var writer = XmlWriter.Create(sb))
+                siteMapBuilder.Build().WriteTo(writer);
+            return Content(sb.ToString(), "text/xml");
         }
 
         [HttpGet("atom")]
