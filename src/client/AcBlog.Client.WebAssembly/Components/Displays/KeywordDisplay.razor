@@ -4,7 +4,8 @@
     <span class="mdi @(Data.Items.Count() == 1 ? "mdi-tag" : "mdi-tag-multiple")">
         @foreach (var key in Data.Items)
         {
-            <a href="keywords" style="color: inherit;">@key</a>
+            <a href="keywords/@HttpUtility.UrlEncode(key)" style="color: inherit;">@key</a>
+            <span>;</span>
         }
     </span>
 </span>

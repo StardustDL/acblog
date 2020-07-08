@@ -5,24 +5,22 @@
 
 <Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded">
 
-    <div class="row">
-        <div class="container">
-            <div class="d-flex flex-row justify-content-between">
-                <h1 class="display-4">@Post.Title</h1>
-                <div class="btn-group-toggle my-auto" role="group">
-                    @if (IsProtected)
-                    {
-                        <button class="btn btn-success mdi mdi-shield-key-outline" @onclick="e => inputPasswordModalVisible = true">Deprotect</button>
-                    }
-                    <AuthorizeView>
-                        <Authorized>
-                            <a class="btn btn-primary mdi mdi-square-edit-outline" href="posts/@HttpUtility.UrlEncode(Id)/edit">Edit</a>
-                        </Authorized>
-                    </AuthorizeView>
-                </div>
+    <div class="container">
+        <div class="d-flex flex-row justify-content-between">
+            <h1 class="display-4">@Post.Title</h1>
+            <div class="btn-group-toggle my-auto" role="group">
+                @if (IsProtected)
+                {
+                    <button class="btn btn-success mdi mdi-shield-key-outline" @onclick="e => inputPasswordModalVisible = true">Deprotect</button>
+                }
+                <AuthorizeView>
+                    <Authorized>
+                        <a class="btn btn-primary mdi mdi-square-edit-outline" href="posts/@HttpUtility.UrlEncode(Id)/edit">Edit</a>
+                    </Authorized>
+                </AuthorizeView>
             </div>
-            <PostMetadataDisplay Value="@Post" />
         </div>
+        <PostMetadataDisplay Value="@Post" />
     </div>
 
     @if (IsProtected)
@@ -33,36 +31,16 @@
     }
     else
     {
-        <div class="row mt-3">
+        <div class="container">
             @switch (Post.Type)
             {
                 case PostType.Article:
                 case PostType.Note:
-                    @*
-                        <div class="col-2 border-right">
-                            <div id="post-toc">
-
-                            </div>
-                        </div>
-                        <div class="col-10">
-                            <div class="ml-1">
-                                <ArticleRenderer Document="@Post.Content" TocElementId="post-toc" />
-                            </div>
-                        </div>
-                    *@
-                    <div class="container">
-                        <div>
-                            <ArticleRenderer Document="@Post.Content"></ArticleRenderer>
-                        </div>
-                    </div>
+                    <ArticleRenderer Document="@Post.Content"></ArticleRenderer>
                     break;
                 case PostType.Slides:
-                    <div class="container">
-                        <div>
-                            <SlidesRenderer Document="@Post.Content" Style="@SlidesStyle"></SlidesRenderer>
-                        </div>
-                        <button type="button" class="btn btn-primary mt-2" style="width: 100%;" @onclick="@OnFullViewClick">Full View</button>
-                    </div>
+                    <SlidesRenderer Document="@Post.Content" Style="@SlidesStyle"></SlidesRenderer>
+                    <button type="button" class="btn btn-primary mt-2" style="width: 100%;" @onclick="@OnFullViewClick">Full View</button>
                     break;
                 default:
                     break;

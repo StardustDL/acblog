@@ -1,0 +1,69 @@
+﻿@page "/categories/{id}"
+@page "/categories/{id}/pages/{pageNumber:int}"
+@inherits BaseCategoryPage
+@inject AcBlog.Sdk.Filters.PostCategoryFilter Categories
+
+<div class="container">
+    <div class="d-flex flex-row justify-content-between">
+        <h1>Category: @Category.ToString() </h1>
+        <AuthorizeView>
+            <Authorized>
+                <div class="btn-group-toggle btn-group-lg btn-group my-auto" role="group">
+                    <a class="btn btn-primary mdi mdi-square-edit-outline" href="categories/@Id/edit">Edit</a>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+    </div>
+
+    <Loader OnLoad="@OnLoad" @ref="loader">
+        <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="@PageNavigationUrl">
+            <ItemTemplate>
+                <PostListItem Id="@context" ShowType="true"></PostListItem>
+            </ItemTemplate>
+        </PagingList>
+    </Loader>
+</div>
+
+@code {
+    const int PageSize = 10;
+
+    QueryResponse<string> Data { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public int? PageNumber { get; set; } = null;
+
+    private Category Category;
+
+    private Loader loader;
+
+    private string PageNavigationUrl;
+
+    protected override void OnParametersSet()
+    {
+        PageNavigationUrl = $"/categories/{HttpUtility.UrlEncode(Id)}";
+        Category = AcBlog.Data.Models.Category.Parse(Id);
+        base.OnParametersSet();
+    }
+
+    private async Task OnLoad()
+    {
+        Title = "Loading...";
+        Data = await Categories.Filter(Category, new Data.Models.Actions.Pagination
+        {
+            CurrentPage = PageNumber ?? 0,
+            PageSize = PageSize
+        });
+        Title = $"Page {Data.CurrentPage.CurrentPage + 1} - {Category.ToString()}";
+    }
+
+    private async Task OnPageTo(int pageNumber)
+    {
+        PageNumber = pageNumber;
+        await OnUpdatePage();
+    }
+
+    private async Task OnUpdatePage() => await loader.Load();
+}

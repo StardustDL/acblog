@@ -2,7 +2,7 @@
 
 <span class="itemdisplay">
     <span class="mdi mdi-folder">
-        <a href="categories" style="color: inherit;">@Data.ToString()</a>
+        <a href="categories/@HttpUtility.UrlEncode(Data.ToString())" style="color: inherit;">@Data.ToString()</a>
     </span>
 </span>
 

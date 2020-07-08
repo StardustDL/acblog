@@ -11,7 +11,7 @@ namespace AcBlog.Data.Models
     {
         public static Keyword Empty => new Keyword();
 
-        public const char KeywordSeperator = '/';
+        public const char KeywordSeperator = ';';
 
         public static bool IsValidName(string name) => !name.Contains(KeywordSeperator);
 

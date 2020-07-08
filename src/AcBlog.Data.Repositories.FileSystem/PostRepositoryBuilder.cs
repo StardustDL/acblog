@@ -13,6 +13,7 @@ using AcBlog.Data.Protections;
 using System.Security.Cryptography;
 using AcBlog.Data.Documents;
 using Microsoft.Extensions.FileProviders;
+using AcBlog.Data.Extensions;
 
 namespace AcBlog.Data.Repositories.FileSystem
 {
@@ -68,84 +69,29 @@ namespace AcBlog.Data.Repositories.FileSystem
         {
             FsBuilder.EnsureDirectoryEmpty("keywords");
 
-            Dictionary<string, List<Post>> dict = new Dictionary<string, List<Post>>();
-            foreach (var v in Data)
-            {
-                List<string> keyids = new List<string>();
-                foreach (var k in v.Keywords.Items)
-                {
-                    if (!dict.ContainsKey(k))
-                    {
-                        var list = new List<Post>
-                        {
-                            v
-                        };
-                        dict.Add(k, list);
-                    }
-                    else
-                    {
-                        dict[k].Add(v);
-                    }
-                }
-            }
+            KeywordCollector collector = KeywordCollector.BuildFromPosts(Data);
 
-            foreach (var v in dict)
+            foreach (var v in collector.Nodes)
             {
-                string subdir = Path.Join("keywords", NameUtility.Encode(v.Key));
+                string subdir = Path.Join("keywords", NameUtility.Encode(v.Keyword.Items.First()));
 
                 PagingProvider<string> paging = new PagingProvider<string>(Path.Join(RootPath, subdir));
 
-                await paging.Build(v.Value.Select(x => x.Id).ToArray(),
+                await paging.Build(v.Data.Select(x => x.Id).ToArray(),
                     PagingConfig).ConfigureAwait(false);
             }
 
             // TODO Add All keyword api
         }
 
-        private class CategoryNode
-        {
-            public CategoryNode(Category category)
-            {
-                Category = category;
-            }
-
-            public Category Category { get; set; }
-
-            public IList<Post> Data { get; } = new List<Post>();
-
-            public Dictionary<string, CategoryNode> Children { get; } = new Dictionary<string, CategoryNode>();
-        }
-
         async Task BuildIndexCategory()
         {
             FsBuilder.EnsureDirectoryEmpty("categories");
 
-            CategoryNode root = new CategoryNode(new Category());
-            foreach (var v in Data)
-            {
-                CategoryNode node = root;
-                foreach (var k in v.Category.Items)
-                {
-                    if (!node.Children.ContainsKey(k))
-                    {
-                        Category c = new Category
-                        {
-                            Items = node.Category.Items.Concat(new[] { k }),
-                        };
-                        var tn = new CategoryNode(c);
-                        node.Children.Add(k, tn);
-                        node = tn;
-                    }
-                    else
-                    {
-                        node = node.Children[k];
-                    }
-                    node.Data.Add(v);
-                }
-            }
+            CategoryTree tree = CategoryTree.BuildFromPosts(Data);
 
-            Queue<CategoryNode> q = new Queue<CategoryNode>();
-            foreach (var v in root.Children.Values)
+            Queue<CategoryTree.Node> q = new Queue<CategoryTree.Node>();
+            foreach (var v in tree.Root.Children.Values)
                 q.Enqueue(v);
 
             while (q.Count > 0)

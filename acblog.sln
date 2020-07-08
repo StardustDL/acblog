@@ -44,6 +44,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Data.Repositories.Sq
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Tools.Sdk", "src\AcBlog.Tools.Sdk\AcBlog.Tools.Sdk.csproj", "{228145E6-E82B-40E5-BA57-CFB6E3ADC038}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcBlog.Data.Extensions", "src\AcBlog.Data.Extensions\AcBlog.Data.Extensions.csproj", "{1D9325AB-B299-4007-827C-9B56B27886AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +116,10 @@ Global
 		{228145E6-E82B-40E5-BA57-CFB6E3ADC038}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{228145E6-E82B-40E5-BA57-CFB6E3ADC038}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{228145E6-E82B-40E5-BA57-CFB6E3ADC038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D9325AB-B299-4007-827C-9B56B27886AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D9325AB-B299-4007-827C-9B56B27886AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D9325AB-B299-4007-827C-9B56B27886AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D9325AB-B299-4007-827C-9B56B27886AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

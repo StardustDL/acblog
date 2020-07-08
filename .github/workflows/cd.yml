@@ -11,7 +11,7 @@ defaults:
 env:
   dotnet-version: "3.1.x"
   node-version: "12.x"
-  build_version: "0.0.1.${{ github.run_number }}-preview"
+  build_version: "0.0.1.${{ github.run_number }}"
 
 jobs:
   pub-images:
