@@ -54,6 +54,8 @@ namespace AcBlog.Client.WebAssembly.Models
 
         public string Repository { get; set; } = "acblog/acblog";
 
+        public string Version { get; set; } = "1.0.0";
+
         public string TrimedCommit { get; private set; }
 
         public string TrimedBranch { get; private set; }

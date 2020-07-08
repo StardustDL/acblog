@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AcBlog.Tools.Sdk.Helpers
 {
+
     internal class Equality
     {
         [DoesNotReturn]

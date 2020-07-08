@@ -3,6 +3,7 @@
     "Commit": "",
     "Branch": "master",
     "BuildDate": "None",
-    "Repository": "acblog/acblog"
+    "Repository": "acblog/acblog",
+    "Version": "1.0.0"
   }
 }

@@ -4,7 +4,10 @@ using AcBlog.Data.Repositories.FileSystem;
 using AcBlog.Sdk;
 using AcBlog.Sdk.Api;
 using AcBlog.Sdk.FileSystem;
+using AcBlog.Tools.Sdk.Helpers;
 using AcBlog.Tools.Sdk.Repositories;
+using LibGit2Sharp;
+using LibGit2Sharp.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
@@ -13,9 +16,11 @@ using StardustDL.Extensions.FileProviders;
 using StardustDL.Extensions.FileProviders.Http;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -84,6 +89,8 @@ namespace AcBlog.Tools.Sdk.Models
             await SaveDb();
         }
 
+        const string GitTempFolder = "temp/git";
+
         public async Task Connect(string name = "")
         {
             if (string.IsNullOrEmpty(name))
@@ -115,6 +122,37 @@ namespace AcBlog.Tools.Sdk.Models
                         Remote = new ApiBlogService(client);
                     }
                     break;
+                    case RemoteType.Git:
+                    {
+                        FSBuilder builder = new FSBuilder(Environment.CurrentDirectory);
+
+                        Logger.LogInformation("Pull git repository.");
+
+                        try
+                        {
+                            using (var repo = new Repository(GitTempFolder))
+                            {
+                                // Credential information to fetch
+                                LibGit2Sharp.PullOptions options = new LibGit2Sharp.PullOptions();
+
+                                // User information to create a merge commit
+                                var signature = new LibGit2Sharp.Signature(
+                                    new Identity("AcBlog.Tools.Sdk", "tools.sdk@acblog"), DateTimeOffset.Now);
+
+                                // Pull
+                                LibGit2Sharp.Commands.Pull(repo, signature, options);
+                            }
+                        }
+                        catch
+                        {
+                            builder.EnsureDirectoryEmpty(GitTempFolder);
+                            Repository.Clone(remote.Uri, GitTempFolder);
+                        }
+
+                        Remote = new FileSystemBlogService(
+                            new PhysicalFileProvider(Path.Join(Environment.CurrentDirectory, GitTempFolder)).AsFileProvider());
+                    }
+                    break;
                 }
                 Remote.PostService.Context.Token = remote.Token;
 
@@ -142,21 +180,7 @@ namespace AcBlog.Tools.Sdk.Models
                 {
                     case RemoteType.LocalFS:
                     {
-                        FSBuilder fsBuilder = new FSBuilder(remote.Uri);
-                        fsBuilder.EnsureDirectoryEmpty();
-
-                        List<Post> posts = new List<Post>();
-                        foreach (var item in await Local.PostService.GetAllPosts())
-                        {
-                            if (item is null)
-                                continue;
-                            Logger.LogInformation($"Loaded {item.Id}: {item.Title}");
-                            posts.Add(item);
-                        }
-
-                        Logger.LogInformation("Build data.");
-                        PostRepositoryBuilder builder = new PostRepositoryBuilder(posts, Path.Join(remote.Uri, "posts"));
-                        await builder.Build();
+                        await toLocalFS(remote);
                     }
                     break;
                     case RemoteType.RemoteFS:
@@ -206,13 +230,66 @@ namespace AcBlog.Tools.Sdk.Models
                                 var result = await Remote.PostService.Delete(v);
                                 if (result)
                                 {
-                                    Logger.LogInformation($"Deleted {v}");
+                                    Logger.LogInformation($"Deleted {v}.");
                                 }
                                 else
                                 {
-                                    Logger.LogError($"Failed to deleted {v}");
+                                    Logger.LogError($"Failed to deleted {v}.");
                                 }
                             }
+                        }
+                    }
+                    break;
+                    case RemoteType.Git:
+                    {
+                        string tempDist = Path.Join(Environment.CurrentDirectory, "temp/dist");
+
+                        Logger.LogInformation("Generate data.");
+
+                        await toLocalFS(new RemoteOption
+                        {
+                            Uri = tempDist,
+                            Type = RemoteType.LocalFS
+                        });
+
+                        FSExtensions.CopyDirectory(tempDist, GitTempFolder);
+
+                        Logger.LogInformation("Load git config.");
+
+                        string userName = Option.GetProperty($"remote.{remote.Name}.git.username"),
+                            password = Option.GetProperty($"remote.{remote.Name}.git.password");
+
+                        {
+                            if (string.IsNullOrEmpty(userName))
+                                userName = ConsoleExtensions.Input("Input username: ");
+                            if (string.IsNullOrEmpty(password))
+                                password = ConsoleExtensions.InputPassword("Input password: ");
+                        }
+
+                        using (var repo = new Repository(GitTempFolder))
+                        {
+                            Logger.LogInformation("Commit to git.");
+
+                            LibGit2Sharp.Commands.Stage(repo, "*");
+
+                            var signature = new LibGit2Sharp.Signature(
+                                    new Identity("AcBlog.Tools.Sdk", "tools.sdk@acblog"), DateTimeOffset.Now);
+                            repo.Commit(DateTimeOffset.Now.ToString(), signature, signature, new CommitOptions
+                            {
+                                AllowEmptyCommit = true
+                            });
+
+                            Logger.LogInformation($"Push to {repo.Head.RemoteName}.");
+
+                            PushOptions options = new LibGit2Sharp.PushOptions();
+                            options.CredentialsProvider = new CredentialsHandler(
+                                (url, usernameFromUrl, types) =>
+                                    new UsernamePasswordCredentials()
+                                    {
+                                        Username = string.IsNullOrEmpty(userName) ? usernameFromUrl : userName,
+                                        Password = password
+                                    });
+                            repo.Network.Push(repo.Head, options);
                         }
                     }
                     break;
@@ -221,6 +298,25 @@ namespace AcBlog.Tools.Sdk.Models
             else
             {
                 throw new Exception("No remote");
+            }
+
+            async Task toLocalFS(RemoteOption remote)
+            {
+                FSBuilder fsBuilder = new FSBuilder(remote.Uri);
+                fsBuilder.EnsureDirectoryEmpty();
+
+                List<Post> posts = new List<Post>();
+                foreach (var item in await Local.PostService.GetAllPosts())
+                {
+                    if (item is null)
+                        continue;
+                    Logger.LogInformation($"Loaded {item.Id}: {item.Title}");
+                    posts.Add(item);
+                }
+
+                Logger.LogInformation("Build data.");
+                PostRepositoryBuilder builder = new PostRepositoryBuilder(posts, Path.Join(remote.Uri, "posts"));
+                await builder.Build();
             }
         }
     }

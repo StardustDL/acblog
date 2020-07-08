@@ -4,7 +4,8 @@
     {
         LocalFS,
         RemoteFS,
-        Api
+        Api,
+        Git
     }
 
     public class RemoteOption

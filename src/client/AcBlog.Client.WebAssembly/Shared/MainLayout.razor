@@ -99,10 +99,12 @@
                     <br />
                     Branch: <a href="https://github.com/@BuildStatus.Repository/tree/@BuildStatus.Branch">@BuildStatus.TrimedBranch</a>
                     <br />
+                    Version: @BuildStatus.Version
+                    <br />
                     Built Date: @BuildStatus.BuildDate
                 </div>;
             }
-            <Popover Content="AcBlogInfo" Title="@("AcBlog")">
+            <Popover Content="AcBlogInfo" Title="@($"AcBlog v{BuildStatus.Version}")">
                 <a href="https://github.com/acblog/acblog">AcBlog</a>
             </Popover>
         </Footer>
