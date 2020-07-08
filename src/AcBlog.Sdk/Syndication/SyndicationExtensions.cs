@@ -32,6 +32,8 @@ namespace AcBlog.Sdk.Syndication
                 List<SyndicationItem> items = new List<SyndicationItem>();
                 foreach (var p in posts)
                 {
+                    if (p is null)
+                        continue;
                     var s = new SyndicationItem(p.Title,
                         SyndicationContent.CreateHtmlContent(Markdown.ToHtml(p.Content.Raw, Pipeline)),
                         new Uri($"{baseAddress}/posts/{HttpUtility.UrlEncode(p.Id)}"), p.Id, p.ModificationTime);

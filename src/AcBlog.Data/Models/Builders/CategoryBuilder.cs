@@ -8,17 +8,20 @@ namespace AcBlog.Data.Models.Builders
     {
         List<string> Inner { get; set; } = new List<string>();
 
-        public CategoryBuilder AddSubCategory(string name)
+        public CategoryBuilder AddSubCategory(params string[] names)
         {
-            if (Category.IsValidName(name))
+            foreach (var name in names)
             {
-                Inner.Add(name);
-                return this;
+                if (Category.IsValidName(name))
+                {
+                    Inner.Add(name);
+                }
+                else
+                {
+                    throw new Exception($"Invalid category name: {name}.");
+                }
             }
-            else
-            {
-                throw new Exception($"Invalid category name: {name}.");
-            }
+            return this;
         }
 
         public CategoryBuilder RemoveSubCategory()
@@ -36,6 +39,6 @@ namespace AcBlog.Data.Models.Builders
 
         public bool IsEmpty => Inner.Count > 0;
 
-        public Category Build() => new Category { Items = Inner.AsEnumerable() };
+        public Category Build() => new Category { Items = Inner.ToArray() };
     }
 }

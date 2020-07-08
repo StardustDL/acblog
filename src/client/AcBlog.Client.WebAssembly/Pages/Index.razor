@@ -3,7 +3,7 @@
 
 <div style="background-image: url(@BlogSettings.IndexBackgroundUrl); background-size: 100% 100%; margin-bottom: 0;">
     <Row Align="middle" Justify="center" Style="height: 100vh;">
-        <Space Style="background-color: #f0f8ffeb; border-radius: 20px; padding: 42px 49px;" Size="large">
+        <Space Style="background-color: #f0f8ffeb; border-radius: 20px; padding: 42px 49px;" Size="@($"{100}")">
             <SpaceItem>
                 <img src="@BlogSettings.IndexIconUrl" class="img-fluid mx-auto" style="border-radius: 20px; max-height: 256px; max-width: 256px;" />
             </SpaceItem>
@@ -11,6 +11,8 @@
                 <Space Direction="vertical">
                     <SpaceItem>
                         <h1 class="display-4 text-center">@BlogSettings.Name</h1>
+                    </SpaceItem>
+                    <SpaceItem>
                         <Divider></Divider>
                     </SpaceItem>
                     <SpaceItem>

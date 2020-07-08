@@ -16,11 +16,11 @@ namespace AcBlog.Data.Models
 
         public Category() { }
 
-        public Category(IEnumerable<string> items) => Items = items;
+        public Category(IList<string> items) => Items = items;
 
         public static bool IsValidName(string name) => !name.Contains(CategorySeperator);
 
-        public IEnumerable<string> Items { get; set; } = Array.Empty<string>();
+        public IList<string> Items { get; set; } = Array.Empty<string>();
 
         public override string ToString() => string.Join(CategorySeperator, Items);
 

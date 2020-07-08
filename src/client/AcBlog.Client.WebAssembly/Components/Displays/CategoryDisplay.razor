@@ -1,8 +1,16 @@
 ﻿@inject IBlogService Service
 
+@using AcBlog.Data.Models.Builders
+
 <span class="itemdisplay">
     <span class="mdi mdi-folder">
-        <a href="categories/@HttpUtility.UrlEncode(Data.ToString())" style="color: inherit;">@Data.ToString()</a>
+        @for (int i = 0; i < Data.Items.Count; i++)
+        {
+            CategoryBuilder builder = new CategoryBuilder();
+            builder.AddSubCategory(Data.Items.Take(i + 1).ToArray());
+            <a href="categories/@HttpUtility.UrlEncode(builder.Build().ToString())" style="color: inherit;">@Data.Items[i]</a>
+            <span>/</span>
+        }
     </span>
 </span>
 

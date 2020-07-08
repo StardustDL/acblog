@@ -14,9 +14,9 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AcBlog.Tools.Sdk.Commands
+namespace AcBlog.Tools.Sdk.Commands.Lists
 {
-    public class ListPostCommand : BaseCommand<ListPostCommand.CArgument>
+    public class PostCommand : BaseCommand<PostCommand.CArgument>
     {
         public override string Name => "post";
 

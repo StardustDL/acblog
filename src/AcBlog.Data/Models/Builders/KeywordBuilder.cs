@@ -8,27 +8,31 @@ namespace AcBlog.Data.Models.Builders
     {
         HashSet<string> Inner { get; set; } = new HashSet<string>();
 
-        public KeywordBuilder AddKeyword(string name)
+        public KeywordBuilder AddKeyword(params string[] names)
         {
-            if (Keyword.IsValidName(name))
+            foreach (var name in names)
             {
-                Inner.Add(name);
-                return this;
+                if (Keyword.IsValidName(name))
+                {
+                    Inner.Add(name);
+                }
+                else
+                {
+                    throw new Exception($"Invalid keyword name: {name}.");
+                }
             }
-            else
-            {
-                throw new Exception($"Invalid keyword name: {name}.");
-            }
+            return this;
         }
 
-        public KeywordBuilder RemoveKeyword(string name)
+        public KeywordBuilder RemoveKeyword(params string[] names)
         {
-            Inner.Remove(name);
+            foreach (var name in names)
+                Inner.Remove(name);
             return this;
         }
 
         public bool IsEmpty => Inner.Count > 0;
 
-        public Keyword Build() => new Keyword { Items = Inner.AsEnumerable() };
+        public Keyword Build() => new Keyword { Items = Inner.ToArray() };
     }
 }

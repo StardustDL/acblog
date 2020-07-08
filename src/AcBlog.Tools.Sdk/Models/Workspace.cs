@@ -83,6 +83,7 @@ namespace AcBlog.Tools.Sdk.Models
             await Save();
             FSBuilder builder = new FSBuilder(Environment.CurrentDirectory);
             builder.EnsureDirectoryExists("posts");
+            await Clean();
         }
 
         public async Task Save()
@@ -133,18 +134,16 @@ namespace AcBlog.Tools.Sdk.Models
 
                         try
                         {
-                            using (var repo = new Repository(GitTempFolder))
-                            {
-                                // Credential information to fetch
-                                LibGit2Sharp.PullOptions options = new LibGit2Sharp.PullOptions();
+                            using var repo = new Repository(GitTempFolder);
+                            // Credential information to fetch
+                            LibGit2Sharp.PullOptions options = new LibGit2Sharp.PullOptions();
 
-                                // User information to create a merge commit
-                                var signature = new LibGit2Sharp.Signature(
-                                    new Identity("AcBlog.Tools.Sdk", "tools.sdk@acblog"), DateTimeOffset.Now);
+                            // User information to create a merge commit
+                            var signature = new LibGit2Sharp.Signature(
+                                new Identity("AcBlog.Tools.Sdk", "tools.sdk@acblog"), DateTimeOffset.Now);
 
-                                // Pull
-                                LibGit2Sharp.Commands.Pull(repo, signature, options);
-                            }
+                            // Pull
+                            LibGit2Sharp.Commands.Pull(repo, signature, options);
                         }
                         catch
                         {
@@ -345,6 +344,13 @@ namespace AcBlog.Tools.Sdk.Models
                 PostRepositoryBuilder builder = new PostRepositoryBuilder(posts, Path.Join(remote.Uri, "posts"));
                 await builder.Build();
             }
+        }
+
+        public Task Clean()
+        {
+            FSBuilder builder = new FSBuilder(Environment.CurrentDirectory);
+            builder.EnsureDirectoryExists("temp", false);
+            return Task.CompletedTask;
         }
     }
 }

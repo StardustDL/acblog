@@ -30,6 +30,7 @@ namespace AcBlog.Tools.Sdk.Commands
 
         private async Task<int> HandleWrapper(T argument, IHost host, IConsole console, CancellationToken cancellationToken)
         {
+            var logger = host.Services.GetRequiredService<ILogger<BaseCommand<T>>>();
             try
             {
                 try
@@ -40,7 +41,7 @@ namespace AcBlog.Tools.Sdk.Commands
                 {
                     if (cancellationToken.IsCancellationRequested)
                     {
-                        console.Error.WriteLine("Operation has been cancelled.");
+                        logger.LogWarning("Operation has been cancelled.");
                         return -1;
                     }
                     throw;
@@ -51,7 +52,6 @@ namespace AcBlog.Tools.Sdk.Commands
 #if DEBUG
                 throw;
 #else
-                var logger = host.Services.GetRequiredService<ILogger<BaseCommand<T>>>();
                 logger.LogError(ex, "Error occurs");
                 return 1;
 #endif

@@ -29,6 +29,7 @@ namespace AcBlog.Tools.Sdk
 
             rootCommand.AddCommand(new InitCommand().Build());
             rootCommand.AddCommand(new RemoteCommand().Build());
+            rootCommand.AddCommand(new NewCommand().Build());
             rootCommand.AddCommand(new ListCommand().Build());
             rootCommand.AddCommand(new PushCommand().Build());
 
@@ -70,7 +71,7 @@ namespace AcBlog.Tools.Sdk
                             .Configure<DB>(context.Configuration.GetSection("db"));
                         services.AddSingleton((services) =>
                         {
-                            return new LocalBlogService(new PhysicalFileProvider(Environment.CurrentDirectory).AsFileProvider());
+                            return new LocalBlogService(Environment.CurrentDirectory, new PhysicalFileProvider(Environment.CurrentDirectory).AsFileProvider());
                         });
                         services.AddSingleton<Workspace>();
                     });

@@ -1,4 +1,5 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Data.Models.Builders;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,10 +36,9 @@ namespace AcBlog.Data.Extensions
                 {
                     if (!node.Children.ContainsKey(k))
                     {
-                        Category c = new Category
-                        {
-                            Items = node.Category.Items.Concat(new[] { k }),
-                        };
+                        CategoryBuilder cb = new CategoryBuilder();
+                        cb.AddSubCategory(node.Category.Items.Concat(new[] { k }).ToArray());
+                        Category c = cb.Build();
                         var tn = new Node(c);
                         node.Children.Add(k, tn);
                         node = tn;

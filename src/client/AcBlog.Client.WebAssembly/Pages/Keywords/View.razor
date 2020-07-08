@@ -3,18 +3,11 @@
 @inherits BaseKeywordPage
 @inject AcBlog.Sdk.Filters.PostKeywordFilter Keywords
 
-<div class="container">
-    <div class="d-flex flex-row justify-content-between">
-        <h1>Keyword: @Keyword.ToString() </h1>
-        <AuthorizeView>
-            <Authorized>
-                <div class="btn-group-toggle btn-group-lg btn-group my-auto" role="group">
-                    <a class="btn btn-primary mdi mdi-square-edit-outline" href="keywords/@Id/edit">Edit</a>
-                </div>
-            </Authorized>
-        </AuthorizeView>
-    </div>
+<PageHeader>
+    <PageHeaderTitle>Keyword: @Keyword.ToString() </PageHeaderTitle>
+</PageHeader>
 
+<div class="container">
     <Loader OnLoad="@OnLoad" @ref="loader">
         <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="@PageNavigationUrl">
             <ItemTemplate>
@@ -65,5 +58,5 @@
         await OnUpdatePage();
     }
 
-    private async Task OnUpdatePage()=>await loader.Load();
+    private async Task OnUpdatePage() => await loader.Load();
 }

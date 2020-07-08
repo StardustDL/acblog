@@ -22,11 +22,11 @@ namespace AcBlog.Tools.Sdk
 
         public IProtector<Document> Protector { get; }
 
-        public PostService(IBlogService blog, string rootPath, IFileProvider fileProvider)
+        public PostService(IBlogService blog, string absPath, string rootPath, IFileProvider fileProvider)
         {
             BlogService = blog;
             Protector = new DocumentProtector();
-            Repo = new PostFSRepo(rootPath, fileProvider, Protector);
+            Repo = new PostFSRepo(absPath, rootPath, fileProvider, Protector);
         }
 
         public Task<IEnumerable<string>> All(CancellationToken cancellationToken = default) => Repo.All(cancellationToken);

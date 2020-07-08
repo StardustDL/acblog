@@ -14,9 +14,9 @@ namespace AcBlog.Tools.Sdk.Models.Text
 
         public string title { get; set; } = string.Empty;
 
-        public string creationTime { get; set; } = DateTimeOffset.MinValue.ToString();
+        public string creationTime { get; set; } = string.Empty;
 
-        public string modificationTime { get; set; } = DateTimeOffset.MinValue.ToString();
+        public string modificationTime { get; set; } = string.Empty;
 
         public string[] keywords { get; set; } = Array.Empty<string>();
 
@@ -46,9 +46,15 @@ namespace AcBlog.Tools.Sdk.Models.Text
             data.Title = title;
             data.Category = new Category(category);
             data.Keywords = new Keyword(keywords);
-            data.CreationTime = DateTimeOffset.Parse(creationTime);
+            if(DateTimeOffset.TryParse(creationTime,out var _creationTime))
+            {
+                data.CreationTime = _creationTime;
+            }
+            if (DateTimeOffset.TryParse(modificationTime, out var _modificationTime))
+            {
+                data.ModificationTime = _modificationTime;
+            }
             data.Type = Enum.Parse<PostType>(type, true);
-            data.ModificationTime = DateTimeOffset.Parse(modificationTime);
             data.AuthorId = author;
         }
     }

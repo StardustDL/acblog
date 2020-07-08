@@ -6,13 +6,15 @@
 {
     <CustomRemoteAuthenticatorView Action="@Action">
         <LogOutSucceeded>
-            <RedirectTo Target=""/>
+            <RedirectTo Target="" />
         </LogOutSucceeded>
     </CustomRemoteAuthenticatorView>
 }
 else
 {
-    <p>Identity is not enabled.</p>
+    <Result Status="403"
+            Title=@("Forbidden")
+            SubTitle=@("Sorry, you are not authorized to access this page.") />
 }
 
 @code{

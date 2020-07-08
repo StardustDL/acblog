@@ -17,9 +17,9 @@ namespace AcBlog.Data.Models
 
         public Keyword() { }
 
-        public Keyword(IEnumerable<string> items) => Items = items;
+        public Keyword(IList<string> items) => Items = items;
 
-        public IEnumerable<string> Items { get; set; } = Array.Empty<string>();
+        public IList<string> Items { get; set; } = Array.Empty<string>();
 
         public override string ToString() => string.Join(KeywordSeperator, Items);
 
