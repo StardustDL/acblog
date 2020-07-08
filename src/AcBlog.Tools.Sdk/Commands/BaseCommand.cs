@@ -51,7 +51,7 @@ namespace AcBlog.Tools.Sdk.Commands
 #if DEBUG
                 throw;
 #else
-                var logger = host.Services.GetRequiredService<ILogger>();
+                var logger = host.Services.GetRequiredService<ILogger<BaseCommand<T>>>();
                 logger.LogError(ex, "Error occurs");
                 return 1;
 #endif

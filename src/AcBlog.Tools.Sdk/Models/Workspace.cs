@@ -245,6 +245,8 @@ namespace AcBlog.Tools.Sdk.Models
                     break;
                     case RemoteType.Git:
                     {
+                        await Connect(name);
+
                         string tempDist = Path.Join(Environment.CurrentDirectory, "temp/dist");
 
                         Logger.LogInformation("Generate data.");
@@ -252,7 +254,8 @@ namespace AcBlog.Tools.Sdk.Models
                         await toLocalFS(new RemoteOption
                         {
                             Uri = tempDist,
-                            Type = RemoteType.LocalFS
+                            Type = RemoteType.LocalFS,
+                            Name = remote.Name
                         });
 
                         FSExtensions.CopyDirectory(tempDist, GitTempFolder);
