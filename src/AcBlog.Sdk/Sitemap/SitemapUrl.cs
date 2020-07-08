@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace AcBlog.Client.WebAssembly.Host.Models
+namespace AcBlog.Sdk.Sitemap
 {
     public class SitemapUrl
     {
-        public string Url { get; set; }
+        public string Url { get; set; } = string.Empty;
         public DateTime? Modified { get; set; }
         public ChangeFrequency? ChangeFrequency { get; set; }
         public double? Priority { get; set; }

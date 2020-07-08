@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace AcBlog.Client.WebAssembly.Host.Models
+namespace AcBlog.Sdk.Sitemap
 {
     public class SitemapBuilder
     {

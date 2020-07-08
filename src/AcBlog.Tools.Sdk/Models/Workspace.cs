@@ -23,6 +23,9 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AcBlog.Sdk.Sitemap;
+using AcBlog.Sdk.Syndication;
+using System.Xml;
 
 namespace AcBlog.Tools.Sdk.Models
 {
@@ -312,6 +315,27 @@ namespace AcBlog.Tools.Sdk.Models
                         continue;
                     Logger.LogInformation($"Loaded {item.Id}: {item.Title}");
                     posts.Add(item);
+                }
+
+                {
+                    var baseAddress = Option.GetProperty($"remote.{remote.Name}.generator.baseAddress");
+                    if (!string.IsNullOrEmpty(baseAddress))
+                    {
+                        var sub = fsBuilder.CreateSubDirectoryBuilder("Site");
+                        {
+                            var siteMapBuilder = await Local.BuildSitemap(baseAddress);
+                            using var st = sub.GetFileRewriteStream("sitemap.xml");
+                            using var writer = new StreamWriter(st);
+                            await writer.WriteAsync(siteMapBuilder.ToString());
+                        }
+                        {
+                            var feed = await Local.BuildSyndication(baseAddress);
+                            StringBuilder sb = new StringBuilder();
+                            using var st = sub.GetFileRewriteStream("atom.xml");
+                            using var writer = XmlWriter.Create(st);
+                            feed.GetAtom10Formatter().WriteTo(writer);
+                        }
+                    }
                 }
 
                 Logger.LogInformation("Build data.");

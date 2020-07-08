@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace AcBlog.Client.WebAssembly.Host.Models
+﻿namespace AcBlog.Sdk.Sitemap
 {
     public enum ChangeFrequency
     {
