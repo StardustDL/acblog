@@ -1,6 +1,5 @@
 @inject IJSRuntime JSRuntime
-@inject IdentityProvider IdentityProvider
-@inject RenderStatus RenderStatus
+@inject IOptions<RuntimeOptions> RuntimeOptions
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly">
@@ -10,7 +9,7 @@
                     <AcBlog.UI.Components.Loading.Loading />
                 </Authorizing>
                 <NotAuthorized>
-                    @if (RenderStatus.IsPrerender)
+                    @if (RuntimeOptions.Value.IsPrerender)
                     {
                         <AcBlog.UI.Components.Loading.Loading />
                     }

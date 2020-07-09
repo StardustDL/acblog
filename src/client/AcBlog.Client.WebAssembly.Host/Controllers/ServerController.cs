@@ -7,6 +7,7 @@ using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace AcBlog.Client.WebAssembly.Host.Controllers
 {
@@ -14,11 +15,11 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
     [ApiController]
     public class ServerController : ControllerBase
     {
-        public ServerController(ServerSettings serverSettings, BuildStatus buildStatus, IdentityProvider identityProvider)
+        public ServerController(IOptions<ServerSettings> serverSettings, IOptions<BuildStatus> buildStatus, IOptions<IdentityProvider> identityProvider)
         {
-            ServerSettings = serverSettings;
-            BuildStatus = buildStatus;
-            IdentityProvider = identityProvider;
+            ServerSettings = serverSettings.Value;
+            BuildStatus = buildStatus.Value;
+            IdentityProvider = identityProvider.Value;
         }
 
         public ServerSettings ServerSettings { get; }
@@ -28,15 +29,15 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
         public IdentityProvider IdentityProvider { get; }
 
         [HttpGet("Identity")]
-        public IdentityProvider Identity() => IdentityProvider;
+        public object Identity() => new { IdentityProvider = IdentityProvider };
 
         [HttpGet("Test")]
         public bool Test() => true;
 
         [HttpGet("Server")]
-        public ServerSettings Server() => ServerSettings;
+        public object Server() => new { Server = ServerSettings };
 
         [HttpGet("Build")]
-        public BuildStatus Build() => BuildStatus;
+        public object Build() => new { Build = BuildStatus };
     }
 }

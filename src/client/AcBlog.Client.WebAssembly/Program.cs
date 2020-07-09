@@ -20,11 +20,8 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using AcBlog.UI.Components;
-using AcBlog.UI.Components.Loading;
-using AcBlog.UI.Components.Markdown;
-using AcBlog.UI.Components.Slides;
-using AcBlog.UI.Components.AntDesigns;
 using AcBlog.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace AcBlog.Client.WebAssembly
 {
@@ -41,14 +38,9 @@ namespace AcBlog.Client.WebAssembly
                 builder.Logging.SetMinimumLevel(LogLevel.Warning);
             }
 
-            builder.Services.AddSingleton(new RenderStatus { IsPrerender = false });
+            builder.Services.AddSingleton(new RuntimeOptions { IsPrerender = false });
 
-            builder.Services.AddExtensions()
-                .AddExtension<ClientUIComponent>()
-                .AddExtension<LoadingUIComponent>()
-                .AddExtension<MarkdownUIComponent>()
-                .AddExtension<SlidesUIComponent>()
-                .AddExtension<AntDesignUIComponent>();
+            builder.Services.AddUIComponents();
 
             var client = new HttpClient()
             {
@@ -70,31 +62,13 @@ namespace AcBlog.Client.WebAssembly
                     }
                 }
 
-                var build = await LoadBuildStatus(builder, client);
-                var server = await LoadServerSettings(builder, client);
+                await LoadBuildStatus(builder, client);
+                await LoadServerSettings(builder, client);
                 var identityProvider = await LoadIdentityProvider(builder, client);
 
-                builder.Services.AddSingleton(build);
-                builder.Services.AddSingleton(server);
-                builder.Services.AddSingleton(identityProvider);
-
-                if (identityProvider.Enable)
-                {
-                    builder.Services.AddApiAuthorization(options =>
-                    {
-                        options.ProviderOptions.ConfigurationEndpoint = identityProvider.Endpoint;
-                        options.AuthenticationPaths.RemoteProfilePath = identityProvider.RemoteProfilePath;
-                        options.AuthenticationPaths.RemoteRegisterPath = identityProvider.RemoteRegisterPath;
-                    });
-                }
-                else
-                {
-                    builder.Services.AddAuthorizationCore();
-                    builder.Services.AddSingleton<AuthenticationStateProvider, EmptyAuthenticationStateProvider>();
-                    builder.Services.AddSingleton<SignOutSessionStateManager>();
-                }
-
-                builder.Services.AddBlogService(server, builder.HostEnvironment.BaseAddress);
+                builder.Services.AddClientConfigurations(builder.Configuration);
+                builder.Services.AddClientAuthorization(identityProvider);
+                builder.Services.AddBlogService(builder.HostEnvironment.BaseAddress);
             }
 
             builder.RootComponents.Add<App>("app");
@@ -109,14 +83,15 @@ namespace AcBlog.Client.WebAssembly
             if (HasHost)
             {
                 using var response = await client.GetAsync("Server/Server");
-                return await response.Content.ReadFromJsonAsync<ServerSettings>();
+                using var stream = await response.Content.ReadAsStreamAsync();
+                builder.Configuration.AddJsonStream(stream);
             }
             else
             {
-                ServerSettings server = new ServerSettings();
-                builder.Configuration.Bind("Server", server);
-                return server;
             }
+            ServerSettings res = new ServerSettings();
+            builder.Configuration.GetSection("Server").Bind(res);
+            return res;
         }
 
         static async Task<IdentityProvider> LoadIdentityProvider(WebAssemblyHostBuilder builder, HttpClient client)
@@ -124,14 +99,15 @@ namespace AcBlog.Client.WebAssembly
             if (HasHost)
             {
                 using var response = await client.GetAsync("Server/Identity");
-                return await response.Content.ReadFromJsonAsync<IdentityProvider>();
+                using var stream = await response.Content.ReadAsStreamAsync();
+                builder.Configuration.AddJsonStream(stream);
             }
             else
             {
-                IdentityProvider server = new IdentityProvider();
-                builder.Configuration.Bind("IdentityProvider", server);
-                return server;
             }
+            IdentityProvider res = new IdentityProvider();
+            builder.Configuration.GetSection("IdentityProvider").Bind(res);
+            return res;
         }
 
         static async Task<BuildStatus> LoadBuildStatus(WebAssemblyHostBuilder builder, HttpClient client)
@@ -139,19 +115,19 @@ namespace AcBlog.Client.WebAssembly
             if (HasHost)
             {
                 using var response = await client.GetAsync("/Server/Build");
-                return await response.Content.ReadFromJsonAsync<BuildStatus>();
+                using var stream = await response.Content.ReadAsStreamAsync();
+                builder.Configuration.AddJsonStream(stream);
             }
             else
             {
-                using var response2 = await client.GetAsync("build.json");
-                response2.EnsureSuccessStatusCode();
-                using var stream = await response2.Content.ReadAsStreamAsync();
+                using var response = await client.GetAsync("build.json");
+                response.EnsureSuccessStatusCode();
+                using var stream = await response.Content.ReadAsStreamAsync();
                 builder.Configuration.AddJsonStream(stream);
-
-                BuildStatus server = new BuildStatus();
-                builder.Configuration.Bind("Build", server);
-                return server;
             }
+            BuildStatus res = new BuildStatus();
+            builder.Configuration.GetSection("Build").Bind(res);
+            return res;
         }
     }
 }

@@ -1,8 +1,8 @@
 @page "/authentication/{action}"
 @inherits BasePage
-@inject IdentityProvider IdentityProvider
+@inject IOptions<IdentityProvider> IdentityProvider
 
-@if (IdentityProvider.Enable)
+@if (IdentityProvider.Value.Enable)
 {
     <CustomRemoteAuthenticatorView Action="@Action">
         <LogOutSucceeded>

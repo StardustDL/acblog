@@ -1,6 +1,6 @@
 ﻿namespace AcBlog.Client.WebAssembly.Models
 {
-    public class RenderStatus
+    public class RuntimeOptions
     {
         public bool IsPrerender { get; set; } = false;
     }

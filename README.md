@@ -8,6 +8,8 @@ An open source extensible static & dynamic blog system.
 
 The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub Pages.
 
+- A mirror homepage on [Gitee](https://acblog.gitee.io).
+
 ## Features
 
 - Based on WebAssembly
@@ -82,7 +84,7 @@ docker run -d \
 Use AcBlog's SDK:
 
 ```sh
-dotnet tool install -g AcBlog.Tools.Sdk --version 0.0.1 \
+dotnet tool install -g AcBlog.Tools.Sdk \
   --add-source https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json
 
 acblog init
@@ -117,7 +119,7 @@ Maybe you need to restart api container after database initializing.
 Use AcBlog's command-line Sdk tool to communicate with AcBlog server.
 
 ```sh
-dotnet tool install -g AcBlog.Tools.Sdk --version 0.0.1 \
+dotnet tool install -g AcBlog.Tools.Sdk \
   --add-source https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json
 
 acblog --help

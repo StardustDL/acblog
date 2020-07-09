@@ -39,12 +39,7 @@ namespace AcBlog.Client.WebAssembly.Host
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddExtensions()
-                .AddExtension<ClientUIComponent>()
-                .AddExtension<LoadingUIComponent>()
-                .AddExtension<MarkdownUIComponent>()
-                .AddExtension<SlidesUIComponent>()
-                .AddExtension<AntDesignUIComponent>();
+            services.AddUIComponents();
 
             services.AddRazorPages();
 
@@ -52,28 +47,13 @@ namespace AcBlog.Client.WebAssembly.Host
 
             services.AddHttpClient();
 
-            services.AddSingleton(new RenderStatus { IsPrerender = true });
+            services.AddSingleton(new RuntimeOptions { IsPrerender = true });
 
-            ServerSettings server = new ServerSettings();
-            Configuration.Bind("Server", server);
-            services.AddSingleton(server);
+            services.AddClientConfigurations(Configuration);
 
-            {
-                BuildStatus bs = new BuildStatus();
-                Configuration.Bind("build", bs);
-                services.AddSingleton(bs);
-            }
+            services.AddServerPrerenderAuthorization(new IdentityProvider { Enable = false });
 
-            {
-                var identity = new IdentityProvider();
-                Configuration.Bind("IdentityProvider", identity);
-                services.AddSingleton(identity);
-            }
-
-            services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
-            services.AddScoped<SignOutSessionStateManager>();
-
-            services.AddBlogService(server, Configuration.GetBaseAddress());
+            services.AddBlogService(Configuration.GetBaseAddress());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
