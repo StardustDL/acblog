@@ -90,6 +90,7 @@ namespace AcBlog.Client.WebAssembly.Host.Pages
             }
         }*/
 
+        // TODO: Move title to component
         public async Task<string> GetTitle()
         {
             string path = HttpContext.Request.Path.ToString().Trim('/');
@@ -102,7 +103,7 @@ namespace AcBlog.Client.WebAssembly.Host.Pages
 
             List<string> result = new List<string>
             {
-                BlogSettings.Name
+                "AcBlog"
             };
 
             if (pathSegs.Length > 0)

@@ -1,5 +1,6 @@
 ﻿using AcBlog.Client.WebAssembly.Interops;
 using AcBlog.Client.WebAssembly.Models;
+using AcBlog.Data.Models;
 using AcBlog.Sdk;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
@@ -31,14 +32,12 @@ namespace AcBlog.Client.WebAssembly.Shared
         [Inject]
         protected BlogSettings BlogSettings { get; set; }
 
+        protected BlogOptions BlogOptions { get; set; } = new BlogOptions();
+
         protected virtual string Title
         {
             get => _title; set
             {
-                if (string.IsNullOrEmpty(value))
-                    value = BlogSettings.Name;
-                else
-                    value = $"{value} - {BlogSettings.Name}";
                 if (value != _title)
                 {
                     _title = value;
@@ -66,9 +65,18 @@ namespace AcBlog.Client.WebAssembly.Shared
             LocationChanged(null, null);
         }
 
+        protected override async Task OnInitializedAsync()
+        {
+            BlogOptions = await Service.GetOptions();
+            await base.OnInitializedAsync();
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            await WindowInterop.SetTitle(JSRuntime, Title);
+            string title = BlogOptions.Name;
+            if (!string.IsNullOrEmpty(Title))
+                title = $"{Title} - {BlogOptions.Name}";
+            await WindowInterop.SetTitle(JSRuntime, title);
             if (!string.IsNullOrEmpty(LocalAnchorJump))
             {
                 await WindowInterop.ScrollTo(JSRuntime, LocalAnchorJump);

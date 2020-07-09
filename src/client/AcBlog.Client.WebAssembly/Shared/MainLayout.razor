@@ -2,13 +2,14 @@
 @layout EmptyLayout
 @inject BlogSettings BlogSettings
 @inject BuildStatus BuildStatus
+@inject IBlogService Service
 
 <Layout Style="min-height: 100vh; background: initial">
     <Sider Collapsible Theme="SiderTheme.Light" Breakpoint="BreakpointType.Lg" CollapsedWidth="0"
            Style="height: 100vh; position: fixed; left: 0;" OnCollapse="@onCollapse">
         <Menu Mode="MenuMode.Inline" Theme="MenuTheme.Light">
             <MenuItem Class="text-center p-0">
-                @BlogSettings.Name
+                @BlogOptions.Name
             </MenuItem>
             <MenuItem>
                 <MdiIcon Type="home" />
@@ -55,21 +56,21 @@
                 </MenuItem>
             </SubMenu>
             @*<MenuItem>
-            <MdiIcon Type="folder" />
-            <span>
-                <MenuLink href="categories">
-                    Categories
-                </MenuLink>
-            </span>
-        </MenuItem>
-        <MenuItem>
-            <MdiIcon Type="tag-multiple" />
-            <span>
-                <MenuLink href="keywords">
-                    Keywords
-                </MenuLink>
-            </span>
-        </MenuItem>*@
+                    <MdiIcon Type="folder" />
+                    <span>
+                        <MenuLink href="categories">
+                            Categories
+                        </MenuLink>
+                    </span>
+                </MenuItem>
+                <MenuItem>
+                    <MdiIcon Type="tag-multiple" />
+                    <span>
+                        <MenuLink href="keywords">
+                            Keywords
+                        </MenuLink>
+                    </span>
+                </MenuItem>*@
             <MenuItem>
                 <MdiIcon Type="cog" />
                 <span>
@@ -84,7 +85,7 @@
         <Content>@Body</Content>
         <Footer Class="text-center mt-3 p-3">
             <MdiIcon Type="copyright" />
-            @BlogSettings.StartYear - @DateTimeOffset.Now.Year, @(BlogSettings.Onwer). All rights reserved.
+            @BlogOptions.StartYear - @DateTimeOffset.Now.Year, @(BlogOptions.Onwer). All rights reserved.
             @if (!string.IsNullOrEmpty(BlogSettings.Footer))
             {
                 @((MarkupString)BlogSettings.Footer)
@@ -112,6 +113,8 @@
 </Layout>
 
 @code {
+    private BlogOptions BlogOptions { get; set; } = new BlogOptions();
+
     private string MainContentStyle = "background: initial; margin-left: 200px;";
 
     private void onCollapse(bool isCollapsed)
@@ -126,5 +129,11 @@
         {
             MainContentStyle = "background: initial; margin-left: 200px;";
         }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        BlogOptions = await Service.GetOptions();
+        await base.OnInitializedAsync();
     }
 }

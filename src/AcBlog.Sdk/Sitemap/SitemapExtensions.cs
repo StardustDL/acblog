@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using AcBlog.Sdk.Helpers;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace AcBlog.Sdk.Sitemap
@@ -8,16 +9,20 @@ namespace AcBlog.Sdk.Sitemap
         public static async Task<SitemapBuilder> BuildSitemap(this IBlogService service, string baseAddress)
         {
             SitemapBuilder siteMapBuilder = new SitemapBuilder();
+            ClientUrlGenerator generator = new ClientUrlGenerator
+            {
+                BaseAddress = baseAddress
+            };
             siteMapBuilder.AddUrl(baseAddress);
             {
-                siteMapBuilder.AddUrl($"{baseAddress}/posts");
-                siteMapBuilder.AddUrl($"{baseAddress}/articles");
-                siteMapBuilder.AddUrl($"{baseAddress}/slides");
-                siteMapBuilder.AddUrl($"{baseAddress}/notes");
+                siteMapBuilder.AddUrl(generator.Posts());
+                siteMapBuilder.AddUrl(generator.Articles());
+                siteMapBuilder.AddUrl(generator.Slides());
+                siteMapBuilder.AddUrl(generator.Notes());
                 var posts = await service.PostService.All();
                 foreach (var id in posts)
                 {
-                    siteMapBuilder.AddUrl($"{baseAddress}/posts/{HttpUtility.UrlEncode(id)}");
+                    siteMapBuilder.AddUrl(generator.Post(id));
                 }
             }
 

@@ -35,6 +35,8 @@ namespace AcBlog.Tools.Sdk.Models
 
         public const string DBPath = "db.json";
 
+        public const string BlogOptionPath = "blog.json";
+
         public Workspace(IOptions<WorkspaceOption> option, IOptions<DB> db, LocalBlogService localBlogService, IHttpClientFactory httpClientFactory, ILogger<Workspace> logger)
         {
             HttpClientFactory = httpClientFactory;
@@ -76,6 +78,8 @@ namespace AcBlog.Tools.Sdk.Models
 
         public LocalBlogService Local { get; private set; }
 
+
+        // TODO: fix rewrite behavior
         public async Task Initialize()
         {
             Option = new WorkspaceOption();
@@ -83,6 +87,12 @@ namespace AcBlog.Tools.Sdk.Models
             await Save();
             FSBuilder builder = new FSBuilder(Environment.CurrentDirectory);
             builder.EnsureDirectoryExists("posts");
+
+            {
+                using var st = builder.GetFileRewriteStream(BlogOptionPath);
+                await JsonSerializer.SerializeAsync(st, new BlogOptions());
+            }
+
             await Clean();
         }
 
@@ -261,8 +271,8 @@ namespace AcBlog.Tools.Sdk.Models
 
                         Logger.LogInformation("Load git config.");
 
-                        string userName = Option.GetProperty($"remote.{remote.Name}.git.username"),
-                            password = Option.GetProperty($"remote.{remote.Name}.git.password");
+                        string userName = Option.Properties[$"remote.{remote.Name}.git.username"],
+                            password = Option.Properties[$"remote.{remote.Name}.git.password"];
 
                         {
                             if (string.IsNullOrEmpty(userName))
@@ -320,7 +330,7 @@ namespace AcBlog.Tools.Sdk.Models
                 }
 
                 {
-                    var baseAddress = Option.GetProperty($"remote.{remote.Name}.generator.baseAddress");
+                    var baseAddress = Option.Properties[$"remote.{remote.Name}.generator.baseAddress"];
                     if (!string.IsNullOrEmpty(baseAddress))
                     {
                         var sub = fsBuilder.CreateSubDirectoryBuilder("Site");
@@ -340,8 +350,16 @@ namespace AcBlog.Tools.Sdk.Models
                 }
 
                 Logger.LogInformation("Build data.");
-                PostRepositoryBuilder builder = new PostRepositoryBuilder(posts, Path.Join(remote.Uri, "posts"));
-                await builder.Build();
+                {
+                    BlogOptions options = await Local.GetOptions();
+                    BlogBuilder builder = new BlogBuilder(options, Path.Join(remote.Uri));
+                    await builder.Build();
+                }
+
+                {
+                    PostRepositoryBuilder builder = new PostRepositoryBuilder(posts, Path.Join(remote.Uri, "posts"));
+                    await builder.Build();
+                }
             }
         }
 

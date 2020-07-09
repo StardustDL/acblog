@@ -1,6 +1,11 @@
-﻿using AcBlog.Sdk;
+﻿using AcBlog.Data.Models;
+using AcBlog.Sdk;
+using AcBlog.Tools.Sdk.Models;
 using StardustDL.Extensions.FileProviders;
 using System.IO;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcBlog.Tools.Sdk.Repositories
 {
@@ -15,5 +20,20 @@ namespace AcBlog.Tools.Sdk.Repositories
         public IFileProvider FileProvider { get; }
 
         public IPostService PostService { get; private set; }
+
+        public async Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default)
+        {
+            var file = await FileProvider.GetFileInfo(Workspace.BlogOptionPath);
+
+            if(await file.Exists())
+            {
+                using var st = await file.CreateReadStream();
+                return await JsonSerializer.DeserializeAsync<BlogOptions>(st);
+            }
+            else
+            {
+                return new BlogOptions();
+            }
+        }
     }
 }

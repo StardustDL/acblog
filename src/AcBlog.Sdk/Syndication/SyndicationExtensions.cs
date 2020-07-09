@@ -1,4 +1,6 @@
-﻿using Markdig;
+﻿using AcBlog.Data.Models;
+using AcBlog.Sdk.Helpers;
+using Markdig;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +16,13 @@ namespace AcBlog.Sdk.Syndication
 
         public static async Task<SyndicationFeed> BuildSyndication(this IBlogService service, string baseAddress)
         {
-            SyndicationFeed feed = new SyndicationFeed("Name", "Description", new Uri(baseAddress));
-            SyndicationPerson author = new SyndicationPerson("", "Onwer", baseAddress);
+            ClientUrlGenerator generator = new ClientUrlGenerator
+            {
+                BaseAddress = baseAddress
+            };
+            BlogOptions blogOptions = await service.GetOptions();
+            SyndicationFeed feed = new SyndicationFeed(blogOptions.Name, blogOptions.Description, new Uri(baseAddress));
+            SyndicationPerson author = new SyndicationPerson("", blogOptions.Onwer, baseAddress);
             feed.Authors.Add(author);
             Dictionary<string, SyndicationCategory> categoryMap = new Dictionary<string, SyndicationCategory>();
             {
@@ -36,10 +43,10 @@ namespace AcBlog.Sdk.Syndication
                         continue;
                     var s = new SyndicationItem(p.Title,
                         SyndicationContent.CreateHtmlContent(Markdown.ToHtml(p.Content.Raw, Pipeline)),
-                        new Uri($"{baseAddress}/posts/{HttpUtility.UrlEncode(p.Id)}"), p.Id, p.ModificationTime);
+                        new Uri(generator.Post(p.Id)), p.Id, p.ModificationTime);
                     s.Authors.Add(author);
 
-                    string summary = "";
+                    string summary;
                     if (await service.PostService.Protector.IsProtected(p.Content))
                     {
                         summary = "Protected Post";

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AcBlog.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,20 +11,6 @@ namespace AcBlog.Tools.Sdk.Models
 
         public Dictionary<string, RemoteOption> Remotes { get; set; } = new Dictionary<string, RemoteOption>();
 
-        public Dictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
-
-        public string GetProperty(string key, string defaultValue = "")
-        {
-            if(Properties.TryGetValue(key, out var res))
-            {
-                return res;
-            }
-            return defaultValue;
-        }
-
-        public void SetProperty(string key, string value)
-        {
-            Properties[key] = value;
-        }
+        public PropertyCollection Properties { get; set; } = new PropertyCollection();
     }
 }
