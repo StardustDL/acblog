@@ -90,7 +90,10 @@ namespace AcBlog.Tools.Sdk.Models
 
             {
                 using var st = builder.GetFileRewriteStream(BlogOptionPath);
-                await JsonSerializer.SerializeAsync(st, new BlogOptions());
+                await JsonSerializer.SerializeAsync(st, new BlogOptions(), options: new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
             }
 
             await Clean();

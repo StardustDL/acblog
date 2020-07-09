@@ -5,7 +5,7 @@
 @inject IBlogService Service
 
 <Layout Style="min-height: 100vh; background: initial">
-    <Sider Collapsible Theme="SiderTheme.Light" Breakpoint="BreakpointType.Lg" CollapsedWidth="0"
+    <Sider Collapsible Theme="SiderTheme.Light" Breakpoint="BreakpointType.Lg" CollapsedWidth="0" Collapsed
            Style="height: 100vh; position: fixed; left: 0;" OnCollapse="@onCollapse">
         <Menu Mode="MenuMode.Inline" Theme="MenuTheme.Light">
             <MenuItem Class="text-center p-0">
@@ -115,7 +115,7 @@
 @code {
     private BlogOptions BlogOptions { get; set; } = new BlogOptions();
 
-    private string MainContentStyle = "background: initial; margin-left: 200px;";
+    private string MainContentStyle = "background: initial; margin-left: 0px;";
 
     private void onCollapse(bool isCollapsed)
     {

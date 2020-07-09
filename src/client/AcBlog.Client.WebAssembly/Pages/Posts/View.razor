@@ -4,10 +4,11 @@
 @using AcBlog.Client.WebAssembly.Components.Renderers
 
 <Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded">
-
-    <div class="container">
-        <div class="d-flex flex-row justify-content-between">
-            <h1 class="display-4">@Post.Title</h1>
+    <PageHeader>
+        <PageHeaderTitle>
+            @Post.Title
+        </PageHeaderTitle>
+        <PageHeaderExtra>
             <div class="btn-group-toggle my-auto" role="group">
                 @if (IsProtected)
                 {
@@ -19,9 +20,11 @@
                     </Authorized>
                 </AuthorizeView>
             </div>
-        </div>
-        <PostMetadataDisplay Value="@Post" />
-    </div>
+        </PageHeaderExtra>
+        <PageHeaderTags>
+            <PostMetadataDisplay Value="@Post" />
+        </PageHeaderTags>
+    </PageHeader>
 
     @if (IsProtected)
     {
