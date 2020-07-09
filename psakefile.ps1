@@ -11,7 +11,7 @@ Task CI -depends Install-deps, Restore, Build, Test, Benchmark, Report
 
 Task CD -depends CD-Build, Pack, Deploy
 
-Task CD-Build -depends Install-deps, Restore, Build
+Task CD-Build -depends Install-deps, Restore, Build, Pack
 
 Task Restore -depends Restore-WASM {
     Exec { dotnet restore }
@@ -88,6 +88,16 @@ Task Deploy-packages {
     Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$build_version.nupkg -s aza -k az }
     Exec { dotnet nuget push ./packages/AcBlog.Sdk.$build_version.nupkg -s aza -k az }
     Exec { dotnet nuget push ./packages/AcBlog.Tools.Sdk.$build_version.nupkg -s aza -k az }
+}
+
+Task Deploy-packages-release {
+    Exec { dotnet nuget push ./packages/AcBlog.Data.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Extensions.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Documents.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
+    Exec { dotnet nuget push ./packages/AcBlog.Sdk.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
+    Exec { dotnet nuget push ./packages/AcBlog.Tools.Sdk.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
 }
 
 Task Restore-WASM {
