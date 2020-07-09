@@ -31,15 +31,12 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
 
         public IConfiguration Configuration { get; }
 
-        public BlogSettings BlogSettings { get; }
-
         private string BaseAddress { get; }
 
-        public SiteController(IBlogService blogService, IConfiguration configuration, BlogSettings blogSettings)
+        public SiteController(IBlogService blogService, IConfiguration configuration)
         {
             BlogService = blogService;
             Configuration = configuration;
-            BlogSettings = blogSettings;
             BaseAddress = Configuration.GetBaseAddress().TrimEnd('/');
         }
 

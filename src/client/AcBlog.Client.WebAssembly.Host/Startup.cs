@@ -65,12 +65,6 @@ namespace AcBlog.Client.WebAssembly.Host
             }
 
             {
-                var blogSettings = new BlogSettings();
-                Configuration.Bind("Blog", blogSettings);
-                services.AddSingleton(blogSettings);
-            }
-
-            {
                 var identity = new IdentityProvider();
                 Configuration.Bind("IdentityProvider", identity);
                 services.AddSingleton(identity);

@@ -29,9 +29,6 @@ namespace AcBlog.Client.WebAssembly.Shared
         [Inject]
         protected IBlogService Service { get; set; }
 
-        [Inject]
-        protected BlogSettings BlogSettings { get; set; }
-
         protected BlogOptions BlogOptions { get; set; } = new BlogOptions();
 
         protected virtual string Title

@@ -18,6 +18,7 @@
     "AcBlog.Client.WebAssembly.Host": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "https://localhost:8101",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

@@ -13,15 +13,12 @@ namespace AcBlog.Client.WebAssembly.Host.Pages
 {
     public class HostModel : PageModel
     {
-        public HostModel(BlogSettings blogSettings, IBlogService blogService)
+        public HostModel(IBlogService blogService)
         {
-            BlogSettings = blogSettings;
             BlogService = blogService;
         }
 
         public string Title { get; private set; } = "Loading...";
-
-        private BlogSettings BlogSettings { get; }
 
         private IBlogService BlogService { get; }
 

@@ -72,12 +72,10 @@ namespace AcBlog.Client.WebAssembly
 
                 var build = await LoadBuildStatus(builder, client);
                 var server = await LoadServerSettings(builder, client);
-                var blog = await LoadBlogSettings(builder, client);
                 var identityProvider = await LoadIdentityProvider(builder, client);
 
                 builder.Services.AddSingleton(build);
                 builder.Services.AddSingleton(server);
-                builder.Services.AddSingleton(blog);
                 builder.Services.AddSingleton(identityProvider);
 
                 if (identityProvider.Enable)
@@ -153,21 +151,6 @@ namespace AcBlog.Client.WebAssembly
                 BuildStatus server = new BuildStatus();
                 builder.Configuration.Bind("Build", server);
                 return server;
-            }
-        }
-
-        static async Task<BlogSettings> LoadBlogSettings(WebAssemblyHostBuilder builder, HttpClient client)
-        {
-            if (HasHost)
-            {
-                using var response = await client.GetAsync("/Server/Blog");
-                return await response.Content.ReadFromJsonAsync<BlogSettings>();
-            }
-            else
-            {
-                var blogSettings = new BlogSettings();
-                builder.Configuration.Bind("Blog", blogSettings);
-                return blogSettings;
             }
         }
     }

@@ -1,12 +1,10 @@
 ﻿@inherits LayoutComponentBase
 @layout EmptyLayout
-@inject BlogSettings BlogSettings
 @inject BuildStatus BuildStatus
 @inject IBlogService Service
 
 <Layout Style="min-height: 100vh; background: initial">
-    <Sider Collapsible Theme="SiderTheme.Light" Breakpoint="BreakpointType.Lg" CollapsedWidth="0" Collapsed
-           Style="height: 100vh; position: fixed; left: 0;" OnCollapse="@onCollapse">
+    <Sider Collapsible Theme="SiderTheme.Light" Breakpoint="BreakpointType.Lg" CollapsedWidth="0">
         <Menu Mode="MenuMode.Inline" Theme="MenuTheme.Light">
             <MenuItem Class="text-center p-0">
                 @BlogOptions.Name
@@ -81,14 +79,14 @@
             </MenuItem>
         </Menu>
     </Sider>
-    <Layout Style="@MainContentStyle">
+    <Layout Style="background: initial;">
         <Content>@Body</Content>
         <Footer Class="text-center mt-3 p-3">
             <MdiIcon Type="copyright" />
             @BlogOptions.StartYear - @DateTimeOffset.Now.Year, @(BlogOptions.Onwer). All rights reserved.
-            @if (!string.IsNullOrEmpty(BlogSettings.Footer))
+            @if (!string.IsNullOrEmpty(BlogOptions.Footer))
             {
-                @((MarkupString)BlogSettings.Footer)
+                @((MarkupString)BlogOptions.Footer)
             }
             Powered by
 
@@ -114,22 +112,6 @@
 
 @code {
     private BlogOptions BlogOptions { get; set; } = new BlogOptions();
-
-    private string MainContentStyle = "background: initial; margin-left: 0px;";
-
-    private void onCollapse(bool isCollapsed)
-    {
-        // TODO: Wait for bug fix in antd https://github.com/ant-design-blazor/ant-design-blazor/issues/283
-
-        if (isCollapsed)
-        {
-            MainContentStyle = "background: initial; margin-left: 0px;";
-        }
-        else
-        {
-            MainContentStyle = "background: initial; margin-left: 200px;";
-        }
-    }
 
     protected override async Task OnInitializedAsync()
     {
