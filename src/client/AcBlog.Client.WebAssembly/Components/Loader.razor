@@ -56,13 +56,19 @@ else
     [Parameter]
     public EventCallback OnLoaded { get; set; }
 
-    public DataLoadingState State { get; private set; }
+    [Parameter]
+    public bool AutoLoad { get; set; } = true;
+
+    public DataLoadingState State { get; private set; } = DataLoadingState.Loading;
 
     private bool NeedCallback { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
-        await Load();
+        if (AutoLoad)
+        {
+            await Load();
+        }
         await base.OnInitializedAsync();
     }
 

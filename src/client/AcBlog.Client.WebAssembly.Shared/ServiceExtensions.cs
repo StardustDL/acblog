@@ -11,6 +11,7 @@ using System.Text;
 using StardustDL.Extensions.FileProviders.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using System.Net.Http.Headers;
 
 namespace AcBlog.Client.WebAssembly
 {
@@ -29,6 +30,10 @@ namespace AcBlog.Client.WebAssembly
             {
                 var server = sp.GetRequiredService<IOptions<ServerSettings>>().Value;
                 var client = sp.GetRequiredService<IHttpClientFactory>().CreateClient();
+                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
+                {
+                    NoCache = true
+                };
                 if (string.IsNullOrEmpty(server.Url))
                 {
                     client.BaseAddress = new Uri($"{baseAddress.TrimEnd('/')}/data/");

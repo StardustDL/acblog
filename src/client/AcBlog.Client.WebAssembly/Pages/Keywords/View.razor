@@ -1,14 +1,34 @@
 ﻿@page "/keywords/{id}"
 @page "/keywords/{id}/pages/{pageNumber:int}"
+@using AcBlog.Data.Models.Builders
 @inherits BaseKeywordPage
 @inject AcBlog.Sdk.Filters.PostKeywordFilter Keywords
 
 <PageHeader>
-    <PageHeaderTitle>Keyword: @Keyword.ToString() </PageHeaderTitle>
+    <PageHeaderTitle> @(Keyword.Items.FirstOrDefault() ?? "") </PageHeaderTitle>
+    <PageHeaderBreadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>
+                <a href="">
+                    <MdiIcon Type="home" />
+                    <span>Home</span>
+                </a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                <a href="posts">
+                    <MdiIcon Type="tag-multiple" />
+                    <span>Keywords</span>
+                </a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                <span>@(Keyword.Items.FirstOrDefault() ?? "")</span>
+            </BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderBreadcrumb>
 </PageHeader>
 
 <div class="container">
-    <Loader OnLoad="@OnLoad" @ref="loader">
+    <Loader OnLoad="@OnLoad" AutoLoad="@false" @ref="loader">
         <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="@PageNavigationUrl">
             <ItemTemplate>
                 <PostListItem Id="@context" ShowType="true"></PostListItem>
@@ -28,7 +48,7 @@
     [Parameter]
     public int? PageNumber { get; set; } = null;
 
-    private Keyword Keyword;
+    private Keyword Keyword = Keyword.Empty;
 
     private Loader loader;
 
@@ -38,7 +58,18 @@
     {
         PageNavigationUrl = $"/keywords/{HttpUtility.UrlEncode(Id)}";
         Keyword = AcBlog.Data.Models.Keyword.Parse(Id);
+        if (Keyword.Items.Count > 1)
+        {
+            KeywordBuilder builder = new KeywordBuilder();
+            builder.AddKeyword(Keyword.Items[0]);
+            Keyword = builder.Build();
+        }
         base.OnParametersSet();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await loader.Load();
     }
 
     private async Task OnLoad()

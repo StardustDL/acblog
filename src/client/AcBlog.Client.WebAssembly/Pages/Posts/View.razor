@@ -8,6 +8,25 @@
         <PageHeaderTitle>
             @Post.Title
         </PageHeaderTitle>
+        <PageHeaderBreadcrumb>
+            <Breadcrumb>
+                <BreadcrumbItem>
+                    <a href="">
+                        <MdiIcon Type="home" />
+                        <span>Home</span>
+                    </a>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <a href="posts">
+                        <MdiIcon Type="archive" />
+                        <span>Posts</span>
+                    </a>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <span>@Post.Id</span>
+                </BreadcrumbItem>
+            </Breadcrumb>
+        </PageHeaderBreadcrumb>
         <PageHeaderExtra>
             <div class="btn-group-toggle my-auto" role="group">
                 @if (IsProtected)
