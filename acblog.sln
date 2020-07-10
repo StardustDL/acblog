@@ -44,7 +44,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Tools.Sdk", "src\AcB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Data.Extensions", "src\AcBlog.Data.Extensions\AcBlog.Data.Extensions.csproj", "{1D9325AB-B299-4007-827C-9B56B27886AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcBlog.Client.WebAssembly", "src\client\AcBlog.Client.WebAssembly\AcBlog.Client.WebAssembly.csproj", "{3AE05590-EB72-4EAA-98ED-9D23DAA12540}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.WebAssembly", "src\client\AcBlog.Client.WebAssembly\AcBlog.Client.WebAssembly.csproj", "{3AE05590-EB72-4EAA-98ED-9D23DAA12540}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

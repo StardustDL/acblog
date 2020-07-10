@@ -6,32 +6,15 @@ using System.Text;
 
 namespace AcBlog.Data.Extensions
 {
-    public class CategoryTree
+    public static class CategoryTreeBuilder
     {
-        public CategoryTree(Node root) => Root = root;
-
-        public Node Root { get; private set; }
-
-        public class Node
+        public static (CategoryTree, IReadOnlyDictionary<CategoryTree.Node, IList<Post>>) BuildFromPosts(IEnumerable<Post> data)
         {
-            public Node(Category category)
-            {
-                Category = category;
-            }
-
-            public Category Category { get; set; }
-
-            public IList<Post> Data { get; } = new List<Post>();
-
-            public Dictionary<string, Node> Children { get; } = new Dictionary<string, Node>();
-        }
-
-        public static CategoryTree BuildFromPosts(IEnumerable<Post> data)
-        {
-            Node root = new Node(new Category());
+            CategoryTree.Node root = new CategoryTree.Node(new Category());
+            Dictionary<CategoryTree.Node, IList<Post>> map = new Dictionary<CategoryTree.Node, IList<Post>>();
             foreach (var v in data)
             {
-                Node node = root;
+                CategoryTree.Node node = root;
                 foreach (var k in v.Category.Items)
                 {
                     if (!node.Children.ContainsKey(k))
@@ -39,7 +22,8 @@ namespace AcBlog.Data.Extensions
                         CategoryBuilder cb = new CategoryBuilder();
                         cb.AddSubCategory(node.Category.Items.Concat(new[] { k }).ToArray());
                         Category c = cb.Build();
-                        var tn = new Node(c);
+                        var tn = new CategoryTree.Node(c);
+                        map.Add(tn, new List<Post>());
                         node.Children.Add(k, tn);
                         node = tn;
                     }
@@ -47,10 +31,10 @@ namespace AcBlog.Data.Extensions
                     {
                         node = node.Children[k];
                     }
-                    node.Data.Add(v);
+                    map[node].Add(v);
                 }
             }
-            return new CategoryTree(root);
+            return (new CategoryTree(root), map);
         }
     }
 }

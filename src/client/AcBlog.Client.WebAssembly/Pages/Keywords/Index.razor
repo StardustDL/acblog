@@ -1,0 +1,46 @@
+﻿@page "/keywords"
+@inherits BaseKeywordPage
+
+<PageHeader>
+    <PageHeaderTitle>Keywords</PageHeaderTitle>
+    <PageHeaderBreadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>
+                <a href="">
+                    <MdiIcon Type="home" />
+                    <span>Home</span>
+                </a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                <span>
+                    <MdiIcon Type="tag-multiple" />
+                    <span>Keywords</span>
+                </span>
+            </BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderBreadcrumb>
+</PageHeader>
+
+<div class="container">
+    <Loader OnLoad="@OnLoad" @ref="loader">
+        <div>
+            @foreach(var v in Data.Items)
+            {
+                <Tag>
+                    <a class="m-1" style="font-size: 18px" href="keywords/@HttpUtility.UrlEncode(v.ToString())">@v.OneNameOrDefault()</a>
+                </Tag>
+            }
+        </div>
+    </Loader>
+</div>
+
+@code {
+    private KeywordCollection Data;
+
+    private Loader loader;
+
+    private async Task OnLoad()
+    {
+        Data = await Service.PostService.GetKeywords();
+    }
+}

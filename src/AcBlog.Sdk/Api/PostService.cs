@@ -21,5 +21,21 @@ namespace AcBlog.Sdk.Api
         public IProtector<Document> Protector { get; }
 
         protected override string PrepUrl => "/Posts";
+
+        public async Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default)
+        {
+            SetHeader();
+            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/categories", cancellationToken).ConfigureAwait(false);
+            responseMessage.EnsureSuccessStatusCode();
+            return await responseMessage.Content.ReadFromJsonAsync<CategoryTree>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default)
+        {
+            SetHeader();
+            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/keywords", cancellationToken).ConfigureAwait(false);
+            responseMessage.EnsureSuccessStatusCode();
+            return await responseMessage.Content.ReadFromJsonAsync<KeywordCollection>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
     }
 }

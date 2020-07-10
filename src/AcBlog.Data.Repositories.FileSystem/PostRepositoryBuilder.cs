@@ -69,26 +69,27 @@ namespace AcBlog.Data.Repositories.FileSystem
         {
             FsBuilder.EnsureDirectoryEmpty("keywords");
 
-            KeywordCollector collector = KeywordCollector.BuildFromPosts(Data);
+            var (collection, map) = KeywordCollectionBuilder.BuildFromPosts(Data);
 
-            foreach (var v in collector.Nodes)
+            foreach (var v in collection.Items)
             {
-                string subdir = Path.Join("keywords", NameUtility.Encode(v.Keyword.Items.First()));
+                string subdir = Path.Join("keywords", NameUtility.Encode(v.OneName()));
 
                 PagingProvider<string> paging = new PagingProvider<string>(Path.Join(RootPath, subdir));
 
-                await paging.Build(v.Data.Select(x => x.Id).ToArray(),
+                await paging.Build(map[v.OneName()].Select(x => x.Id).ToArray(),
                     PagingConfig).ConfigureAwait(false);
             }
 
-            // TODO Add All keyword api
+            using var st = FsBuilder.GetFileRewriteStream("keywords/all.json");
+            await JsonSerializer.SerializeAsync(st, collection).ConfigureAwait(false);
         }
 
         async Task BuildIndexCategory()
         {
             FsBuilder.EnsureDirectoryEmpty("categories");
 
-            CategoryTree tree = CategoryTree.BuildFromPosts(Data);
+            var (tree, map) = CategoryTreeBuilder.BuildFromPosts(Data);
 
             Queue<CategoryTree.Node> q = new Queue<CategoryTree.Node>();
             foreach (var v in tree.Root.Children.Values)
@@ -102,14 +103,15 @@ namespace AcBlog.Data.Repositories.FileSystem
 
                 PagingProvider<string> paging = new PagingProvider<string>(Path.Join(RootPath, subdir));
 
-                await paging.Build(node.Data.Select(x => x.Id).ToArray(),
+                await paging.Build(map[node].Select(x => x.Id).ToArray(),
                     PagingConfig).ConfigureAwait(false);
 
                 foreach (var v in node.Children.Values)
                     q.Enqueue(v);
             }
 
-            // TODO Add All category api
+            using var st = FsBuilder.GetFileRewriteStream("categories/all.json");
+            await JsonSerializer.SerializeAsync(st, tree).ConfigureAwait(false);
         }
 
         public async Task Build()

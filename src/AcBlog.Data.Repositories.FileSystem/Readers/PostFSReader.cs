@@ -61,5 +61,21 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
                 query.Pagination);
             return res;
         }
+
+        public async Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default)
+        {
+            using var fs = await (await FileProvider.GetFileInfo(Path.Join(RootPath, "categories", "all.json")).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
+            var result = await JsonSerializer.DeserializeAsync<CategoryTree>(fs, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            return result;
+        }
+
+        public async Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default)
+        {
+            using var fs = await (await FileProvider.GetFileInfo(Path.Join(RootPath, "keywords", "all.json")).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
+            var result = await JsonSerializer.DeserializeAsync<KeywordCollection>(fs, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            return result;
+        }
     }
 }

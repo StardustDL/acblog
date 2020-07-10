@@ -26,7 +26,7 @@ namespace AcBlog.Sdk.Api
 
         public RepositoryAccessContext Context { get; set; } = new RepositoryAccessContext();
 
-        private void SetHeader()
+        protected virtual void SetHeader()
         {
             if (Context != null && !string.IsNullOrWhiteSpace(Context.Token))
             {

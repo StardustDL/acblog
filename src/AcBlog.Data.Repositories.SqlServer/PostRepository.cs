@@ -135,5 +135,9 @@ namespace AcBlog.Data.Repositories.SqlServer
         }
 
         public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(Status.Value);
+
+        public Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default) => throw new NotImplementedException();
+
+        public Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default) => throw new NotImplementedException();
     }
 }

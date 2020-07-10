@@ -5,7 +5,7 @@
 @inject AcBlog.Sdk.Filters.PostKeywordFilter Keywords
 
 <PageHeader>
-    <PageHeaderTitle> @(Keyword.Items.FirstOrDefault() ?? "") </PageHeaderTitle>
+    <PageHeaderTitle> @(Keyword.OneNameOrDefault()) </PageHeaderTitle>
     <PageHeaderBreadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
@@ -15,13 +15,13 @@
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
-                <a href="posts">
+                <a href="keywords">
                     <MdiIcon Type="tag-multiple" />
                     <span>Keywords</span>
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
-                <span>@(Keyword.Items.FirstOrDefault() ?? "")</span>
+                <span>@(Keyword.OneNameOrDefault())</span>
             </BreadcrumbItem>
         </Breadcrumb>
     </PageHeaderBreadcrumb>
@@ -60,9 +60,7 @@
         Keyword = AcBlog.Data.Models.Keyword.Parse(Id);
         if (Keyword.Items.Count > 1)
         {
-            KeywordBuilder builder = new KeywordBuilder();
-            builder.AddKeyword(Keyword.Items[0]);
-            Keyword = builder.Build();
+            Keyword = new Keyword(Keyword.OneName());
         }
         base.OnParametersSet();
     }

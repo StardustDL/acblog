@@ -44,5 +44,9 @@ namespace AcBlog.Tools.Sdk
         public Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default) => Repo.Query(query, cancellationToken);
 
         public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Repo.GetStatus(cancellationToken);
+
+        public Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default) => Repo.GetCategories(cancellationToken);
+
+        public Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default) => Repo.GetKeywords(cancellationToken);
     }
 }

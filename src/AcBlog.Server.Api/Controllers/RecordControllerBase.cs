@@ -11,7 +11,7 @@ namespace AcBlog.Server.Api.Controllers
 {
     public class RecordControllerBase<T, TId, TRepo, TQuery> : ControllerBase where TId : class where T : class, IHasId<TId> where TRepo : IRecordRepository<T, TId, TQuery> where TQuery : QueryRequest, new()
     {
-        TRepo Repository { get; }
+        protected TRepo Repository { get; }
 
         protected RecordControllerBase(TRepo repository)
         {
@@ -19,7 +19,7 @@ namespace AcBlog.Server.Api.Controllers
         }
 
         [HttpGet("status")]
-        public async Task<ActionResult<RepositoryStatus>> CanRead()
+        public async Task<ActionResult<RepositoryStatus>> GetStatus()
         {
             return await Repository.GetStatus();
         }

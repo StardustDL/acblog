@@ -43,5 +43,9 @@ namespace AcBlog.Sdk.FileSystem
         public Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default) => Reader.Query(query, cancellationToken);
 
         public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Reader.GetStatus(cancellationToken);
+
+        public Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default) => Reader.GetCategories(cancellationToken);
+
+        public Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default) => Reader.GetKeywords(cancellationToken);
     }
 }

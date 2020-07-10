@@ -5,7 +5,7 @@
 @inject AcBlog.Sdk.Filters.PostCategoryFilter Categories
 
 <PageHeader>
-    <PageHeaderTitle>@(Category.Items.LastOrDefault() ?? "") </PageHeaderTitle>
+    <PageHeaderTitle>@Category.OneNameOrDefault()</PageHeaderTitle>
     <PageHeaderBreadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
@@ -15,7 +15,7 @@
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
-                <a href="posts">
+                <a href="categories">
                     <MdiIcon Type="folder" />
                     <span>Categories</span>
                 </a>
@@ -23,20 +23,22 @@
             @for (int i = 0; i < Category.Items.Count; i++)
             {
                 string name = Category.Items[i];
-                <BreadcrumbItem>
-                    @if (i < Category.Items.Count - 1)
-                    {
-                        CategoryBuilder builder = new CategoryBuilder();
-                        builder.AddSubCategory(Category.Items.Take(i + 1).ToArray());
+                @if (i < Category.Items.Count - 1)
+                {
+                    CategoryBuilder builder = new CategoryBuilder();
+                    builder.AddSubCategory(Category.Items.Take(i + 1).ToArray());
+                    <BreadcrumbItem>
                         <a href="categories/@HttpUtility.UrlEncode(builder.Build().ToString())">
                             <span>@name</span>
                         </a>
-                    }
-                    else
-                    {
+                    </BreadcrumbItem>
+                }
+                else
+                {
+                    <BreadcrumbItem>
                         <span>@name</span>
-                    }
-                </BreadcrumbItem>
+                    </BreadcrumbItem>
+                }
             }
         </Breadcrumb>
     </PageHeaderBreadcrumb>

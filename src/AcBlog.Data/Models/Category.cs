@@ -18,6 +18,12 @@ namespace AcBlog.Data.Models
 
         public Category(IList<string> items) => Items = items;
 
+        public Category(string name) : this(new string[] { name }) { }
+
+        public string OneName() => Items.Last();
+
+        public string OneNameOrDefault() => Items.LastOrDefault();
+
         public static bool IsValidName(string name) => !name.Contains(CategorySeperator);
 
         public IList<string> Items { get; set; } = Array.Empty<string>();

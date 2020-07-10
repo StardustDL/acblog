@@ -19,6 +19,12 @@ namespace AcBlog.Data.Models
 
         public Keyword(IList<string> items) => Items = items;
 
+        public Keyword(string name) : this(new string[] { name }) { }
+
+        public string OneName() => Items.First();
+
+        public string OneNameOrDefault() => Items.FirstOrDefault();
+
         public IList<string> Items { get; set; } = Array.Empty<string>();
 
         public override string ToString() => string.Join(KeywordSeperator, Items);
