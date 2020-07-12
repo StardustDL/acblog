@@ -19,7 +19,7 @@ namespace AcBlog.Client.WebAssembly
     {
         public static void AddClientConfigurations(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<BuildStatus>(configuration.GetSection("Server"));
+            services.Configure<ServerSettings>(configuration.GetSection("Server"));
             services.Configure<IdentityProvider>(configuration.GetSection("IdentityProvider"));
             services.Configure<BuildStatus>(configuration.GetSection("Build"));
         }
