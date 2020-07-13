@@ -25,14 +25,14 @@ namespace AcBlog.Server.Api.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly AppOption _options;
+        private readonly AppOptions _options;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IOptions<AppOption> options)
+            IOptions<AppOptions> options)
         {
             _userManager = userManager;
             _signInManager = signInManager;

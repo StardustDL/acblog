@@ -42,14 +42,10 @@ namespace AcBlog.Server.Api
         public void ConfigureServices(IServiceCollection services)
         {
             {
-                services.Configure<AppOption>(Configuration.GetSection("Options"));
+                services.Configure<AppOptions>(Configuration.GetSection("Options"));
             }
 
             {
-                /*services.AddScoped(sp => new DbContextOptionsBuilder<DataContext>()
-                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-                services.AddScoped(sp => sp.GetRequiredService<DbContextOptionsBuilder<DataContext>>().Options);*/
-
                 services.AddDbContext<DataContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -64,9 +60,6 @@ namespace AcBlog.Server.Api
 
                 services.AddIdentityServer(Configuration.GetSection("IdentityServer:Options"))
                     .AddApiAuthorization<ApplicationUser, IdentityDbContext>();
-
-                services.Configure<ApiAuthorizationOptions>(
-                    Configuration.GetSection("IdentityServer:ApiAuthorization"));
 
                 services.AddAuthentication()
                     .AddIdentityServerJwt();
