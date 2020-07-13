@@ -43,16 +43,15 @@ namespace AcBlog.Tools.Sdk.Repositories
 
         protected virtual string GetAbsolutePath(string id) => Path.Join(AbsolutePath, $"{id}.md");
 
-        public override async Task<IEnumerable<string>> All(CancellationToken cancellationToken = default)
+        public override Task<IEnumerable<string>> All(CancellationToken cancellationToken = default)
         {
             List<string> result = new List<string>();
-            await foreach (var file in (await FileProvider.GetDirectoryContents(RootPath)).Children())
+            foreach (var file in Directory.EnumerateFiles(RootPath, "*.md", SearchOption.AllDirectories))
             {
-                if (file.IsDirectory || !file.Name.EndsWith(".md"))
-                    continue;
-                result.Add(Path.GetFileNameWithoutExtension(file.Name));
+                var name = Path.GetRelativePath(RootPath, file);
+                result.Add(name.Substring(0, name.Length - 3));
             }
-            return result.AsEnumerable();
+            return Task.FromResult<IEnumerable<string>>(result);
         }
 
         public override async Task<Post?> Get(string id, CancellationToken cancellationToken = default)
@@ -71,6 +70,12 @@ namespace AcBlog.Tools.Sdk.Repositories
             if (string.IsNullOrEmpty(metadata.modificationTime))
             {
                 metadata.modificationTime = File.GetLastWriteTime(GetAbsolutePath(id)).ToString();
+            }
+            if (metadata.category.Length == 0)
+            {
+                var path = Path.GetDirectoryName(id)?.Replace("\\", "/");
+                var items = path?.Split("/", StringSplitOptions.RemoveEmptyEntries);
+                metadata.category = items ?? Array.Empty<string>();
             }
 
             Post result = new Post();
