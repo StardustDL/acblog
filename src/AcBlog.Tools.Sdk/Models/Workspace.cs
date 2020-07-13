@@ -332,26 +332,6 @@ namespace AcBlog.Tools.Sdk.Models
                     posts.Add(item);
                 }
 
-                {
-                    var baseAddress = Option.Properties[$"remote.{remote.Name}.generator.baseAddress"];
-                    if (!string.IsNullOrEmpty(baseAddress))
-                    {
-                        var sub = fsBuilder.CreateSubDirectoryBuilder("Site");
-                        {
-                            var siteMapBuilder = await Local.BuildSitemap(baseAddress);
-                            using var st = sub.GetFileRewriteStream("sitemap.xml");
-                            using var writer = XmlWriter.Create(st);
-                            siteMapBuilder.Build().WriteTo(writer);
-                        }
-                        {
-                            var feed = await Local.BuildSyndication(baseAddress);
-                            using var st = sub.GetFileRewriteStream("atom.xml");
-                            using var writer = XmlWriter.Create(st);
-                            feed.GetAtom10Formatter().WriteTo(writer);
-                        }
-                    }
-                }
-
                 Logger.LogInformation("Build data.");
                 {
                     BlogOptions options = await Local.GetOptions();
@@ -362,6 +342,28 @@ namespace AcBlog.Tools.Sdk.Models
                 {
                     PostRepositoryBuilder builder = new PostRepositoryBuilder(posts, Path.Join(remote.Uri, "posts"));
                     await builder.Build();
+                }
+
+                {
+                    var baseAddress = Option.Properties[$"remote.{remote.Name}.generator.baseAddress"];
+                    if (!string.IsNullOrEmpty(baseAddress))
+                    {
+                        Logger.LogInformation("Build sitemap.");
+                        var sub = fsBuilder.CreateSubDirectoryBuilder("Site");
+                        {
+                            var siteMapBuilder = await Local.BuildSitemap(baseAddress);
+                            using var st = sub.GetFileRewriteStream("sitemap.xml");
+                            using var writer = XmlWriter.Create(st);
+                            siteMapBuilder.Build().WriteTo(writer);
+                        }
+                        Logger.LogInformation("Build feed.");
+                        {
+                            var feed = await Local.BuildSyndication(baseAddress);
+                            using var st = sub.GetFileRewriteStream("atom.xml");
+                            using var writer = XmlWriter.Create(st);
+                            feed.GetAtom10Formatter().WriteTo(writer);
+                        }
+                    }
                 }
             }
         }
