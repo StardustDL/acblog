@@ -35,7 +35,7 @@
                 }
                 <AuthorizeView>
                     <Authorized>
-                        <a class="btn btn-primary mdi mdi-square-edit-outline" href="posts/@HttpUtility.UrlEncode(Id)/edit">Edit</a>
+                        <a class="btn btn-primary mdi mdi-square-edit-outline" href="posts/@Uri.EscapeDataString(Id)/edit">Edit</a>
                     </Authorized>
                 </AuthorizeView>
             </div>

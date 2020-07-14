@@ -56,7 +56,7 @@
 
     protected override void OnParametersSet()
     {
-        PageNavigationUrl = $"/keywords/{HttpUtility.UrlEncode(Id)}";
+        PageNavigationUrl = $"/keywords/{Uri.EscapeDataString(Id)}";
         Keyword = AcBlog.Data.Models.Keyword.Parse(Id);
         if (Keyword.Items.Count > 1)
         {

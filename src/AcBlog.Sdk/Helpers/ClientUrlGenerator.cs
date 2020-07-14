@@ -11,7 +11,7 @@ namespace AcBlog.Sdk.Helpers
 
         public string BaseAddress { get => _baseAddress; set => _baseAddress = value.TrimEnd('/'); }
 
-        public string Post(string id) => $"{BaseAddress}/posts/{HttpUtility.UrlEncode(id)}";
+        public string Post(string id) => $"{BaseAddress}/posts/{Uri.EscapeDataString(id)}";
 
         public string Posts() => $"{BaseAddress}/posts";
 

@@ -65,7 +65,7 @@
     RenderFragment<TreeNode> NodeTemplate = ctx =>@<Template>
         <span style="font-size: 18px;" class="m-1">
             <MdiIcon Type="folder"/>
-            <a href="categories/@HttpUtility.UrlEncode(ctx.Key)">@ctx.Text</a>
+            <a href="categories/@Uri.EscapeDataString(ctx.Key)">@ctx.Text</a>
         </span>
     </Template>;
 }

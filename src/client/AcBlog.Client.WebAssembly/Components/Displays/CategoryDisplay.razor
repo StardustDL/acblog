@@ -8,7 +8,7 @@
         {
             CategoryBuilder builder = new CategoryBuilder();
             builder.AddSubCategory(Data.Items.Take(i + 1).ToArray());
-            <a href="categories/@HttpUtility.UrlEncode(builder.Build().ToString())" style="color: inherit;">@Data.Items[i]</a>
+            <a href="categories/@Uri.EscapeDataString(builder.Build().ToString())" style="color: inherit;">@Data.Items[i]</a>
             <span>/</span>
         }
     </span>

@@ -89,7 +89,7 @@ namespace AcBlog.Client.WebAssembly.Shared
                 var frag = url[BaseUri.Length..];
                 if (frag.StartsWith("#"))
                 {
-                    LocalAnchorJump = HttpUtility.UrlDecode(frag[1..]);
+                    LocalAnchorJump = Uri.UnescapeDataString(frag[1..]);
                     StateHasChanged();
                 }
             }

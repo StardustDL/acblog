@@ -1,6 +1,7 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -67,7 +68,7 @@ namespace AcBlog.Sdk.Api
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.DeleteAsync($"{PrepUrl}/{HttpUtility.UrlEncode(id)}", cancellationToken).ConfigureAwait(false);
+            using var responseMessage = await HttpClient.DeleteAsync($"{PrepUrl}/{Uri.EscapeDataString(id)}", cancellationToken).ConfigureAwait(false);
 
             if (!responseMessage.IsSuccessStatusCode)
                 return false;
@@ -79,7 +80,7 @@ namespace AcBlog.Sdk.Api
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{HttpUtility.UrlEncode(id)}", cancellationToken).ConfigureAwait(false);
+            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{Uri.EscapeDataString(id)}", cancellationToken).ConfigureAwait(false);
             return responseMessage.IsSuccessStatusCode;
         }
 
@@ -87,7 +88,7 @@ namespace AcBlog.Sdk.Api
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{HttpUtility.UrlEncode(id)}", cancellationToken).ConfigureAwait(false);
+            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/{Uri.EscapeDataString(id)}", cancellationToken).ConfigureAwait(false);
             responseMessage.EnsureSuccessStatusCode();
 
             var result = await responseMessage.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -111,7 +112,7 @@ namespace AcBlog.Sdk.Api
         {
             SetHeader();
 
-            using var responseMessage = await HttpClient.PutAsJsonAsync($"{PrepUrl}/{HttpUtility.UrlEncode(value.Id)}", value, cancellationToken).ConfigureAwait(false);
+            using var responseMessage = await HttpClient.PutAsJsonAsync($"{PrepUrl}/{Uri.EscapeDataString(value.Id)}", value, cancellationToken).ConfigureAwait(false);
             responseMessage.EnsureSuccessStatusCode();
 
             return await responseMessage.Content.ReadFromJsonAsync<bool>(cancellationToken: cancellationToken).ConfigureAwait(false);

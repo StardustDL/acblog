@@ -22,7 +22,7 @@
                                 break;
                         }
                     }
-                    <a href="posts/@HttpUtility.UrlEncode(Id)" style="color:black">
+                    <a href="posts/@Uri.EscapeDataString(Id)" style="color:black">
                         <span>@Post.Title</span>
                     </a>
                 </h4>
