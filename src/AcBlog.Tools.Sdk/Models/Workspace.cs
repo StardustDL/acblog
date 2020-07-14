@@ -37,6 +37,8 @@ namespace AcBlog.Tools.Sdk.Models
 
         public const string BlogOptionPath = "blog.json";
 
+        const string AssetsPath = "assets";
+
         public Workspace(IOptions<WorkspaceOption> option, IOptions<DB> db, LocalBlogService localBlogService, IHttpClientFactory httpClientFactory, ILogger<Workspace> logger)
         {
             HttpClientFactory = httpClientFactory;
@@ -87,6 +89,7 @@ namespace AcBlog.Tools.Sdk.Models
             await Save();
             FSBuilder builder = new FSBuilder(Environment.CurrentDirectory);
             builder.EnsureDirectoryExists("posts");
+            builder.EnsureDirectoryExists(AssetsPath);
 
             {
                 using var st = builder.GetFileRewriteStream(BlogOptionPath);
@@ -363,6 +366,14 @@ namespace AcBlog.Tools.Sdk.Models
                             using var writer = XmlWriter.Create(st);
                             feed.GetAtom10Formatter().WriteTo(writer);
                         }
+                    }
+                }
+                {
+                    string assetsPath = Path.Join(Environment.CurrentDirectory, AssetsPath);
+                    if(Directory.Exists(assetsPath))
+                    {
+                        Logger.LogInformation("Copy assets.");
+                        FSExtensions.CopyDirectory(assetsPath, Path.Join(remote.Uri, AssetsPath));
                     }
                 }
             }
