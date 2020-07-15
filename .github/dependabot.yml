@@ -6,18 +6,18 @@ updates:
       interval: daily
     open-pull-requests-limit: 3
   - package-ecosystem: npm
-    directory: "/src/AcBlog.Client.WebAssembly"
+    directory: "/src/client/AcBlog.Client.WebAssembly"
     schedule:
       interval: daily
     allow:
       - dependency-type: production
     open-pull-requests-limit: 3
   - package-ecosystem: "docker"
-    directory: "/src/AcBlog.Client.WebAssembly"
+    directory: "/src/client/AcBlog.Client.WebAssembly"
     schedule:
       interval: daily
   - package-ecosystem: "docker"
-    directory: "/src/AcBlog.Client.WebAssembly.Host"
+    directory: "/src/client/AcBlog.Client.WebAssembly.Host"
     schedule:
       interval: daily
   - package-ecosystem: "docker"

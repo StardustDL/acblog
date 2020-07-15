@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   client:
-    image: acblog/wasm-host:latest
+    image: registry.cn-hangzhou.aliyuncs.com/acblog/wasm-host:latest
     ports:
       - "6000:80"
     volumes:
@@ -13,16 +13,19 @@ services:
     depends_on:
       - api
   api:
-    image: acblog/api:latest
+    image: registry.cn-hangzhou.aliyuncs.com/acblog/api:latest
     ports:
       - "6100:80"
     environment:
       - ConnectionStrings:IdentityConnection=Server=db;User=sa;Password=MyPassword001;Database=api_identity;
       - ConnectionStrings:DefaultConnection=Server=db;User=sa;Password=MyPassword001;Database=api_default;
+      - LomentServer:Uri=http://loment
+      - LomentServer:Enable=true
     volumes:
       - ./api/appsettings.json:/app/appsettings.json
     depends_on:
       - db
+      - server
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
@@ -30,7 +33,21 @@ services:
       - ACCEPT_EULA=Y
     volumes:
       - data:/var/opt/mssql
-    ports:
-      - "1433:1433"
+  loment:
+    image: registry.cn-hangzhou.aliyuncs.com/stardustdl/loment:latest # stardustdl/loment:latest
+    environment:
+      - LOMENT_DBORIGIN=root:123456@(lomentdb:3306)
+      - LOMENT_DBNAME=loment_db
+    depends_on:
+      - lomentdb
+  lomentdb:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    security_opt:
+      - seccomp:unconfined
+    volumes:
+      - lomentdata:/var/opt/mssql
 volumes:
   data:
+  lomentdata:

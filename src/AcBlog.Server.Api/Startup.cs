@@ -24,6 +24,9 @@ using AcBlog.Data.Repositories.SqlServer.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using Loment;
+using Microsoft.Extensions.Options;
+using System.Net.Http;
 
 namespace AcBlog.Server.Api
 {
@@ -63,6 +66,23 @@ namespace AcBlog.Server.Api
 
                 services.AddAuthentication()
                     .AddIdentityServerJwt();
+            }
+
+            services.AddHttpClient();
+
+            {
+                services.Configure<LomentServerOptions>(Configuration.GetSection("LomentServer"));
+                services.AddHttpClient("loment-client", (sp, client) =>
+                {
+                    var options = sp.GetService<IOptions<LomentServerOptions>>().Value;
+                    if (options.Enable)
+                        client.BaseAddress = new Uri(options.Uri);
+                });
+                services.AddScoped<ILomentService>(sp =>
+                {
+                    var http = sp.GetRequiredService<IHttpClientFactory>().CreateClient("loment-client");
+                    return new LomentService(http);
+                });
             }
 
             services.AddControllersWithViews();
