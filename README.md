@@ -1,6 +1,6 @@
 # AcBlog
 
-![CI](https://github.com/acblog/acblog/workflows/CI/badge.svg) ![CD](https://github.com/acblog/acblog/workflows/CD/badge.svg) [![Homepage](https://img.shields.io/github/workflow/status/acblog/acblog.github.io/Deploy/src?label=homepage)](https://github.com/acblog/acblog.github.io) ![Mirrors](https://img.shields.io/github/workflow/status/acblog/mirrors/Mirror/master?label=mirrors) ![License](https://img.shields.io/github/license/acblog/acblog.svg)
+![CI](https://github.com/acblog/acblog/workflows/CI/badge.svg) ![CD](https://github.com/acblog/acblog/workflows/CD/badge.svg) [![Homepage](https://img.shields.io/github/workflow/status/acblog/acblog.github.io/Deploy/src?label=homepage)](https://github.com/acblog/acblog.github.io) ![Mirrors](https://img.shields.io/github/workflow/status/acblog/mirrors/Mirror/master?label=mirrors) ![License](https://img.shields.io/github/license/acblog/acblog.svg) [![AcBlog.Tools.SDK](https://buildstats.info/nuget/AcBlog.Tools.SDK)](https://www.nuget.org/packages/AcBlog.Tools.SDK/)
 
 An open source extensible static & dynamic blog system.
 
@@ -38,6 +38,13 @@ The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub P
   - [![Docker](https://img.shields.io/docker/pulls/acblog/api.svg)](https://hub.docker.com/r/acblog/api) Server.API
 
 ## Guide
+
+### Full Static Hosting
+
+GitHub Pages hosting, based on [wasm-ghpages-generate-action](https://github.com/acblog/wasm-ghpages-generate-action) and [static-backend-generate-action](https://github.com/acblog/static-backend-generate-action).
+
+- [Demo Project](https://github.com/acblog/acblog.github.io)
+- [中文说明](https://stardustdl.gitee.io/posts/AcBlog-staticgen)
 
 ### Frontend
 
@@ -156,3 +163,7 @@ Invoke-psake Build
 ```sh
 Invoke-psake CI
 ```
+
+## Status
+
+![](https://buildstats.info/github/chart/acblog/acblog?branch=master)
