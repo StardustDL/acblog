@@ -21,6 +21,6 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: "docker"
-    directory: "/src/AcBlog.Server.API"
+    directory: "/src/AcBlog.Server.Api"
     schedule:
       interval: daily

@@ -32,7 +32,7 @@ namespace AcBlog.Tools.Sdk.Models.Text
         {
             id = data.Id;
             title = data.Title;
-            author = data.AuthorId;
+            author = data.Author;
             creationTime = data.CreationTime.ToString();
             modificationTime = data.ModificationTime.ToString();
             category = data.Category.Items.ToArray();
@@ -55,7 +55,7 @@ namespace AcBlog.Tools.Sdk.Models.Text
                 data.ModificationTime = _modificationTime;
             }
             data.Type = Enum.Parse<PostType>(type, true);
-            data.AuthorId = author;
+            data.Author = author;
         }
     }
 }

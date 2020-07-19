@@ -44,7 +44,7 @@ The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub P
 GitHub Pages hosting, based on [wasm-ghpages-generate-action](https://github.com/acblog/wasm-ghpages-generate-action) and [static-backend-generate-action](https://github.com/acblog/static-backend-generate-action).
 
 - [Demo Project](https://github.com/acblog/acblog.github.io)
-- [中文说明](https://stardustdl.gitee.io/posts/AcBlog-staticgen)
+- [中文说明](https://stardustdl.gitee.io/posts/Development%2FAcBlog-staticgen)
 
 ### Frontend
 

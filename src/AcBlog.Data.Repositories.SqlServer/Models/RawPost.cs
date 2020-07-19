@@ -33,7 +33,7 @@ namespace AcBlog.Data.Repositories.SqlServer.Models
             return new RawPost
             {
                 Id = value.Id,
-                AuthorId = value.AuthorId,
+                AuthorId = value.Author,
                 Category = value.Category.ToString(),
                 CreationTime = value.CreationTime,
                 ModificationTime = value.ModificationTime,
@@ -49,7 +49,7 @@ namespace AcBlog.Data.Repositories.SqlServer.Models
             return new Post
             {
                 Id = value.Id,
-                AuthorId = value.AuthorId,
+                Author = value.AuthorId,
                 Category = AcBlog.Data.Models.Category.Parse(value.Category),
                 CreationTime = value.CreationTime,
                 ModificationTime = value.ModificationTime,

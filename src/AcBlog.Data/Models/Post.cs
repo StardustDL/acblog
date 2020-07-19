@@ -1,6 +1,5 @@
 ﻿using AcBlog.Data.Documents;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace AcBlog.Data.Models
@@ -11,7 +10,7 @@ namespace AcBlog.Data.Models
 
         public PostType Type { get; set; } = PostType.Article;
 
-        public string AuthorId { get; set; } = string.Empty;
+        public string Author { get; set; } = string.Empty;
 
         public Document Content { get; set; } = new Document();
 
