@@ -69,8 +69,8 @@ namespace AcBlog.Data.Repositories.SqlServer
 
             if (query.Type != null)
                 qr = qr.Where(x => x.Type == query.Type);
-            if (!string.IsNullOrWhiteSpace(query.AuthorId))
-                qr = qr.Where(x => x.AuthorId == query.AuthorId);
+            if (!string.IsNullOrWhiteSpace(query.Author))
+                qr = qr.Where(x => x.AuthorId == query.Author);
             if (query.Category != null)
                 qr = qr.Where(x => x.Category.StartsWith(query.Category.ToString()));
             if (query.Keywords != null)

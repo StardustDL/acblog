@@ -8,7 +8,7 @@ namespace AcBlog.Data.Models.Actions
     {
         public PostType? Type { get; set; } = null;
 
-        public string AuthorId { get; set; } = string.Empty;
+        public string Author { get; set; } = string.Empty;
 
         public string Content { get; set; } = string.Empty;
 
