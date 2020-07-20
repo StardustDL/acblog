@@ -5,12 +5,16 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Models.Actions
 {
+    public static class QueryResponse
+    {
+        public static QueryResponse<T> Empty<T>()
+        {
+            return new QueryResponse<T>(Array.Empty<T>(), new Pagination());
+        }
+    }
+
     public class QueryResponse<T>
     {
-        public QueryResponse() : this(Array.Empty<T>(), new Pagination())
-        {
-        }
-
         public QueryResponse(IEnumerable<T> results, Pagination currentPage)
         {
             Results = results;
