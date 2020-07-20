@@ -14,7 +14,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
     {
         protected RecordFSReaderBase(string rootPath, IFileProvider fileProvider) : base(rootPath, fileProvider)
         {
-            PagingProvider = new PagingProvider<TId>(Path.Join(RootPath, "pages"), FileProvider);
+            PagingProvider = new PagingProvider<TId>(Paths.GetPaginationRoot(RootPath), FileProvider);
         }
 
         protected PagingProvider<TId> PagingProvider { get; }

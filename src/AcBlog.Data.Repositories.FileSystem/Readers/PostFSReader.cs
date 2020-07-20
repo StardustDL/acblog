@@ -19,7 +19,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
         {
         }
 
-        protected override string GetPath(string id) => Path.Join(RootPath, $"{NameUtility.Encode(id)}.json");
+        protected override string GetPath(string id) => Paths.GetFileById(RootPath, id);
 
         public async override Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
         {
@@ -32,26 +32,23 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
                 switch (query.Type)
                 {
                     case PostType.Article:
-                        paging = new PagingProvider<string>(Path.Join(RootPath, "articles"), FileProvider);
+                        paging = new PagingProvider<string>(Paths.GetArticleRoot(RootPath), FileProvider);
                         break;
                     case PostType.Slides:
-                        paging = new PagingProvider<string>(Path.Join(RootPath, "slides"), FileProvider);
+                        paging = new PagingProvider<string>(Paths.GetSlidesRoot(RootPath), FileProvider);
                         break;
                     case PostType.Note:
-                        paging = new PagingProvider<string>(Path.Join(RootPath, "notes"), FileProvider);
+                        paging = new PagingProvider<string>(Paths.GetNoteRoot(RootPath), FileProvider);
                         break;
                 }
             }
             else if (query.Category != null && query.Category.Items.Any())
             {
-                var catRoot = Path.Join(RootPath, "categories");
-                catRoot = Path.Join(catRoot, Path.Combine(query.Category.Items.Select(NameUtility.Encode).ToArray()));
-                paging = new PagingProvider<string>(catRoot, FileProvider);
+                paging = new PagingProvider<string>(Paths.GetCategoryRoot(RootPath, query.Category), FileProvider);
             }
             else if (query.Keywords != null && query.Keywords.Items.Any())
             {
-                var catRoot = Path.Join(RootPath, "keywords");
-                paging = new PagingProvider<string>(Path.Join(catRoot, query.Keywords.Items.Select(NameUtility.Encode).First()), FileProvider);
+                paging = new PagingProvider<string>(Paths.GetKeywordRoot(RootPath, query.Keywords), FileProvider);
             }
 
             await paging.FillPagination(query.Pagination);
@@ -64,7 +61,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public async Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default)
         {
-            using var fs = await (await FileProvider.GetFileInfo(Path.Join(RootPath, "categories", "all.json")).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
+            using var fs = await (await FileProvider.GetFileInfo(Paths.GetCategoryMetadata(RootPath)).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
             var result = await JsonSerializer.DeserializeAsync<CategoryTree>(fs, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             return result;
@@ -72,7 +69,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public async Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default)
         {
-            using var fs = await (await FileProvider.GetFileInfo(Path.Join(RootPath, "keywords", "all.json")).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
+            using var fs = await (await FileProvider.GetFileInfo(Paths.GetKeywordMetadata(RootPath)).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
             var result = await JsonSerializer.DeserializeAsync<KeywordCollection>(fs, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             return result;

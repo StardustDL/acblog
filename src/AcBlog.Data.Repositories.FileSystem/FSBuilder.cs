@@ -3,15 +3,10 @@ using System;
 
 namespace AcBlog.Data.Repositories.FileSystem
 {
-    public class FSBuilder
+    public static class FSStaticBuilder
     {
-        public FSBuilder(string rootPath) => RootPath = rootPath;
-
-        public string RootPath { get; }
-
-        public void EnsureDirectoryExists(string subpath = "", bool isExists = true)
+        public static void EnsureDirectoryExists(string path, bool isExists = true)
         {
-            string path = Path.Join(RootPath, subpath);
             if (isExists)
             {
                 if (!Directory.Exists(path))
@@ -28,10 +23,9 @@ namespace AcBlog.Data.Repositories.FileSystem
             }
         }
 
-        public void EnsureDirectoryEmpty(string subpath = "")
+        public static void EnsureDirectoryEmpty(string path)
         {
-            string path = Path.Join(RootPath, subpath);
-            EnsureDirectoryExists(subpath);
+            EnsureDirectoryExists(path);
             foreach (var v in Directory.GetFiles(path))
             {
                 File.Delete(v);
@@ -42,14 +36,13 @@ namespace AcBlog.Data.Repositories.FileSystem
             }
         }
 
-        public void EnsureFileExists(string subpath, bool isExists = true, byte[]? initialData = null)
+        public static void EnsureFileExists(string path, bool isExists = true, byte[]? initialData = null)
         {
-            string path = Path.Join(RootPath, subpath);
             if (isExists)
             {
                 if (!File.Exists(path))
                 {
-                    EnsureDirectoryExists(Path.GetDirectoryName(subpath));
+                    EnsureDirectoryExists(Path.GetDirectoryName(path));
                     File.WriteAllBytes(path, initialData ?? Array.Empty<byte>());
                 }
             }
@@ -62,18 +55,53 @@ namespace AcBlog.Data.Repositories.FileSystem
             }
         }
 
+        public static void EnsureFileEmpty(string path)
+        {
+            EnsureFileExists(path, false);
+            EnsureFileExists(path, true);
+        }
+
+        public static Stream GetFileRewriteStream(string path)
+        {
+            EnsureFileEmpty(path);
+            return File.OpenWrite(path);
+        }
+    }
+
+    public class FSBuilder
+    {
+        public FSBuilder(string rootPath) => RootPath = rootPath;
+
+        public string RootPath { get; }
+
+        public void EnsureDirectoryExists(string subpath = "", bool isExists = true)
+        {
+            string path = Path.Join(RootPath, subpath);
+            FSStaticBuilder.EnsureDirectoryExists(path, isExists);
+        }
+
+        public void EnsureDirectoryEmpty(string subpath = "")
+        {
+            string path = Path.Join(RootPath, subpath);
+            FSStaticBuilder.EnsureDirectoryEmpty(path);
+        }
+
+        public void EnsureFileExists(string subpath, bool isExists = true, byte[]? initialData = null)
+        {
+            string path = Path.Join(RootPath, subpath);
+            FSStaticBuilder.EnsureFileExists(path, isExists, initialData);
+        }
+
         public void EnsureFileEmpty(string subpath)
         {
             string path = Path.Join(RootPath, subpath);
-            EnsureFileExists(subpath, false);
-            EnsureFileExists(subpath, true);
+            FSStaticBuilder.EnsureFileEmpty(path);
         }
 
         public Stream GetFileRewriteStream(string subpath)
         {
             string path = Path.Join(RootPath, subpath);
-            EnsureFileEmpty(subpath);
-            return File.OpenWrite(path);
+            return FSStaticBuilder.GetFileRewriteStream(path);
         }
 
         public FSBuilder CreateSubDirectoryBuilder(string subpath)
