@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace AcBlog.Data.Repositories.FileSystem
+namespace AcBlog.Data.Repositories.FileSystem.Builders
 {
     public class BlogBuilder
     {

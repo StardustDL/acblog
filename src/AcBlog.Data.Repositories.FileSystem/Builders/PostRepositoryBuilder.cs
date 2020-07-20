@@ -15,31 +15,22 @@ using AcBlog.Data.Documents;
 using Microsoft.Extensions.FileProviders;
 using AcBlog.Data.Extensions;
 
-namespace AcBlog.Data.Repositories.FileSystem
+namespace AcBlog.Data.Repositories.FileSystem.Builders
 {
-    public class PostRepositoryBuilder
+    public class PostRepositoryBuilder : RecoderRepositoryBuilderBase<Post, string>
     {
-        public PostRepositoryBuilder(IList<Post> data, string rootPath)
+        public PostRepositoryBuilder(string rootPath) : base(rootPath)
         {
-            RootPath = rootPath;
-
-            Data = data;
         }
-
-        public PagingConfig PagingConfig { get; set; } = new PagingConfig();
 
         public IProtector<Document>? Protector { get; set; }
 
-        public string RootPath { get; }
-
-        protected IList<Post> Data { get; set; }
-
-        async Task BuildIndexType()
+        async Task BuildIndexType(IList<Post> data)
         {
             {
                 PagingProvider<string> paging = new PagingProvider<string>(Paths.GetArticleRoot(RootPath));
 
-                await paging.Build(Data.Where(
+                await paging.Build(data.Where(
                     x => x.Type == PostType.Article).ToList().Select(x => x.Id).ToArray(),
                     PagingConfig).ConfigureAwait(false);
             }
@@ -47,7 +38,7 @@ namespace AcBlog.Data.Repositories.FileSystem
             {
                 PagingProvider<string> paging = new PagingProvider<string>(Paths.GetSlidesRoot(RootPath));
 
-                await paging.Build(Data.Where(
+                await paging.Build(data.Where(
                     x => x.Type == PostType.Slides).ToList().Select(x => x.Id).ToArray(),
                     PagingConfig).ConfigureAwait(false);
             }
@@ -55,17 +46,17 @@ namespace AcBlog.Data.Repositories.FileSystem
             {
                 PagingProvider<string> paging = new PagingProvider<string>(Paths.GetNoteRoot(RootPath));
 
-                await paging.Build(Data.Where(
+                await paging.Build(data.Where(
                     x => x.Type == PostType.Note).ToList().Select(x => x.Id).ToArray(),
                     PagingConfig).ConfigureAwait(false);
             }
         }
 
-        async Task BuildIndexKeyword()
+        async Task BuildIndexKeyword(IList<Post> data)
         {
             FSStaticBuilder.EnsureDirectoryEmpty(Paths.GetKeywordRoot(RootPath));
 
-            var (collection, map) = KeywordCollectionBuilder.BuildFromPosts(Data);
+            var (collection, map) = KeywordCollectionBuilder.BuildFromPosts(data);
 
             foreach (var v in collection.Items)
             {
@@ -79,11 +70,11 @@ namespace AcBlog.Data.Repositories.FileSystem
             await JsonSerializer.SerializeAsync(st, collection).ConfigureAwait(false);
         }
 
-        async Task BuildIndexCategory()
+        async Task BuildIndexCategory(IList<Post> data)
         {
             FSStaticBuilder.EnsureDirectoryEmpty(Paths.GetCategoryRoot(RootPath));
 
-            var (tree, map) = CategoryTreeBuilder.BuildFromPosts(Data);
+            var (tree, map) = CategoryTreeBuilder.BuildFromPosts(data);
 
             Queue<CategoryTree.Node> q = new Queue<CategoryTree.Node>();
             foreach (var v in tree.Root.Children.Values)
@@ -106,31 +97,13 @@ namespace AcBlog.Data.Repositories.FileSystem
             await JsonSerializer.SerializeAsync(st, tree).ConfigureAwait(false);
         }
 
-        public async Task Build()
+        public override async Task Build(IList<Post> data)
         {
-            FSStaticBuilder.EnsureDirectoryEmpty(RootPath);
-
-            Data = (from x in Data orderby x.CreationTime descending select x).ToArray();
-
-            await BuildIndexType().ConfigureAwait(false);
-
-            await BuildIndexKeyword().ConfigureAwait(false);
-
-            await BuildIndexCategory().ConfigureAwait(false);
-
-            foreach (var v in Data)
-            {
-                Post post = v;
-                using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetFileById(RootPath, post.Id));
-                await JsonSerializer.SerializeAsync(st, post).ConfigureAwait(false);
-            }
-
-            {
-                PagingProvider<string> paging = new PagingProvider<string>(Paths.GetPaginationRoot(RootPath));
-
-                await paging.Build(Data.Select(x => x.Id).ToArray(),
-                    PagingConfig).ConfigureAwait(false);
-            }
+            data = (from x in data orderby x.CreationTime descending select x).ToArray();
+            await base.Build(data).ConfigureAwait(false);
+            await BuildIndexType(data).ConfigureAwait(false);
+            await BuildIndexKeyword(data).ConfigureAwait(false);
+            await BuildIndexCategory(data).ConfigureAwait(false);
         }
     }
 }

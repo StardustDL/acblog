@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using AcBlog.Sdk.Sitemap;
 using AcBlog.Sdk.Syndication;
 using System.Xml;
+using AcBlog.Data.Repositories.FileSystem.Builders;
 
 namespace AcBlog.Tools.Sdk.Models
 {
@@ -343,8 +344,8 @@ namespace AcBlog.Tools.Sdk.Models
                 }
 
                 {
-                    PostRepositoryBuilder builder = new PostRepositoryBuilder(posts, Path.Join(remote.Uri, "posts"));
-                    await builder.Build();
+                    PostRepositoryBuilder builder = new PostRepositoryBuilder(Path.Join(remote.Uri, "posts"));
+                    await builder.Build(posts);
                 }
 
                 {
