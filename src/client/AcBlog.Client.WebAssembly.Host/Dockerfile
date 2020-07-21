@@ -9,7 +9,6 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["src/client/AcBlog.Client.WebAssembly.Host/AcBlog.Client.WebAssembly.Host.csproj", "src/client/AcBlog.Client.WebAssembly.Host/"]
 COPY ["src/client/AcBlog.Client.WebAssembly/AcBlog.Client.WebAssembly.csproj", "src/client/AcBlog.Client.WebAssembly/"]
-COPY ["src/AcBlog.Data.Documents/AcBlog.Data.Documents.csproj", "src/AcBlog.Data.Documents/"]
 COPY ["src/AcBlog.Data/AcBlog.Data.csproj", "src/AcBlog.Data/"]
 COPY ["src/AcBlog.Sdk/AcBlog.Sdk.csproj", "src/AcBlog.Sdk/"]
 COPY ["src/AcBlog.Data.Repositories.FileSystem/AcBlog.Data.Repositories.FileSystem.csproj", "src/AcBlog.Data.Repositories.FileSystem/"]
