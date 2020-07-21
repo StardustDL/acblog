@@ -28,6 +28,10 @@ namespace AcBlog.Data.Repositories.FileSystem
 
         public static string GetKeywordRoot(string rootPath, Keyword keyword) => Path.Join(GetKeywordRoot(rootPath), Path.Combine(keyword.Items.Select(NameUtility.Encode).ToArray()));
 
+        public static string GetRouteRoot(string rootPath) => Path.Join(GetFilterRoot(rootPath), "routes");
+
+        public static string GetRouteFile(string rootPath, string route) => Path.Join(GetRouteRoot(rootPath), $"{NameUtility.Encode(route)}.json");
+
         public static string GetFileById(string rootPath, string id) => Path.Join(rootPath, $"{NameUtility.Encode(id)}.json");
     }
 }

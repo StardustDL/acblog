@@ -11,24 +11,29 @@ namespace AcBlog.Tools.Sdk.Repositories
 {
     public class LocalBlogService : IBlogService
     {
-        public LocalBlogService(string absPath, IFileProvider fileProvider)
+        public LocalBlogService(string rootPath)
         {
-            FileProvider = fileProvider;
-            PostService = new PostService(this, Path.Join(absPath, "posts"), "posts", FileProvider);
+            RootPath = rootPath;
+            PostService = new PostService(this, Path.Join(rootPath, "posts"));
+            PageService = new PageService(this, Path.Join(rootPath, "pages"));
+            LayoutService = new LayoutService(this, Path.Join(rootPath, "layouts"));
         }
 
-        public IFileProvider FileProvider { get; }
+        public string RootPath { get; }
 
-        public IPostService PostService { get; private set; }
+        public IPostService PostService { get; }
+
+        public IPageService PageService { get; }
+
+        public ILayoutService LayoutService { get; }
 
         public async Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default)
         {
-            var file = await FileProvider.GetFileInfo(Workspace.BlogOptionPath);
-
-            if(await file.Exists())
+            string path = Path.Join(RootPath, Workspace.BlogOptionPath);
+            if (File.Exists(path))
             {
-                using var st = await file.CreateReadStream();
-                return await JsonSerializer.DeserializeAsync<BlogOptions>(st);
+                using var st = File.OpenRead(path);
+                return await JsonSerializer.DeserializeAsync<BlogOptions>(st).ConfigureAwait(false);
             }
             else
             {

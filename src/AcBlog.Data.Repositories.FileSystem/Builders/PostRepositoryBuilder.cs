@@ -23,8 +23,6 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
         {
         }
 
-        public IProtector<Document>? Protector { get; set; }
-
         async Task BuildIndexType(IList<Post> data)
         {
             {

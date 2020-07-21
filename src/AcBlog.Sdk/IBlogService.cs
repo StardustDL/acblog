@@ -9,6 +9,10 @@ namespace AcBlog.Sdk
     {
         IPostService PostService { get; }
 
+        IPageService PageService { get; }
+
+        ILayoutService LayoutService { get; }
+
         Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default);
     }
 }

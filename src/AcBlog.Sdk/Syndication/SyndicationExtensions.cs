@@ -1,4 +1,5 @@
-﻿using AcBlog.Data.Models;
+﻿using AcBlog.Data.Extensions;
+using AcBlog.Data.Models;
 using AcBlog.Sdk.Helpers;
 using Markdig;
 using System;
@@ -35,7 +36,7 @@ namespace AcBlog.Sdk.Syndication
                 }*/
             }
             {
-                var posts = await service.PostService.GetPosts(await service.PostService.All());
+                var posts = await service.PostService.GetAllItems();
                 List<SyndicationItem> items = new List<SyndicationItem>();
                 foreach (var p in posts)
                 {

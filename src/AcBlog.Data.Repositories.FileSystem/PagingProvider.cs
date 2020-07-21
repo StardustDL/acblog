@@ -53,8 +53,7 @@ namespace AcBlog.Data.Repositories.FileSystem
             {
                 string path = GetPagePath(pagination.CurrentPage);
                 using var fs = await (await FileProvider.GetFileInfo(path).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
-                return JsonSerializer.DeserializeAsync<IList<TId>>(fs)
-                    .ConfigureAwait(false).GetAwaiter().GetResult();
+                return await JsonSerializer.DeserializeAsync<IList<TId>>(fs).ConfigureAwait(false);
             }
             else
             {

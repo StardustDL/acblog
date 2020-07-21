@@ -15,6 +15,17 @@ namespace AcBlog.Data.Models.Actions
 
     public class QueryResponse<T>
     {
+        public QueryResponse(IList<T> results)
+        {
+            Results = results;
+            CurrentPage = new Pagination
+            {
+                CurrentPage = 0,
+                PageSize = results.Count,
+                TotalCount = results.Count
+            };
+        }
+
         public QueryResponse(IEnumerable<T> results, Pagination currentPage)
         {
             Results = results;

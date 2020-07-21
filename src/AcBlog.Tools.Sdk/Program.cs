@@ -72,7 +72,7 @@ namespace AcBlog.Tools.Sdk
                             .Configure<DB>(context.Configuration.GetSection("db"));
                         services.AddSingleton((services) =>
                         {
-                            return new LocalBlogService(Environment.CurrentDirectory, new PhysicalFileProvider(Environment.CurrentDirectory).AsFileProvider());
+                            return new LocalBlogService(Environment.CurrentDirectory);
                         });
                         services.AddSingleton<Workspace>();
                     });

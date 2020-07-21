@@ -1,12 +1,10 @@
-﻿using AcBlog.Data.Documents;
-using AcBlog.Data.Models;
+﻿using AcBlog.Data.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace AcBlog.Tools.Sdk.Models.Text
 {
-    public class PostMetadata
+    public class PostMetadata : MetadataBase<Post>
     {
         public string id { get; set; } = string.Empty;
 
@@ -40,13 +38,13 @@ namespace AcBlog.Tools.Sdk.Models.Text
             type = Enum.GetName(typeof(PostType), data.Type)?.ToLowerInvariant() ?? string.Empty;
         }
 
-        public void ApplyTo(Post data)
+        public override void ApplyTo(Post data)
         {
             data.Id = id;
             data.Title = title;
             data.Category = new Category(category);
             data.Keywords = new Keyword(keywords);
-            if(DateTimeOffset.TryParse(creationTime,out var _creationTime))
+            if (DateTimeOffset.TryParse(creationTime, out var _creationTime))
             {
                 data.CreationTime = _creationTime;
             }

@@ -27,6 +27,7 @@ using AcBlog.Sdk.Sitemap;
 using AcBlog.Sdk.Syndication;
 using System.Xml;
 using AcBlog.Data.Repositories.FileSystem.Builders;
+using AcBlog.Data.Extensions;
 
 namespace AcBlog.Tools.Sdk.Models
 {
@@ -210,8 +211,11 @@ namespace AcBlog.Tools.Sdk.Models
                     {
                         await Connect(name);
                         Logger.LogInformation($"Fetch remote posts.");
+
+                        // TODO: Pages & layouts
+
                         HashSet<string> remoteIds = (await Remote.PostService.All()).ToHashSet();
-                        foreach (var item in await Local.PostService.GetAllPosts())
+                        foreach (var item in await Local.PostService.GetAllItems())
                         {
                             if (item is null)
                                 continue;
@@ -328,12 +332,30 @@ namespace AcBlog.Tools.Sdk.Models
                 fsBuilder.EnsureDirectoryEmpty();
 
                 List<Post> posts = new List<Post>();
-                foreach (var item in await Local.PostService.GetAllPosts())
+                foreach (var item in await Local.PostService.GetAllItems())
                 {
                     if (item is null)
                         continue;
-                    Logger.LogInformation($"Loaded {item.Id}: {item.Title}");
+                    Logger.LogInformation($"Loaded Post {item.Id}: {item.Title}");
                     posts.Add(item);
+                }
+
+                List<Layout> layouts = new List<Layout>();
+                foreach (var item in await Local.LayoutService.GetAllItems())
+                {
+                    if (item is null)
+                        continue;
+                    Logger.LogInformation($"Loaded Layout {item.Id}");
+                    layouts.Add(item);
+                }
+
+                List<Page> pages = new List<Page>();
+                foreach (var item in await Local.PageService.GetAllItems())
+                {
+                    if (item is null)
+                        continue;
+                    Logger.LogInformation($"Loaded Page {item.Id}: {item.Title}");
+                    pages.Add(item);
                 }
 
                 Logger.LogInformation("Build data.");
@@ -341,11 +363,9 @@ namespace AcBlog.Tools.Sdk.Models
                     BlogOptions options = await Local.GetOptions();
                     BlogBuilder builder = new BlogBuilder(options, Path.Join(remote.Uri));
                     await builder.Build();
-                }
-
-                {
-                    PostRepositoryBuilder builder = new PostRepositoryBuilder(Path.Join(remote.Uri, "posts"));
-                    await builder.Build(posts);
+                    await builder.BuildPosts(posts);
+                    await builder.BuildLayouts(layouts);
+                    await builder.BuildPages(pages);
                 }
 
                 {

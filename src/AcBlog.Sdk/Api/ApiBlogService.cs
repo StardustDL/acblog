@@ -15,11 +15,19 @@ namespace AcBlog.Sdk.Api
             HttpClient = httpClient;
 
             PostService = new PostService(this, httpClient);
+
+            PageService = new PageService(this, httpClient);
+
+            LayoutService = new LayoutService(this, httpClient);
         }
 
         public HttpClient HttpClient { get; }
 
-        public IPostService PostService { get; private set; }
+        public IPostService PostService { get; }
+
+        public IPageService PageService { get; }
+
+        public ILayoutService LayoutService { get; }
 
         const string PrepUrl = "/Blog";
 
