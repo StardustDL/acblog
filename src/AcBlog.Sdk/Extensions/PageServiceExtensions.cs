@@ -1,6 +1,6 @@
 ﻿using AcBlog.Sdk.Filters;
 
-namespace AcBlog.Sdk
+namespace AcBlog.Sdk.Extensions
 {
     public static class PageServiceExtensions
     {

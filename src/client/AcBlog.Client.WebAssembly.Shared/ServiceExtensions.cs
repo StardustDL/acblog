@@ -12,6 +12,7 @@ using StardustDL.Extensions.FileProviders.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
+using AcBlog.Sdk.Extensions;
 
 namespace AcBlog.Client.WebAssembly
 {

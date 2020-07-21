@@ -22,9 +22,10 @@
                 </small>
             }
         </div>
-        @if (!string.IsNullOrEmpty(Value.Content.Raw))
-        {
-            <div>
+
+        <div>
+            @if (!string.IsNullOrEmpty(Value.Content.Raw))
+            {
                 <small class="m-1"></small>
                 <small>
                     <WordCountDisplay Document="@Value.Content" />
@@ -33,8 +34,12 @@
                 <small>
                     <ReadTimeDisplay Document="@Value.Content" />
                 </small>
-            </div>
-        }
+            }
+            <small class="m-1"></small>
+            <small>
+                <PostVisitorDisplay Data="@Value" />
+            </small>
+        </div>
     </div>
 }
 

@@ -4,7 +4,7 @@ using AcBlog.Data.Repositories;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AcBlog.Sdk
+namespace AcBlog.Sdk.Extensions
 {
     public static class StatisticServiceExtensions
     {
@@ -20,6 +20,16 @@ namespace AcBlog.Sdk
             }
 
             public Task<long> Count(StatisticQueryRequest query, CancellationToken cancellationToken = default) => Repository.Count(query, cancellationToken);
+        }
+
+        public static string GetStatisticUri(this Post value)
+        {
+            return $"posts/{value.Id}";
+        }
+
+        public static string GetStatisticUri(this Page value)
+        {
+            return $"pages/{value.Id}";
         }
     }
 }

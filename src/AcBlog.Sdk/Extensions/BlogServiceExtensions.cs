@@ -1,4 +1,4 @@
-﻿namespace AcBlog.Sdk
+﻿namespace AcBlog.Sdk.Extensions
 {
     public static class BlogServiceExtensions
     {

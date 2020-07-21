@@ -69,6 +69,8 @@
             }
         </div>
     }
+
+    
 </Loader>
 
 @code {
@@ -92,7 +94,7 @@
         await loader.Load();
     }
 
-    private Task OnLoaded()
+    private async Task OnLoaded()
     {
         if (Post is null)
         {
@@ -109,8 +111,8 @@
             {
                 Title = Post.Title;
             }
+            await Service.StatisticVisited(Post);
         }
-        return Task.CompletedTask;
     }
 
     private async Task OnLoad()

@@ -1,0 +1,20 @@
+﻿@inject IBlogService Service
+
+@if (Count != null)
+{
+    <span class="itemdisplay">
+        <span class="mdi mdi-eye">@Count.Value</span>
+    </span>
+}
+
+@code {
+    [Parameter]
+    public Post Data { get; set; }
+
+    private long? Count { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Count = await Service.StatisticCount(Data);
+    }
+}
