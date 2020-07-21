@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\AcBlog.Data.Repositories.Externals\AcBlog.Data.Repositories.Externals.csproj" />
     <ProjectReference Include="..\..\AcBlog.Sdk\AcBlog.Sdk.csproj" />
     <ProjectReference Include="..\..\StardustDL.Extensions.FileProviders.Http\StardustDL.Extensions.FileProviders.Http.csproj" />
   </ItemGroup>

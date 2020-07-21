@@ -13,6 +13,10 @@ namespace AcBlog.Sdk
 
         ILayoutService LayoutService { get; }
 
+        ICommentService CommentService { get; }
+
+        IStatisticService StatisticService { get; }
+
         Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default);
     }
 }

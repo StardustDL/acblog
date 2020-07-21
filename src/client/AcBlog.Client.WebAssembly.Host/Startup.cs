@@ -51,7 +51,7 @@ namespace AcBlog.Client.WebAssembly.Host
 
             services.AddClientConfigurations(Configuration);
 
-            services.AddServerPrerenderAuthorization(new IdentityProvider { Enable = false });
+            services.AddServerPrerenderAuthorization();
 
             services.AddBlogService(Configuration.GetBaseAddress());
         }

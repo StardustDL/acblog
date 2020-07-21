@@ -116,5 +116,15 @@ namespace AcBlog.Data.Repositories.Externals
                 Uri = value.Uri
             }, cancellationToken);
         }
+
+        public Task<long> Count(StatisticQueryRequest query, CancellationToken cancellationToken = default)
+        {
+            return Service.Count(new Listat.Models.StatisticQuery
+            {
+                Category = query.Category,
+                Payload = query.Payload,
+                Uri = query.Uri,
+            }, cancellationToken);
+        }
     }
 }

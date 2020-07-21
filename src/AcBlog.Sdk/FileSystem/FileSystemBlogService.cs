@@ -26,6 +26,10 @@ namespace AcBlog.Sdk.FileSystem
 
         public ILayoutService LayoutService { get; }
 
+        public ICommentService CommentService => throw new NotImplementedException();
+
+        public IStatisticService StatisticService => throw new NotImplementedException();
+
         public async Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default)
         {
             using var fs = await (await FileProvider.GetFileInfo("blog.json").ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);

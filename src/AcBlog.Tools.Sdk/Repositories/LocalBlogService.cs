@@ -27,6 +27,10 @@ namespace AcBlog.Tools.Sdk.Repositories
 
         public ILayoutService LayoutService { get; }
 
+        public ICommentService CommentService => throw new System.NotImplementedException();
+
+        public IStatisticService StatisticService => throw new System.NotImplementedException();
+
         public async Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default)
         {
             string path = Path.Join(RootPath, Workspace.BlogOptionPath);

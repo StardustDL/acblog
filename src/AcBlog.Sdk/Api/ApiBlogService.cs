@@ -29,6 +29,10 @@ namespace AcBlog.Sdk.Api
 
         public ILayoutService LayoutService { get; }
 
+        public ICommentService CommentService => throw new NotImplementedException();
+
+        public IStatisticService StatisticService => throw new NotImplementedException();
+
         const string PrepUrl = "/Blog";
 
         public async Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default)

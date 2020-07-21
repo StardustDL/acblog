@@ -63,11 +63,10 @@ namespace AcBlog.Client.WebAssembly
                 }
 
                 await LoadBuildStatus(builder, client);
-                await LoadServerSettings(builder, client);
-                var identityProvider = await LoadIdentityProvider(builder, client);
+                var serverSettings = await LoadServerSettings(builder, client);
 
                 builder.Services.AddClientConfigurations(builder.Configuration);
-                builder.Services.AddClientAuthorization(identityProvider);
+                builder.Services.AddClientAuthorization(serverSettings.Identity);
                 builder.Services.AddBlogService(builder.HostEnvironment.BaseAddress);
             }
 
@@ -91,22 +90,6 @@ namespace AcBlog.Client.WebAssembly
             }
             ServerSettings res = new ServerSettings();
             builder.Configuration.GetSection("Server").Bind(res);
-            return res;
-        }
-
-        static async Task<IdentityProvider> LoadIdentityProvider(WebAssemblyHostBuilder builder, HttpClient client)
-        {
-            if (HasHost)
-            {
-                using var response = await client.GetAsync("Server/Identity");
-                using var stream = await response.Content.ReadAsStreamAsync();
-                builder.Configuration.AddJsonStream(stream);
-            }
-            else
-            {
-            }
-            IdentityProvider res = new IdentityProvider();
-            builder.Configuration.GetSection("IdentityProvider").Bind(res);
             return res;
         }
 

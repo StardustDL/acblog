@@ -11,41 +11,17 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Sdk.FileSystem
 {
-    internal class PostService : IPostService
+    internal class PostService : RecordRepoBaseService<Post, string, PostQueryRequest, IPostRepository>, IPostService
     {
-        PostFSReader Reader { get; }
-
-        public RepositoryAccessContext Context { get => Reader.Context; set => Reader.Context = value; }
-
-        public IBlogService BlogService { get; }
+        public PostService(IBlogService blog, string rootPath, IFileProvider fileProvider) : base(blog, new PostFSReader(rootPath, fileProvider))
+        {
+            Protector = new DocumentProtector();
+        }
 
         public IProtector<Document> Protector { get; }
 
-        public PostService(IBlogService blog, string rootPath, IFileProvider fileProvider)
-        {
-            BlogService = blog;
-            Protector = new DocumentProtector();
-            Reader = new PostFSReader(rootPath, fileProvider);
-        }
+        public Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default) => Repository.GetCategories(cancellationToken);
 
-        public Task<IEnumerable<string>> All(CancellationToken cancellationToken = default) => Reader.All(cancellationToken);
-
-        public Task<string?> Create(Post value, CancellationToken cancellationToken = default) => Reader.Create(value, cancellationToken);
-
-        public Task<bool> Delete(string id, CancellationToken cancellationToken = default) => Reader.Delete(id, cancellationToken);
-
-        public Task<bool> Exists(string id, CancellationToken cancellationToken = default) => Reader.Exists(id, cancellationToken);
-
-        public Task<Post?> Get(string id, CancellationToken cancellationToken = default) => Reader.Get(id, cancellationToken);
-
-        public Task<bool> Update(Post value, CancellationToken cancellationToken = default) => Reader.Update(value, cancellationToken);
-
-        public Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default) => Reader.Query(query, cancellationToken);
-
-        public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Reader.GetStatus(cancellationToken);
-
-        public Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default) => Reader.GetCategories(cancellationToken);
-
-        public Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default) => Reader.GetKeywords(cancellationToken);
+        public Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default) => Repository.GetKeywords(cancellationToken);
     }
 }

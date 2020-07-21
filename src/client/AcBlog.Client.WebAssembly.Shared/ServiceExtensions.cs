@@ -20,38 +20,16 @@ namespace AcBlog.Client.WebAssembly
         public static void AddClientConfigurations(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<ServerSettings>(configuration.GetSection("Server"));
-            services.Configure<IdentityProvider>(configuration.GetSection("IdentityProvider"));
             services.Configure<BuildStatus>(configuration.GetSection("Build"));
         }
 
         public static void AddBlogService(this IServiceCollection services, string baseAddress)
         {
-            services.AddScoped<IBlogService>(sp =>
+            services.PostConfigure<ServerSettings>(settings =>
             {
-                var server = sp.GetRequiredService<IOptions<ServerSettings>>().Value;
-                var client = sp.GetRequiredService<IHttpClientFactory>().CreateClient();
-                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
-                {
-                    NoCache = true
-                };
-                if (string.IsNullOrEmpty(server.Url))
-                {
-                    client.BaseAddress = new Uri($"{baseAddress.TrimEnd('/')}/data/");
-                    return new FileSystemBlogService(new HttpFileProvider(client));
-                }
-                else if (server.IsStatic)
-                {
-                    if (!server.Url.EndsWith("/"))
-                        server.Url += "/";
-                    client.BaseAddress = new Uri(server.Url);
-                    return new FileSystemBlogService(new HttpFileProvider(client));
-                }
-                else
-                {
-                    client.BaseAddress = new Uri(server.Url);
-                    return new ApiBlogService(client);
-                }
+                settings.BaseAddress = baseAddress;
             });
+            services.AddScoped<IBlogService, ClientBlogService>();
 
             services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PostService.CreateArticleFilter());
             services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PostService.CreateSlidesFilter());

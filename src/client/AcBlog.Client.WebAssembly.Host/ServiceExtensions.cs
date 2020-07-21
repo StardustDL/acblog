@@ -8,7 +8,7 @@ namespace AcBlog.Client.WebAssembly.Host
 {
     public static class ServiceExtensions
     {
-        public static void AddServerPrerenderAuthorization(this IServiceCollection services, IdentityProvider identityProvider)
+        public static void AddServerPrerenderAuthorization(this IServiceCollection services)
         {
             services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
             services.AddScoped<SignOutSessionStateManager>();

@@ -22,7 +22,7 @@ namespace AcBlog.Client.WebAssembly
                 .AddExtension<AntDesignUIComponent>();
         }
 
-        public static void AddClientAuthorization(this IServiceCollection services, IdentityProvider identityProvider)
+        public static void AddClientAuthorization(this IServiceCollection services, IdentityServerSettings identityProvider)
         {
             if (identityProvider.Enable)
             {
