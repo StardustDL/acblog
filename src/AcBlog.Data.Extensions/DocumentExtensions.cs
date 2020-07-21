@@ -1,9 +1,8 @@
-﻿using Markdig;
+﻿using AcBlog.Data.Documents;
+using Markdig;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace AcBlog.Data.Documents
+namespace AcBlog.Data.Extensions
 {
     public static class DocumentExtensions
     {

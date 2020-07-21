@@ -58,6 +58,7 @@ namespace AcBlog.Client.WebAssembly
             services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PostService.CreateNoteFilter());
             services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PostService.CreateKeywordFilter());
             services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PostService.CreateCategoryFilter());
+            services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PageService.CreateRouteFilter());
         }
     }
 }

@@ -12,9 +12,10 @@
     @if (Data.CurrentPage != null)
     {
         <div class="text-center m-1">
+            @* disable CurrentChanged="onPageTo" to use url navigation *@
             <AntDesign.Pagination Total="Data.CurrentPage.TotalCount" Current="Data.CurrentPage.CurrentPage + 1"
-                        PageSize="Data.CurrentPage.PageSize"
-                        CurrentChanged="onPageTo" ItemRender="PaginationItemRenderer" ShowSizeChanger="@false"></AntDesign.Pagination>
+                                  PageSize="Data.CurrentPage.PageSize"
+                                  ItemRender="PaginationItemRenderer" ShowSizeChanger="@false"></AntDesign.Pagination>
         </div>
     }
 }
@@ -51,7 +52,19 @@
     @<Template>
         @if (ctx.Type == "page")
         {
-            <a href="@($"{PageNavigationUrl}/pages/{ctx.Page - 1}")" @onclick:preventDefault>@(ctx.Page)</a>
+            <a href="@($"{PageNavigationUrl}/pages/{ctx.Page - 1}")">@(ctx.Page)</a>
+        }
+        else if (ctx.Type == "prev" && Data.CurrentPage.HasPreviousPage)
+        {
+            <a href="@($"{PageNavigationUrl}/pages/{Data.CurrentPage.CurrentPage - 1}")">
+                @("<")
+            </a>
+        }
+        else if (ctx.Type == "next" && Data.CurrentPage.HasNextPage)
+        {
+            <a href="@($"{PageNavigationUrl}/pages/{Data.CurrentPage.CurrentPage + 1}")">
+                @(">")
+            </a>
         }
         else
         {

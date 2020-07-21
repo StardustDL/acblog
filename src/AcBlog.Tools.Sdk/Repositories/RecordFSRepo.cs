@@ -17,8 +17,10 @@ namespace AcBlog.Tools.Sdk.Repositories
 {
     internal abstract class RecordFSRepo<T, TQuery, TMeta> : RecordFSRepository<T, string, TQuery> where T : class, IHasId<string> where TQuery : QueryRequest, new() where TMeta : MetadataBase<T>, new()
     {
-        public RecordFSRepo(string rootPath) : base(rootPath, new PhysicalFileProvider(rootPath).AsFileProvider())
+        public RecordFSRepo(string rootPath) : base(rootPath)
         {
+            FSStaticBuilder.EnsureDirectoryExists(rootPath);
+            FileProvider = new PhysicalFileProvider(rootPath).AsFileProvider();
         }
 
         Lazy<RepositoryStatus> _status = new Lazy<RepositoryStatus>(() =>

@@ -91,6 +91,8 @@ namespace AcBlog.Tools.Sdk.Models
             await Save();
             FSBuilder builder = new FSBuilder(Environment.CurrentDirectory);
             builder.EnsureDirectoryExists("posts");
+            builder.EnsureDirectoryExists("pages");
+            builder.EnsureDirectoryExists("layouts");
             builder.EnsureDirectoryExists(AssetsPath);
 
             {

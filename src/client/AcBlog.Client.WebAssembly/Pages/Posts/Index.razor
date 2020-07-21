@@ -52,6 +52,11 @@
 
     private Loader loader;
 
+    protected override async Task OnParametersSetAsync()
+    {
+        await loader.Load();
+    }
+
     private async Task OnLoad()
     {
         Title = "Loading...";

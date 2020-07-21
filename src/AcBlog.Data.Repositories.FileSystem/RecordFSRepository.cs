@@ -1,5 +1,6 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
+using Microsoft.Extensions.FileProviders;
 using StardustDL.Extensions.FileProviders;
 using System.Collections.Generic;
 using System.Threading;
@@ -9,7 +10,13 @@ namespace AcBlog.Data.Repositories.FileSystem
 {
     public abstract class RecordFSRepository<T, TId, TQuery> : IRecordRepository<T, TId, TQuery> where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
     {
-        protected RecordFSRepository(string rootPath, IFileProvider fileProvider)
+        protected RecordFSRepository(string rootPath)
+        {
+            RootPath = rootPath;
+            FileProvider = new NullFileProvider().AsFileProvider();
+        }
+
+        protected RecordFSRepository(string rootPath, StardustDL.Extensions.FileProviders.IFileProvider fileProvider)
         {
             RootPath = rootPath;
             FileProvider = fileProvider;
@@ -17,7 +24,7 @@ namespace AcBlog.Data.Repositories.FileSystem
 
         public string RootPath { get; }
 
-        protected IFileProvider FileProvider { get; }
+        protected StardustDL.Extensions.FileProviders.IFileProvider FileProvider { get; set; }
 
         public RepositoryAccessContext Context { get; set; } = new RepositoryAccessContext();
 
