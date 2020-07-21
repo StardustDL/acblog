@@ -34,7 +34,14 @@ else
             @ChildContent
             break;
         case DataLoadingState.Failed:
-            <Alert Message="Loading Failed" Type="@AlertType.Error" OnClose="@Load" CloseText="Reload" ShowIcon Closable />
+            @if (FailingContent is null)
+            {
+                <Alert Message="Loading Failed" Type="@AlertType.Error" OnClose="@Load" CloseText="Reload" ShowIcon Closable />
+            }
+            else
+            {
+                @FailingContent
+            }
             break;
     }
 }
@@ -49,6 +56,9 @@ else
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment FailingContent { get; set; }
 
     [Parameter]
     public EventCallback OnLoad { get; set; }
@@ -84,11 +94,11 @@ else
         catch (Exception ex)
         {
             Logger.Log(LogLevel.Error, ex, "Loading failed");
+            State = DataLoadingState.Failed;
             await NotificationService.Error(new NotificationConfig
             {
                 Message = "Loading failed",
             });
-            State = DataLoadingState.Failed;
         }
     }
 

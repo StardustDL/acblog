@@ -40,7 +40,7 @@ namespace AcBlog.Tools.Sdk.Repositories
             foreach (var file in Directory.EnumerateFiles(RootPath, "*.md", SearchOption.AllDirectories))
             {
                 var name = Path.GetRelativePath(RootPath, file);
-                result.Add(name.Substring(0, name.Length - 3));
+                result.Add(name.Substring(0, name.Length - 3).Replace('\\', '/'));
             }
             return Task.FromResult<IEnumerable<string>>(result);
         }

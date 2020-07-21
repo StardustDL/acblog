@@ -1,5 +1,6 @@
 @inject IJSRuntime JSRuntime
 @inject IOptions<RuntimeOptions> RuntimeOptions
+@inject NavigationManager NavigationManager
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly">
@@ -31,9 +32,7 @@
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(MainLayout)">
-                <Result Status="404"
-                        Title=@("Not Found")
-                        SubTitle=@("Sorry, the page you visited does not exist.")/>
+                <AcBlog.Client.WebAssembly.Pages.Pages.View Route="@NavigationManager.ToBaseRelativePath(NavigationManager.Uri)"/>
             </LayoutView>
         </NotFound>
     </Router>

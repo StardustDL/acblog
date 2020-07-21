@@ -1,144 +1,77 @@
-﻿@page "/pages/{route}"
-@inject NotificationService NotificationService
+﻿@page "/pages/view/{route}"
+
 @inherits BasePagePage
 @inject AcBlog.Sdk.Filters.PageRouteFilter Routes
 @using AcBlog.Client.WebAssembly.Components.Renderers
 
-<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded">
-    <PageHeader>
-        <PageHeaderTitle>
-            @Post.Title
-        </PageHeaderTitle>
-        <PageHeaderBreadcrumb>
-            <Breadcrumb>
-                <BreadcrumbItem>
-                    <a href="">
-                        <MdiIcon Type="home" />
-                        <span>Home</span>
-                    </a>
-                </BreadcrumbItem>
-                <BreadcrumbItem>
-                    <a href="posts">
-                        <MdiIcon Type="archive" />
-                        <span>Posts</span>
-                    </a>
-                </BreadcrumbItem>
-                <BreadcrumbItem>
-                    <span>@Post.Id</span>
-                </BreadcrumbItem>
-            </Breadcrumb>
-        </PageHeaderBreadcrumb>
-        <PageHeaderExtra>
-            <div class="btn-group-toggle my-auto" role="group">
-                <AuthorizeView>
-                    <Authorized>
-                        <a class="btn btn-primary mdi mdi-square-edit-outline" href="posts/@Uri.EscapeDataString(Id)/edit">Edit</a>
-                    </Authorized>
-                </AuthorizeView>
-            </div>
-        </PageHeaderExtra>
-        <PageHeaderTags>
-            @{ 
-                // TODO: PageMetadataDisplay
-            }
-            @*<PostMetadataDisplay Value="@Post" />*@
-        </PageHeaderTags>
-    </PageHeader>
+<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" AutoLoad="@false" @ref="loader">
+    <ChildContent>
+        <PageHeader>
+            <PageHeaderTitle>
+                @Page.Title
+            </PageHeaderTitle>
+            <PageHeaderBreadcrumb>
+                <Breadcrumb>
+                    <BreadcrumbItem>
+                        <a href="">
+                            <MdiIcon Type="home" />
+                            <span>Home</span>
+                        </a>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem>
+                        <a href="pages">
+                            <MdiIcon Type="book-open" />
+                            <span>Pages</span>
+                        </a>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem>
+                        <span>@Page.Id</span>
+                    </BreadcrumbItem>
+                </Breadcrumb>
+            </PageHeaderBreadcrumb>
+        </PageHeader>
 
-    @if (IsProtected)
-    {
-        <Modal Title="@("Input Password")" Visible="inputPasswordModalVisible" OnOk="e=>OnPasswordSubmit()" OnCancel="e => inputPasswordModalVisible = false">
-            <InputPassword @bind-Value="@Password" Size="@InputSize.Large" OnPressEnter="e=>OnPasswordSubmit()" />
-        </Modal>
-    }
-    else
-    {
-        <div class="container">
-            @switch (Post.Type)
-            {
-                case PostType.Article:
-                case PostType.Note:
-                    <ArticleRenderer Document="@Post.Content"></ArticleRenderer>
-                    break;
-                case PostType.Slides:
-                    <SlidesRenderer Document="@Post.Content" Style="@SlidesStyle"></SlidesRenderer>
-                    <button type="button" class="btn btn-primary mt-2" style="width: 100%;" @onclick="@OnFullViewClick">Full View</button>
-                    break;
-                default:
-                    break;
-            }
-        </div>
-    }
+        @((MarkupString)Page.Content)
+    </ChildContent>
+
+    <FailingContent>
+        <Result Status="404"
+                Title=@("Not Found")
+                SubTitle=@("Sorry, the page you visited does not exist.") />
+    </FailingContent>
 </Loader>
 
 @code {
     [Parameter]
-    public string Id { get; set; }
+    public string Route { get; set; }
 
-    private Post Post { get; set; }
+    private Loader loader;
 
-    private bool IsProtected { get; set; } = false;
+    private Page Page { get; set; }
 
-    private bool inputPasswordModalVisible = false;
-
-    private string Password { get; set; } = string.Empty;
-
-    private string SlidesStyle { get; set; } = "border: 0; height: 500px; width: 100%";
+    protected override async Task OnParametersSetAsync()
+    {
+        Console.WriteLine($"Route {Route}");
+        await loader.Load();
+    }
 
     private Task OnLoaded()
     {
-        if (Post is null)
+        if (Page is null)
         {
             Title = "Loading...";
         }
         else
         {
-            if (IsProtected)
-            {
-                Title = "Protected Post";
-                inputPasswordModalVisible = true;
-            }
-            else
-            {
-                Title = Post.Title;
-            }
+            Title = Page.Title;
         }
         return Task.CompletedTask;
     }
 
     private async Task OnLoad()
     {
-        Post = await Service.PostService.Get(Id);
-        IsProtected = await Service.PostService.Protector.IsProtected(Post.Content);
-    }
-
-    private async Task OnPasswordSubmit()
-    {
-        try
-        {
-            Document dep = await Service.PostService.Protector.Deprotect(Post.Content, new Data.Protections.ProtectionKey
-            {
-                Password = Password
-            });
-            Post.Content = dep;
-            IsProtected = await Service.PostService.Protector.IsProtected(Post.Content);
-            if (!IsProtected)
-                inputPasswordModalVisible = false;
-        }
-        catch
-        {
-            inputPasswordModalVisible = true;
-
-            await NotificationService.Error(new NotificationConfig
-            {
-                Message = "Wrong password",
-            });
-        }
-    }
-
-    private Task OnFullViewClick()
-    {
-        SlidesStyle = "left: 0; right: 0; top: 0; bottom: 0; margin:0; border:0; position: absolute; height: 100%; width:100%; z-index: 500;";
-        return Task.CompletedTask;
+        var pages = await Routes.Filter(Route, null);
+        var id = pages.Results.First();
+        Page = await Service.PageService.Get(id);
     }
 }

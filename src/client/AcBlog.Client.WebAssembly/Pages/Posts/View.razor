@@ -3,7 +3,7 @@
 @inherits BasePostPage
 @using AcBlog.Client.WebAssembly.Components.Renderers
 
-<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded">
+<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" AutoLoad="@false" @ref="loader">
     <PageHeader>
         <PageHeaderTitle>
             @Post.Title
@@ -84,6 +84,13 @@
     private string Password { get; set; } = string.Empty;
 
     private string SlidesStyle { get; set; } = "border: 0; height: 500px; width: 100%";
+
+    private Loader loader;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await loader.Load();
+    }
 
     private Task OnLoaded()
     {

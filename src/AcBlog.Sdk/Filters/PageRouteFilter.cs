@@ -11,9 +11,10 @@ namespace AcBlog.Sdk.Filters
 
         public override Task<QueryResponse<string>> Filter(string? arg, Pagination? pagination)
         {
+            string route = (arg ?? string.Empty).Trim('/');
             return BaseService.Query(new PageQueryRequest
             {
-                Route = arg ?? string.Empty,
+                Route = route,
                 Pagination = pagination
             });
         }
