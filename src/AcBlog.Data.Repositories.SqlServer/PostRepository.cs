@@ -28,7 +28,7 @@ namespace AcBlog.Data.Repositories.SqlServer
 
         DataContext Data { get; set; }
 
-        public RepositoryAccessContext Context { get; set; }
+        public RepositoryAccessContext Context { get; set; } = new RepositoryAccessContext();
 
         public async Task<IEnumerable<string>> All(CancellationToken cancellationToken = default) => await Data.Posts.Select(x => x.Id).ToArrayAsync(cancellationToken).ConfigureAwait(false);
 

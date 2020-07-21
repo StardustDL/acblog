@@ -85,6 +85,7 @@ Task Deploy-packages {
     Exec { dotnet nuget push ./packages/AcBlog.Data.Extensions.$build_version.nupkg -s aza -k az }
     Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$build_version.nupkg -s aza -k az }
     Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$build_version.nupkg -s aza -k az }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.Externals.$build_version.nupkg -s aza -k az }
     Exec { dotnet nuget push ./packages/AcBlog.Sdk.$build_version.nupkg -s aza -k az }
     Exec { dotnet nuget push ./packages/AcBlog.Tools.Sdk.$build_version.nupkg -s aza -k az }
 }
@@ -94,6 +95,7 @@ Task Deploy-packages-release {
     Exec { dotnet nuget push ./packages/AcBlog.Data.Extensions.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
     Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
     Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.Externals.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
     Exec { dotnet nuget push ./packages/AcBlog.Sdk.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
     Exec { dotnet nuget push ./packages/AcBlog.Tools.Sdk.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
 }

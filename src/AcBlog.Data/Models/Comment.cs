@@ -14,6 +14,8 @@ namespace AcBlog.Data.Models
 
         public string Link { get; set; } = string.Empty;
 
+        public string Extra { get; set; } = string.Empty;
+
         public DateTimeOffset CreationTime { get; set; }
 
         public DateTimeOffset ModificationTime { get; set; }
