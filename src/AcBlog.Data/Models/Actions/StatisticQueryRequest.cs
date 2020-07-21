@@ -6,6 +6,6 @@
 
         public string Uri { get; set; } = string.Empty;
 
-        public string Data { get; set; } = string.Empty;
+        public string Payload { get; set; } = string.Empty;
     }
 }

@@ -27,11 +27,15 @@ The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub P
   - Markdown rendering
   - LaTeX math rendering
   - Diagram rendering
+  - Media links
   - Password protection
   - Table of contents
 - Slides
   - Preview & Full page
 - Note
+- Custom pages
+  - Layout
+  - Full HTML
 - Docker deployment
   - [![Docker](https://img.shields.io/docker/pulls/acblog/wasm.svg)](https://hub.docker.com/r/acblog/wasm) Client.WebAssembly
   - [![Docker](https://img.shields.io/docker/pulls/acblog/wasm-host.svg)](https://hub.docker.com/r/acblog/wasm-host) Client.WebAssembly.Host

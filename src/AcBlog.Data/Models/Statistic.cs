@@ -1,4 +1,6 @@
-﻿namespace AcBlog.Data.Models
+﻿using System;
+
+namespace AcBlog.Data.Models
 {
     public class Statistic : IHasId<string>
     {
@@ -8,6 +10,10 @@
 
         public string Uri { get; set; } = string.Empty;
 
-        public string Data { get; set; } = string.Empty;
+        public string Payload { get; set; } = string.Empty;
+
+        public DateTimeOffset CreationTime { get; set; }
+
+        public DateTimeOffset ModificationTime { get; set; }
     }
 }
