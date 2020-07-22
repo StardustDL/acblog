@@ -3,7 +3,7 @@
 @inherits BasePostPage
 @using AcBlog.Client.WebAssembly.Components.Renderers
 
-<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" AutoLoad="@false" @ref="loader">
+<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" AutoLoad="@true" @ref="loader">
     <PageHeader>
         <PageHeaderTitle>
             @Post.Title
@@ -67,6 +67,10 @@
                 default:
                     break;
             }
+
+            <div class="mt-5">
+                <CommentList Uri="@Post.GetCommentUri()"></CommentList>
+            </div>
         </div>
     }
 </Loader>
@@ -89,7 +93,10 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        await loader.Load();
+        if (loader != null)
+        {
+            await loader.Load();
+        }
     }
 
     private async Task OnLoaded()

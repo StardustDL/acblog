@@ -4,7 +4,7 @@
 @inject AcBlog.Sdk.Filters.PageRouteFilter Routes
 @using AcBlog.Client.WebAssembly.Components.Renderers
 
-<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" AutoLoad="@false" @ref="loader">
+<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" AutoLoad="@true" @ref="loader">
     <ChildContent>
         <PageHeader>
             <PageHeaderTitle>
@@ -51,8 +51,10 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        Console.WriteLine($"Route {Route}");
-        await loader.Load();
+        if (loader != null)
+        {
+            await loader.Load();
+        }
     }
 
     private Task OnLoaded()

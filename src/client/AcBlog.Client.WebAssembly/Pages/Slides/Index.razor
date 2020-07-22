@@ -40,7 +40,7 @@
 </PageHeader>
 
 <div class="container">
-    <Loader OnLoad="@OnLoad" AutoLoad="@false" @ref="loader">
+    <Loader OnLoad="@OnLoad" AutoLoad="@true" @ref="loader">
         <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="/slides">
             <ItemTemplate>
                 <PostListItem Id="@context"></PostListItem>
@@ -61,7 +61,10 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        await loader.Load();
+        if (loader != null)
+        {
+            await loader.Load();
+        }
     }
 
     private async Task OnLoad()

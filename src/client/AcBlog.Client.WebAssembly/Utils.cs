@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -101,6 +102,22 @@ namespace AcBlog.Client.WebAssembly
                 if (!haspre) sb.Append(string.Format("{0} ms", value.Milliseconds));
             }
             return sb.ToString();
+        }
+
+        public static string GetGravatarUrl(string email, uint size = 128, string @default = "mp")
+        {
+            static string ComputeHash(string input)
+            {
+                MD5CryptoServiceProvider MD5 = new MD5CryptoServiceProvider();
+                byte[] inputArray = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashedArray = MD5.ComputeHash(inputArray);
+                MD5.Clear();
+                return BitConverter.ToString(hashedArray).Replace("-", "");
+            }
+
+            email = email.Trim().ToLower();
+            string src = $"https://www.gravatar.com/avatar/{ComputeHash(email).ToLower()}?size={size}&d={@default}";
+            return src;
         }
     }
 }
