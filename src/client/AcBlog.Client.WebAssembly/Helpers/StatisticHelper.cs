@@ -10,11 +10,10 @@ namespace AcBlog.Client.WebAssembly.Helpers
 {
     static class StatisticHelper
     {
-        public static async Task StatisticVisited(this IBlogService blogService, Post data)
+        public static async Task Visited(this IStatisticService service, Post data)
         {
             try
             {
-                var service = blogService.StatisticService;
                 await service.Create(new Statistic
                 {
                     Category = "Post",
@@ -30,16 +29,19 @@ namespace AcBlog.Client.WebAssembly.Helpers
             }
         }
 
-        public static async Task<long?> StatisticCount(this IBlogService blogService, Post data)
+        public static async Task<int?> Count(this IStatisticService service, Post data)
         {
             try
             {
-                var service = blogService.StatisticService;
-                return await service.Count(new Data.Models.Actions.StatisticQueryRequest
+                return (await service.Query(new Data.Models.Actions.StatisticQueryRequest
                 {
                     Category = "Post",
-                    Uri = data.GetStatisticUri()
-                });
+                    Uri = data.GetStatisticUri(),
+                    Pagination = new Data.Models.Actions.Pagination
+                    {
+                        PageSize = 1
+                    }
+                })).CurrentPage.TotalCount;
             }
             catch
             {

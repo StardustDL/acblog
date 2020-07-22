@@ -33,7 +33,7 @@ namespace AcBlog.Data.Repositories.Externals
             var items = await Service.Query(new Listat.Models.StatisticQuery
             {
                 Offset = 0,
-                Limit = int.MaxValue - 1,
+                Limit = int.MaxValue,
             }, cancellationToken).ConfigureAwait(false);
 
             return items.Select(x => x.Id);
@@ -92,14 +92,22 @@ namespace AcBlog.Data.Repositories.Externals
         {
             var pagination = query.Pagination ?? new Pagination();
 
-            var items = await Service.Query(new Listat.Models.StatisticQuery
+            var innerQuery = new Listat.Models.StatisticQuery
             {
                 Category = query.Category,
                 Payload = query.Payload,
                 Uri = query.Uri,
                 Offset = pagination.Offset,
                 Limit = pagination.PageSize,
-            }, cancellationToken).ConfigureAwait(false);
+            };
+
+            var items = await Service.Query(innerQuery, cancellationToken).ConfigureAwait(false);
+
+            innerQuery.Offset = 0;
+            innerQuery.Limit = int.MaxValue;
+            var count = await Service.Count(innerQuery, cancellationToken).ConfigureAwait(false);
+
+            pagination.TotalCount = (int)count;
 
             return new QueryResponse<string>(items.Select(x => x.Id), pagination);
         }
@@ -114,16 +122,6 @@ namespace AcBlog.Data.Repositories.Externals
                 Category = value.Category,
                 ModificationTime = value.ModificationTime,
                 Uri = value.Uri
-            }, cancellationToken);
-        }
-
-        public Task<long> Count(StatisticQueryRequest query, CancellationToken cancellationToken = default)
-        {
-            return Service.Count(new Listat.Models.StatisticQuery
-            {
-                Category = query.Category,
-                Payload = query.Payload,
-                Uri = query.Uri,
             }, cancellationToken);
         }
     }

@@ -18,8 +18,6 @@ namespace AcBlog.Sdk.Extensions
             public RepoBasedService(IBlogService blogService, IStatisticRepository repository) : base(blogService, repository)
             {
             }
-
-            public Task<long> Count(StatisticQueryRequest query, CancellationToken cancellationToken = default) => Repository.Count(query, cancellationToken);
         }
 
         public static string GetStatisticUri(this Post value)

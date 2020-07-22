@@ -7,6 +7,5 @@ namespace AcBlog.Data.Repositories
 {
     public interface IStatisticRepository : IRecordRepository<Statistic, string, StatisticQueryRequest>
     {
-        Task<long> Count(StatisticQueryRequest query, CancellationToken cancellationToken = default);
     }
 }

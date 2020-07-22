@@ -3,7 +3,7 @@
 @inject IOptions<BuildStatus> BuildStatus
 @inject IBlogService Service
 
-<Layout Style="min-height: 100vh; background: initial">
+<AntDesign.Layout Style="min-height: 100vh; background: initial">
     <Sider Collapsible Theme="SiderTheme.Light" Breakpoint="BreakpointType.Xl" CollapsedWidth="0">
         <Menu Mode="MenuMode.Inline" Theme="MenuTheme.Light">
             <MenuItem Class="text-center p-0">
@@ -108,7 +108,7 @@
             </Popover>
         </Footer>
     </Layout>
-</Layout>
+</AntDesign.Layout>
 
 @code {
     private BlogOptions BlogOptions { get; set; } = new BlogOptions();

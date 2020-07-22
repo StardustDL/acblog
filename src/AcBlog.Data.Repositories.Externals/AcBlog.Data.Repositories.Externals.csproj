@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Listat" Version="0.0.1" />
-    <PackageReference Include="Loment" Version="0.0.2" />
+    <PackageReference Include="Listat" Version="0.0.4" />
+    <PackageReference Include="Loment" Version="0.0.4" />
   </ItemGroup>
 </Project>

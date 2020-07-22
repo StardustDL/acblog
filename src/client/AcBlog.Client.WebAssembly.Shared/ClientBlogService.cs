@@ -1,5 +1,7 @@
 ﻿using AcBlog.Client.WebAssembly.Models;
 using AcBlog.Data.Models;
+using AcBlog.Data.Models.Actions;
+using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.Externals;
 using AcBlog.Sdk;
 using AcBlog.Sdk.Api;
@@ -10,6 +12,7 @@ using Loment;
 using Microsoft.Extensions.Options;
 using StardustDL.Extensions.FileProviders.Http;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -53,7 +56,18 @@ namespace AcBlog.Client.WebAssembly
                     server.Comment.Uri += "/";
                 var client = httpClientFactory.CreateClient();
                 client.BaseAddress = new Uri(server.Comment.Uri);
-                Comment = new LomentCommentRepository(new LomentService(client)).AsService(this);
+                CommentService = new LomentCommentRepository(new LomentService(client)).AsService(this);
+            }
+            else
+            {
+                try
+                {
+                    CommentService = Main.CommentService;
+                }
+                catch
+                {
+                    CommentService = new EmptyCommentRepo().AsService(this);
+                }
             }
 
             if (server.Statistic.Enable)
@@ -62,15 +76,22 @@ namespace AcBlog.Client.WebAssembly
                     server.Statistic.Uri += "/";
                 var client = httpClientFactory.CreateClient();
                 client.BaseAddress = new Uri(server.Statistic.Uri);
-                Statistic = new ListatStatisticRepository(new ListatService(client)).AsService(this);
+                StatisticService = new ListatStatisticRepository(new ListatService(client)).AsService(this);
+            }
+            else
+            {
+                try
+                {
+                    StatisticService = Main.StatisticService;
+                }
+                catch
+                {
+                    StatisticService = new EmptyStatisticRepo().AsService(this);
+                }
             }
         }
 
         private IBlogService Main { get; }
-
-        private ICommentService Comment { get; }
-
-        private IStatisticService Statistic { get; }
 
         public IPostService PostService => Main.PostService;
 
@@ -78,10 +99,18 @@ namespace AcBlog.Client.WebAssembly
 
         public ILayoutService LayoutService => Main.LayoutService;
 
-        public ICommentService CommentService => Comment ?? Main.CommentService;
+        public ICommentService CommentService { get; }
 
-        public IStatisticService StatisticService => Statistic ?? Main.StatisticService;
+        public IStatisticService StatisticService { get; }
 
         public Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default) => Main.GetOptions(cancellationToken);
+
+        class EmptyCommentRepo : EmptyRecordRepository<Comment, string, CommentQueryRequest>, ICommentRepository
+        {
+        }
+
+        class EmptyStatisticRepo : EmptyRecordRepository<Statistic, string, StatisticQueryRequest>, IStatisticRepository
+        {
+        }
     }
 }

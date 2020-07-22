@@ -32,7 +32,7 @@ namespace AcBlog.Data.Repositories.Externals
             var items = await Service.Query(new Loment.Models.CommentQuery
             {
                 Offset = 0,
-                Limit = int.MaxValue - 1,
+                Limit = int.MaxValue,
             }, cancellationToken).ConfigureAwait(false);
 
             return items.Select(x => x.Id);
@@ -97,7 +97,7 @@ namespace AcBlog.Data.Repositories.Externals
         {
             var pagination = query.Pagination ?? new Pagination();
 
-            var items = await Service.Query(new Loment.Models.CommentQuery
+            var innerQuery = new Loment.Models.CommentQuery
             {
                 Author = query.Author,
                 Content = query.Content,
@@ -106,7 +106,15 @@ namespace AcBlog.Data.Repositories.Externals
                 Uri = query.Uri,
                 Offset = pagination.Offset,
                 Limit = pagination.PageSize,
-            }, cancellationToken).ConfigureAwait(false);
+            };
+
+            var items = await Service.Query(innerQuery, cancellationToken).ConfigureAwait(false);
+
+            innerQuery.Offset = 0;
+            innerQuery.Limit = int.MaxValue;
+            var count = await Service.Count(innerQuery, cancellationToken).ConfigureAwait(false);
+
+            pagination.TotalCount = (int)count;
 
             return new QueryResponse<string>(items.Select(x => x.Id), pagination);
         }
