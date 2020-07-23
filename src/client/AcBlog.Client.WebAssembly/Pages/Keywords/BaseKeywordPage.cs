@@ -1,5 +1,5 @@
-﻿using AcBlog.Client.WebAssembly.Interops;
-using AcBlog.Client.WebAssembly.Models;
+﻿using AcBlog.Client.UI.Interops;
+using AcBlog.Client.UI.Models;
 using AcBlog.Sdk;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;

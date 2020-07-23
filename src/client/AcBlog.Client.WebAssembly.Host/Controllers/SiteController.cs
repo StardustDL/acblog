@@ -9,7 +9,7 @@ using System.Web;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using AcBlog.Client.WebAssembly.Models;
+using AcBlog.Client.UI.Models;
 using AcBlog.Data.Models;
 using AcBlog.Sdk;
 using AcBlog.Sdk.Sitemap;

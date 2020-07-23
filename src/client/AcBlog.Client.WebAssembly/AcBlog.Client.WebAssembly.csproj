@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\AcBlog.Data\AcBlog.Data.csproj" />
     <ProjectReference Include="..\..\AcBlog.Sdk\AcBlog.Sdk.csproj" />
     <ProjectReference Include="..\AcBlog.Client.Core\AcBlog.Client.Core.csproj" />
+    <ProjectReference Include="..\AcBlog.Client.UI\AcBlog.Client.UI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

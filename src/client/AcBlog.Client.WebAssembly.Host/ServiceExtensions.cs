@@ -1,4 +1,4 @@
-﻿using AcBlog.Client.WebAssembly.Models;
+﻿using AcBlog.Client.UI.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;

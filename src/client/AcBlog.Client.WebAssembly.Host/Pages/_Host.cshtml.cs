@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using AcBlog.Client.WebAssembly.Models;
+using AcBlog.Client.UI.Models;
 using AcBlog.Data.Models;
 using AcBlog.Sdk;
 using Microsoft.AspNetCore.Mvc;

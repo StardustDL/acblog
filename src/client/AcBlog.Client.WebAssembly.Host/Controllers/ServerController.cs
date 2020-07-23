@@ -2,7 +2,7 @@
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using AcBlog.Client.Models;
-using AcBlog.Client.WebAssembly.Models;
+using AcBlog.Client.UI.Models;
 using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;

@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using AcBlog.Sdk;
 using AcBlog.Sdk.Api;
-using AcBlog.Client.WebAssembly.Models;
+using AcBlog.Client.UI.Models;
 using AcBlog.Sdk.FileSystem;
 using System.IO;
 using Microsoft.AspNetCore.Components;

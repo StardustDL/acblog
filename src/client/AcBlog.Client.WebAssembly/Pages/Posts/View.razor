@@ -1,7 +1,7 @@
 ﻿@page "/posts/{id}"
 @inject NotificationService NotificationService
 @inherits BasePostPage
-@using AcBlog.Client.WebAssembly.Components.Renderers
+@using AcBlog.Client.UI.Components.Renderers
 
 <Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" LoadKey="@Id" @ref="loader">
     <PageHeader>
