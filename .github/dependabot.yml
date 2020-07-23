@@ -6,7 +6,7 @@ updates:
       interval: daily
     open-pull-requests-limit: 3
   - package-ecosystem: npm
-    directory: "/src/client/AcBlog.Client.WebAssembly"
+    directory: "/src/client/AcBlog.Client.UI"
     schedule:
       interval: daily
     allow:

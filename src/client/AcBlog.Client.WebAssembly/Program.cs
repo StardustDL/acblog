@@ -23,6 +23,7 @@ using AcBlog.UI.Components;
 using AcBlog.Extensions;
 using Microsoft.Extensions.Options;
 using AcBlog.Client.Models;
+using AcBlog.Client.UI;
 
 namespace AcBlog.Client.WebAssembly
 {
@@ -71,7 +72,7 @@ namespace AcBlog.Client.WebAssembly
                 builder.Services.AddBlogService(builder.HostEnvironment.BaseAddress);
             }
 
-            builder.RootComponents.Add<App>("app");
+            builder.RootComponents.Add<AcBlog.Client.UI.App>("app");
 
             await builder.UseExtensions();
 

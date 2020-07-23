@@ -68,13 +68,13 @@ Task Publish-wasm {
 }
 
 Task NPMUP? {
-    Set-Location src/client/AcBlog.Client.WebAssembly
+    Set-Location src/client/AcBlog.Client.UI
     Exec { ncu }
     Set-Location ../../..
 }
 
 Task NPMUP {
-    Set-Location src/client/AcBlog.Client.WebAssembly
+    Set-Location src/client/AcBlog.Client.UI
     Exec { ncu -u }
     Exec { npm i }
     Set-Location ../../..
@@ -103,7 +103,7 @@ Task Deploy-packages-release {
 }
 
 Task Restore-WASM {
-    Set-Location src/client/AcBlog.Client.WebAssembly
+    Set-Location src/client/AcBlog.Client.UI
     Exec { npm ci }
     Exec { gulp }
     Set-Location ../../..
