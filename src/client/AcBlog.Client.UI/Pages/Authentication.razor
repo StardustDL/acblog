@@ -1,0 +1,23 @@
+@page "/authentication/{action}"
+@inherits BasePage
+@inject IOptions<ServerSettings> ServerSettings
+
+@if (ServerSettings.Value.Identity.Enable)
+{
+    <CustomRemoteAuthenticatorView Action="@Action">
+        <LogOutSucceeded>
+            <RedirectTo Target="" />
+        </LogOutSucceeded>
+    </CustomRemoteAuthenticatorView>
+}
+else
+{
+    <Result Status="403"
+            Title=@("Forbidden")
+            SubTitle=@("Sorry, you are not authorized to access this page.") />
+}
+
+@code{
+    [Parameter]
+    public string Action { get; set; }
+}

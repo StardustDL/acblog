@@ -1,0 +1,122 @@
+﻿@page "/posts/new"
+@page "/posts/{id}/edit"
+@attribute [Authorize]
+@inherits BasePostPage
+@inject IAccessTokenProvider TokenProvider
+
+<div class="container">
+    <ItemEditor IsCreate="@IsCreate" Title="@(IsCreate ? "Create post" : "Edit post")" OnCheckValidation="@OnCheckValidation" OnCreate="@OnCreate" OnDelete="@OnDelete" OnUpdate="@OnUpdate">
+        <Loader OnLoad="@OnLoad">
+            <div class="input-group mt-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputTitle">Title</label>
+                </div>
+                <input type="text" class="form-control" @bind-value="Model.Title" id="inputTitle" required />
+            </div>
+
+            <div class="input-group mt-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputType">Type</label>
+                </div>
+                <select class="custom-select" id="inputType" @bind="Model.Type">
+                    <option value="@PostType.Article" class="mdi mdi-presentation">Article</option>
+                    <option value="@PostType.Slides">Slides</option>
+                    <option value="@PostType.Note">Note</option>
+                </select>
+            </div>
+
+            <div class="input-group mt-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputCategory">Category</label>
+                </div>
+                <select class="custom-select" id="inputCategory">
+                    <option value="@string.Empty"></option>
+                </select>
+            </div>
+
+            <div class="form-group mt-3">
+                <label class="col-form-label">Keywords</label>
+                <span class="form-control">
+                </span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="inputContent" class="col-form-label">Content</label>
+                <textarea class="form-control" id="inputContent" @bind="Model.Content.Raw" style="height: 800px" />
+            </div>
+        </Loader>
+    </ItemEditor>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private Post Model { get; set; }
+
+    private bool IsCreate { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Service.PostService.UseToken(TokenProvider);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnLoad()
+    {
+        Title = "Loading...";
+        if (string.IsNullOrWhiteSpace(Id))
+        {
+            Model = new Post();
+            IsCreate = true;
+            Title = "New";
+        }
+        else
+        {
+            Model = await Service.PostService.Get(Id);
+            IsCreate = false;
+            Title = "Edit";
+        }
+    }
+
+    private Task OnCheckValidation(ModelValidation validation)
+    {
+        if (string.IsNullOrWhiteSpace(Model.Title))
+        {
+            validation.Errors.Add("Title is empty.");
+        }
+        return Task.CompletedTask;
+    }
+
+    private async Task OnCreate(EventCallbackResult<bool> result)
+    {
+        Model.CreationTime = DateTimeOffset.Now;
+        var id = await Service.PostService.Create(Model);
+        result.Result = id != null;
+        if (id != null)
+        {
+            NavigationManager.NavigateTo($"posts/{Uri.EscapeDataString(id)}");
+        }
+    }
+
+    private async Task OnUpdate(EventCallbackResult<bool> result)
+    {
+        Model.ModificationTime = DateTimeOffset.Now;
+        var pass = await Service.PostService.Update(Model);
+        result.Result = pass;
+        if (pass)
+        {
+            NavigationManager.NavigateTo($"posts/{Uri.EscapeDataString(Model.Id)}");
+        }
+    }
+
+    private async Task OnDelete(EventCallbackResult<bool> result)
+    {
+        var pass = await Service.PostService.Delete(Model.Id);
+        result.Result = pass;
+        if (pass)
+        {
+            NavigationManager.NavigateTo("posts");
+        }
+    }
+}

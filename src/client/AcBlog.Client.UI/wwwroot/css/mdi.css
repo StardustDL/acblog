@@ -1,0 +1,50 @@
+﻿.itemdisplay .mdi:not(:empty)::before {
+    margin-right: 0.25rem;
+}
+
+.alert.mdi::before,
+.breadcrumb .mdi::before,
+.btn.mdi::before,
+.card-title.mdi::before,
+.card-subtitle.mdi::before,
+.card-link.mdi::before,
+.dropdown-item.mdi::before,
+.list-group-item.mdi::before,
+.nav-link.mdi::before {
+    font-size: 1.25em;
+    line-height: initial;
+    position: relative;
+    top: 0.09rem;
+}
+
+.alert.mdi::before,
+.breadcrumb .mdi:not(:empty)::before,
+.btn.mdi:not(:empty)::before,
+.card-title.mdi:not(:empty)::before,
+.card-subtitle.mdi:not(:empty)::before,
+.card-link.mdi:not(:empty)::before,
+.dropdown-item.mdi:not(:empty)::before,
+.nav-link.mdi:not(:empty)::before {
+    margin-right: 0.25rem;
+}
+
+.list-group-item.mdi:not(:empty)::before {
+    margin-right: 0.5rem;
+}
+
+.dropdown-item.mdi:not(:empty)::before {
+    margin-left: -0.75rem;
+}
+
+.alert.mdi::before,
+.list-group-item.mdi:not(:empty)::before {
+    margin-left: -0.5rem;
+}
+
+.modal-title.mdi::before {
+    font-size: 1.5em;
+    line-height: 0.5;
+    position: relative;
+    top: 0.26rem;
+    margin-right: 0.5rem;
+}

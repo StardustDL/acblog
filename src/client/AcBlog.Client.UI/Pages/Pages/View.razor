@@ -1,0 +1,87 @@
+﻿@page "/pages/view/{route}"
+
+@inherits BasePagePage
+@inject AcBlog.Sdk.Filters.PageRouteFilter Routes
+@inject IPageRenderService PageService
+@using AcBlog.Client.UI.Components.Renderers
+
+<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" LoadKey="@Route" @ref="loader">
+    <ChildContent>
+        <PageHeader>
+            <PageHeaderTitle>
+                @Page.Title
+            </PageHeaderTitle>
+            <PageHeaderBreadcrumb>
+                <Breadcrumb>
+                    <BreadcrumbItem>
+                        <a href="">
+                            <MdiIcon Type="home" />
+                            <span>Home</span>
+                        </a>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem>
+                        <a href="pages">
+                            <MdiIcon Type="book-open" />
+                            <span>Pages</span>
+                        </a>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem>
+                        <span>@Page.Id</span>
+                    </BreadcrumbItem>
+                </Breadcrumb>
+            </PageHeaderBreadcrumb>
+        </PageHeader>
+
+        @((MarkupString)Rendered)
+    </ChildContent>
+
+    <FailingContent>
+        <Result Status="404"
+                Title=@("Not Found")
+                SubTitle=@("Sorry, the page you visited does not exist.") />
+    </FailingContent>
+</Loader>
+
+@code {
+    [Parameter]
+    public string Route { get; set; }
+
+    private Loader loader;
+
+    private Page Page { get; set; }
+
+    private string Rendered { get; set; }
+
+    private Task OnLoaded()
+    {
+        if (Page is null)
+        {
+            Title = "Loading...";
+        }
+        else
+        {
+            Title = Page.Title;
+        }
+        return Task.CompletedTask;
+    }
+
+    private async Task OnLoad()
+    {
+        var pages = await Routes.Filter(Route, null);
+        var id = pages.Results.First();
+        Page = await Service.PageService.Get(id);
+        AcBlog.Data.Models.Layout layout = null;
+        if (!string.IsNullOrEmpty(Page.Layout))
+        {
+            try
+            {
+                layout = await Service.LayoutService.Get(Page.Layout);
+            }
+            catch
+            {
+                layout = null;
+            }
+        }
+        Rendered = await PageService.Render(Page, layout);
+    }
+}

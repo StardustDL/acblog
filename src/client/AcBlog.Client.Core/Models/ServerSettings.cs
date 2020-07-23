@@ -1,4 +1,4 @@
-﻿namespace AcBlog.Client.WebAssembly.Models
+﻿namespace AcBlog.Client.Models
 {
     public class ServerSettings
     {

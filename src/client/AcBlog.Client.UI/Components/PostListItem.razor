@@ -1,0 +1,76 @@
+﻿@inject IBlogService Service
+
+<Loader OnLoad="@OnLoad" AutoLoad="@true" @ref="loader" UseSkeleton>
+    <AntListItem @key="@Id">
+        <AntListItemMeta Avatar="@("")">
+            <Title>
+                <h4>
+                    @if (ShowType)
+                    {
+                        switch (Post.Type)
+                        {
+                            case PostType.Article:
+                                <MdiIcon Type="feather" />
+                                break;
+                            case PostType.Slides:
+                                <MdiIcon Type="presentation" />
+                                break;
+                            case PostType.Note:
+                                <MdiIcon Type="file-document" />
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    <a href="posts/@Uri.EscapeDataString(Id)" style="color:black">
+                        <span>@Post.Title</span>
+                    </a>
+                </h4>
+                <div>
+                    <PostMetadataDisplay Value="@Post" />
+                </div>
+            </Title>
+        </AntListItemMeta>
+        @if (!IsProtected)
+        {
+            <p>
+                <AcBlog.Client.UI.Components.Displays.DocumentPreviewDisplay Document="@Post.Content" />
+            </p>
+        }
+        else
+        {
+            <p>Protected Post</p>
+        }
+    </AntListItem>
+</Loader>
+
+@code {
+    [Parameter]
+    public bool ShowType { get; set; } = false;
+
+    [Parameter]
+    public string Id { get; set; }
+
+    private Post Post { get; set; }
+
+    private bool IsProtected { get; set; } = false;
+
+    private Loader loader;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (loader != null)
+        {
+            await loader.Load();
+        }
+    }
+
+    private async Task OnLoad()
+    {
+        Post = null;
+        IsProtected = false;
+
+        Post = await Service.PostService.Get(Id);
+        IsProtected = await Service.PostService.Protector.IsProtected(Post.Content);
+    }
+}

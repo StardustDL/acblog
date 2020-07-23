@@ -1,0 +1,18 @@
+﻿@inject IBlogService Service
+
+<span class="itemdisplay">
+    <span class="mdi @(Data.Items.Count() == 1 ? "mdi-tag" : "mdi-tag-multiple")">
+        @foreach (var key in Data.Items)
+        {
+            <a href="keywords/@Uri.EscapeDataString(key)" style="color: inherit;">@key</a>
+            <span>;</span>
+        }
+    </span>
+</span>
+
+
+
+@code {
+    [Parameter]
+    public Keyword Data { get; set; }
+}

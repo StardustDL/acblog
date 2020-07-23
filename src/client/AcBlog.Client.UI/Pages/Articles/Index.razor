@@ -1,0 +1,72 @@
+﻿@page "/articles"
+@page "/articles/pages"
+@page "/articles/pages/{pageNumber:int}"
+@inherits BaseArticlePage
+@inject AcBlog.Sdk.Filters.PostArticleFilter Article
+
+<PageHeader>
+    <PageHeaderTitle>Articles</PageHeaderTitle>
+    <PageHeaderBreadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>
+                <a href="">
+                    <MdiIcon Type="home" />
+                    <span>Home</span>
+                </a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                <a href="posts">
+                    <MdiIcon Type="archive" />
+                    <span>Posts</span>
+                </a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                <span>
+                    <MdiIcon Type="feather" />
+                    <span>Articles</span>
+                </span>
+            </BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderBreadcrumb>
+    <PageHeaderExtra>
+        <AuthorizeView>
+            <Authorized>
+                <div class="btn-group-toggle mx-auto" role="group">
+                    <a class="btn btn-success mdi mdi-plus" href="posts/new">Create</a>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+    </PageHeaderExtra>
+</PageHeader>
+
+<div class="container">
+    <Loader OnLoad="@OnLoad" LoadKey="@($"{PageNumber}")" @ref="loader">
+        <PagingList Data="@Data" Column="1" PageNavigationUrl="/articles">
+            <ItemTemplate>
+                <PostListItem Id="@context"></PostListItem>
+            </ItemTemplate>
+        </PagingList>
+    </Loader>
+</div>
+
+@code {
+    const int PageSize = 10;
+
+    QueryResponse<string> Data { get; set; }
+
+    [Parameter]
+    public int? PageNumber { get; set; } = null;
+
+    private Loader loader;
+
+    private async Task OnLoad()
+    {
+        Title = "Loading...";
+        Data = await Article.Filter(new Data.Models.Actions.Pagination
+        {
+            CurrentPage = PageNumber ?? 0,
+            PageSize = PageSize
+        });
+        Title = $"Page {Data.CurrentPage.CurrentPage + 1}";
+    }
+}

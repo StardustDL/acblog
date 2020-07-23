@@ -2,13 +2,13 @@
 using AcBlog.UI.Components.Loading;
 using AcBlog.UI.Components.Slides;
 using AcBlog.Extensions;
-using AcBlog.Client.WebAssembly.Models;
+using AcBlog.Client.UI.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using AcBlog.UI.Components;
 using AcBlog.Client.Models;
 
-namespace AcBlog.Client.WebAssembly
+namespace AcBlog.Client.UI
 {
     public static class ServiceExtensions
     {

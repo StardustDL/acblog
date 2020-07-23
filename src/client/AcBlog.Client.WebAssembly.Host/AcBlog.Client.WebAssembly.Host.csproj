@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AcBlog.Client.WebAssembly.Shared\AcBlog.Client.WebAssembly.Shared.csproj" />
+    <ProjectReference Include="..\AcBlog.Client.Core\AcBlog.Client.Core.csproj" />
     <ProjectReference Include="..\AcBlog.Client.WebAssembly\AcBlog.Client.WebAssembly.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,4 @@
-﻿using AcBlog.Client.WebAssembly.Models;
+﻿using AcBlog.Client.Models;
 using AcBlog.Sdk;
 using AcBlog.Sdk.Api;
 using AcBlog.Sdk.FileSystem;
@@ -15,7 +15,7 @@ using System.Net.Http.Headers;
 using AcBlog.Sdk.Extensions;
 using AcBlog.Data.Pages;
 
-namespace AcBlog.Client.WebAssembly
+namespace AcBlog.Client
 {
     public static class ServiceExtensions
     {

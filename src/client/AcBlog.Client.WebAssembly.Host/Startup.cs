@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AcBlog.Client.Models;
 using AcBlog.Client.WebAssembly.Models;
 using AcBlog.Extensions;
 using AcBlog.Sdk;

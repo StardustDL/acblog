@@ -1,0 +1,128 @@
+﻿@inject NavigationManager NavigationManager
+@inject IBlogService Service
+@inject NotificationService NotificationService
+
+<Loader OnLoad="@OnLoad" AutoLoad="@true" @ref="loader">
+    @if (Data.CurrentPage.TotalCount > 0)
+    {
+        <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo">
+            <ItemTemplate>
+                <CommentListItem Id="@context"></CommentListItem>
+            </ItemTemplate>
+            <Header>
+                <span>
+                    @($"{Data.CurrentPage.TotalCount} {(Data.CurrentPage.TotalCount > 1 ? "comments" : "comment")}")
+                </span>
+            </Header>
+        </PagingList>
+    }
+</Loader>
+
+<AntDesign.Comment Author="@CommentModel.Author" Content="@Editor" Avatar="@Utils.GetGravatarUrl(CommentModel.Email)">
+
+</AntDesign.Comment>
+
+@code {
+    // Null for auto detect
+    [Parameter]
+    public string Uri { get; set; } = "";
+
+    const int PageSize = 10;
+
+    QueryResponse<string> Data { get; set; }
+
+    private int PageNumber { get; set; } = 0;
+
+    private Loader loader;
+
+    private AcBlog.Data.Models.Comment CommentModel = new Data.Models.Comment();
+
+    protected override void OnInitialized()
+    {
+        Editor =
+    @<div>
+        <div class="input-group mt-1">
+            <div class="input-group-prepend">
+                <label class="input-group-text">Name</label>
+            </div>
+            <input type="text" class="form-control" @bind-value="@CommentModel.Author" required />
+        </div>
+        <div class="input-group mt-1">
+            <div class="input-group-prepend">
+                <label class="input-group-text">Email</label>
+            </div>
+            <input type="text" class="form-control" @bind-value="@CommentModel.Email" />
+        </div>
+        <div class="input-group mt-1">
+            <div class="input-group-prepend">
+                <label class="input-group-text">Link</label>
+            </div>
+            <input type="text" class="form-control" @bind-value="@CommentModel.Link" />
+        </div>
+        <div class="form-group mt-1">
+            <label class="col-form-label">Content</label>
+            <textarea class="form-control" @bind="CommentModel.Content" style="height: 100px" />
+        </div>
+        <Button Loading="@IsSubmitting" OnClick="OnSubmit" Type="@ButtonType.Primary" Class="mt-1">
+            Reply
+        </Button>
+    </div>;
+        base.OnInitialized();
+    }
+
+    private async Task OnLoad()
+    {
+        if (string.IsNullOrEmpty(Uri))
+        {
+            Uri = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        }
+
+        Data = await Service.CommentService.Query(new CommentQueryRequest
+        {
+            Uri = Uri,
+            Pagination = new Data.Models.Actions.Pagination
+            {
+                CurrentPage = PageNumber,
+                PageSize = PageSize,
+            }
+        });
+    }
+
+    private bool IsSubmitting { get; set; } = false;
+
+    private async Task OnSubmit()
+    {
+        IsSubmitting = true;
+
+        CommentModel.Uri = Uri;
+        CommentModel.CreationTime = DateTimeOffset.Now;
+        CommentModel.ModificationTime = DateTimeOffset.Now;
+
+        try
+        {
+            await Service.CommentService.Create(CommentModel);
+        }
+        catch
+        {
+            await NotificationService.Error(new NotificationConfig
+            {
+                Message = "Failed to comment."
+            });
+        }
+
+        IsSubmitting = false;
+        CommentModel = new Data.Models.Comment();
+
+        await OnUpdatePage();
+    }
+
+    private async Task OnPageTo(int pageNumber)
+    {
+        PageNumber = pageNumber;
+        await OnUpdatePage();
+    }
+
+    private async Task OnUpdatePage() => await loader.Load();
+
+    RenderFragment Editor;
+    }

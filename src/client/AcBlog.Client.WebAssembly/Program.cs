@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using AcBlog.UI.Components;
 using AcBlog.Extensions;
 using Microsoft.Extensions.Options;
+using AcBlog.Client.Models;
 
 namespace AcBlog.Client.WebAssembly
 {

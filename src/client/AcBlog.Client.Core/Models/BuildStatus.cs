@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace AcBlog.Client.WebAssembly.Models
+namespace AcBlog.Client.Models
 {
     public class BuildStatus
     {

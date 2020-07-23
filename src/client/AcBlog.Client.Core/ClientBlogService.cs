@@ -1,4 +1,4 @@
-﻿using AcBlog.Client.WebAssembly.Models;
+﻿using AcBlog.Client.Models;
 using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
@@ -18,7 +18,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AcBlog.Client.WebAssembly
+namespace AcBlog.Client
 {
     public class ClientBlogService : IBlogService
     {

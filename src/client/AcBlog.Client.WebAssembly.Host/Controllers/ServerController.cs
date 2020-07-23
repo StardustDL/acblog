@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
+using AcBlog.Client.Models;
 using AcBlog.Client.WebAssembly.Models;
 using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;

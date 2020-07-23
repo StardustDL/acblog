@@ -1,0 +1,22 @@
+﻿@inject NavigationManager Navigation
+
+@code {
+    [Parameter]
+    public string Target { get; set; }
+
+    [Parameter]
+    public bool HasReturnUrl { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        if (HasReturnUrl)
+        {
+            Navigation.NavigateTo($"{Target}?returnUrl=" +
+                Uri.EscapeDataString(Navigation.Uri));
+        }
+        else
+        {
+            Navigation.NavigateTo(Target);
+        }
+    }
+}

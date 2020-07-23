@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Loading...</title>
+    <base href="/" />
+    <link rel="icon" href="icon.png" />
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="lib/mdi/css/materialdesignicons.min.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
+    <link href="_content/AcBlog.UI.Components.Loading/component.css" rel="stylesheet" />
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon.png" />
+
+    <script type="text/javascript">
+        function sparedirectDecode(loc) {
+            if (loc.search) {
+                var qs = {};
+                loc.search.slice(1).split('&').forEach(function (v) {
+                    var a = v.split('=');
+                    qs[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
+                });
+                if (qs.route !== undefined) {
+                    return loc.pathname.slice(0, -1) + (qs.route || '') +
+                        (qs.query ? ('?' + qs.query) : '') +
+                        loc.hash;
+                }
+            }
+            return null;
+        }
+        var sparedirectTo = sparedirectDecode(window.location);
+        if (sparedirectTo) {
+            window.history.replaceState(null, null, sparedirectTo);
+        }
+    </script>
+</head>
+
+<body>
+    <app>
+        <div class="loading loading1" style="margin: auto; bottom: 0; right:0; left: 0; top: 0; position: fixed">
+            <div>
+                <div>
+                    <div>
+                        <div>
+                            <div>
+                                <div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </app>
+    <div id="loading-info-ui" class="alert alert-info mdi mdi-information" style="display: block;">
+        Loading application...
+    </div>
+    <div id="blazor-error-ui" class="alert alert-danger mdi mdi-alert" role="alert">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="_framework/blazor.webassembly.js" autostart="true"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+
+    <script src="_content/AcBlog.Extensions.Core/component.js"></script>
+</body>
+
+</html>
