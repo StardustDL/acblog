@@ -3,7 +3,7 @@
 
 <Loader OnLoad="@OnLoad" UseSkeleton>
     <AntDesign.Comment Datetime="@dateTime" Author="@author" Avatar="@Utils.GetGravatarUrl(Comment.Email)"
-                       Content="@content">
+                       Content="@content" @key="@Id">
     </AntDesign.Comment>
 </Loader>
 

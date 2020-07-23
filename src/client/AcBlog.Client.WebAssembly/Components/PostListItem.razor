@@ -1,7 +1,7 @@
 ﻿@inject IBlogService Service
 
 <Loader OnLoad="@OnLoad" UseSkeleton>
-    <AntListItem>
+    <AntListItem @key="@Id">
         <AntListItemMeta Avatar="@("")">
             <Title>
                 <h4>
