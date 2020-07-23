@@ -1,7 +1,7 @@
 ﻿@inject IBlogService Service
 @inject IMarkdownRenderService MarkdownService
 
-<Loader OnLoad="@OnLoad" UseSkeleton>
+<Loader OnLoad="@OnLoad" LoadKey="@Id" UseSkeleton>
     <AntDesign.Comment Datetime="@dateTime" Author="@author" Avatar="@Utils.GetGravatarUrl(Comment.Email)"
                        Content="@content" @key="@Id">
     </AntDesign.Comment>

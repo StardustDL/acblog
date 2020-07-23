@@ -3,7 +3,7 @@
 @inherits BasePostPage
 @using AcBlog.Client.WebAssembly.Components.Renderers
 
-<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" AutoLoad="@true" @ref="loader">
+<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" LoadKey="@Id" @ref="loader">
     <PageHeader>
         <PageHeaderTitle>
             @Post.Title
@@ -91,14 +91,6 @@
 
     private Loader loader;
 
-    protected override async Task OnParametersSetAsync()
-    {
-        if (loader != null)
-        {
-            await loader.Load();
-        }
-    }
-
     private async Task OnLoaded()
     {
         if (Post is null)
@@ -116,7 +108,7 @@
             {
                 Title = Post.Title;
             }
-            await Service.StatisticService.Visited(Post);
+            await Service.StatisticService?.Visited(Post);
         }
     }
 

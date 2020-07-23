@@ -4,6 +4,7 @@ namespace AcBlog.Client.WebAssembly.Models
 {
     public enum DataLoadingState
     {
+        Initialized,
         Loading,
         Success,
         Failed

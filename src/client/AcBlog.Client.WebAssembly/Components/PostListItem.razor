@@ -1,6 +1,6 @@
 ﻿@inject IBlogService Service
 
-<Loader OnLoad="@OnLoad" UseSkeleton>
+<Loader OnLoad="@OnLoad" AutoLoad="@true" @ref="loader" UseSkeleton>
     <AntListItem @key="@Id">
         <AntListItemMeta Avatar="@("")">
             <Title>
@@ -54,6 +54,16 @@
     private Post Post { get; set; }
 
     private bool IsProtected { get; set; } = false;
+
+    private Loader loader;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (loader != null)
+        {
+            await loader.Load();
+        }
+    }
 
     private async Task OnLoad()
     {

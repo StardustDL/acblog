@@ -28,8 +28,8 @@
 </PageHeader>
 
 <div class="container">
-    <Loader OnLoad="@OnLoad" AutoLoad="@true" @ref="loader">
-        <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="@PageNavigationUrl">
+    <Loader OnLoad="@OnLoad" LoadKey="@($"{Id}-{PageNumber}")" @ref="loader">
+        <PagingList Data="@Data" Column="1" PageNavigationUrl="@PageNavigationUrl">
             <ItemTemplate>
                 <PostListItem Id="@context" ShowType="true"></PostListItem>
             </ItemTemplate>
@@ -57,25 +57,13 @@
     protected override void OnParametersSet()
     {
         PageNavigationUrl = $"/keywords/{Uri.EscapeDataString(Id)}";
-        Keyword = AcBlog.Data.Models.Keyword.Parse(Id);
-        if (Keyword.Items.Count > 1)
-        {
-            Keyword = new Keyword(Keyword.OneName());
-        }
         base.OnParametersSet();
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        if (loader != null)
-        {
-            await loader.Load();
-        }
     }
 
     private async Task OnLoad()
     {
         Title = "Loading...";
+        Keyword = AcBlog.Data.Models.Keyword.Parse(Id);
         Data = await Keywords.Filter(Keyword, new Data.Models.Actions.Pagination
         {
             CurrentPage = PageNumber ?? 0,
@@ -83,12 +71,4 @@
         });
         Title = $"Page {Data.CurrentPage.CurrentPage + 1} - {Keyword.ToString()}";
     }
-
-    private async Task OnPageTo(int pageNumber)
-    {
-        PageNumber = pageNumber;
-        await OnUpdatePage();
-    }
-
-    private async Task OnUpdatePage() => await loader.Load();
 }

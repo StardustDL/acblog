@@ -33,8 +33,8 @@
 </PageHeader>
 
 <div class="container">
-    <Loader OnLoad="@OnLoad" AutoLoad="@true" @ref="loader">
-        <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="/posts">
+    <Loader OnLoad="@OnLoad" LoadKey="@($"{PageNumber}")" @ref="loader">
+        <PagingList Data="@Data" Column="1" PageNavigationUrl="/posts">
             <ItemTemplate>
                 <PostListItem Id="@context" ShowType="true"></PostListItem>
             </ItemTemplate>
@@ -52,14 +52,6 @@
 
     private Loader loader;
 
-    protected override async Task OnParametersSetAsync()
-    {
-        if (loader != null)
-        {
-            await loader.Load();
-        }
-    }
-
     private async Task OnLoad()
     {
         Title = "Loading...";
@@ -73,12 +65,4 @@
         });
         Title = $"Page {Data.CurrentPage.CurrentPage + 1}";
     }
-
-    private async Task OnPageTo(int pageNumber)
-    {
-        PageNumber = pageNumber;
-        await OnUpdatePage();
-    }
-
-    private async Task OnUpdatePage() => await loader.Load();
 }

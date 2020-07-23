@@ -15,6 +15,6 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        Count = await Service.StatisticService.Count(Data);
+        Count = await Service.StatisticService?.Count(Data);
     }
 }

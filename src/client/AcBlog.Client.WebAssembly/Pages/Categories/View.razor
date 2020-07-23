@@ -45,7 +45,7 @@
 </PageHeader>
 
 <div class="container">
-    <Loader OnLoad="@OnLoad" AutoLoad="@true" @ref="loader">
+    <Loader OnLoad="@OnLoad" LoadKey="@($"{Id}-{PageNumber}")" @ref="loader">
         <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="@PageNavigationUrl">
             <ItemTemplate>
                 <PostListItem Id="@context" ShowType="true"></PostListItem>
@@ -74,20 +74,12 @@
     protected override void OnParametersSet()
     {
         PageNavigationUrl = $"/categories/{Uri.EscapeDataString(Id)}";
-        Category = AcBlog.Data.Models.Category.Parse(Id);
         base.OnParametersSet();
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        if (loader != null)
-        {
-            await loader.Load();
-        }
     }
 
     private async Task OnLoad()
     {
+        Category = AcBlog.Data.Models.Category.Parse(Id);
         Title = "Loading...";
         Data = await Categories.Filter(Category, new Data.Models.Actions.Pagination
         {

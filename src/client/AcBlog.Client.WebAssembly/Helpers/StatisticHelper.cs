@@ -12,6 +12,8 @@ namespace AcBlog.Client.WebAssembly.Helpers
     {
         public static async Task Visited(this IStatisticService service, Post data)
         {
+            if (service is null)
+                return;
             try
             {
                 await service.Create(new Statistic
@@ -31,6 +33,8 @@ namespace AcBlog.Client.WebAssembly.Helpers
 
         public static async Task<int?> Count(this IStatisticService service, Post data)
         {
+            if (service is null)
+                return null;
             try
             {
                 return (await service.Query(new Data.Models.Actions.StatisticQueryRequest

@@ -50,44 +50,64 @@ namespace AcBlog.Client.WebAssembly
                 }
             }
 
-            if (server.Comment.Enable)
+            try
             {
-                if (!server.Comment.Uri.EndsWith("/"))
-                    server.Comment.Uri += "/";
-                var client = httpClientFactory.CreateClient();
-                client.BaseAddress = new Uri(server.Comment.Uri);
-                CommentService = new LomentCommentRepository(new LomentService(client)).AsService(this);
+                switch (server.Comment.Type)
+                {
+                    case CommentServerType.Loment:
+                    {
+                        if (!server.Comment.Uri.EndsWith("/"))
+                            server.Comment.Uri += "/";
+                        var client = httpClientFactory.CreateClient();
+                        client.BaseAddress = new Uri(server.Comment.Uri);
+                        CommentService = new LomentCommentRepository(new LomentService(client)).AsService(this);
+                    }
+                    break;
+                    case CommentServerType.Main:
+                    {
+                        CommentService = Main.CommentService;
+                    }
+                    break;
+                    case CommentServerType.Disable:
+                    {
+                        CommentService = null;
+                    }
+                    break;
+                }
             }
-            else
+            catch
             {
-                try
-                {
-                    CommentService = Main.CommentService;
-                }
-                catch
-                {
-                    CommentService = new EmptyCommentRepo().AsService(this);
-                }
+                CommentService = null;
             }
 
-            if (server.Statistic.Enable)
+            try
             {
-                if (!server.Statistic.Uri.EndsWith("/"))
-                    server.Statistic.Uri += "/";
-                var client = httpClientFactory.CreateClient();
-                client.BaseAddress = new Uri(server.Statistic.Uri);
-                StatisticService = new ListatStatisticRepository(new ListatService(client)).AsService(this);
+                switch (server.Statistic.Type)
+                {
+                    case StatisticServerType.Listat:
+                    {
+                        if (!server.Statistic.Uri.EndsWith("/"))
+                            server.Statistic.Uri += "/";
+                        var client = httpClientFactory.CreateClient();
+                        client.BaseAddress = new Uri(server.Statistic.Uri);
+                        StatisticService = new ListatStatisticRepository(new ListatService(client)).AsService(this);
+                    }
+                    break;
+                    case StatisticServerType.Main:
+                    {
+                        StatisticService = Main.StatisticService;
+                    }
+                    break;
+                    case StatisticServerType.Disable:
+                    {
+                        StatisticService = null;
+                    }
+                    break;
+                }
             }
-            else
+            catch
             {
-                try
-                {
-                    StatisticService = Main.StatisticService;
-                }
-                catch
-                {
-                    StatisticService = new EmptyStatisticRepo().AsService(this);
-                }
+                StatisticService = null;
             }
         }
 

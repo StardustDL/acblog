@@ -61,6 +61,9 @@ else
     public RenderFragment FailingContent { get; set; }
 
     [Parameter]
+    public string LoadKey { get; set; } = string.Empty;
+
+    [Parameter]
     public EventCallback OnLoad { get; set; }
 
     [Parameter]
@@ -69,17 +72,19 @@ else
     [Parameter]
     public bool AutoLoad { get; set; } = true;
 
-    public DataLoadingState State { get; private set; } = DataLoadingState.Loading;
+    private string LastLoadKey { get; set; } = null;
+
+    public DataLoadingState State { get; private set; } = DataLoadingState.Initialized;
 
     private bool NeedCallback { get; set; } = false;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        if (AutoLoad)
+        if (AutoLoad && LastLoadKey != LoadKey && State != DataLoadingState.Loading)
         {
             await Load();
         }
-        await base.OnInitializedAsync();
+        await base.OnParametersSetAsync();
     }
 
     public async Task Load()
@@ -95,11 +100,8 @@ else
         {
             Logger.Log(LogLevel.Error, ex, "Loading failed");
             State = DataLoadingState.Failed;
-            _ = NotificationService.Error(new NotificationConfig
-            {
-                Message = "Loading failed",
-            });
         }
+        LastLoadKey = LoadKey;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

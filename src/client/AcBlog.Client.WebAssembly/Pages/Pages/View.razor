@@ -5,7 +5,7 @@
 @inject IPageRenderService PageService
 @using AcBlog.Client.WebAssembly.Components.Renderers
 
-<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" AutoLoad="@true" @ref="loader">
+<Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" LoadKey="@Route" @ref="loader">
     <ChildContent>
         <PageHeader>
             <PageHeaderTitle>
@@ -51,14 +51,6 @@
     private Page Page { get; set; }
 
     private string Rendered { get; set; }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        if (loader != null)
-        {
-            await loader.Load();
-        }
-    }
 
     private Task OnLoaded()
     {

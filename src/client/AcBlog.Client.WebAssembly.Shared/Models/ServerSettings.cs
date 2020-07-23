@@ -31,16 +31,30 @@
         public bool IsStatic { get; set; }
     }
 
+    public enum CommentServerType
+    {
+        Disable,
+        Main,
+        Loment
+    }
+
     public class CommentServerSettings
     {
-        public bool Enable { get; set; }
+        public CommentServerType Type { get; set; }
 
         public string Uri { get; set; }
     }
 
+    public enum StatisticServerType
+    {
+        Disable,
+        Main,
+        Listat
+    }
+
     public class StatisticServerSettings
     {
-        public bool Enable { get; set; }
+        public StatisticServerType Type { get; set; }
 
         public string Uri { get; set; }
     }
