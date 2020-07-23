@@ -9,13 +9,15 @@ namespace AcBlog.Data.Models
 
         public string Layout { get; set; } = string.Empty;
 
-        public string Body { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
 
         public string Route { get; set; } = string.Empty;
 
         public string Title { get; set; } = string.Empty;
 
-        public Dictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
+        public Feature Features { get; set; } = Feature.Empty;
+
+        public PropertyCollection Properties { get; set; } = new PropertyCollection();
 
         public DateTimeOffset CreationTime { get; set; }
 

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using AcBlog.Sdk.Extensions;
+using AcBlog.Data.Pages;
 
 namespace AcBlog.Client.WebAssembly
 {
@@ -37,7 +38,11 @@ namespace AcBlog.Client.WebAssembly
             services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PostService.CreateNoteFilter());
             services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PostService.CreateKeywordFilter());
             services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PostService.CreateCategoryFilter());
+
             services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PageService.CreateRouteFilter());
+
+            services.AddScoped<IMarkdownRenderService, MarkdownRenderService>();
+            services.AddScoped<IPageRenderService, PageRenderService>();
         }
     }
 }

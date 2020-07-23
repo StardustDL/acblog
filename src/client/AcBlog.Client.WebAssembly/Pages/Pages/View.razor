@@ -2,6 +2,7 @@
 
 @inherits BasePagePage
 @inject AcBlog.Sdk.Filters.PageRouteFilter Routes
+@inject IPageRenderService PageService
 @using AcBlog.Client.WebAssembly.Components.Renderers
 
 <Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" AutoLoad="@true" @ref="loader">
@@ -31,7 +32,7 @@
             </PageHeaderBreadcrumb>
         </PageHeader>
 
-        @((MarkupString)Page.Body)
+        @((MarkupString)Rendered)
     </ChildContent>
 
     <FailingContent>
@@ -48,6 +49,8 @@
     private Loader loader;
 
     private Page Page { get; set; }
+
+    private string Rendered { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -75,5 +78,18 @@
         var pages = await Routes.Filter(Route, null);
         var id = pages.Results.First();
         Page = await Service.PageService.Get(id);
+        AcBlog.Data.Models.Layout layout = null;
+        if (!string.IsNullOrEmpty(Page.Layout))
+        {
+            try
+            {
+                layout = await Service.LayoutService.Get(Page.Layout);
+            }
+            catch
+            {
+                layout = null;
+            }
+        }
+        Rendered = await PageService.Render(Page, layout);
     }
 }

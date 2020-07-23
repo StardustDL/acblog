@@ -38,16 +38,16 @@ namespace AcBlog.Data.Models
             return builder.Build();
         }
 
-        public static bool TryParse(string input, [NotNullWhen(true)] out Keyword? category)
+        public static bool TryParse(string input, [NotNullWhen(true)] out Keyword? keyword)
         {
             try
             {
-                category = Parse(input);
+                keyword = Parse(input);
                 return true;
             }
             catch
             {
-                category = null;
+                keyword = null;
                 return false;
             }
         }

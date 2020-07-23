@@ -34,7 +34,7 @@ The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub P
   - Preview & Full page
 - Note
 - Custom pages
-  - Layout
+  - Custom layout
   - Full HTML
 - Visitor statistic
 - Comments
@@ -109,7 +109,7 @@ For GitHub Pages hosting, you can use [static-backend-generate-action](https://g
 
 #### Dynamic
 
-Use AcBlog's Api server docker image:
+Use AcBlog's API server docker image:
 
 ```sh
 docker pull acblog/api:latest
@@ -169,6 +169,16 @@ Invoke-psake Build
 ```sh
 Invoke-psake CI
 ```
+
+## Dependencies
+
+- [.NET](https://github.com/dotnet/runtime) & [ASP.NET](https://github.com/dotnet/aspnetcore) For basic framework.
+- [Entity Framework](https://github.com/dotnet/efcore) For database access.
+- [ant-design-blazor](https://github.com/ant-design-blazor/ant-design-blazor) For UI designs.
+- [scriban](https://github.com/lunet-io/scriban) For layouts.
+- [RazorComponents.Markdown](https://github.com/StardustDL/RazorComponents.Markdown) For Markdown rendering.
+- [loment](https://github.com/StardustDL/loment) For comment service.
+- [listat](https://github.com/StardustDL/listat) For statistic service.
 
 ## Status
 

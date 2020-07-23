@@ -95,7 +95,7 @@ else
         {
             Logger.Log(LogLevel.Error, ex, "Loading failed");
             State = DataLoadingState.Failed;
-            await NotificationService.Error(new NotificationConfig
+            _ = NotificationService.Error(new NotificationConfig
             {
                 Message = "Loading failed",
             });

@@ -36,14 +36,14 @@ namespace AcBlog.Tools.Sdk.Repositories
 
             Page result = new Page();
             metadata.ApplyTo(result);
-            result.Body = content;
+            result.Content = content;
 
             return Task.FromResult(result);
         }
 
         protected override Task<(PageMetadata, string)> CreateNewItem(Page value)
         {
-            return Task.FromResult((new PageMetadata(value), value.Body));
+            return Task.FromResult((new PageMetadata(value), value.Content));
         }
     }
 }

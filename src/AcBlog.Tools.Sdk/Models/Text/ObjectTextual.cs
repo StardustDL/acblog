@@ -55,6 +55,10 @@ namespace AcBlog.Tools.Sdk.Models.Text
                         throw new Exception("Failed to parse metadata.", ex);
                     }
                 }
+                else
+                {
+                    contentBg = -1;
+                }
             }
             if (contentBg + 1 < lines.Length)
             {

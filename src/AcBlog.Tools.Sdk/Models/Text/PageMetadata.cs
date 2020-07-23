@@ -1,6 +1,9 @@
 ﻿using AcBlog.Data.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 
 namespace AcBlog.Tools.Sdk.Models.Text
 {
@@ -14,7 +17,9 @@ namespace AcBlog.Tools.Sdk.Models.Text
 
         public string title { get; set; } = string.Empty;
 
-        public Dictionary<string, string> properties { get; set; } = new Dictionary<string, string>();
+        public string[] features { get; set; } = Array.Empty<string>();
+
+        public Dictionary<string, dynamic> properties { get; set; } = new Dictionary<string, dynamic>();
 
         public string creationTime { get; set; } = string.Empty;
 
@@ -29,7 +34,12 @@ namespace AcBlog.Tools.Sdk.Models.Text
             layout = data.Layout;
             creationTime = data.CreationTime.ToString();
             modificationTime = data.ModificationTime.ToString();
-            properties = data.Properties;
+            features = data.Features.Items.ToArray();
+            properties = new Dictionary<string, dynamic>(
+                data.Properties.Raw.Select(
+                    x => new KeyValuePair<string, dynamic>(
+                        x.Key,
+                        JsonConvert.DeserializeObject<dynamic>(x.Value))));
             route = data.Route;
         }
 
@@ -37,6 +47,7 @@ namespace AcBlog.Tools.Sdk.Models.Text
         {
             data.Id = id;
             data.Title = title;
+            data.Features = new Feature(features);
             if (DateTimeOffset.TryParse(creationTime, out var _creationTime))
             {
                 data.CreationTime = _creationTime;
@@ -47,7 +58,11 @@ namespace AcBlog.Tools.Sdk.Models.Text
             }
             data.Layout = layout;
             data.Route = route;
-            data.Properties = properties;
+            data.Properties = new PropertyCollection(new Dictionary<string, string>(
+                properties.Select(
+                    x => new KeyValuePair<string, string>(
+                        x.Key,
+                        JsonConvert.SerializeObject(x.Value)))));
         }
     }
 }
