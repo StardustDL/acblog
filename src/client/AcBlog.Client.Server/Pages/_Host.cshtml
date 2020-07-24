@@ -1,0 +1,42 @@
+﻿@page "/"
+@namespace AcBlog.Client.Server.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AcBlog.Client.Server</title>
+    <base href="~/" />
+    <link rel="icon" href="icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon.png" />
+    <component type="typeof(AcBlog.Extensions.StyleSheetDeclare)" render-mode="Static" />
+</head>
+<body>
+    <app>
+        <component type="typeof(AcBlog.Client.UI.App)" render-mode="Server" />
+    </app>
+
+    <div id="loading-info-ui" class="alert alert-info mdi mdi-information" style="display: block;">
+        Loading application...
+    </div>
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.server.js"></script>
+
+    <component type="typeof(AcBlog.Extensions.ScriptDeclare)" render-mode="Static" />
+</body>
+</html>

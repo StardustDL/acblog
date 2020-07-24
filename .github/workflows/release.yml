@@ -35,6 +35,8 @@ jobs:
         echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./build.json || exit $LASTEXITCODE
         cd ../AcBlog.Client.WebAssembly || exit $LASTEXITCODE
         echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./wwwroot/build.json || exit $LASTEXITCODE
+        cd ../AcBlog.Client.Server || exit $LASTEXITCODE
+        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./build.json || exit $LASTEXITCODE
     - name: CD
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
@@ -64,6 +66,14 @@ jobs:
         repository: acblog/wasm-host
         tag_with_ref: true
         dockerfile: ./src/client/AcBlog.Client.WebAssembly.Host/Dockerfile
+    - name: Push Client.Server image
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: acblog/client
+        tag_with_ref: true
+        dockerfile: ./src/client/AcBlog.Client.Server/Dockerfile
     - name: Push Server.Api image
       uses: docker/build-push-action@v1
       with:
