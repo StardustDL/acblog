@@ -19,7 +19,7 @@
             </MenuItem>
             @{
                 RenderFragment PostsSubMenuTitle = @<span>
-                    <MdiIcon Type="archive" />
+                    <MdiIcon Type="post" />
                     <span>
                         <MenuLink href="posts">
                             Posts
@@ -54,21 +54,29 @@
                 </MenuItem>
             </SubMenu>
             <MenuItem>
-                    <MdiIcon Type="folder" />
-                    <span>
-                        <MenuLink href="categories">
-                            Categories
-                        </MenuLink>
-                    </span>
-                </MenuItem>
-                <MenuItem>
-                    <MdiIcon Type="tag-multiple" />
-                    <span>
-                        <MenuLink href="keywords">
-                            Keywords
-                        </MenuLink>
-                    </span>
-                </MenuItem>
+                <MdiIcon Type="folder" />
+                <span>
+                    <MenuLink href="categories">
+                        Categories
+                    </MenuLink>
+                </span>
+            </MenuItem>
+            <MenuItem>
+                <MdiIcon Type="tag-multiple" />
+                <span>
+                    <MenuLink href="keywords">
+                        Keywords
+                    </MenuLink>
+                </span>
+            </MenuItem>
+            <MenuItem>
+                <MdiIcon Type="archive" />
+                <span>
+                    <MenuLink href="archives">
+                        Archives
+                    </MenuLink>
+                </span>
+            </MenuItem>
             <MenuItem>
                 <MdiIcon Type="cog" />
                 <span>

@@ -58,7 +58,7 @@ namespace AcBlog.Client.Server.Controllers
             StringBuilder sb = new StringBuilder();
             using (var writer = XmlWriter.Create(sb))
                 feed.GetAtom10Formatter().WriteTo(writer);
-            return Content(sb.ToString(), "application/atom+xml");
+            return Content(sb.ToString(), "text/xml");
         }
 
         [HttpGet("rss")]
@@ -69,7 +69,7 @@ namespace AcBlog.Client.Server.Controllers
             StringBuilder sb = new StringBuilder();
             using (var writer = XmlWriter.Create(sb))
                 feed.GetRss20Formatter().WriteTo(writer);
-            return Content(sb.ToString(), "application/rss+xml");
+            return Content(sb.ToString(), "text/xml");
         }
     }
 }

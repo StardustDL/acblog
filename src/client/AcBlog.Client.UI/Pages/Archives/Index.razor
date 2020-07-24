@@ -1,0 +1,76 @@
+﻿@page "/archives"
+@inherits BaseArchivePage
+
+<PageHeader>
+    <PageHeaderTitle>Archives</PageHeaderTitle>
+    <PageHeaderBreadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>
+                <a href="">
+                    <MdiIcon Type="home" />
+                    <span>Home</span>
+                </a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                <span>
+                    <MdiIcon Type="archive" />
+                    <span>Archives</span>
+                </span>
+            </BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderBreadcrumb>
+</PageHeader>
+
+<div class="container">
+    <Loader OnLoad="@OnLoad" LoadKey="@($"{PageNumber}")" @ref="loader">
+        <Timeline Style="font-size: 18px;" Mode="alternate">
+            @foreach (var item in Data)
+            {
+                <TimelineItem Color="@($"#{((item.Key.GetHashCode() + 1) % 0xffffff + 1).ToString("X6")}")">
+                    <p>@item.Key</p>
+                    @foreach (var p in item)
+                    {
+                        <p>
+                            @switch (p.Type)
+                            {
+                                case PostType.Article:
+                                    <MdiIcon Type="feather" />
+                                    break;
+                                case PostType.Slides:
+                                    <MdiIcon Type="presentation" />
+                                    break;
+                                case PostType.Note:
+                                    <MdiIcon Type="file-document" />
+                                    break;
+                                default:
+                                    break;
+                            }
+                            <a href="posts/@Uri.EscapeDataString(p.Id)">@p.Title</a>
+                        </p>
+                    }
+                </TimelineItem>
+            }
+        </Timeline>
+    </Loader>
+</div>
+
+@code {
+    const int PageSize = 10;
+
+    IEnumerable<Post> RawData { get; set; }
+
+    IEnumerable<IGrouping<string, Post>> Data { get; set; }
+
+    [Parameter]
+    public int? PageNumber { get; set; } = null;
+
+    private Loader loader;
+
+    private async Task OnLoad()
+    {
+        Title = "Loading...";
+        RawData = await Service.PostService.GetAllItems();
+        Data = from d in RawData orderby d.CreationTime descending group d by d.CreationTime.ToLocalTime().ToString("yyyy-MM-dd");
+        Title = "";
+    }
+}

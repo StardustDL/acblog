@@ -48,7 +48,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.UI", "src\cli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.Core", "src\client\AcBlog.Client.Core\AcBlog.Client.Core.csproj", "{C5E1A1B9-3008-4E4E-8C91-C291C3204BC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcBlog.Client.Server", "src\client\AcBlog.Client.Server\AcBlog.Client.Server.csproj", "{777B38C4-221F-4E07-90D2-1B65166428DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcBlog.Client.Server", "src\client\AcBlog.Client.Server\AcBlog.Client.Server.csproj", "{777B38C4-221F-4E07-90D2-1B65166428DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -41,6 +41,7 @@ The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub P
   - Full HTML
 - Visitor statistic
 - Comments
+- Archives with timeline
 - Sitemap
 - Feeds (Atom & RSS)
 - Docker deployment
