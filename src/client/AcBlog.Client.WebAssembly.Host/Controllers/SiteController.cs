@@ -53,13 +53,24 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
 
         [HttpGet("atom")]
         [HttpGet("atom.xml")]
-        public async Task<ActionResult> GetFeed()
+        public async Task<ActionResult> GetAtomFeed()
         {
             var feed = await BlogService.BuildSyndication(BaseAddress);
             StringBuilder sb = new StringBuilder();
             using (var writer = XmlWriter.Create(sb))
                 feed.GetAtom10Formatter().WriteTo(writer);
-            return Content(sb.ToString(), "text/xml");
+            return Content(sb.ToString(), "application/atom+xml");
+        }
+
+        [HttpGet("rss")]
+        [HttpGet("rss.xml")]
+        public async Task<ActionResult> GetRssFeed()
+        {
+            var feed = await BlogService.BuildSyndication(BaseAddress);
+            StringBuilder sb = new StringBuilder();
+            using (var writer = XmlWriter.Create(sb))
+                feed.GetRss20Formatter().WriteTo(writer);
+            return Content(sb.ToString(), "application/rss+xml");
         }
     }
 }

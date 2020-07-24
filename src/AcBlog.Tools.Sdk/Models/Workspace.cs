@@ -385,15 +385,22 @@ namespace AcBlog.Tools.Sdk.Models
                         Logger.LogInformation("Build feed.");
                         {
                             var feed = await Local.BuildSyndication(baseAddress);
-                            using var st = sub.GetFileRewriteStream("atom.xml");
-                            using var writer = XmlWriter.Create(st);
-                            feed.GetAtom10Formatter().WriteTo(writer);
+                            using (var st = sub.GetFileRewriteStream("atom.xml"))
+                            {
+                                using var writer = XmlWriter.Create(st);
+                                feed.GetAtom10Formatter().WriteTo(writer);
+                            }
+                            using (var st = sub.GetFileRewriteStream("rss.xml"))
+                            {
+                                using var writer = XmlWriter.Create(st);
+                                feed.GetRss20Formatter().WriteTo(writer);
+                            }
                         }
                     }
                 }
                 {
                     string assetsPath = Path.Join(Environment.CurrentDirectory, AssetsPath);
-                    if(Directory.Exists(assetsPath))
+                    if (Directory.Exists(assetsPath))
                     {
                         Logger.LogInformation("Copy assets.");
                         FSExtensions.CopyDirectory(assetsPath, Path.Join(remote.Uri, AssetsPath));
