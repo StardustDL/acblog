@@ -53,7 +53,7 @@ Task Pack {
         New-Item -Path "packages" -ItemType Directory
     }
 
-    Exec -maxRetries 3 { dotnet pack -c Release /p:Version=$build_version -o ./packages }
+    Exec -maxRetries 10 { dotnet pack -c Release /p:Version=$build_version -o ./packages }
 }
 
 Task Publish-wasm {

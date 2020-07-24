@@ -12,13 +12,14 @@ The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub P
 
 ## Features
 
-- Based on WebAssembly
+- Based on WebAssembly & SignalR
 - Single Page APP
   - Installable
   - Offline
 - Frontend
   - WebAssembly: full static files
-  - SPA with server prerender
+  - SPA by WebAssembly with server prerender
+  - SPA without WebAssembly by communicating with server
 - Backend
   - Static-file backend with generator
   - Dynamic server backend
@@ -38,9 +39,12 @@ The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub P
   - Full HTML
 - Visitor statistic
 - Comments
+- Sitemap
+- ATOM feeds
 - Docker deployment
   - [![Docker](https://img.shields.io/docker/pulls/acblog/wasm.svg)](https://hub.docker.com/r/acblog/wasm) Client.WebAssembly
   - [![Docker](https://img.shields.io/docker/pulls/acblog/wasm-host.svg)](https://hub.docker.com/r/acblog/wasm-host) Client.WebAssembly.Host
+  - [![Docker](https://img.shields.io/docker/pulls/acblog/client.svg)](https://hub.docker.com/r/acblog/client) Client.Server
   - [![Docker](https://img.shields.io/docker/pulls/acblog/api.svg)](https://hub.docker.com/r/acblog/api) Server.API
 
 ## Guide
@@ -88,6 +92,23 @@ docker run -d \
   -v $PWD/appsettings.json:/app/appsettings.json \
   -v $PWD/manifest.json:/app/wwwroot/manifest.json \
   -p 8000:80 acblog/wasm-host:latest
+```
+
+---
+
+Use AcBlog's server client docker image (no WebAssembly):
+
+```sh
+docker pull acblog/client:latest
+docker run -d -p 8000:80 acblog/client:latest
+```
+
+You can use volumn to apply settings:
+
+```sh
+docker run -d \
+  -v $PWD/appsettings.json:/app/appsettings.json \
+  -p 8000:80 acblog/client:latest
 ```
 
 ### Backend
