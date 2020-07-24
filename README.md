@@ -10,6 +10,8 @@ The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub P
 
 - A mirror homepage on [Gitee](https://acblog.gitee.io).
 
+![](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview.png)
+
 ## Features
 
 - Based on WebAssembly & SignalR

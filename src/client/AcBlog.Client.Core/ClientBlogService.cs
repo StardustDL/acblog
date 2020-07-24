@@ -80,6 +80,8 @@ namespace AcBlog.Client
                 CommentService = null;
             }
 
+            CommentService ??= new EmptyCommentRepo().AsService(this);
+
             try
             {
                 switch (server.Statistic.Type)
@@ -109,6 +111,8 @@ namespace AcBlog.Client
             {
                 StatisticService = null;
             }
+
+            StatisticService ??= new EmptyStatisticRepo().AsService(this);
         }
 
         private IBlogService Main { get; }
