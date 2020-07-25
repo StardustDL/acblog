@@ -69,7 +69,7 @@
             }
 
             <div class="mt-5">
-                <CommentList Uri="@Post.GetCommentUri()"></CommentList>
+                <CommentList Uri="@UrlGenerator.Post(Post)"></CommentList>
             </div>
         </div>
     }
@@ -108,7 +108,7 @@
             {
                 Title = Post.Title;
             }
-            await Service.StatisticService?.Visited(Post);
+            await Service.StatisticService?.Visited(UrlGenerator, Post);
         }
     }
 

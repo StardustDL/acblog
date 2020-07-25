@@ -19,15 +19,5 @@ namespace AcBlog.Sdk.Extensions
             {
             }
         }
-
-        public static string GetStatisticUri(this Post value)
-        {
-            return $"posts/{value.Id}";
-        }
-
-        public static string GetStatisticUri(this Page value)
-        {
-            return $"pages/{value.Id}";
-        }
     }
 }

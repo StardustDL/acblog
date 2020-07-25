@@ -1,6 +1,7 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Sdk;
 using AcBlog.Sdk.Extensions;
+using AcBlog.Sdk.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace AcBlog.Client.Helpers
 {
     public static class StatisticHelper
     {
-        public static async Task Visited(this IStatisticService service, Post data)
+        public static async Task Visited(this IStatisticService service, IClientUrlGenerator urlGenerator, Post data)
         {
             if (service is null)
                 return;
@@ -21,7 +22,7 @@ namespace AcBlog.Client.Helpers
                     Category = "Post",
                     CreationTime = DateTimeOffset.Now,
                     ModificationTime = DateTimeOffset.Now,
-                    Uri = data.GetStatisticUri(),
+                    Uri = urlGenerator.Post(data),
                     Payload = ""
                 });
             }
@@ -31,7 +32,7 @@ namespace AcBlog.Client.Helpers
             }
         }
 
-        public static async Task<int?> Count(this IStatisticService service, Post data)
+        public static async Task<int?> Count(this IStatisticService service, IClientUrlGenerator urlGenerator, Post data)
         {
             if (service is null)
                 return null;
@@ -40,7 +41,7 @@ namespace AcBlog.Client.Helpers
                 return (await service.Query(new Data.Models.Actions.StatisticQueryRequest
                 {
                     Category = "Post",
-                    Uri = data.GetStatisticUri(),
+                    Uri = urlGenerator.Post(data),
                     Pagination = new Data.Models.Actions.Pagination
                     {
                         PageSize = 1
