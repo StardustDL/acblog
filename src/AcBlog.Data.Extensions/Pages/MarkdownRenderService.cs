@@ -130,13 +130,15 @@ namespace AcBlog.Data.Pages
             {
                 foreach (LinkInline link in document.Descendants<LinkInline>())
                 {
-                    if (!link.IsImage)
+                    if (!link.Url.StartsWith("blog://") && link.Url.Contains("://"))
+                    {
                         continue;
-                    if (link.Url.StartsWith("https://"))
-                        continue;
-                    if (link.Url.StartsWith("http://"))
-                        continue;
+                    }
 
+                    if (link.Url.StartsWith("blog://"))
+                    {
+                        link.Url = link.Url.Remove(0, "blog://".Length);
+                    }
                     var id = link.Url.Replace('\\', '/').TrimStart('/');
                     var url = await FileRepository.Get(id);
                     if (url != null)

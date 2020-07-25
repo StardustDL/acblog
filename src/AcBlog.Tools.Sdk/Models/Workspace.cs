@@ -365,15 +365,18 @@ namespace AcBlog.Tools.Sdk.Models
                 List<Data.Models.File> files = new List<Data.Models.File>();
                 {
                     string path = Path.Join(Environment.CurrentDirectory, AssetsPath);
-                    foreach (var file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
+                    if (Directory.Exists(path))
                     {
-                        Data.Models.File f = new Data.Models.File();
-                        f.Id = Path.GetRelativePath(Environment.CurrentDirectory, file).Replace('\\', '/');
-                        if (!string.IsNullOrEmpty(baseAddress))
+                        foreach (var file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
                         {
-                            f.Uri = $"{baseAddress.TrimEnd('/')}/{f.Id}";
+                            Data.Models.File f = new Data.Models.File();
+                            f.Id = Path.GetRelativePath(Environment.CurrentDirectory, file).Replace('\\', '/');
+                            if (!string.IsNullOrEmpty(baseAddress))
+                            {
+                                f.Uri = $"{baseAddress.TrimEnd('/')}/{f.Id}";
+                            }
+                            files.Add(f);
                         }
-                        files.Add(f);
                     }
                 }
 
