@@ -15,7 +15,7 @@
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
-                <a href="keywords">
+                <a href="@UrlGenerator.Keywords()">
                     <MdiIcon Type="tag-multiple" />
                     <span>Keywords</span>
                 </a>
@@ -54,16 +54,11 @@
 
     private string PageNavigationUrl;
 
-    protected override void OnParametersSet()
-    {
-        PageNavigationUrl = $"/keywords/{Uri.EscapeDataString(Id)}";
-        base.OnParametersSet();
-    }
-
     private async Task OnLoad()
     {
         Title = "Loading...";
         Keyword = AcBlog.Data.Models.Keyword.Parse(Id);
+        PageNavigationUrl = UrlGenerator.Keyword(Keyword);
         Data = await Keywords.Filter(Keyword, new Data.Models.Actions.Pagination
         {
             CurrentPage = PageNumber ?? 0,

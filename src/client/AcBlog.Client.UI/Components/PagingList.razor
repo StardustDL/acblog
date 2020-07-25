@@ -57,35 +57,36 @@
     {
         if (string.IsNullOrEmpty(PageNavigationUrl))
         {
-            PaginationItemRenderer = ctx =>@<Template>
-        @ctx.DefaultRender(ctx)
-    </Template>;
-}
-else
-{
-PaginationItemRenderer = ctx => @<Template>
-    @if (ctx.Type == "page")
-    {
-        <a href="@($"{PageNavigationUrl}/pages/{ctx.Page - 1}")">@(ctx.Page)</a>
+            PaginationItemRenderer = ctx => 
+            @<Template>
+                @ctx.DefaultRender(ctx)
+            </Template>;
+        }
+        else
+        {
+        PaginationItemRenderer = ctx => @<Template>
+            @if (ctx.Type == "page")
+            {
+                <a href="@($"{PageNavigationUrl}/pages/{ctx.Page - 1}")">@(ctx.Page)</a>
+            }
+            else if (ctx.Type == "prev" && Data.CurrentPage.HasPreviousPage)
+            {
+                <a href="@($"{PageNavigationUrl}/pages/{Data.CurrentPage.CurrentPage - 1}")">
+                    @("<")
+                </a>
+            }
+            else if (ctx.Type == "next" && Data.CurrentPage.HasNextPage)
+            {
+                <a href="@($"{PageNavigationUrl}/pages/{Data.CurrentPage.CurrentPage + 1}")">
+                    @(">")
+                </a>
+            }
+            else
+            {
+                @ctx.DefaultRender(ctx)
+            }
+        </Template>;
+        }
+        base.OnParametersSet();
     }
-    else if (ctx.Type == "prev" && Data.CurrentPage.HasPreviousPage)
-    {
-        <a href="@($"{PageNavigationUrl}/pages/{Data.CurrentPage.CurrentPage - 1}")">
-            @("<")
-        </a>
-    }
-    else if (ctx.Type == "next" && Data.CurrentPage.HasNextPage)
-    {
-        <a href="@($"{PageNavigationUrl}/pages/{Data.CurrentPage.CurrentPage + 1}")">
-            @(">")
-        </a>
-    }
-    else
-    {
-        @ctx.DefaultRender(ctx)
-    }
-</Template>;
-}
-base.OnParametersSet();
-}
 }

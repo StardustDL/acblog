@@ -6,13 +6,13 @@ using System.Web;
 
 namespace AcBlog.Sdk.Helpers
 {
-    public class ClientUrlGenerator
+    public class ClientUrlGenerator : IClientUrlGenerator
     {
         private string _baseAddress = string.Empty;
 
         public string BaseAddress { get => _baseAddress; set => _baseAddress = value.TrimEnd('/'); }
 
-        public string Post(string id) => $"{BaseAddress}/posts/{Uri.EscapeDataString(id)}";
+        public string Post(Post post) => $"{BaseAddress}/posts/{Uri.EscapeDataString(post.Id)}";
 
         public string Posts() => $"{BaseAddress}/posts";
 

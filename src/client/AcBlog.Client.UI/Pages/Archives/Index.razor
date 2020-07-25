@@ -45,7 +45,7 @@
                                 default:
                                     break;
                             }
-                            <a href="posts/@Uri.EscapeDataString(p.Id)">@p.Title</a>
+                            <a href="@UrlGenerator.Post(p)">@p.Title</a>
                         </p>
                     }
                 </TimelineItem>

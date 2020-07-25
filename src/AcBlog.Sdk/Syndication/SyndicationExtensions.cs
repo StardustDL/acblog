@@ -44,7 +44,7 @@ namespace AcBlog.Sdk.Syndication
                         continue;
                     var s = new SyndicationItem(p.Title,
                         SyndicationContent.CreateHtmlContent(Markdown.ToHtml(p.Content.Raw, Pipeline)),
-                        new Uri(generator.Post(p.Id)), p.Id, p.ModificationTime);
+                        new Uri(generator.Post(p)), p.Id, p.ModificationTime);
                     s.Authors.Add(author);
 
                     string summary;

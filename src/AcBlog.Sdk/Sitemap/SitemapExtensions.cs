@@ -26,10 +26,12 @@ namespace AcBlog.Sdk.Sitemap
                 siteMapBuilder.AddUrl(generator.Notes());
                 siteMapBuilder.AddUrl(generator.Archives());
                 {
-                    var posts = await service.PostService.All();
-                    foreach (var id in posts)
+                    var posts = await service.PostService.GetAllItems();
+                    foreach (var c in posts)
                     {
-                        siteMapBuilder.AddUrl(generator.Post(id));
+                        if (c is null)
+                            continue;
+                        siteMapBuilder.AddUrl(generator.Post(c));
                     }
                 }
                 {

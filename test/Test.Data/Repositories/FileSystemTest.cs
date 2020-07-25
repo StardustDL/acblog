@@ -56,6 +56,7 @@ namespace Test.Data.Repositories
             await builder.BuildPosts(PostData);
             await builder.BuildLayouts(LayoutData);
             await builder.BuildPages(PageData);
+            await builder.BuildFiles(FileData);
 
             BlogService = new FileSystemBlogService(new PhysicalFileProvider(RootPath).AsFileProvider());
         }

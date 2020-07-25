@@ -2,6 +2,7 @@
 using AcBlog.Client.UI.Models;
 using AcBlog.Data.Models;
 using AcBlog.Sdk;
+using AcBlog.Sdk.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;
@@ -28,6 +29,9 @@ namespace AcBlog.Client.UI.Shared
 
         [Inject]
         protected IBlogService Service { get; set; }
+        
+        [Inject]
+        protected IClientUrlGenerator UrlGenerator { get; set; }
 
         protected BlogOptions BlogOptions { get; set; } = new BlogOptions();
 

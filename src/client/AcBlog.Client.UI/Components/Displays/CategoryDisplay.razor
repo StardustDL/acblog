@@ -1,4 +1,5 @@
 ﻿@inject IBlogService Service
+@inject IClientUrlGenerator UrlGenerator
 
 @using AcBlog.Data.Models.Builders
 
@@ -8,7 +9,7 @@
         {
             CategoryBuilder builder = new CategoryBuilder();
             builder.AddSubCategory(Data.Items.Take(i + 1).ToArray());
-            <a href="categories/@Uri.EscapeDataString(builder.Build().ToString())" style="color: inherit;">@Data.Items[i]</a>
+            <a href="@UrlGenerator.Category(builder.Build())" style="color: inherit;">@Data.Items[i]</a>
             <span>/</span>
         }
     </span>

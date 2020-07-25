@@ -15,6 +15,7 @@ using System.Net.Http.Headers;
 using AcBlog.Sdk.Extensions;
 using AcBlog.Data.Pages;
 using AcBlog.Data.Repositories;
+using AcBlog.Sdk.Helpers;
 
 namespace AcBlog.Client
 {
@@ -57,6 +58,8 @@ namespace AcBlog.Client
 
             services.AddScoped<IMarkdownRenderService, MarkdownRenderService>();
             services.AddScoped<IPageRenderService, PageRenderService>();
+
+            services.AddScoped<IClientUrlGenerator, ClientUrlGenerator>();
         }
     }
 }

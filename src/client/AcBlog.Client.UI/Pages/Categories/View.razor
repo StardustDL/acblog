@@ -15,7 +15,7 @@
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
-                <a href="categories">
+                <a href="@UrlGenerator.Categories()">
                     <MdiIcon Type="folder" />
                     <span>Categories</span>
                 </a>
@@ -28,7 +28,7 @@
                     CategoryBuilder builder = new CategoryBuilder();
                     builder.AddSubCategory(Category.Items.Take(i + 1).ToArray());
                     <BreadcrumbItem>
-                        <a href="categories/@Uri.EscapeDataString(builder.Build().ToString())">
+                        <a href="@UrlGenerator.Category(builder.Build())">
                             <span>@name</span>
                         </a>
                     </BreadcrumbItem>
@@ -71,15 +71,10 @@
 
     private string PageNavigationUrl;
 
-    protected override void OnParametersSet()
-    {
-        PageNavigationUrl = $"/categories/{Uri.EscapeDataString(Id)}";
-        base.OnParametersSet();
-    }
-
     private async Task OnLoad()
     {
         Category = AcBlog.Data.Models.Category.Parse(Id);
+        PageNavigationUrl = UrlGenerator.Category(Category);
         Title = "Loading...";
         Data = await Categories.Filter(Category, new Data.Models.Actions.Pagination
         {
