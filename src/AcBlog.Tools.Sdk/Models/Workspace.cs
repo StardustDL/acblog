@@ -375,6 +375,10 @@ namespace AcBlog.Tools.Sdk.Models
                             {
                                 f.Uri = $"{baseAddress.TrimEnd('/')}/{f.Id}";
                             }
+                            else
+                            {
+                                f.Uri = $"/{f.Id}";
+                            }
                             files.Add(f);
                         }
                     }

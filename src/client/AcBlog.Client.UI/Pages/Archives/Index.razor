@@ -23,10 +23,10 @@
 
 <div class="container">
     <Loader OnLoad="@OnLoad" LoadKey="@($"{PageNumber}")" @ref="loader">
-        <Timeline Style="font-size: 18px;" Mode="alternate">
+        <Timeline Mode="alternate">
             @foreach (var item in Data)
             {
-                <TimelineItem Color="@($"#{((item.Key.GetHashCode() + 1) % 0xffffff + 1).ToString("X6")}")">
+                <TimelineItem Color="@($"#{((item.Key.GetHashCode() + 1) % 0xffffff + 1).ToString("X6")}")" Style="font-size: 16px;">
                     <p>@item.Key</p>
                     @foreach (var p in item)
                     {

@@ -67,6 +67,15 @@ namespace Test.Data
             };
         }
 
+        public static File GetFile()
+        {
+            return new File
+            {
+                Id = GetString(),
+                Uri = GetString()
+            };
+        }
+
         public static Page GetPage()
         {
             return new Page

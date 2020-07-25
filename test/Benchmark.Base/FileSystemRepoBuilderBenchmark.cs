@@ -22,6 +22,8 @@ namespace Benchmark.Base
 
         IList<Post> PostData { get; set; }
 
+        IList<AcBlog.Data.Models.File> FileData { get; set; }
+
         IList<Layout> LayoutData { get; set; }
 
         IList<Page> PageData { get; set; }
@@ -37,6 +39,7 @@ namespace Benchmark.Base
             PostData = Enumerable.Range(0, Length).Select(x => Generator.GetPost()).ToArray();
             LayoutData = Enumerable.Range(0, Length).Select(x => Generator.GetLayout()).ToArray();
             PageData = Enumerable.Range(0, Length).Select(x => Generator.GetPage()).ToArray();
+            FileData = Enumerable.Range(0, Length).Select(x => Generator.GetFile()).ToArray();
 
             Builder = new BlogBuilder(new BlogOptions(), RootPath);
         }
@@ -55,5 +58,8 @@ namespace Benchmark.Base
 
         [Benchmark]
         public async Task Page() => await Builder.BuildPages(PageData);
+
+        [Benchmark]
+        public async Task File() => await Builder.BuildFiles(FileData);
     }
 }

@@ -33,6 +33,8 @@ namespace Test.Data.Repositories
 
         IList<Page> PageData { get; set; }
 
+        IList<AcBlog.Data.Models.File> FileData { get; set; }
+
         BlogOptions BlogOptionsData { get; set; }
 
         FileSystemBlogService BlogService { get; set; }
@@ -46,6 +48,7 @@ namespace Test.Data.Repositories
             PostData = Enumerable.Range(0, 100).Select(x => Generator.GetPost()).ToArray();
             LayoutData = Enumerable.Range(0, 100).Select(x => Generator.GetLayout()).ToArray();
             PageData = Enumerable.Range(0, 100).Select(x => Generator.GetPage()).ToArray();
+            FileData = Enumerable.Range(0, 100).Select(x => Generator.GetFile()).ToArray();
             BlogOptionsData = new BlogOptions();
 
             BlogBuilder builder = new BlogBuilder(BlogOptionsData, RootPath);
@@ -133,6 +136,24 @@ namespace Test.Data.Repositories
 
                 var filter = await repo.CreateKeywordFilter().Filter(c);
                 filter.ShouldDeepEqual(res);
+            }
+        }
+
+        [TestMethod]
+        public async Task File()
+        {
+            var repo = BlogService.FileService;
+
+            await repo.TestStatus();
+
+            foreach (var item in FileData)
+            {
+                await repo.TestGet(item.Id);
+            }
+
+            foreach (var id in await repo.TestAll())
+            {
+                Assert.IsTrue(FileData.Any(x => x.Id == id));
             }
         }
 

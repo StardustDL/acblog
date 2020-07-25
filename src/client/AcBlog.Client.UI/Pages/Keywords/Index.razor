@@ -26,7 +26,7 @@
         <div>
             @foreach(var v in Data.Items)
             {
-                <Tag>
+                <Tag Class="m-1">
                     <a class="m-1" style="font-size: 18px" href="keywords/@Uri.EscapeDataString(v.ToString())">@v.OneNameOrDefault()</a>
                 </Tag>
             }

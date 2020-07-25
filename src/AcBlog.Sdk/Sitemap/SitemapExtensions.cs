@@ -1,4 +1,9 @@
-﻿using AcBlog.Sdk.Helpers;
+﻿using AcBlog.Data.Extensions;
+using AcBlog.Data.Models;
+using AcBlog.Sdk.Helpers;
+using System.Collections;
+using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -19,29 +24,40 @@ namespace AcBlog.Sdk.Sitemap
                 siteMapBuilder.AddUrl(generator.Articles());
                 siteMapBuilder.AddUrl(generator.Slides());
                 siteMapBuilder.AddUrl(generator.Notes());
-                var posts = await service.PostService.All();
-                foreach (var id in posts)
+                siteMapBuilder.AddUrl(generator.Archives());
                 {
-                    siteMapBuilder.AddUrl(generator.Post(id));
+                    var posts = await service.PostService.All();
+                    foreach (var id in posts)
+                    {
+                        siteMapBuilder.AddUrl(generator.Post(id));
+                    }
+                }
+                {
+                    siteMapBuilder.AddUrl(generator.Categories());
+                    var cates = await service.PostService.GetCategories();
+                    foreach (var c in cates.AsCategoryList())
+                    {
+                        siteMapBuilder.AddUrl(generator.Category(c));
+                    }
+                }
+                {
+                    siteMapBuilder.AddUrl(generator.Keywords());
+                    var cates = await service.PostService.GetKeywords();
+                    foreach (var c in cates.Items)
+                    {
+                        siteMapBuilder.AddUrl(generator.Keyword(c));
+                    }
+                }
+                {
+                    var cates = await service.PageService.GetAllItems();
+                    foreach (var c in cates)
+                    {
+                        if (c is null)
+                            continue;
+                        siteMapBuilder.AddUrl(generator.Page(c));
+                    }
                 }
             }
-
-            /*{
-                var keywords = await BlogService.KeywordService.All();
-                siteMapBuilder.AddUrl($"{BaseAddress}/keywords");
-                foreach (var id in keywords)
-                {
-                    siteMapBuilder.AddUrl($"{BaseAddress}/keywords/{id}");
-                }
-            };
-            {
-                var categories = await BlogService.CategoryService.All();
-                siteMapBuilder.AddUrl($"{BaseAddress}/categories");
-                foreach (var id in categories)
-                {
-                    siteMapBuilder.AddUrl($"{BaseAddress}/categories/{id}");
-                }
-            };*/
 
             return siteMapBuilder;
         }
