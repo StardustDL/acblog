@@ -69,30 +69,44 @@ namespace AcBlog.Data.Protections
 
         public async Task<Document> Protect(Document value, ProtectionKey key, CancellationToken cancellationToken = default)
         {
-            var res = new Document();
-            byte[] bs;
-            using (var ms = new MemoryStream())
+            try
             {
-                await JsonSerializer.SerializeAsync(ms, value, cancellationToken: cancellationToken);
-                bs = ms.ToArray();
+                var res = new Document();
+                byte[] bs;
+                using (var ms = new MemoryStream())
+                {
+                    await JsonSerializer.SerializeAsync(ms, value, cancellationToken: cancellationToken);
+                    bs = ms.ToArray();
+                }
+                var ky = Encoding.UTF8.GetBytes(key.Password);
+                res.Tag = ProtectFlag;
+                res.Raw = Convert.ToBase64String(AesEncrypt(bs, ky));
+                return res;
             }
-            var ky = Encoding.UTF8.GetBytes(key.Password);
-            res.Tag = ProtectFlag;
-            res.Raw = Convert.ToBase64String(AesEncrypt(bs, ky));
-            return res;
+            catch (Exception ex)
+            {
+                throw new ProtectionException("Protect failed.", ex);
+            }
         }
 
         public async Task<Document> Deprotect(Document value, ProtectionKey key, CancellationToken cancellationToken = default)
         {
-            if (!await IsProtected(value))
+            try
             {
-                return value;
+                if (!await IsProtected(value))
+                {
+                    return value;
+                }
+                var bs = Convert.FromBase64String(value.Raw);
+                var ky = Encoding.UTF8.GetBytes(key.Password);
+                using (var ms = new MemoryStream(AesDecrypt(bs, ky)))
+                {
+                    return await JsonSerializer.DeserializeAsync<Document>(ms, cancellationToken: cancellationToken);
+                }
             }
-            var bs = Convert.FromBase64String(value.Raw);
-            var ky = Encoding.UTF8.GetBytes(key.Password);
-            using (var ms = new MemoryStream(AesDecrypt(bs, ky)))
+            catch (Exception ex)
             {
-                return await JsonSerializer.DeserializeAsync<Document>(ms, cancellationToken: cancellationToken);
+                throw new ProtectionException("Deprotect failed.", ex);
             }
         }
     }

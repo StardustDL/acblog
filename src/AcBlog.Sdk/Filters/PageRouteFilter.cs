@@ -9,7 +9,7 @@ namespace AcBlog.Sdk.Filters
         {
         }
 
-        public override Task<QueryResponse<string>> Filter(string? arg, Pagination? pagination)
+        public override Task<QueryResponse<string>> Filter(string? arg, Pagination? pagination = null)
         {
             string route = (arg ?? string.Empty);
             return BaseService.Query(new PageQueryRequest

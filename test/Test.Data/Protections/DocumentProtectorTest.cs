@@ -15,12 +15,7 @@ namespace Test.Data.Protections
         [TestMethod]
         public async Task Password()
         {
-            Document document = new Document
-            {
-                Raw = "abc",
-                Tag = "a"
-            };
-            await ProtectorTester.Password(new DocumentProtector(), document);
+            await new DocumentProtector().TestPassword(Generator.GetDocument());
         }
     }
 }

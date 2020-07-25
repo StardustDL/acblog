@@ -2,6 +2,7 @@
 using AcBlog.Data.Models.Builders;
 using DeepEqual.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace Test.Data.Models.Builders
 {
@@ -21,15 +22,14 @@ namespace Test.Data.Models.Builders
             builder.RemoveKeyword("c");
             builder.Build().ShouldDeepEqual(new Keyword(new[] { "a", "b" }));
 
-            try
-            {
-                builder.AddKeyword($"a{Keyword.KeywordSeperator}b");
-                Assert.Fail("Invalid name");
-            }
-            catch
-            {
-
-            }
+            Assert.ThrowsException<Exception>(() => builder.AddKeyword($"a{Keyword.KeywordSeperator}b"));
         }
+
+        [TestMethod]
+        public void String()
+        {
+            var item = Generator.GetKeyword().ToString();
+        }
+
     }
 }

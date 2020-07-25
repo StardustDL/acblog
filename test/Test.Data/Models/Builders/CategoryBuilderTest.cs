@@ -24,43 +24,13 @@ namespace Test.Data.Models.Builders
             builder.RemoveSubCategory();
             builder.Build().ShouldDeepEqual(new Category(new[] { "a", "b" }));
 
-            try
-            {
-                builder.AddSubCategory($"a{Category.CategorySeperator}b");
-                Assert.Fail("Invalid name");
-            }
-            catch
-            {
-
-            }
+            Assert.ThrowsException<Exception>(() => builder.AddSubCategory($"a{Category.CategorySeperator}b"));
         }
-    }
 
-    [TestClass]
-    public class FeatureBuilderTest
-    {
         [TestMethod]
-        public void Basic()
+        public void String()
         {
-            FeatureBuilder builder = new FeatureBuilder();
-            builder.AddFeature("a", "b");
-            builder.Build().ShouldDeepEqual(new Feature(new[] { "a", "b" }));
-
-            builder.AddFeature("c");
-            builder.Build().ShouldDeepEqual(new Feature(new[] { "a", "b", "c" }));
-
-            builder.RemoveFeature("c");
-            builder.Build().ShouldDeepEqual(new Feature(new[] { "a", "b" }));
-
-            try
-            {
-                builder.AddFeature($"a{Feature.FeatureSeperator}b");
-                Assert.Fail("Invalid name");
-            }
-            catch
-            {
-
-            }
+            var item = Generator.GetCategory().ToString();
         }
     }
 }

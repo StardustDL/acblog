@@ -13,7 +13,7 @@ namespace AcBlog.Sdk.Filters
 
         public TBase BaseService { get; protected set; }
 
-        public abstract Task<QueryResponse<string>> Filter(Pagination? pagination);
+        public abstract Task<QueryResponse<string>> Filter(Pagination? pagination = null);
     }
 
     public abstract class BaseQueryFilter<TBase, T> : IQueryFilter<TBase, T>
@@ -25,6 +25,6 @@ namespace AcBlog.Sdk.Filters
 
         public TBase BaseService { get; protected set; }
 
-        public abstract Task<QueryResponse<string>> Filter(T arg, Pagination? pagination);
+        public abstract Task<QueryResponse<string>> Filter(T arg, Pagination? pagination = null);
     }
 }

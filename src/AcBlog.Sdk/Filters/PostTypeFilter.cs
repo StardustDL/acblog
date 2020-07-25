@@ -10,7 +10,7 @@ namespace AcBlog.Sdk.Filters
         {
         }
 
-        public override Task<QueryResponse<string>> Filter(PostType? arg, Pagination? pagination)
+        public override Task<QueryResponse<string>> Filter(PostType? arg = null, Pagination? pagination = null)
         {
             return BaseService.Query(new PostQueryRequest
             {
@@ -26,7 +26,7 @@ namespace AcBlog.Sdk.Filters
         {
         }
 
-        public Task<QueryResponse<string>> Filter(Pagination? pagination) => base.Filter(PostType.Article, pagination);
+        public Task<QueryResponse<string>> Filter(Pagination? pagination = null) => base.Filter(PostType.Article, pagination);
     }
 
     public class PostSlidesFilter : PostTypeFilter, IQueryFilter<IPostService>
@@ -35,7 +35,7 @@ namespace AcBlog.Sdk.Filters
         {
         }
 
-        public Task<QueryResponse<string>> Filter(Pagination? pagination) => base.Filter(PostType.Slides, pagination);
+        public Task<QueryResponse<string>> Filter(Pagination? pagination = null) => base.Filter(PostType.Slides, pagination);
     }
 
     public class PostNoteFilter : PostTypeFilter, IQueryFilter<IPostService>
@@ -44,6 +44,6 @@ namespace AcBlog.Sdk.Filters
         {
         }
 
-        public Task<QueryResponse<string>> Filter(Pagination? pagination) => base.Filter(PostType.Note, pagination);
+        public Task<QueryResponse<string>> Filter(Pagination? pagination = null) => base.Filter(PostType.Note, pagination);
     }
 }
