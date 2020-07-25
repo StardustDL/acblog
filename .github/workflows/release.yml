@@ -11,7 +11,7 @@ defaults:
 env:
   dotnet-version: "3.1.x"
   node-version: "12.x"
-  build_version: "0.0.3"
+  build_version: "0.0.4"
 
 jobs:
   pub-images:

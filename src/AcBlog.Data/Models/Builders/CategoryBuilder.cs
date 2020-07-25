@@ -28,7 +28,7 @@ namespace AcBlog.Data.Models.Builders
         {
             if (Inner.Count > 0)
             {
-                Inner.RemoveAt(Inner.Count);
+                Inner.RemoveAt(Inner.Count - 1);
                 return this;
             }
             else

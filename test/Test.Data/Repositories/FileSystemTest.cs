@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace Test.Data.Repositories
 {
     [TestClass]
-    public class FileSystemTest : RepositoriyTest
+    public class FileSystemTest
     {
         string RootPath { get; set; }
 

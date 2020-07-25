@@ -4,16 +4,7 @@ using Test.Data.Repositories;
 
 namespace Test.Sdk
 {
-    public abstract class SdkTest : RepositoriyTest
+    public abstract class SdkTest
     {
-        protected async Task PostService(IPostService service)
-        {
-            await PostRepository(service);
-        }
-
-        protected async Task BlogService(IBlogService service)
-        {
-            await PostService(service.PostService);
-        }
     }
 }

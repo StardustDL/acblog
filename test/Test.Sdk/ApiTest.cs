@@ -27,6 +27,6 @@ namespace Test.Sdk
             Factory.Dispose();
         }
 
-        public Task Post() => PostService(Service.PostService);
+        // public Task Post() => PostService(Service.PostService);
     }
 }
