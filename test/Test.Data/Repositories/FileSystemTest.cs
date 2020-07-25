@@ -41,6 +41,7 @@ namespace Test.Data.Repositories
         public async Task Setup()
         {
             RootPath = Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "fstest");
+            FSStaticBuilder.EnsureDirectoryExists(RootPath);
 
             PostData = Enumerable.Range(0, 100).Select(x => Generator.GetPost()).ToArray();
             LayoutData = Enumerable.Range(0, 100).Select(x => Generator.GetLayout()).ToArray();

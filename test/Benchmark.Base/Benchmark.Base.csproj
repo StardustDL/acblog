@@ -10,4 +10,9 @@
     <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\AcBlog.Data.Repositories.FileSystem\AcBlog.Data.Repositories.FileSystem.csproj" />
+    <ProjectReference Include="..\Test.Utils\Test.Utils.csproj" />
+  </ItemGroup>
+
 </Project>
