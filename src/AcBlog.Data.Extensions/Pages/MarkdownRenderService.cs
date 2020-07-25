@@ -130,13 +130,17 @@ namespace AcBlog.Data.Pages
             {
                 foreach (LinkInline link in document.Descendants<LinkInline>())
                 {
-                    if (link.IsImage && !Uri.TryCreate(link.Url, UriKind.Absolute, out _))
-                    {
-                        var id = link.Url.Replace('\\', '/').TrimStart('/');
-                        var url = await FileRepository.Get(id);
-                        if (url != null)
-                            link.Url = url.Uri;
-                    }
+                    if (!link.IsImage)
+                        continue;
+                    if (link.Url.StartsWith("https://"))
+                        continue;
+                    if (link.Url.StartsWith("http://"))
+                        continue;
+
+                    var id = link.Url.Replace('\\', '/').TrimStart('/');
+                    var url = await FileRepository.Get(id);
+                    if (url != null)
+                        link.Url = url.Uri;
                 }
             }
 
