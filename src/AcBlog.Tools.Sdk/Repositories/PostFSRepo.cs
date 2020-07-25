@@ -44,11 +44,11 @@ namespace AcBlog.Tools.Sdk.Repositories
                 metadata.id = id;
             if (string.IsNullOrEmpty(metadata.creationTime))
             {
-                metadata.creationTime = File.GetCreationTime(path).ToString();
+                metadata.creationTime = System.IO.File.GetCreationTime(path).ToString();
             }
             if (string.IsNullOrEmpty(metadata.modificationTime))
             {
-                metadata.modificationTime = File.GetLastWriteTime(path).ToString();
+                metadata.modificationTime = System.IO.File.GetLastWriteTime(path).ToString();
             }
             if (metadata.category.Length == 0)
             {

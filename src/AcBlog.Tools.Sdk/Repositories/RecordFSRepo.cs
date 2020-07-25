@@ -52,7 +52,7 @@ namespace AcBlog.Tools.Sdk.Repositories
         public override async Task<T?> Get(string id, CancellationToken cancellationToken = default)
         {
             string path = GetPath(id);
-            using var fs = File.OpenRead(path);
+            using var fs = System.IO.File.OpenRead(path);
             using var sr = new StreamReader(fs);
             var src = await sr.ReadToEndAsync().ConfigureAwait(false);
             var (metadata, content) = ObjectTextual.Parse<TMeta>(src);
@@ -68,16 +68,16 @@ namespace AcBlog.Tools.Sdk.Repositories
             }
             var (metadata, content) = await CreateNewItem(value);
             string result = ObjectTextual.Format(metadata, content);
-            await File.WriteAllTextAsync(GetPath(value.Id), result, System.Text.Encoding.UTF8, cancellationToken);
+            await System.IO.File.WriteAllTextAsync(GetPath(value.Id), result, System.Text.Encoding.UTF8, cancellationToken);
             return value.Id;
         }
 
         public override Task<bool> Delete(string id, CancellationToken cancellationToken = default)
         {
             string path = GetPath(id);
-            if (File.Exists(path))
+            if (System.IO.File.Exists(path))
             {
-                File.Delete(path);
+                System.IO.File.Delete(path);
                 return Task.FromResult(true);
             }
             return Task.FromResult(false);
@@ -85,7 +85,7 @@ namespace AcBlog.Tools.Sdk.Repositories
 
         public override Task<bool> Exists(string id, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(File.Exists(GetPath(id)));
+            return Task.FromResult(System.IO.File.Exists(GetPath(id)));
         }
 
         public override async Task<bool> Update(T value, CancellationToken cancellationToken = default)
@@ -96,7 +96,7 @@ namespace AcBlog.Tools.Sdk.Repositories
             }
             var (metadata, content) = await CreateNewItem(value);
             string result = ObjectTextual.Format(metadata, content);
-            await File.WriteAllTextAsync(GetPath(value.Id), result, System.Text.Encoding.UTF8, cancellationToken);
+            await System.IO.File.WriteAllTextAsync(GetPath(value.Id), result, System.Text.Encoding.UTF8, cancellationToken);
             return true;
         }
 
