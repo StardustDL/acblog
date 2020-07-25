@@ -62,7 +62,7 @@ namespace AcBlog.Tools.Sdk.Models
 
         async Task SaveDb()
         {
-            using var st = File.Open(DBPath, FileMode.Create, FileAccess.Write);
+            using var st = System.IO.File.Open(DBPath, FileMode.Create, FileAccess.Write);
             await JsonSerializer.SerializeAsync(st, new { db = DB }, options: new JsonSerializerOptions
             {
                 WriteIndented = true
@@ -71,7 +71,7 @@ namespace AcBlog.Tools.Sdk.Models
 
         async Task SaveOption()
         {
-            using var st = File.Open(OptionPath, FileMode.Create, FileAccess.Write);
+            using var st = System.IO.File.Open(OptionPath, FileMode.Create, FileAccess.Write);
             await JsonSerializer.SerializeAsync(st, new { acblog = Option }, options: new JsonSerializerOptions
             {
                 WriteIndented = true
@@ -360,6 +360,23 @@ namespace AcBlog.Tools.Sdk.Models
                     pages.Add(item);
                 }
 
+                var baseAddress = Option.Properties[$"remote.{remote.Name}.generator.baseAddress"];
+
+                List<Data.Models.File> files = new List<Data.Models.File>();
+                {
+                    string path = Path.Join(Environment.CurrentDirectory, AssetsPath);
+                    foreach (var file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
+                    {
+                        Data.Models.File f = new Data.Models.File();
+                        f.Id = Path.GetRelativePath(Environment.CurrentDirectory, file).Replace('\\', '/');
+                        if (!string.IsNullOrEmpty(baseAddress))
+                        {
+                            f.Uri = $"{baseAddress.TrimEnd('/')}/{f.Id}";
+                        }
+                        files.Add(f);
+                    }
+                }
+
                 Logger.LogInformation("Build data.");
                 {
                     BlogOptions options = await Local.GetOptions();
@@ -368,10 +385,10 @@ namespace AcBlog.Tools.Sdk.Models
                     await builder.BuildPosts(posts);
                     await builder.BuildLayouts(layouts);
                     await builder.BuildPages(pages);
+                    await builder.BuildFiles(files);
                 }
 
                 {
-                    var baseAddress = Option.Properties[$"remote.{remote.Name}.generator.baseAddress"];
                     if (!string.IsNullOrEmpty(baseAddress))
                     {
                         Logger.LogInformation("Build sitemap.");

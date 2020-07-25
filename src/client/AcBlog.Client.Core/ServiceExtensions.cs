@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using AcBlog.Sdk.Extensions;
 using AcBlog.Data.Pages;
+using AcBlog.Data.Repositories;
 
 namespace AcBlog.Client
 {
@@ -32,6 +33,19 @@ namespace AcBlog.Client
                 settings.BaseAddress = baseAddress;
             });
             services.AddScoped<IBlogService, ClientBlogService>();
+
+            services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PostService);
+            services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PageService);
+            services.AddScoped(sp => sp.GetRequiredService<IBlogService>().LayoutService);
+            services.AddScoped(sp => sp.GetRequiredService<IBlogService>().CommentService);
+            services.AddScoped(sp => sp.GetRequiredService<IBlogService>().StatisticService);
+            services.AddScoped(sp => sp.GetRequiredService<IBlogService>().FileService);
+            services.AddScoped<IPostRepository>(sp => sp.GetRequiredService<IBlogService>().PostService);
+            services.AddScoped<IPageRepository>(sp => sp.GetRequiredService<IBlogService>().PageService);
+            services.AddScoped<ILayoutRepository>(sp => sp.GetRequiredService<IBlogService>().LayoutService);
+            services.AddScoped<ICommentRepository>(sp => sp.GetRequiredService<IBlogService>().CommentService);
+            services.AddScoped<IStatisticRepository>(sp => sp.GetRequiredService<IBlogService>().StatisticService);
+            services.AddScoped<IFileRepository>(sp => sp.GetRequiredService<IBlogService>().FileService);
 
             services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PostService.CreateArticleFilter());
             services.AddScoped(sp => sp.GetRequiredService<IBlogService>().PostService.CreateSlidesFilter());

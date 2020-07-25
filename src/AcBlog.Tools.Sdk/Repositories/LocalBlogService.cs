@@ -31,12 +31,14 @@ namespace AcBlog.Tools.Sdk.Repositories
 
         public IStatisticService StatisticService => throw new System.NotImplementedException();
 
+        public IFileService FileService => throw new System.NotImplementedException();
+
         public async Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default)
         {
             string path = Path.Join(RootPath, Workspace.BlogOptionPath);
-            if (File.Exists(path))
+            if (System.IO.File.Exists(path))
             {
-                using var st = File.OpenRead(path);
+                using var st = System.IO.File.OpenRead(path);
                 return await JsonSerializer.DeserializeAsync<BlogOptions>(st).ConfigureAwait(false);
             }
             else

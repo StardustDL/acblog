@@ -17,6 +17,8 @@ namespace AcBlog.Sdk
 
         IStatisticService StatisticService { get; }
 
+        IFileService FileService { get; }
+
         Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default);
     }
 }

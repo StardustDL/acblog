@@ -35,22 +35,22 @@ namespace AcBlog.Data.Repositories
             CanWrite = false
         };
 
-        public RepositoryAccessContext Context { get; set; } = new RepositoryAccessContext();
+        public virtual RepositoryAccessContext Context { get; set; } = new RepositoryAccessContext();
 
-        public Task<IEnumerable<TId>> All(CancellationToken cancellationToken = default) => Task.FromResult<IEnumerable<TId>>(Array.Empty<TId>());
+        public virtual Task<IEnumerable<TId>> All(CancellationToken cancellationToken = default) => Task.FromResult<IEnumerable<TId>>(Array.Empty<TId>());
 
-        public Task<TId?> Create(T value, CancellationToken cancellationToken = default) => Task.FromResult<TId?>(null);
+        public virtual Task<TId?> Create(T value, CancellationToken cancellationToken = default) => Task.FromResult<TId?>(null);
 
-        public Task<bool> Delete(TId id, CancellationToken cancellationToken = default) => Task.FromResult(false);
+        public virtual Task<bool> Delete(TId id, CancellationToken cancellationToken = default) => Task.FromResult(false);
 
-        public Task<bool> Exists(TId id, CancellationToken cancellationToken = default) => Task.FromResult(false);
+        public virtual Task<bool> Exists(TId id, CancellationToken cancellationToken = default) => Task.FromResult(false);
 
-        public Task<T?> Get(TId id, CancellationToken cancellationToken = default) => Task.FromResult<T?>(null);
+        public virtual Task<T?> Get(TId id, CancellationToken cancellationToken = default) => Task.FromResult<T?>(null);
 
-        public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(Status);
+        public virtual Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(Status);
 
-        public Task<QueryResponse<TId>> Query(TQuery query, CancellationToken cancellationToken = default) => Task.FromResult(new QueryResponse<TId>(Array.Empty<TId>()));
+        public virtual Task<QueryResponse<TId>> Query(TQuery query, CancellationToken cancellationToken = default) => Task.FromResult(new QueryResponse<TId>(Array.Empty<TId>()));
 
-        public Task<bool> Update(T value, CancellationToken cancellationToken = default) => Task.FromResult(false);
+        public virtual Task<bool> Update(T value, CancellationToken cancellationToken = default) => Task.FromResult(false);
     }
 }

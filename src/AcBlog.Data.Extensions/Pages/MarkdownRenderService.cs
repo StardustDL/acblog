@@ -1,6 +1,11 @@
-﻿using Markdig;
+﻿using AcBlog.Data.Repositories;
+using Markdig;
 using Markdig.Extensions.MediaLinks;
+using Markdig.Renderers;
+using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,6 +13,8 @@ namespace AcBlog.Data.Pages
 {
     public class MarkdownRenderService : IMarkdownRenderService
     {
+        IFileRepository? FileRepository { get; }
+
         class BilibiliMediaLinkHost : IHostProvider
         {
             static string? MediaLink(Uri uri)
@@ -105,14 +112,41 @@ namespace AcBlog.Data.Pages
             return pipeline;
         });
 
+        public MarkdownRenderService(IFileRepository? fileRepository = null)
+        {
+            FileRepository = fileRepository;
+        }
+
         public Task<string> RenderPlainText(string markdown)
         {
             return Task.FromResult(Markdown.ToPlainText(markdown, Pipeline.Value));
         }
 
-        public Task<string> RenderHtml(string markdown)
+        public async Task<string> RenderHtml(string markdown)
         {
-            return Task.FromResult(Markdown.ToHtml(markdown, Pipeline.Value));
+            var document = Markdown.Parse(markdown, Pipeline.Value);
+
+            if (FileRepository != null)
+            {
+                foreach (LinkInline link in document.Descendants<LinkInline>())
+                {
+                    if (link.IsImage && !Uri.TryCreate(link.Url, UriKind.Absolute, out _))
+                    {
+                        var id = link.Url.Replace('\\', '/').TrimStart('/');
+                        var url = await FileRepository.Get(id);
+                        if (url != null)
+                            link.Url = url.Uri;
+                    }
+                }
+            }
+
+            using var writer = new StringWriter();
+            HtmlRenderer renderer = new HtmlRenderer(writer);
+            Pipeline.Value.Setup(renderer);
+
+            renderer.Render(document);
+            writer.Flush();
+            return writer.ToString();
         }
     }
 }

@@ -2,6 +2,7 @@
 using Markdig;
 using Microsoft.Extensions.DependencyInjection;
 using StardustDL.RazorComponents.Markdown;
+using System.Threading.Tasks;
 
 namespace AcBlog.UI.Components
 {
@@ -18,8 +19,20 @@ namespace AcBlog.UI.Components
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IMarkdownComponentService, MarkdownComponentService>();
+            services.AddScoped<IMarkdownComponentService, CustomMarkdownComponentService>();
             base.ConfigureServices(services);
+        }
+
+        class CustomMarkdownComponentService: MarkdownComponentService
+        {
+            public CustomMarkdownComponentService(IMarkdownRenderService service) => Service = service;
+
+            IMarkdownRenderService Service { get; }
+
+            public override Task<string> RenderHtml(string value)
+            {
+                return Service.RenderHtml(value);
+            }
         }
     }
 }

@@ -48,5 +48,11 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
             var builder = new LayoutRepositoryBuilder(Path.Join(RootPath, "layouts"));
             await builder.Build(data);
         }
+
+        public async Task BuildFiles(IList<Models.File> data)
+        {
+            var builder = new FileRepositoryBuilder(Path.Join(RootPath, "files"));
+            await builder.Build(data);
+        }
     }
 }

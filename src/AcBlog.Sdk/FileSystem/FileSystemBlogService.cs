@@ -16,6 +16,7 @@ namespace AcBlog.Sdk.FileSystem
             PostService = new PostService(this, "posts", FileProvider);
             PageService = new PageService(this, "pages", FileProvider);
             LayoutService = new LayoutService(this, "layouts", FileProvider);
+            FileService = new FileService(this, "files", FileProvider);
         }
 
         public IFileProvider FileProvider { get; }
@@ -25,6 +26,8 @@ namespace AcBlog.Sdk.FileSystem
         public IPageService PageService { get; }
 
         public ILayoutService LayoutService { get; }
+
+        public IFileService FileService { get; }
 
         public ICommentService CommentService => throw new NotImplementedException();
 

@@ -6,6 +6,8 @@
 
         public CommentServerSettings Comment { get; set; } = new CommentServerSettings();
 
+        public FileServerSettings File { get; set; } = new FileServerSettings();
+
         public StatisticServerSettings Statistic { get; set; } = new StatisticServerSettings();
 
         public IdentityServerSettings Identity { get; set; } = new IdentityServerSettings();
@@ -41,6 +43,20 @@
     public class CommentServerSettings
     {
         public CommentServerType Type { get; set; }
+
+        public string Uri { get; set; }
+    }
+
+    public enum FileServerType
+    {
+        Disable,
+        Main,
+        Rebase
+    }
+
+    public class FileServerSettings
+    {
+        public FileServerType Type { get; set; }
 
         public string Uri { get; set; }
     }

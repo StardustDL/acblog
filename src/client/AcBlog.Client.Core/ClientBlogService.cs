@@ -84,6 +84,34 @@ namespace AcBlog.Client
 
             try
             {
+                switch (server.File.Type)
+                {
+                    case FileServerType.Rebase:
+                    {
+                        FileService = new RebaseFileRepo(server.File.Uri).AsService(this);
+                    }
+                    break;
+                    case FileServerType.Main:
+                    {
+                        FileService = Main.FileService;
+                    }
+                    break;
+                    case FileServerType.Disable:
+                    {
+                        FileService = null;
+                    }
+                    break;
+                }
+            }
+            catch
+            {
+                FileService = null;
+            }
+
+            FileService ??= new RebaseFileRepo(server.BaseAddress).AsService(this);
+
+            try
+            {
                 switch (server.Statistic.Type)
                 {
                     case StatisticServerType.Listat:
@@ -123,6 +151,8 @@ namespace AcBlog.Client
 
         public ILayoutService LayoutService => Main.LayoutService;
 
+        public IFileService FileService { get; }
+
         public ICommentService CommentService { get; }
 
         public IStatisticService StatisticService { get; }
@@ -131,6 +161,22 @@ namespace AcBlog.Client
 
         class EmptyCommentRepo : EmptyRecordRepository<Comment, string, CommentQueryRequest>, ICommentRepository
         {
+        }
+
+        class RebaseFileRepo : EmptyRecordRepository<File, string, FileQueryRequest>, IFileRepository
+        {
+            public RebaseFileRepo(string baseAddress) => BaseAddress = baseAddress.TrimEnd('/');
+
+            string BaseAddress { get; }
+
+            public override Task<File> Get(string id, CancellationToken cancellationToken = default)
+            {
+                return Task.FromResult(new File
+                {
+                    Id = id,
+                    Uri = $"{BaseAddress}/{id}"
+                });
+            }
         }
 
         class EmptyStatisticRepo : EmptyRecordRepository<Statistic, string, StatisticQueryRequest>, IStatisticRepository
