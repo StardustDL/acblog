@@ -30,12 +30,12 @@ namespace AcBlog.Tools.Sdk.Repositories
 
         public override Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new QueryResponse<string>(Array.Empty<string>()));
         }
 
-        public Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default) => Task.FromResult(new CategoryTree());
 
-        public Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default) => Task.FromResult(new KeywordCollection());
 
         protected override async Task<Post> CreateExistedItem(string id, PostMetadata metadata, string content)
         {

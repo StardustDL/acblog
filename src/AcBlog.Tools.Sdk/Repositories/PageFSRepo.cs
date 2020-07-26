@@ -17,7 +17,7 @@ namespace AcBlog.Tools.Sdk.Repositories
 
         public override Task<QueryResponse<string>> Query(PageQueryRequest query, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new QueryResponse<string>(Array.Empty<string>()));
         }
 
         protected override Task<Page> CreateExistedItem(string id, PageMetadata metadata, string content)
