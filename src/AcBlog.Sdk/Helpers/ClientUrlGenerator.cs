@@ -26,6 +26,8 @@ namespace AcBlog.Sdk.Helpers
 
         public string Categories() => $"{BaseAddress}/categories";
 
+        public string Comments() => $"{BaseAddress}/comments";
+
         public string Category(Category category) => $"{BaseAddress}/categories/{Uri.EscapeDataString(category.ToString())}";
 
         public string Keywords() => $"{BaseAddress}/keywords";

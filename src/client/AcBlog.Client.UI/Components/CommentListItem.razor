@@ -11,6 +11,9 @@
     [Parameter]
     public string Id { get; set; }
 
+    [Parameter]
+    public bool ShowSource { get; set; } = false;
+
     private AcBlog.Data.Models.Comment Comment { get; set; }
 
     RenderFragment content;
@@ -31,6 +34,15 @@
             </span>
         </Tooltip>;
 
-        author = @<a href="@Comment.Link">@Comment.Author</a>;
+        author = @<span>
+                          <a href="@Comment.Link">@Comment.Author</a>
+                          @if (ShowSource)
+                          {
+                              <span>@@</span> 
+                              <a href="@Comment.Uri">
+                                   @Comment.Uri
+                              </a>
+                          }
+                      </span>;
     }
 }

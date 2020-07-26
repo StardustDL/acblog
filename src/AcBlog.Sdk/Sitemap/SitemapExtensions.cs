@@ -25,6 +25,7 @@ namespace AcBlog.Sdk.Sitemap
                 siteMapBuilder.AddUrl(generator.Slides());
                 siteMapBuilder.AddUrl(generator.Notes());
                 siteMapBuilder.AddUrl(generator.Archives());
+                siteMapBuilder.AddUrl(generator.Comments());
                 {
                     var posts = await service.PostService.GetAllItems();
                     foreach (var c in posts)

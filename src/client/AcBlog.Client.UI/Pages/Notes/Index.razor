@@ -41,7 +41,7 @@
 
 <div class="container">
     <Loader OnLoad="@OnLoad" LoadKey="@($"{PageNumber}")" @ref="loader">
-        <PagingList Data="@Data" Column="1" PageNavigationUrl="/notes">
+        <PagingList Data="@Data" Column="1" PageNavigationUrl="@UrlGenerator.Notes()">
             <ItemTemplate>
                 <PostListItem Id="@context"></PostListItem>
             </ItemTemplate>

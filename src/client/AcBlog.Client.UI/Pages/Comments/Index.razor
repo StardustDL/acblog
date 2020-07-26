@@ -1,10 +1,12 @@
-﻿@page "/posts"
-@page "/posts/pages"
-@page "/posts/pages/{pageNumber:int}"
-@inherits BasePostPage
+﻿@page "/comments"
+@page "/comments/pages"
+@page "/comments/pages/{pageNumber:int}"
+@inject NotificationService NotificationService
+@inherits BaseCommentPage
+@using AcBlog.Client.UI.Components.Renderers
 
 <PageHeader>
-    <PageHeaderTitle>Posts</PageHeaderTitle>
+    <PageHeaderTitle>Comments</PageHeaderTitle>
     <PageHeaderBreadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
@@ -15,28 +17,19 @@
             </BreadcrumbItem>
             <BreadcrumbItem>
                 <span>
-                    <MdiIcon Type="post" />
-                    <span>Posts</span>
+                    <MdiIcon Type="comment" />
+                    <span>Comments</span>
                 </span>
             </BreadcrumbItem>
         </Breadcrumb>
     </PageHeaderBreadcrumb>
-    <PageHeaderExtra>
-        <AuthorizeView>
-            <Authorized>
-                <div class="btn-group-toggle mx-auto" role="group">
-                    <a class="btn btn-success mdi mdi-plus" href="posts/new">Create</a>
-                </div>
-            </Authorized>
-        </AuthorizeView>
-    </PageHeaderExtra>
 </PageHeader>
 
 <div class="container">
     <Loader OnLoad="@OnLoad" LoadKey="@($"{PageNumber}")" @ref="loader">
-        <PagingList Data="@Data" Column="1" PageNavigationUrl="@UrlGenerator.Posts()">
+        <PagingList Data="@Data" Column="1" PageNavigationUrl="@UrlGenerator.Comments()">
             <ItemTemplate>
-                <PostListItem Id="@context" ShowType="true"></PostListItem>
+                <CommentListItem Id="@context" ShowSource="@true"></CommentListItem>
             </ItemTemplate>
         </PagingList>
     </Loader>
@@ -55,9 +48,9 @@
     private async Task OnLoad()
     {
         Title = "Loading...";
-        Data = await Service.PostService.Query(new PostQueryRequest
+        Data = await Service.CommentService.Query(new CommentQueryRequest
         {
-            Pagination = new Data.Models.Actions.Pagination
+            Pagination= new Data.Models.Actions.Pagination
             {
                 CurrentPage = PageNumber ?? 0,
                 PageSize = PageSize

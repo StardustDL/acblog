@@ -15,8 +15,8 @@
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
-                <a href="posts">
-                    <MdiIcon Type="@UrlGenerator.Posts()" />
+                <a href="@UrlGenerator.Posts()">
+                    <MdiIcon Type="post" />
                     <span>Posts</span>
                 </a>
             </BreadcrumbItem>
@@ -41,7 +41,7 @@
 
 <div class="container">
     <Loader OnLoad="@OnLoad" @ref="loader">
-        <PagingList Data="@Data" Column="1" PageNavigationUrl="/slides">
+        <PagingList Data="@Data" Column="1" PageNavigationUrl="@UrlGenerator.Slides()">
             <ItemTemplate>
                 <PostListItem Id="@context"></PostListItem>
             </ItemTemplate>

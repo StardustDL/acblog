@@ -40,7 +40,7 @@ namespace AcBlog.Client.UI
             }
             else if (tspan.TotalDays > 7)
             {
-                sb.Append("1 weeks ago");
+                sb.Append("1 week ago");
             }
             else if (tspan.TotalDays > 1)
             {

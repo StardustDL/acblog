@@ -15,5 +15,6 @@ namespace AcBlog.Sdk.Helpers
         string Post(Post post);
         string Posts();
         string Slides();
+        string Comments();
     }
 }
