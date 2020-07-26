@@ -21,5 +21,15 @@ namespace AcBlog.Data.Extensions
         {
             return await repository.GetItems(await repository.All());
         }
+
+        public static IEnumerable<T> IgnoreNull<T>(this IEnumerable<T?> raw) where T : class
+        {
+            foreach (var v in raw)
+            {
+                if (v is null)
+                    continue;
+                yield return v;
+            }
+        }
     }
 }
