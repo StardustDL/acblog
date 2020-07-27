@@ -1,0 +1,97 @@
+﻿@page "/search"
+@page "/search/{query}"
+@inherits BaseSearchPage
+
+<PageHeader>
+    <PageHeaderTitle>Search</PageHeaderTitle>
+    <PageHeaderBreadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>
+                <a href="">
+                    <MdiIcon Type="home" />
+                    <span>Home</span>
+                </a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                <span>
+                    <MdiIcon Type="magnify" />
+                    <span>Search</span>
+                </span>
+            </BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderBreadcrumb>
+    <PageHeaderContent>
+        <Search Placeholder="Search" Size="@InputSize.Large" OnSearch="@OnSearch" OnPressEnter="@OnSearch" @bind-Value="@CurrentQuery" />
+    </PageHeaderContent>
+</PageHeader>
+
+<div class="container">
+    <Loader OnLoad="@OnLoad" LoadKey="@($"{Query}")" @ref="loader">
+        <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo">
+            <ItemTemplate>
+                <PostListItem Id="@context" ShowType="true"></PostListItem>
+            </ItemTemplate>
+        </PagingList>
+    </Loader>
+</div>
+
+@code {
+    [Parameter]
+    public string Query { get; set; } = null;
+
+    string CurrentQuery { get; set; } = "";
+
+    const int PageSize = 10;
+
+    QueryResponse<string> Data { get; set; }
+
+    int PageNumber { get; set; } = 0;
+
+    private Loader loader;
+
+    private async Task OnLoad()
+    {
+        if (string.IsNullOrWhiteSpace(CurrentQuery))
+        {
+            Title = "";
+            Data = new QueryResponse<string>(Array.Empty<string>());
+        }
+        else
+        {
+            Title = "Loading...";
+            Data = await Service.PostService.Searcher.Search(new PostQueryRequest
+            {
+                Term = Query,
+                Pagination = new Data.Models.Actions.Pagination
+                {
+                    CurrentPage = PageNumber,
+                    PageSize = PageSize
+                }
+            });
+            Title = $"Page {Data.CurrentPage.CurrentPage + 1}";
+        }
+    }
+
+    private async Task OnPageTo(int pageNumber)
+    {
+        PageNumber = pageNumber;
+        await OnUpdatePage();
+    }
+
+    private async Task OnUpdatePage() => await loader.Load();
+
+    private void OnSearch()
+    {
+        if (string.IsNullOrWhiteSpace(CurrentQuery))
+            return;
+        PageNumber = 0;
+        NavigationManager.NavigateTo(UrlGenerator.Search(CurrentQuery));
+        StateHasChanged();
+    }
+
+    protected override void OnParametersSet()
+    {
+        CurrentQuery = Query ?? "";
+        base.OnParametersSet();
+    }
+}

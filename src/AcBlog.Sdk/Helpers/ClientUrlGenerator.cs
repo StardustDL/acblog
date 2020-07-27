@@ -14,6 +14,8 @@ namespace AcBlog.Sdk.Helpers
 
         public string Post(Post post) => $"{BaseAddress}/posts/{Uri.EscapeDataString(post.Id)}";
 
+        public string Search(string query = "") => $"{BaseAddress}/search/{Uri.EscapeDataString(query)}";
+
         public string Posts() => $"{BaseAddress}/posts";
 
         public string Articles() => $"{BaseAddress}/articles";

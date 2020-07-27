@@ -20,6 +20,13 @@ namespace AcBlog.Data.Repositories.Searchers.Local
 
             if (string.IsNullOrEmpty(query.Route))
                 qr.Where(x => x.Route.StartsWith(query.Route));
+            if (!string.IsNullOrWhiteSpace(query.Term))
+            {
+                qr = qr.Where(x =>
+                    x.Title.ToString().Contains(query.Term) ||
+                    x.Content.ToString().Contains(query.Term)
+                );
+            }
 
             return qr.AsQueryResponse<Page, string>(query);
         }

@@ -11,7 +11,7 @@ using System.Web;
 
 namespace AcBlog.Sdk.Api
 {
-    internal abstract class BaseRecordApiService<T, TQuery> where T : class, IHasId<string>
+    internal abstract class BaseRecordApiService<T, TQuery, TSearcher> where T : class, IHasId<string>
     {
         protected abstract string PrepUrl { get; }
 
@@ -24,6 +24,8 @@ namespace AcBlog.Sdk.Api
         public IBlogService BlogService { get; private set; }
 
         public HttpClient HttpClient { get; }
+
+        public TSearcher Searcher => throw new NotImplementedException();
 
         public RepositoryAccessContext Context { get; set; } = new RepositoryAccessContext();
 

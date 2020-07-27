@@ -1,6 +1,8 @@
-﻿using AcBlog.Data.Models;
+﻿using AcBlog.Data.Extensions;
+using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
+using AcBlog.Data.Repositories.Searchers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +19,10 @@ namespace AcBlog.Sdk.Extensions
         {
             public RepoBasedService(IBlogService blogService, IStatisticRepository repository) : base(blogService, repository)
             {
+                Searcher = Repository.CreateLocalSearcher();
             }
+
+            public IStatisticRepositorySearcher Searcher { get; }
         }
     }
 }

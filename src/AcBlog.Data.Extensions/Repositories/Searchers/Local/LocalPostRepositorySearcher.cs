@@ -33,9 +33,19 @@ namespace AcBlog.Data.Repositories.Searchers.Local
                 qr = qr.Where(x => x.Title.Contains(query.Title));
             if (!string.IsNullOrWhiteSpace(query.Content))
             {
-                string jsonContent = JsonSerializer.Serialize(query.Content);
-                qr = qr.Where(x => x.Content.Raw.Contains(jsonContent));
+                qr = qr.Where(x => x.Content.Raw.Contains(query.Content));
             }
+            if (!string.IsNullOrWhiteSpace(query.Term))
+            {
+                qr = qr.Where(x =>
+                    x.Author.Contains(query.Term) ||
+                    x.Category.ToString().Contains(query.Term) ||
+                    x.Keywords.ToString().Contains(query.Term) ||
+                    x.Title.ToString().Contains(query.Term) ||
+                    x.Content.Raw.ToString().Contains(query.Term)
+                );
+            }
+
             qr = query.Order switch
             {
                 PostResponseOrder.None => qr,

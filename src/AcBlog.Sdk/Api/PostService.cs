@@ -3,6 +3,7 @@ using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories;
+using AcBlog.Data.Repositories.Searchers;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Sdk.Api
 {
-    internal class PostService : BaseRecordApiService<Post, PostQueryRequest>, IPostService
+    internal class PostService : BaseRecordApiService<Post, PostQueryRequest, IPostRepositorySearcher>, IPostService
     {
         public PostService(IBlogService blog, HttpClient httpClient) : base(blog, httpClient)
         {

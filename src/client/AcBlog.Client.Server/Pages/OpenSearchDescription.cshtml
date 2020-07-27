@@ -1,0 +1,13 @@
+﻿@page "/Site/opensearch"
+@model AcBlog.Client.Server.Pages.OpenSearchDescriptionModel
+@{
+    Layout = null;
+    Response.ContentType = "text/xml";
+}
+<?xml version="1.0" encoding="UTF-8" ?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+    <ShortName>@Model.BlogOptions.Name</ShortName>
+    <Description>@Model.BlogOptions.Description</Description>
+    <Image width="16" height="16">@Model.BlogOptions.Icon</Image>
+    <Url type="text/html" template="@($"{Model.BaseAddress}/search/{{searchTerms}}")" />
+</OpenSearchDescription>

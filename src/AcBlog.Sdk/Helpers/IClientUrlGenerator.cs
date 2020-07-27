@@ -4,6 +4,7 @@ namespace AcBlog.Sdk.Helpers
 {
     public interface IClientUrlGenerator
     {
+        string Search(string query = "");
         string Archives();
         string Articles();
         string Categories();

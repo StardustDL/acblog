@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Sdk
 {
-    internal abstract class RecordRepoBaseService<T, TId, TQuery, TRepo> where TRepo : IRecordRepository<T, TId, TQuery> where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+    public abstract class RecordRepoBaseService<T, TId, TQuery, TRepo> where TRepo : IRecordRepository<T, TId, TQuery> where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
     {
         protected RecordRepoBaseService(IBlogService blogService, TRepo repository)
         {

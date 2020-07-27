@@ -14,29 +14,4 @@ namespace AcBlog.Data.Repositories.Searchers
 
         Task<QueryResponse<TId>> Search(TQuery query, CancellationToken cancellationToken = default);
     }
-
-    public interface IPostRepositorySearcher: IRecordRepositorySearcher<Post,string,PostQueryRequest, IPostRepository>
-    {
-
-    }
-
-    public interface ILayoutRepositorySearcher : IRecordRepositorySearcher<Layout, string, LayoutQueryRequest, ILayoutRepository>
-    {
-
-    }
-
-    public interface ICommentRepositorySearcher : IRecordRepositorySearcher<Comment, string, CommentQueryRequest, ICommentRepository>
-    {
-
-    }
-
-    public interface IStatisticRepositorySearcher : IRecordRepositorySearcher<Statistic, string, StatisticQueryRequest, IStatisticRepository>
-    {
-
-    }
-
-    public interface IPageRepositorySearcher : IRecordRepositorySearcher<Page, string, PageQueryRequest, IPageRepository>
-    {
-
-    }
 }

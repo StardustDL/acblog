@@ -28,6 +28,13 @@ namespace AcBlog.Data.Repositories.Searchers.Local
                 qr = qr.Where(x => x.Uri == query.Uri);
             if (!string.IsNullOrWhiteSpace(query.Content))
                 qr = qr.Where(x => x.Content.Contains(query.Content));
+            if (!string.IsNullOrWhiteSpace(query.Term))
+            {
+                qr = qr.Where(x =>
+                    x.Author.Contains(query.Term) ||
+                    x.Content.ToString().Contains(query.Term)
+                );
+            }
 
             return qr.AsQueryResponse<Comment, string>(query);
         }
