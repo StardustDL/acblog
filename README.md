@@ -44,6 +44,7 @@ The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub P
 - Archives with timeline
 - Sitemap
 - Feeds (Atom & RSS)
+- Search
 - Docker deployment
   - [![Docker](https://img.shields.io/docker/pulls/acblog/wasm.svg)](https://hub.docker.com/r/acblog/wasm) Client.WebAssembly
   - [![Docker](https://img.shields.io/docker/pulls/acblog/wasm-host.svg)](https://hub.docker.com/r/acblog/wasm-host) Client.WebAssembly.Host
