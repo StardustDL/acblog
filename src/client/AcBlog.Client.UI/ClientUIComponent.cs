@@ -8,7 +8,7 @@ namespace AcBlog.Client.UI
         public ClientUIComponent()
         {
             AddLocalStyleSheetResource("lib/bootstrap/css/bootstrap.min.css");
-            AddLocalStyleSheetResource("lib/mdi/css/materialdesignicons.min.css");
+            AddStyleSheetResource("_content/StardustDL.RazorComponents.MaterialDesignIcons/mdi/css/materialdesignicons.min.css");
             AddLocalStyleSheetResource("lib/markdown-css/github-markdown.css");
             AddLocalStyleSheetResource("css/app.css");
 
