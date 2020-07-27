@@ -10,7 +10,12 @@ The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub P
 
 - A mirror homepage on [Gitee](https://acblog.gitee.io).
 
-![](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview.png)
+## Screenshots
+
+![](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview-home.png)
+![](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview-post.png)
+![](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview-archive.png)
+![](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview-search.png)
 
 ## Features
 
@@ -44,7 +49,7 @@ The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub P
 - Archives with timeline
 - Sitemap
 - Feeds (Atom & RSS)
-- Search
+- Search (Open Search supported)
 - Docker deployment
   - [![Docker](https://img.shields.io/docker/pulls/acblog/wasm.svg)](https://hub.docker.com/r/acblog/wasm) Client.WebAssembly
   - [![Docker](https://img.shields.io/docker/pulls/acblog/wasm-host.svg)](https://hub.docker.com/r/acblog/wasm-host) Client.WebAssembly.Host
