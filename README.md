@@ -4,7 +4,7 @@
 
 An open source extensible static & dynamic blog system.
 
-![](https://repository-images.githubusercontent.com/259549650/50d50d00-9073-11ea-8e72-0d3f1d3a7d8c)
+![cover](https://repository-images.githubusercontent.com/259549650/50d50d00-9073-11ea-8e72-0d3f1d3a7d8c)
 
 The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub Pages.
 
@@ -12,10 +12,10 @@ The [homepage](https://acblog.github.io) is powered by AcBlog hosted on GitHub P
 
 ## Screenshots
 
-![](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview-home.png)
-![](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview-post.png)
-![](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview-archive.png)
-![](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview-search.png)
+![Home](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview-home.png)
+![Posts](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview-post.png)
+![Archives](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview-archive.png)
+![Search](https://github.com/StardustDL/own-staticfile-hosting/raw/master/acblog/images/preview-search.png)
 
 ## Features
 
@@ -182,7 +182,7 @@ Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Na
 
 4. Restore dependencies
 
-Add NuGet source: https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json.
+Add NuGet source: [StardustDL's NUGET feeds](https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json).
 
 ```ps1
 Invoke-psake Restore
@@ -212,4 +212,4 @@ Invoke-psake CI
 
 ## Status
 
-![](https://buildstats.info/github/chart/acblog/acblog?branch=master)
+![Status](https://buildstats.info/github/chart/acblog/acblog?branch=master)

@@ -13,7 +13,12 @@ Task CD -depends CD-Build, Pack, Deploy
 
 Task CD-Build -depends Install-deps, Restore, Build, Pack
 
-Task Restore -depends Restore-WASM {
+Task Build-dotnet -depends Restore-dotnet, Build
+
+Task Restore -depends Restore-WASM, Restore-dotnet
+
+Task Restore-dotnet {
+    Exec { dotnet nuget add source https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json -n aza -u sparkshine -p $NUGET_AUTH_TOKEN --store-password-in-clear-text }
     Exec { dotnet restore }
 }
 
@@ -22,7 +27,6 @@ Task Build {
 }
 
 Task Install-deps {
-    Exec { dotnet nuget add source https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json -n aza -u sparkshine -p $NUGET_AUTH_TOKEN --store-password-in-clear-text }
     Exec { npm install --global gulp }
     Exec { dotnet tool install --global Microsoft.Web.LibraryManager.Cli }
     Exec { dotnet tool install dotnet-reportgenerator-globaltool --tool-path ./tools }
@@ -36,7 +40,7 @@ Task Test {
     Exec { dotnet test -c Release ./test/Test.Base /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=../../reports/test/coverage.xml /p:MergeWith=../../reports/test/coverage.json }
 }
 
-Task Benchmark { 
+Task Benchmark {
     Exec { dotnet run -c Release --project ./test/Benchmark.Base }
 }
 

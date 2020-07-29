@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <base href="/" />
     <title>Redirecting...</title>
+</head>
+<body>
     <script type="text/javascript">
         function sparedirectEncode(loc, segmentCount) {
             return loc.protocol + '//' + loc.hostname + (loc.port ? ':' + loc.port : '') +
@@ -15,7 +17,5 @@
         var l = window.location;
         l.replace(sparedirectEncode(l, 0));
     </script>
-</head>
-<body>
 </body>
 </html>
