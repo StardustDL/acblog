@@ -14,14 +14,16 @@ namespace AcBlog.Tools.Sdk.Repositories
         public LocalBlogService(string rootPath)
         {
             RootPath = rootPath;
-            PostService = new PostService(this, Path.Join(rootPath, "posts"));
+            InnerPostService = new PostService(this, Path.Join(rootPath, "posts"));
             PageService = new PageService(this, Path.Join(rootPath, "pages"));
             LayoutService = new LayoutService(this, Path.Join(rootPath, "layouts"));
         }
 
         public string RootPath { get; }
 
-        public IPostService PostService { get; }
+        internal PostService InnerPostService { get; }
+
+        public IPostService PostService => InnerPostService;
 
         public IPageService PageService { get; }
 

@@ -37,24 +37,39 @@ namespace AcBlog.Tools.Sdk.Repositories
 
         public Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default) => Task.FromResult(new KeywordCollection());
 
-        protected override async Task<Post> CreateExistedItem(string id, PostMetadata metadata, string content)
+        public PostMetadata GetDefaultMetadata(string id)
         {
             string path = GetPath(id);
-            if (string.IsNullOrEmpty(metadata.id))
-                metadata.id = id;
-            if (string.IsNullOrEmpty(metadata.creationTime))
+            PostMetadata metadata = new PostMetadata
             {
-                metadata.creationTime = System.IO.File.GetCreationTime(path).ToString();
-            }
-            if (string.IsNullOrEmpty(metadata.modificationTime))
-            {
-                metadata.modificationTime = System.IO.File.GetLastWriteTime(path).ToString();
-            }
-            if (metadata.category.Length == 0)
+                id = id,
+                creationTime = System.IO.File.GetCreationTime(path).ToString(),
+                modificationTime = System.IO.File.GetLastWriteTime(path).ToString()
+            };
             {
                 var relpath = Path.GetDirectoryName(id)?.Replace("\\", "/");
                 var items = relpath?.Split("/", StringSplitOptions.RemoveEmptyEntries);
                 metadata.category = items ?? Array.Empty<string>();
+            }
+            return metadata;
+        }
+
+        protected override async Task<Post> CreateExistedItem(string id, PostMetadata metadata, string content)
+        {
+            var defaultMeta = GetDefaultMetadata(id);
+            if (string.IsNullOrEmpty(metadata.id))
+                metadata.id = defaultMeta.id;
+            if (string.IsNullOrEmpty(metadata.creationTime))
+            {
+                metadata.creationTime = defaultMeta.creationTime;
+            }
+            if (string.IsNullOrEmpty(metadata.modificationTime))
+            {
+                metadata.modificationTime = defaultMeta.modificationTime;
+            }
+            if (!(metadata.category?.Length > 0))
+            {
+                metadata.category = defaultMeta.category;
             }
 
             Post result = new Post();
@@ -64,7 +79,7 @@ namespace AcBlog.Tools.Sdk.Repositories
                 Raw = content
             };
 
-            if (!string.IsNullOrEmpty(metadata.password))
+            if (!string.IsNullOrWhiteSpace(metadata.password))
             {
                 result.Content = await Protector.Protect(result.Content, new ProtectionKey
                 {

@@ -43,7 +43,6 @@ namespace Test.Data.Repositories
         public static async Task TestGet<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, TId id) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
         {
             var result = await repository.Get(id);
-            Assert.AreEqual(id, result.Id);
             Assert.IsNotNull(result);
         }
 

@@ -6,23 +6,23 @@ namespace AcBlog.Tools.Sdk.Models.Text
 {
     public class PostMetadata : MetadataBase<Post>
     {
-        public string id { get; set; } = string.Empty;
+        public string? id { get; set; } = null;
 
-        public string author { get; set; } = string.Empty;
+        public string? author { get; set; } = null;
 
-        public string title { get; set; } = string.Empty;
+        public string? title { get; set; } = null;
 
-        public string creationTime { get; set; } = string.Empty;
+        public string? creationTime { get; set; } = null;
 
-        public string modificationTime { get; set; } = string.Empty;
+        public string? modificationTime { get; set; } = null;
 
-        public string[] keywords { get; set; } = Array.Empty<string>();
+        public string[]? keywords { get; set; } = null;
 
-        public string[] category { get; set; } = Array.Empty<string>();
+        public string[]? category { get; set; } = null;
 
-        public string type { get; set; } = Enum.GetName(typeof(PostType), PostType.Article)?.ToLowerInvariant() ?? "article";
+        public string? type { get; set; } = null;
 
-        public string password { get; set; } = string.Empty;
+        public string? password { get; set; } = null;
 
         public PostMetadata() { }
 
@@ -40,10 +40,14 @@ namespace AcBlog.Tools.Sdk.Models.Text
 
         public override void ApplyTo(Post data)
         {
-            data.Id = id;
-            data.Title = title;
-            data.Category = new Category(category);
-            data.Keywords = new Keyword(keywords);
+            if (id != null)
+                data.Id = id;
+            if (title != null)
+                data.Title = title;
+            if (category != null)
+                data.Category = new Category(category);
+            if (keywords != null)
+                data.Keywords = new Keyword(keywords);
             if (DateTimeOffset.TryParse(creationTime, out var _creationTime))
             {
                 data.CreationTime = _creationTime;
@@ -52,8 +56,10 @@ namespace AcBlog.Tools.Sdk.Models.Text
             {
                 data.ModificationTime = _modificationTime;
             }
-            data.Type = Enum.Parse<PostType>(type, true);
-            data.Author = author;
+            if (type != null)
+                data.Type = Enum.Parse<PostType>(type, true);
+            if (author != null)
+                data.Author = author;
         }
     }
 }

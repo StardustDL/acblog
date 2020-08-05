@@ -22,7 +22,9 @@ namespace AcBlog.Tools.Sdk.Repositories
             Searcher = Repository.CreateLocalSearcher();
         }
 
-        public IProtector<Document> Protector => (Repository as PostFSRepo)!.Protector;
+        internal PostFSRepo InnerRepository => (Repository as PostFSRepo)!;
+
+        public IProtector<Document> Protector => InnerRepository.Protector;
 
         public IPostRepositorySearcher Searcher { get; }
 
