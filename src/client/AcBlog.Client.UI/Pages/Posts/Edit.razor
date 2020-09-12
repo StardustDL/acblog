@@ -4,6 +4,8 @@
 @inherits BasePostPage
 @inject IAccessTokenProvider TokenProvider
 
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
+
 <div class="container">
     <ItemEditor IsCreate="@IsCreate" Title="@(IsCreate ? "Create post" : "Edit post")" OnCheckValidation="@OnCheckValidation" OnCreate="@OnCreate" OnDelete="@OnDelete" OnUpdate="@OnUpdate">
         <Loader OnLoad="@OnLoad">

@@ -4,6 +4,8 @@
 @inherits BaseCategoryPage
 @inject AcBlog.Sdk.Filters.PostCategoryFilter Categories
 
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
+
 <PageHeader>
     <PageHeaderTitle>@Category.OneNameOrDefault()</PageHeaderTitle>
     <PageHeaderBreadcrumb>

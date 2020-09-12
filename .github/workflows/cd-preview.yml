@@ -1,0 +1,88 @@
+name: CD-Preview
+
+on:
+  repository_dispatch:
+    types: [cd-preview]
+
+defaults:
+  run:
+    shell: pwsh
+
+env:
+  dotnet-version: "3.1.x"
+  node-version: "12.x"
+  build_version: "0.0.3.${{ github.run_number }}"
+
+jobs:
+  pub-images:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.dotnet-version }}
+    - name: Setup NodeJS
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.node-version }}
+    - name: Setup psake
+      run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake
+    - name: Generate build status
+      run: |
+        cd src/client/AcBlog.Client.WebAssembly.Host || exit $LASTEXITCODE
+        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./build.json || exit $LASTEXITCODE
+        cd ../AcBlog.Client.WebAssembly || exit $LASTEXITCODE
+        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./wwwroot/build.json || exit $LASTEXITCODE
+        cd ../AcBlog.Client.Server || exit $LASTEXITCODE
+        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./build.json || exit $LASTEXITCODE
+    - name: CD
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
+      run: Invoke-psake cd-build -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
+    - name: Publish Client.WebAssembly
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
+      run: Invoke-psake publish-wasm -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: wasm
+        path: ./src/client/AcBlog.Client.WebAssembly/publish
+    - name: Push Client.WebAssembly image
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.MIRROR_DOCKER_USERNAME }}
+        password: ${{ secrets.MIRROR_DOCKER_PASSWORD }}
+        registry: registry.cn-hangzhou.aliyuncs.com
+        repository: stardustdl/acblog-preview
+        tags: wasm
+        dockerfile: ./src/client/AcBlog.Client.WebAssembly/Dockerfile
+    - name: Push Client.WebAssembly.Host image
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.MIRROR_DOCKER_USERNAME }}
+        password: ${{ secrets.MIRROR_DOCKER_PASSWORD }}
+        registry: registry.cn-hangzhou.aliyuncs.com
+        repository: stardustdl/acblog-preview
+        tags: wasm-host
+        dockerfile: ./src/client/AcBlog.Client.WebAssembly.Host/Dockerfile
+    - name: Push Client.Server image
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.MIRROR_DOCKER_USERNAME }}
+        password: ${{ secrets.MIRROR_DOCKER_PASSWORD }}
+        registry: registry.cn-hangzhou.aliyuncs.com
+        repository: stardustdl/acblog-preview
+        tags: client
+        dockerfile: ./src/client/AcBlog.Client.Server/Dockerfile
+    - name: Push Server.Api image
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.MIRROR_DOCKER_USERNAME }}
+        password: ${{ secrets.MIRROR_DOCKER_PASSWORD }}
+        registry: registry.cn-hangzhou.aliyuncs.com
+        repository: stardustdl/acblog-preview
+        tags: api
+        dockerfile: ./src/AcBlog.Server.Api/Dockerfile

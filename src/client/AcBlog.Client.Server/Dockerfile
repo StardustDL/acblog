@@ -5,7 +5,7 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-buster AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["src/AcBlog.Data/AcBlog.Data.csproj", "src/AcBlog.Data/"]
 COPY ["src/AcBlog.Sdk/AcBlog.Sdk.csproj", "src/AcBlog.Sdk/"]

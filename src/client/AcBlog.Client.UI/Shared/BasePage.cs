@@ -37,12 +37,18 @@ namespace AcBlog.Client.UI.Shared
 
         protected virtual string Title
         {
-            get => _title; set
+            get
+            {
+                string title = BlogOptions.Name;
+                if (!string.IsNullOrWhiteSpace(_title))
+                    title = $"{_title} - {BlogOptions.Name}";
+                return title;
+            }
+            set
             {
                 if (value != _title)
                 {
                     _title = value;
-                    StateHasChanged();
                 }
             }
         }
@@ -74,10 +80,10 @@ namespace AcBlog.Client.UI.Shared
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            string title = BlogOptions.Name;
+            /*string title = BlogOptions.Name;
             if (!string.IsNullOrEmpty(Title))
                 title = $"{Title} - {BlogOptions.Name}";
-            await WindowInterop.SetTitle(JSRuntime, title);
+            await WindowInterop.SetTitle(JSRuntime, title);*/
             if (!string.IsNullOrEmpty(LocalAnchorJump))
             {
                 await WindowInterop.ScrollTo(JSRuntime, LocalAnchorJump);

@@ -1,6 +1,8 @@
 ﻿@page "/"
 @inherits BasePage
 
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
+
 <div style="background-image: url(@BlogOptions.Cover); background-size: 100% 100%; margin-bottom: 0;">
     <Row Align="middle" Justify="center" Style="height: 100vh;">
         <Space Style="background-color: #f0f8ff96; border-radius: 20px; padding: 42px 49px;" Size="@($"{100}")">

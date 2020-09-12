@@ -3,6 +3,8 @@
 @inherits BasePostPage
 @using AcBlog.Client.UI.Components.Renderers
 
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
+
 <Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" LoadKey="@Id" @ref="loader">
     <PageHeader>
         <PageHeaderTitle>

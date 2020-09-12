@@ -4,6 +4,8 @@
 @inherits BaseKeywordPage
 @inject AcBlog.Sdk.Filters.PostKeywordFilter Keywords
 
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
+
 <PageHeader>
     <PageHeaderTitle> @(Keyword.OneNameOrDefault()) </PageHeaderTitle>
     <PageHeaderBreadcrumb>

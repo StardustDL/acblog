@@ -5,6 +5,8 @@
 @inject IPageRenderService PageService
 @using AcBlog.Client.UI.Components.Renderers
 
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
+
 <Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" LoadKey="@Route" @ref="loader">
     <ChildContent>
         <PageHeader>
