@@ -73,7 +73,7 @@ namespace AcBlog.Data.Protections
             {
                 var res = new Document();
                 byte[] bs;
-                using (var ms = new MemoryStream())
+                await using (var ms = new MemoryStream())
                 {
                     await JsonSerializer.SerializeAsync(ms, value, cancellationToken: cancellationToken);
                     bs = ms.ToArray();
@@ -99,7 +99,7 @@ namespace AcBlog.Data.Protections
                 }
                 var bs = Convert.FromBase64String(value.Raw);
                 var ky = Encoding.UTF8.GetBytes(key.Password);
-                using (var ms = new MemoryStream(AesDecrypt(bs, ky)))
+                await using (var ms = new MemoryStream(AesDecrypt(bs, ky)))
                 {
                     return await JsonSerializer.DeserializeAsync<Document>(ms, cancellationToken: cancellationToken);
                 }

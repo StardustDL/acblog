@@ -86,7 +86,7 @@ namespace AcBlog.Client.WebAssembly
             if (HasHost)
             {
                 using var response = await client.GetAsync("Server/Server");
-                using var stream = await response.Content.ReadAsStreamAsync();
+                await using var stream = await response.Content.ReadAsStreamAsync();
                 builder.Configuration.AddJsonStream(stream);
             }
             else
@@ -102,14 +102,14 @@ namespace AcBlog.Client.WebAssembly
             if (HasHost)
             {
                 using var response = await client.GetAsync("/Server/Build");
-                using var stream = await response.Content.ReadAsStreamAsync();
+                await using var stream = await response.Content.ReadAsStreamAsync();
                 builder.Configuration.AddJsonStream(stream);
             }
             else
             {
                 using var response = await client.GetAsync("build.json");
                 response.EnsureSuccessStatusCode();
-                using var stream = await response.Content.ReadAsStreamAsync();
+                await using var stream = await response.Content.ReadAsStreamAsync();
                 builder.Configuration.AddJsonStream(stream);
             }
             BuildStatus res = new BuildStatus();

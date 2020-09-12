@@ -61,7 +61,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public async Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default)
         {
-            using var fs = await (await FileProvider.GetFileInfo(Paths.GetCategoryMetadata(RootPath)).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
+            await using var fs = await (await FileProvider.GetFileInfo(Paths.GetCategoryMetadata(RootPath)).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
             var result = await JsonSerializer.DeserializeAsync<CategoryTree>(fs, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             return result;
@@ -69,7 +69,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public async Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default)
         {
-            using var fs = await (await FileProvider.GetFileInfo(Paths.GetKeywordMetadata(RootPath)).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
+            await using var fs = await (await FileProvider.GetFileInfo(Paths.GetKeywordMetadata(RootPath)).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
             var result = await JsonSerializer.DeserializeAsync<KeywordCollection>(fs, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             return result;

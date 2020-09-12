@@ -62,7 +62,7 @@ namespace AcBlog.Tools.Sdk.Models
 
         async Task SaveDb()
         {
-            using var st = System.IO.File.Open(DBPath, FileMode.Create, FileAccess.Write);
+            await using var st = System.IO.File.Open(DBPath, FileMode.Create, FileAccess.Write);
             await JsonSerializer.SerializeAsync(st, new { db = DB }, options: new JsonSerializerOptions
             {
                 WriteIndented = true
@@ -71,7 +71,7 @@ namespace AcBlog.Tools.Sdk.Models
 
         async Task SaveOption()
         {
-            using var st = System.IO.File.Open(OptionPath, FileMode.Create, FileAccess.Write);
+            await using var st = System.IO.File.Open(OptionPath, FileMode.Create, FileAccess.Write);
             await JsonSerializer.SerializeAsync(st, new { acblog = Option }, options: new JsonSerializerOptions
             {
                 WriteIndented = true
@@ -96,7 +96,7 @@ namespace AcBlog.Tools.Sdk.Models
             builder.EnsureDirectoryExists(AssetsPath);
 
             {
-                using var st = builder.GetFileRewriteStream(BlogOptionPath);
+                await using var st = builder.GetFileRewriteStream(BlogOptionPath);
                 await JsonSerializer.SerializeAsync(st, new BlogOptions(), options: new JsonSerializerOptions
                 {
                     WriteIndented = true
@@ -402,21 +402,21 @@ namespace AcBlog.Tools.Sdk.Models
                         var sub = fsBuilder.CreateSubDirectoryBuilder("Site");
                         {
                             var siteMapBuilder = await Local.BuildSitemap(baseAddress);
-                            using var st = sub.GetFileRewriteStream("sitemap.xml");
-                            using var writer = XmlWriter.Create(st);
+                            await using var st = sub.GetFileRewriteStream("sitemap.xml");
+                            await using var writer = XmlWriter.Create(st);
                             siteMapBuilder.Build().WriteTo(writer);
                         }
                         Logger.LogInformation("Build feed.");
                         {
                             var feed = await Local.BuildSyndication(baseAddress);
-                            using (var st = sub.GetFileRewriteStream("atom.xml"))
+                            await using (var st = sub.GetFileRewriteStream("atom.xml"))
                             {
-                                using var writer = XmlWriter.Create(st);
+                                await using var writer = XmlWriter.Create(st);
                                 feed.GetAtom10Formatter().WriteTo(writer);
                             }
-                            using (var st = sub.GetFileRewriteStream("rss.xml"))
+                            await using (var st = sub.GetFileRewriteStream("rss.xml"))
                             {
-                                using var writer = XmlWriter.Create(st);
+                                await using var writer = XmlWriter.Create(st);
                                 feed.GetRss20Formatter().WriteTo(writer);
                             }
                         }

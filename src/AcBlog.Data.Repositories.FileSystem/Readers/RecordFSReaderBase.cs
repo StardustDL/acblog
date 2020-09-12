@@ -66,7 +66,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public override async Task<T?> Get(TId id, CancellationToken cancellationToken = default)
         {
-            using var fs = await (await FileProvider.GetFileInfo(GetPath(id)).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
+            await using var fs = await (await FileProvider.GetFileInfo(GetPath(id)).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
             var result = await JsonSerializer.DeserializeAsync<T?>(fs, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             if (result != null)

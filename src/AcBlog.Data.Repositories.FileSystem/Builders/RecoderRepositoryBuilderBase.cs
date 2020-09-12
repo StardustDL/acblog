@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
 
 namespace AcBlog.Data.Repositories.FileSystem.Builders
 {
@@ -21,7 +22,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
         {
             foreach (var v in data)
             {
-                using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetFileById(RootPath, v.Id.ToString()));
+                await using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetFileById(RootPath, v.Id.ToString() ?? throw new NullReferenceException(nameof(v.Id))));
                 await JsonSerializer.SerializeAsync(st, v).ConfigureAwait(false);
             }
         }
@@ -30,7 +31,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
         {
             PagingProvider<string> paging = new PagingProvider<string>(Paths.GetPaginationRoot(RootPath));
 
-            await paging.Build(data.Select(x => x.Id.ToString()).ToArray(),
+            await paging.Build(data.Select(x => x.Id.ToString() ?? throw new NullReferenceException(nameof(x.Id))).ToArray(),
                 PagingConfig).ConfigureAwait(false);
         }
 

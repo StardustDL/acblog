@@ -64,7 +64,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
                     PagingConfig).ConfigureAwait(false);
             }
 
-            using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetKeywordMetadata(RootPath));
+            await using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetKeywordMetadata(RootPath));
             await JsonSerializer.SerializeAsync(st, collection).ConfigureAwait(false);
         }
 
@@ -91,7 +91,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
                     q.Enqueue(v);
             }
 
-            using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetCategoryMetadata(RootPath));
+            await using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetCategoryMetadata(RootPath));
             await JsonSerializer.SerializeAsync(st, tree).ConfigureAwait(false);
         }
 

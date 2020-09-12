@@ -146,7 +146,7 @@ namespace AcBlog.Data.Pages
                 }
             }
 
-            using var writer = new StringWriter();
+            await using var writer = new StringWriter();
             HtmlRenderer renderer = new HtmlRenderer(writer);
             Pipeline.Value.Setup(renderer);
 

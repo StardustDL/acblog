@@ -20,7 +20,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             if (!string.IsNullOrEmpty(query.Route))
             {
                 string path = Paths.GetRouteFile(RootPath, query.Route);
-                using var fs = await (await FileProvider.GetFileInfo(path).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
+                await using var fs = await (await FileProvider.GetFileInfo(path).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
                 var result = await JsonSerializer.DeserializeAsync<string[]>(fs, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
                 return new QueryResponse<string>(result);

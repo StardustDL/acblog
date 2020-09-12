@@ -35,7 +35,7 @@ namespace AcBlog.Sdk.FileSystem
 
         public async Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default)
         {
-            using var fs = await (await FileProvider.GetFileInfo("blog.json").ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
+            await using var fs = await (await FileProvider.GetFileInfo("blog.json").ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
             return await JsonSerializer.DeserializeAsync<BlogOptions>(fs, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
         }

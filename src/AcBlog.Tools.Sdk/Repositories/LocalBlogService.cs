@@ -40,7 +40,7 @@ namespace AcBlog.Tools.Sdk.Repositories
             string path = Path.Join(RootPath, Workspace.BlogOptionPath);
             if (System.IO.File.Exists(path))
             {
-                using var st = System.IO.File.OpenRead(path);
+                await using var st = System.IO.File.OpenRead(path);
                 return await JsonSerializer.DeserializeAsync<BlogOptions>(st).ConfigureAwait(false);
             }
             else

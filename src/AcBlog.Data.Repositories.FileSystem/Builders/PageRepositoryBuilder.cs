@@ -19,7 +19,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
             foreach (var g in gr)
             {
                 string path = Paths.GetRouteFile(RootPath, g.Key);
-                using var st = FSStaticBuilder.GetFileRewriteStream(path);
+                await using var st = FSStaticBuilder.GetFileRewriteStream(path);
                 await JsonSerializer.SerializeAsync(st, (from p in g select p.Id).ToArray()).ConfigureAwait(false);
             }
         }

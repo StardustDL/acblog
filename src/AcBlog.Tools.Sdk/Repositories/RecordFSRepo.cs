@@ -52,7 +52,7 @@ namespace AcBlog.Tools.Sdk.Repositories
         public override async Task<T?> Get(string id, CancellationToken cancellationToken = default)
         {
             string path = GetPath(id);
-            using var fs = System.IO.File.OpenRead(path);
+            await using var fs = System.IO.File.OpenRead(path);
             using var sr = new StreamReader(fs);
             var src = await sr.ReadToEndAsync().ConfigureAwait(false);
             var (metadata, content) = ObjectTextual.Parse<TMeta>(src);

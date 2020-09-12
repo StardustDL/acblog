@@ -22,7 +22,7 @@ namespace AcBlog.Data.Repositories.FileSystem
 
         public async Task EnsureConfig()
         {
-            using var fs = await (await FileProvider.GetFileInfo(GetConfigPath()).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
+            await using var fs = await (await FileProvider.GetFileInfo(GetConfigPath()).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
             Config = await JsonSerializer.DeserializeAsync<PagingConfig>(fs).ConfigureAwait(false);
         }
 
@@ -52,7 +52,7 @@ namespace AcBlog.Data.Repositories.FileSystem
                 Config.TotalPage == 0 && pagination.CurrentPage == 0))
             {
                 string path = GetPagePath(pagination.CurrentPage);
-                using var fs = await (await FileProvider.GetFileInfo(path).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
+                await using var fs = await (await FileProvider.GetFileInfo(path).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
                 return await JsonSerializer.DeserializeAsync<IList<TId>>(fs).ConfigureAwait(false);
             }
             else
@@ -71,7 +71,7 @@ namespace AcBlog.Data.Repositories.FileSystem
 
                 config.TotalCount = data.Count;
 
-                using var st = builder.GetFileRewriteStream(configPath);
+                await using var st = builder.GetFileRewriteStream(configPath);
 
                 await JsonSerializer.SerializeAsync(
                     st, config, cancellationToken: cancellationToken)
@@ -87,7 +87,7 @@ namespace AcBlog.Data.Repositories.FileSystem
                 {
                     string pagePath = Path.GetRelativePath(RootPath, GetPagePath(pn));
 
-                    using var st = builder.GetFileRewriteStream(pagePath);
+                    await using var st = builder.GetFileRewriteStream(pagePath);
 
                     await JsonSerializer.SerializeAsync(
                         st, page, cancellationToken: cancellationToken)
@@ -100,7 +100,7 @@ namespace AcBlog.Data.Repositories.FileSystem
             {
                 string pagePath = Path.GetRelativePath(RootPath, GetPagePath(pn));
 
-                using var st = builder.GetFileRewriteStream(pagePath);
+                await using var st = builder.GetFileRewriteStream(pagePath);
 
                 await JsonSerializer.SerializeAsync(
                     st, page, cancellationToken: cancellationToken)

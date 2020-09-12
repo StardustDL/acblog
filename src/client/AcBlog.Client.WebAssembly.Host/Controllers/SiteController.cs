@@ -46,7 +46,7 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
         {
             var siteMapBuilder = await BlogService.BuildSitemap(BaseAddress);
             StringBuilder sb = new StringBuilder();
-            using (var writer = XmlWriter.Create(sb))
+            await using (var writer = XmlWriter.Create(sb))
                 siteMapBuilder.Build().WriteTo(writer);
             return Content(sb.ToString(), "text/xml");
         }
@@ -57,7 +57,7 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
         {
             var feed = await BlogService.BuildSyndication(BaseAddress);
             StringBuilder sb = new StringBuilder();
-            using (var writer = XmlWriter.Create(sb))
+            await using (var writer = XmlWriter.Create(sb))
                 feed.GetAtom10Formatter().WriteTo(writer);
             return Content(sb.ToString(), "application/atom+xml");
         }
@@ -68,7 +68,7 @@ namespace AcBlog.Client.WebAssembly.Host.Controllers
         {
             var feed = await BlogService.BuildSyndication(BaseAddress);
             StringBuilder sb = new StringBuilder();
-            using (var writer = XmlWriter.Create(sb))
+            await using (var writer = XmlWriter.Create(sb))
                 feed.GetRss20Formatter().WriteTo(writer);
             return Content(sb.ToString(), "application/rss+xml");
         }
