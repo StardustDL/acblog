@@ -25,7 +25,7 @@ namespace AcBlog.UI.Components
             base.ConfigureServices(services);
         }
 
-        class CustomMarkdownComponentService: MarkdownComponentService
+        class CustomMarkdownComponentService : MarkdownComponentService
         {
             public CustomMarkdownComponentService(IMarkdownRenderService service) => Service = service;
 

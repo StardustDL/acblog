@@ -29,11 +29,11 @@ namespace AcBlog.Data.Models
         public IEnumerable<Category> AsCategoryList()
         {
             Queue<Node> q = new Queue<Node>();
-            foreach(var item in Root.Children.Values)
+            foreach (var item in Root.Children.Values)
             {
                 q.Enqueue(item);
             }
-            while(q.Count > 0)
+            while (q.Count > 0)
             {
                 var u = q.Dequeue();
                 yield return u.Category;

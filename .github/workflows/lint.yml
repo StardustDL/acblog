@@ -11,7 +11,7 @@ defaults:
     shell: pwsh
 
 env:
-  dotnet-version: "3.1.x"
+  dotnet-version: "5.0.100-preview.8.20417.9"
   node-version: "12.x"
 
 jobs:
@@ -24,7 +24,8 @@ jobs:
       - name: Lint Code Base
         uses: docker://github/super-linter:v3
         env:
-          VALIDATE_DOCKER: false
+          VALIDATE_DOCKERFILE: false
+          VALIDATE_DOCKERFILE_HADOLINT: false
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   analyse:

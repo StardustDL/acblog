@@ -29,7 +29,7 @@ namespace AcBlog.Client.UI.Shared
 
         [Inject]
         protected IBlogService Service { get; set; }
-        
+
         [Inject]
         protected IClientUrlGenerator UrlGenerator { get; set; }
 

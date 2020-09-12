@@ -13,7 +13,7 @@ namespace StardustDL.Extensions.FileProviders.Http
         public HttpClient Client { get; }
 
         public Task<IDirectoryContents> GetDirectoryContents(string subpath) => throw new NotImplementedException();
-        
+
         public async Task<IFileInfo> GetFileInfo(string subpath)
         {
             var result = await Client.GetAsync(subpath).ConfigureAwait(false);

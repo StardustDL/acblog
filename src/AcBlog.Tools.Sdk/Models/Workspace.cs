@@ -132,49 +132,49 @@ namespace AcBlog.Tools.Sdk.Models
                             new PhysicalFileProvider(remote.Uri).AsFileProvider());
                         break;
                     case RemoteType.RemoteFS:
-                    {
-                        var client = HttpClientFactory.CreateClient();
-                        client.BaseAddress = new Uri(remote.Uri);
-                        Remote = new FileSystemBlogService(
-                            new HttpFileProvider(client));
-                    }
-                    break;
+                        {
+                            var client = HttpClientFactory.CreateClient();
+                            client.BaseAddress = new Uri(remote.Uri);
+                            Remote = new FileSystemBlogService(
+                                new HttpFileProvider(client));
+                        }
+                        break;
                     case RemoteType.Api:
-                    {
-                        var client = HttpClientFactory.CreateClient();
-                        client.BaseAddress = new Uri(remote.Uri);
-                        Remote = new ApiBlogService(client);
-                    }
-                    break;
+                        {
+                            var client = HttpClientFactory.CreateClient();
+                            client.BaseAddress = new Uri(remote.Uri);
+                            Remote = new ApiBlogService(client);
+                        }
+                        break;
                     case RemoteType.Git:
-                    {
-                        FSBuilder builder = new FSBuilder(Environment.CurrentDirectory);
-
-                        Logger.LogInformation("Pull git repository.");
-
-                        try
                         {
-                            using var repo = new Repository(GitTempFolder);
-                            // Credential information to fetch
-                            LibGit2Sharp.PullOptions options = new LibGit2Sharp.PullOptions();
+                            FSBuilder builder = new FSBuilder(Environment.CurrentDirectory);
 
-                            // User information to create a merge commit
-                            var signature = new LibGit2Sharp.Signature(
-                                new Identity("AcBlog.Tools.Sdk", "tools.sdk@acblog"), DateTimeOffset.Now);
+                            Logger.LogInformation("Pull git repository.");
 
-                            // Pull
-                            LibGit2Sharp.Commands.Pull(repo, signature, options);
+                            try
+                            {
+                                using var repo = new Repository(GitTempFolder);
+                                // Credential information to fetch
+                                LibGit2Sharp.PullOptions options = new LibGit2Sharp.PullOptions();
+
+                                // User information to create a merge commit
+                                var signature = new LibGit2Sharp.Signature(
+                                    new Identity("AcBlog.Tools.Sdk", "tools.sdk@acblog"), DateTimeOffset.Now);
+
+                                // Pull
+                                LibGit2Sharp.Commands.Pull(repo, signature, options);
+                            }
+                            catch
+                            {
+                                builder.EnsureDirectoryEmpty(GitTempFolder);
+                                Repository.Clone(remote.Uri, GitTempFolder);
+                            }
+
+                            Remote = new FileSystemBlogService(
+                                new PhysicalFileProvider(Path.Join(Environment.CurrentDirectory, GitTempFolder)).AsFileProvider());
                         }
-                        catch
-                        {
-                            builder.EnsureDirectoryEmpty(GitTempFolder);
-                            Repository.Clone(remote.Uri, GitTempFolder);
-                        }
-
-                        Remote = new FileSystemBlogService(
-                            new PhysicalFileProvider(Path.Join(Environment.CurrentDirectory, GitTempFolder)).AsFileProvider());
-                    }
-                    break;
+                        break;
                 }
                 Remote.PostService.Context.Token = remote.Token;
 
@@ -201,126 +201,126 @@ namespace AcBlog.Tools.Sdk.Models
                 switch (remote.Type)
                 {
                     case RemoteType.LocalFS:
-                    {
-                        await toLocalFS(remote);
-                    }
-                    break;
+                        {
+                            await toLocalFS(remote);
+                        }
+                        break;
                     case RemoteType.RemoteFS:
-                    {
-                        throw new NotSupportedException("Not support pushing to remote file system, please push to local file system and sync to remote.");
-                    }
+                        {
+                            throw new NotSupportedException("Not support pushing to remote file system, please push to local file system and sync to remote.");
+                        }
                     case RemoteType.Api:
-                    {
-                        await Connect(name);
-                        Logger.LogInformation($"Fetch remote posts.");
-
-                        // TODO: Pages & layouts
-
-                        HashSet<string> remoteIds = (await Remote.PostService.All()).ToHashSet();
-                        foreach (var item in await Local.PostService.GetAllItems())
                         {
-                            if (item is null)
-                                continue;
-                            Logger.LogInformation($"Loaded {item.Id}: {item.Title}");
-                            if (remoteIds.Contains(item.Id))
+                            await Connect(name);
+                            Logger.LogInformation($"Fetch remote posts.");
+
+                            // TODO: Pages & layouts
+
+                            HashSet<string> remoteIds = (await Remote.PostService.All()).ToHashSet();
+                            foreach (var item in await Local.PostService.GetAllItems())
                             {
-                                var result = await Remote.PostService.Update(item);
-                                if (result)
+                                if (item is null)
+                                    continue;
+                                Logger.LogInformation($"Loaded {item.Id}: {item.Title}");
+                                if (remoteIds.Contains(item.Id))
                                 {
-                                    Logger.LogInformation($"Updated {item.Id}");
+                                    var result = await Remote.PostService.Update(item);
+                                    if (result)
+                                    {
+                                        Logger.LogInformation($"Updated {item.Id}");
+                                    }
+                                    else
+                                    {
+                                        Logger.LogError($"Failed to update {item.Id}");
+                                    }
                                 }
                                 else
                                 {
-                                    Logger.LogError($"Failed to update {item.Id}");
+                                    var result = await Remote.PostService.Create(item);
+                                    if (result is null)
+                                    {
+                                        Logger.LogError($"Failed to create {item.Id}");
+                                    }
+                                    else
+                                    {
+                                        Logger.LogInformation($"Created {item.Id}");
+                                    }
                                 }
+                                remoteIds.Remove(item.Id);
                             }
-                            else
+                            if (full)
                             {
-                                var result = await Remote.PostService.Create(item);
-                                if (result is null)
+                                foreach (var v in remoteIds)
                                 {
-                                    Logger.LogError($"Failed to create {item.Id}");
-                                }
-                                else
-                                {
-                                    Logger.LogInformation($"Created {item.Id}");
+                                    var result = await Remote.PostService.Delete(v);
+                                    if (result)
+                                    {
+                                        Logger.LogInformation($"Deleted {v}.");
+                                    }
+                                    else
+                                    {
+                                        Logger.LogError($"Failed to deleted {v}.");
+                                    }
                                 }
                             }
-                            remoteIds.Remove(item.Id);
                         }
-                        if (full)
-                        {
-                            foreach (var v in remoteIds)
-                            {
-                                var result = await Remote.PostService.Delete(v);
-                                if (result)
-                                {
-                                    Logger.LogInformation($"Deleted {v}.");
-                                }
-                                else
-                                {
-                                    Logger.LogError($"Failed to deleted {v}.");
-                                }
-                            }
-                        }
-                    }
-                    break;
+                        break;
                     case RemoteType.Git:
-                    {
-                        await Connect(name);
-
-                        string tempDist = Path.Join(Environment.CurrentDirectory, "temp/dist");
-
-                        Logger.LogInformation("Generate data.");
-
-                        await toLocalFS(new RemoteOption
                         {
-                            Uri = tempDist,
-                            Type = RemoteType.LocalFS,
-                            Name = remote.Name
-                        });
+                            await Connect(name);
 
-                        FSExtensions.CopyDirectory(tempDist, GitTempFolder);
+                            string tempDist = Path.Join(Environment.CurrentDirectory, "temp/dist");
 
-                        Logger.LogInformation("Load git config.");
+                            Logger.LogInformation("Generate data.");
 
-                        string userName = Option.Properties[$"remote.{remote.Name}.git.username"],
-                            password = Option.Properties[$"remote.{remote.Name}.git.password"];
-
-                        {
-                            if (string.IsNullOrEmpty(userName))
-                                userName = ConsoleExtensions.Input("Input username: ");
-                            if (string.IsNullOrEmpty(password))
-                                password = ConsoleExtensions.InputPassword("Input password: ");
-                        }
-
-                        using (var repo = new Repository(GitTempFolder))
-                        {
-                            Logger.LogInformation("Commit to git.");
-
-                            LibGit2Sharp.Commands.Stage(repo, "*");
-
-                            var signature = new LibGit2Sharp.Signature(
-                                    new Identity("AcBlog.Tools.Sdk", "tools.sdk@acblog"), DateTimeOffset.Now);
-                            repo.Commit(DateTimeOffset.Now.ToString(), signature, signature, new CommitOptions
+                            await toLocalFS(new RemoteOption
                             {
-                                AllowEmptyCommit = true
+                                Uri = tempDist,
+                                Type = RemoteType.LocalFS,
+                                Name = remote.Name
                             });
 
-                            Logger.LogInformation($"Push to {repo.Head.RemoteName}.");
+                            FSExtensions.CopyDirectory(tempDist, GitTempFolder);
 
-                            PushOptions options = new LibGit2Sharp.PushOptions();
-                            options.CredentialsProvider = new CredentialsHandler(
-                                (url, usernameFromUrl, types) =>
-                                    new UsernamePasswordCredentials()
-                                    {
-                                        Username = string.IsNullOrEmpty(userName) ? usernameFromUrl : userName,
-                                        Password = password
-                                    });
-                            repo.Network.Push(repo.Head, options);
+                            Logger.LogInformation("Load git config.");
+
+                            string userName = Option.Properties[$"remote.{remote.Name}.git.username"],
+                                password = Option.Properties[$"remote.{remote.Name}.git.password"];
+
+                            {
+                                if (string.IsNullOrEmpty(userName))
+                                    userName = ConsoleExtensions.Input("Input username: ");
+                                if (string.IsNullOrEmpty(password))
+                                    password = ConsoleExtensions.InputPassword("Input password: ");
+                            }
+
+                            using (var repo = new Repository(GitTempFolder))
+                            {
+                                Logger.LogInformation("Commit to git.");
+
+                                LibGit2Sharp.Commands.Stage(repo, "*");
+
+                                var signature = new LibGit2Sharp.Signature(
+                                        new Identity("AcBlog.Tools.Sdk", "tools.sdk@acblog"), DateTimeOffset.Now);
+                                repo.Commit(DateTimeOffset.Now.ToString(), signature, signature, new CommitOptions
+                                {
+                                    AllowEmptyCommit = true
+                                });
+
+                                Logger.LogInformation($"Push to {repo.Head.RemoteName}.");
+
+                                PushOptions options = new LibGit2Sharp.PushOptions();
+                                options.CredentialsProvider = new CredentialsHandler(
+                                    (url, usernameFromUrl, types) =>
+                                        new UsernamePasswordCredentials()
+                                        {
+                                            Username = string.IsNullOrEmpty(userName) ? usernameFromUrl : userName,
+                                            Password = password
+                                        });
+                                repo.Network.Push(repo.Head, options);
+                            }
                         }
-                    }
-                    break;
+                        break;
                 }
             }
             else

@@ -55,24 +55,24 @@ namespace AcBlog.Client
                 switch (server.Comment.Type)
                 {
                     case CommentServerType.Loment:
-                    {
-                        if (!server.Comment.Uri.EndsWith("/"))
-                            server.Comment.Uri += "/";
-                        var client = httpClientFactory.CreateClient();
-                        client.BaseAddress = new Uri(server.Comment.Uri);
-                        CommentService = new LomentCommentRepository(new LomentService(client)).AsService(this);
-                    }
-                    break;
+                        {
+                            if (!server.Comment.Uri.EndsWith("/"))
+                                server.Comment.Uri += "/";
+                            var client = httpClientFactory.CreateClient();
+                            client.BaseAddress = new Uri(server.Comment.Uri);
+                            CommentService = new LomentCommentRepository(new LomentService(client)).AsService(this);
+                        }
+                        break;
                     case CommentServerType.Main:
-                    {
-                        CommentService = Main.CommentService;
-                    }
-                    break;
+                        {
+                            CommentService = Main.CommentService;
+                        }
+                        break;
                     case CommentServerType.Disable:
-                    {
-                        CommentService = null;
-                    }
-                    break;
+                        {
+                            CommentService = null;
+                        }
+                        break;
                 }
             }
             catch
@@ -87,20 +87,20 @@ namespace AcBlog.Client
                 switch (server.File.Type)
                 {
                     case FileServerType.Rebase:
-                    {
-                        FileService = new RebaseFileRepo(server.File.Uri).AsService(this);
-                    }
-                    break;
+                        {
+                            FileService = new RebaseFileRepo(server.File.Uri).AsService(this);
+                        }
+                        break;
                     case FileServerType.Main:
-                    {
-                        FileService = Main.FileService;
-                    }
-                    break;
+                        {
+                            FileService = Main.FileService;
+                        }
+                        break;
                     case FileServerType.Disable:
-                    {
-                        FileService = null;
-                    }
-                    break;
+                        {
+                            FileService = null;
+                        }
+                        break;
                 }
             }
             catch
@@ -115,24 +115,24 @@ namespace AcBlog.Client
                 switch (server.Statistic.Type)
                 {
                     case StatisticServerType.Listat:
-                    {
-                        if (!server.Statistic.Uri.EndsWith("/"))
-                            server.Statistic.Uri += "/";
-                        var client = httpClientFactory.CreateClient();
-                        client.BaseAddress = new Uri(server.Statistic.Uri);
-                        StatisticService = new ListatStatisticRepository(new ListatService(client)).AsService(this);
-                    }
-                    break;
+                        {
+                            if (!server.Statistic.Uri.EndsWith("/"))
+                                server.Statistic.Uri += "/";
+                            var client = httpClientFactory.CreateClient();
+                            client.BaseAddress = new Uri(server.Statistic.Uri);
+                            StatisticService = new ListatStatisticRepository(new ListatService(client)).AsService(this);
+                        }
+                        break;
                     case StatisticServerType.Main:
-                    {
-                        StatisticService = Main.StatisticService;
-                    }
-                    break;
+                        {
+                            StatisticService = Main.StatisticService;
+                        }
+                        break;
                     case StatisticServerType.Disable:
-                    {
-                        StatisticService = null;
-                    }
-                    break;
+                        {
+                            StatisticService = null;
+                        }
+                        break;
                 }
             }
             catch
