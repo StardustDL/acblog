@@ -10,11 +10,13 @@ namespace AcBlog.UI.Components
     {
         public MarkdownUIComponent()
         {
-            AddStyleSheetResource("_content/StardustDL.RazorComponents.Markdown/highlight.js/github.css");
+            AddStyleSheetResource("_content/StardustDL.RazorComponents.Markdown/prismjs/themes/prism.css");
             AddStyleSheetResource("_content/StardustDL.RazorComponents.Markdown/katex/katex.min.css");
             AddStyleSheetResource("_content/StardustDL.RazorComponents.Markdown/css/markdown.css");
             AddScriptResource("_content/StardustDL.RazorComponents.Markdown/component-min.js");
             AddScriptResource("_content/StardustDL.RazorComponents.Markdown/mermaid/mermaid.min.js");
+            AddScriptResource("_content/StardustDL.RazorComponents.Markdown/prismjs/components/prism-core.min.js");
+            AddScriptResource("_content/StardustDL.RazorComponents.Markdown/prismjs/plugins/autoloader/prism-autoloader.min.js");
         }
 
         public override void ConfigureServices(IServiceCollection services)

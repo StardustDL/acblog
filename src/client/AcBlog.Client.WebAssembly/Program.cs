@@ -50,6 +50,8 @@ namespace AcBlog.Client.WebAssembly
             };
             builder.Services.AddSingleton(client);
 
+            builder.Services.AddHttpClient();
+
             {
                 {
                     try

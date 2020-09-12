@@ -105,7 +105,7 @@
         }
     }
 
-    private async Task onDelete()
+    private void onDelete()
     {
         async Task OnOk(AntDesign.ModalClosingEventArgs e)
         {
@@ -130,7 +130,7 @@
             }
         }
 
-        await ModalService.Confirm(new ConfirmOptions()
+        ModalService.Confirm(new ConfirmOptions()
         {
             Title = "Are you sure delete?",
             Content = "Delete confirm",

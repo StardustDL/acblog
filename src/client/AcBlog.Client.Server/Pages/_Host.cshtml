@@ -1,4 +1,5 @@
-﻿@page "/"
+﻿
+@page "/"
 @namespace AcBlog.Client.Server.Pages
 @model AcBlog.Client.Server.Pages.HostModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
@@ -20,7 +21,7 @@
 </head>
 <body>
     <app>
-        <component type="typeof(AcBlog.Client.UI.App)" render-mode="Server" />
+        <component type="typeof(AcBlog.Client.UI.App)" render-mode="ServerPrerendered" />
     </app>
 
     <div id="loading-info-ui" class="alert alert-info mdi mdi-information" style="display: block;">

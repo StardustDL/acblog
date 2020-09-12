@@ -40,6 +40,8 @@ namespace AcBlog.Client.Server
             services.AddSingleton(new RuntimeOptions { IsPrerender = false });
             services.AddUIComponents();
 
+            services.AddHttpClient();
+
             services.AddClientConfigurations(Configuration);
             {
                 var server = new ServerSettings();
