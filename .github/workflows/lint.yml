@@ -74,8 +74,7 @@ jobs:
       run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake
     - name: Build
       env:
-        NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
-      run: Invoke-psake build-dotnet -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = "0.0.1-preview" }
-
+        build_version: 0.0.1-preview
+      run: Invoke-psake build-dotnet
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

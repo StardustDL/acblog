@@ -170,7 +170,7 @@ acblog --help
 
 ## Build
 
-1. Install .NET Core SDK 3.1, NodeJS 12.x and npm.
+1. Install .NET SDK 5.0, NodeJS 12.x and npm.
 2. Install Gulp & Libman
 3. Install psake
 

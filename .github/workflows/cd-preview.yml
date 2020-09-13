@@ -14,7 +14,7 @@ env:
   build_version: "0.0.3.${{ github.run_number }}-preview1"
 
 jobs:
-  pub-images:
+  pub-images-packages:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -29,23 +29,16 @@ jobs:
         node-version: ${{ env.node-version }}
     - name: Setup psake
       run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake
-    - name: Generate build status
-      run: |
-        cd src/client/AcBlog.Client.WebAssembly.Host || exit $LASTEXITCODE
-        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./build.json || exit $LASTEXITCODE
-        cd ../AcBlog.Client.WebAssembly || exit $LASTEXITCODE
-        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./wwwroot/build.json || exit $LASTEXITCODE
-        cd ../AcBlog.Client.Server || exit $LASTEXITCODE
-        echo "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./build.json || exit $LASTEXITCODE
     - name: CD
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
-      run: Invoke-psake cd-build -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
-    - name: Publish Client.WebAssembly
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
-      run: Invoke-psake publish-wasm -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
-    - name: Upload artifacts
+      run: Invoke-psake cd
+    - name: Upload package artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: packages
+        path: ./packages
+    - name: Upload WASM artifacts
       uses: actions/upload-artifact@v2
       with:
         name: wasm
@@ -86,27 +79,3 @@ jobs:
         repository: stardustdl/acblog-preview
         tags: api
         dockerfile: ./src/AcBlog.Server.Api/Dockerfile
-  pub-pkgs:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.dotnet-version }}
-    - name: Setup NodeJS
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ env.node-version }}
-    - name: Setup psake
-      run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake
-    - name: CD
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
-      run: Invoke-psake cd -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: packages
-        path: ./packages

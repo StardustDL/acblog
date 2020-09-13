@@ -34,9 +34,7 @@ jobs:
     - name: Setup psake
       run: Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; Install-Module -Name psake
     - name: CI
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
-      run: Invoke-psake ci -parameters @{ "NUGET_AUTH_TOKEN" = $env:NUGET_AUTH_TOKEN ; "build_version" = $env:build_version }
+      run: Invoke-psake ci
     - name: Upload reports
       uses: actions/upload-artifact@v2
       with:

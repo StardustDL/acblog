@@ -1,24 +1,24 @@
 properties {
-    $NUGET_AUTH_TOKEN = $NUGET_AUTH_TOKEN
-    $build_version = $build_version
+    $NUGET_AUTH_TOKEN = $env:NUGET_AUTH_TOKEN
+    $build_version = $env:build_version
 }
 
 Task default -depends Restore, Build
 
 Task Deploy -depends Deploy-packages
 
-Task CI -depends Install-deps, Restore, Build, Test, Benchmark, Report
+Task CI -depends Install-deps, Restore, Gen-Build-Status, Build, Test, Benchmark, Report
 
 Task CD -depends CD-Build, Pack, Deploy
 
-Task CD-Build -depends Install-deps, Restore, Build, Pack
+Task CD-Build -depends Install-deps, Restore, Gen-Build-Status, Build, Pack, Publish-wasm
 
 Task Build-dotnet -depends Restore-dotnet, Build
 
 Task Restore -depends Restore-WASM, Restore-dotnet
 
 Task Restore-dotnet {
-    Exec { dotnet nuget add source https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json -n aza -u sparkshine -p $NUGET_AUTH_TOKEN --store-password-in-clear-text }
+    Exec { dotnet nuget add source https://sparkshine.pkgs.visualstudio.com/StardustDL/_packaging/feed/nuget/v3/index.json -n ownpkgs }
     Exec { dotnet restore }
 }
 
@@ -85,25 +85,36 @@ Task NPMUP {
 }
 
 Task Deploy-packages {
-    Exec { dotnet nuget push ./packages/AcBlog.Data.$build_version.nupkg -s aza -k az }
-    Exec { dotnet nuget push ./packages/AcBlog.Data.Extensions.$build_version.nupkg -s aza -k az }
-    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$build_version.nupkg -s aza -k az }
-    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$build_version.nupkg -s aza -k az }
-    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.Externals.$build_version.nupkg -s aza -k az }
-    Exec { dotnet nuget push ./packages/AcBlog.Sdk.$build_version.nupkg -s aza -k az }
-    Exec { dotnet nuget push ./packages/AcBlog.Tools.Sdk.$build_version.nupkg -s aza -k az }
-    Exec { dotnet nuget push ./packages/AcBlog.Client.Core.$build_version.nupkg -s aza -k az }
-    Exec { dotnet nuget push ./packages/AcBlog.Client.UI.$build_version.nupkg -s aza -k az }
+    Exec { dotnet nuget update source ownpkgs -u sparkshine -p $NUGET_AUTH_TOKEN --store-password-in-clear-text }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.$build_version.nupkg -s ownpkgs -k az --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Extensions.$build_version.nupkg -s ownpkgs -k az --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$build_version.nupkg -s ownpkgs -k az --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$build_version.nupkg -s ownpkgs -k az --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.Externals.$build_version.nupkg -s ownpkgs -k az --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Sdk.$build_version.nupkg -s ownpkgs -k az --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Tools.Sdk.$build_version.nupkg -s ownpkgs -k az --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Client.Core.$build_version.nupkg -s ownpkgs -k az --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Client.UI.$build_version.nupkg -s ownpkgs -k az --skip-duplicate }
 }
 
 Task Deploy-packages-release {
-    Exec { dotnet nuget push ./packages/AcBlog.Data.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
-    Exec { dotnet nuget push ./packages/AcBlog.Data.Extensions.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
-    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
-    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
-    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.Externals.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
-    Exec { dotnet nuget push ./packages/AcBlog.Sdk.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
-    Exec { dotnet nuget push ./packages/AcBlog.Tools.Sdk.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Extensions.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.FileSystem.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.SQLServer.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Data.Repositories.Externals.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Sdk.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN --skip-duplicate }
+    Exec { dotnet nuget push ./packages/AcBlog.Tools.Sdk.$build_version.nupkg  -s https://api.nuget.org/v3/index.json -k $NUGET_AUTH_TOKEN --skip-duplicate }
+}
+
+Task Gen-Build-Status {
+    Set-Location src/client/AcBlog.Client.WebAssembly.Host
+    Write-Output "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(Get-date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./build.json
+    Set-Location ../AcBlog.Client.WebAssembly
+    Write-Output "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(Get-date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./wwwroot/build.json
+    Set-Location ../AcBlog.Client.Server
+    Write-Output "{ ""Build"": { ""Commit"": ""$env:GITHUB_SHA"", ""Branch"": ""$env:GITHUB_REF"", ""BuildDate"": ""$(Get-date)"", ""Repository"": ""$env:GITHUB_REPOSITORY"", ""Version"": ""$env:build_version"" } }" > ./build.json
+    Set-Location ../../..
 }
 
 Task Restore-WASM {
