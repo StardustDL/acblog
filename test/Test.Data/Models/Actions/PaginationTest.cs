@@ -1,9 +1,6 @@
 ﻿using AcBlog.Data.Models.Actions;
 using DeepEqual.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Test.Data.Models.Actions
 {

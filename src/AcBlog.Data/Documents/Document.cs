@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AcBlog.Data.Documents
+﻿namespace AcBlog.Data.Documents
 {
     public class Document
     {

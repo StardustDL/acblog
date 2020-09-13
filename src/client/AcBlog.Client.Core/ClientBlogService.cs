@@ -12,7 +12,6 @@ using Loment;
 using Microsoft.Extensions.Options;
 using StardustDL.Extensions.FileProviders.Http;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;

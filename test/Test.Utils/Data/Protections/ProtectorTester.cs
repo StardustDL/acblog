@@ -1,7 +1,6 @@
 ﻿using AcBlog.Data.Protections;
 using DeepEqual.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Threading.Tasks;
 
 namespace Test.Data.Protections

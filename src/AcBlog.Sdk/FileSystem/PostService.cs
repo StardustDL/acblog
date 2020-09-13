@@ -7,7 +7,6 @@ using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.FileSystem.Readers;
 using AcBlog.Data.Repositories.Searchers;
 using StardustDL.Extensions.FileProviders;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 

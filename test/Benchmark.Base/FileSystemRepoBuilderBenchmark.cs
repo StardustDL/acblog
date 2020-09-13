@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BenchmarkDotNet.Attributes;
-using System.Reflection;
-using System.IO;
+﻿using AcBlog.Data.Models;
 using AcBlog.Data.Repositories.FileSystem;
-using System.Threading.Tasks;
-using AcBlog.Data.Models;
-using Test.Data;
 using AcBlog.Data.Repositories.FileSystem.Builders;
+using BenchmarkDotNet.Attributes;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Test.Data;
 
 namespace Benchmark.Base
 {

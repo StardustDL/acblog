@@ -1,10 +1,6 @@
-﻿using AcBlog.Tools.Sdk.Helpers;
-using AcBlog.Tools.Sdk.Models;
+﻿using AcBlog.Tools.Sdk.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.CommandLine;
-using System.CommandLine.Invocation;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 

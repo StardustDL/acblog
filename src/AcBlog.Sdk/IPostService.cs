@@ -1,5 +1,4 @@
 ﻿using AcBlog.Data.Documents;
-using AcBlog.Data.Models;
 using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.Searchers;

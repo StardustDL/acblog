@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using AcBlog.Data.Repositories.SqlServer.Models;
+﻿using AcBlog.Data.Repositories.SqlServer.Models;
 using AcBlog.Server.Api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace AcBlog.Server.Api
 {

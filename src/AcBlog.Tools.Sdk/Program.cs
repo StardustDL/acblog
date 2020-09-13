@@ -1,22 +1,15 @@
-﻿using AcBlog.Sdk;
-using AcBlog.Tools.Sdk.Commands;
+﻿using AcBlog.Tools.Sdk.Commands;
 using AcBlog.Tools.Sdk.Models;
 using AcBlog.Tools.Sdk.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using StardustDL.Extensions.FileProviders;
 using System;
 using System.CommandLine;
 using System.CommandLine.Builder;
 using System.CommandLine.Hosting;
-using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AcBlog.Tools.Sdk

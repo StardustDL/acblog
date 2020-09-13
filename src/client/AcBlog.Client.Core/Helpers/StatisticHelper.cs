@@ -1,10 +1,7 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Sdk;
-using AcBlog.Sdk.Extensions;
 using AcBlog.Sdk.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AcBlog.Client.Helpers

@@ -1,11 +1,6 @@
 ﻿using AcBlog.Data.Extensions;
-using AcBlog.Data.Models;
 using AcBlog.Sdk.Helpers;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.Sockets;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace AcBlog.Sdk.Sitemap
 {
@@ -27,11 +22,9 @@ namespace AcBlog.Sdk.Sitemap
                 siteMapBuilder.AddUrl(generator.Archives());
                 siteMapBuilder.AddUrl(generator.Comments());
                 {
-                    var posts = await service.PostService.GetAllItems();
-                    foreach (var c in posts)
+                    var posts = service.PostService.GetAllItems().IgnoreNull();
+                    await foreach (var c in posts)
                     {
-                        if (c is null)
-                            continue;
                         siteMapBuilder.AddUrl(generator.Post(c));
                     }
                 }
@@ -52,11 +45,9 @@ namespace AcBlog.Sdk.Sitemap
                     }
                 }
                 {
-                    var cates = await service.PageService.GetAllItems();
-                    foreach (var c in cates)
+                    var cates = service.PageService.GetAllItems().IgnoreNull();
+                    await foreach (var c in cates)
                     {
-                        if (c is null)
-                            continue;
                         siteMapBuilder.AddUrl(generator.Page(c));
                     }
                 }

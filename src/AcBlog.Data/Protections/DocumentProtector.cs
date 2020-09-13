@@ -1,5 +1,4 @@
 ﻿using AcBlog.Data.Documents;
-using AcBlog.Data.Models;
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -12,7 +11,7 @@ namespace AcBlog.Data.Protections
 {
     public sealed class DocumentProtector : IProtector<Document>
     {
-        readonly static SHA256Managed _sha = new SHA256Managed();
+        static readonly SHA256Managed _sha = new SHA256Managed();
 
         static byte[] FormalKey(byte[] raw)
         {
@@ -62,7 +61,7 @@ namespace AcBlog.Data.Protections
             return resultArray;
         }
 
-        readonly static string _protectFlag = Convert.ToBase64String(Encoding.UTF8.GetBytes("Protected Post by PostProtector"));
+        static readonly string _protectFlag = Convert.ToBase64String(Encoding.UTF8.GetBytes("Protected Post by PostProtector"));
 
         public Task<bool> IsProtected(Document value, CancellationToken cancellationToken = default)
         {

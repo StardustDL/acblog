@@ -1,10 +1,8 @@
-﻿using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Jobs;
-using BenchmarkDotNet.Running;
-using System.Text;
-using BenchmarkDotNet.Order;
+﻿using BenchmarkDotNet.Columns;
+using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
-using BenchmarkDotNet.Columns;
+using BenchmarkDotNet.Order;
+using BenchmarkDotNet.Running;
 
 namespace Benchmark.Base
 {

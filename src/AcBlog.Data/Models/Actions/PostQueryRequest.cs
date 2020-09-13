@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AcBlog.Data.Models.Actions
+﻿namespace AcBlog.Data.Models.Actions
 {
     public class PostQueryRequest : QueryRequest
     {

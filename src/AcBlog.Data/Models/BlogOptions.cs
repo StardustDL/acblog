@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AcBlog.Data.Models
+﻿namespace AcBlog.Data.Models
 {
     public class BlogOptions
     {

@@ -1,8 +1,4 @@
-﻿using AcBlog.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace AcBlog.Data.Repositories.SqlServer.Models
 {

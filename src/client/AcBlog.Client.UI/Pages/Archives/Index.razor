@@ -30,7 +30,7 @@
             {
                 <TimelineItem Color="@($"#{((item.Key.GetHashCode() + 1) % 0xffffff + 1).ToString("X6")}")" Style="font-size: 16px;">
                     <p>@item.Key</p>
-                    @foreach (var p in item)
+                    @foreach (var p in item.Value)
                     {
                         <p>
                             @switch (p.Type)
@@ -59,9 +59,7 @@
 @code {
     const int PageSize = 10;
 
-    IEnumerable<Post> RawData { get; set; }
-
-    IEnumerable<IGrouping<string, Post>> Data { get; set; }
+    Dictionary<string, List<Post>> Data { get; set; } = new Dictionary<string, List<Post>>();
 
     [Parameter]
     public int? PageNumber { get; set; } = null;
@@ -71,8 +69,19 @@
     private async Task OnLoad()
     {
         Title = "Loading...";
-        RawData = await Service.PostService.GetAllItems();
-        Data = from d in RawData orderby d.CreationTime descending group d by d.CreationTime.ToLocalTime().ToString("yyyy-MM-dd");
+
+        Data.Clear();
+        var rawData = Service.PostService.GetAllItems();
+        var grouped = (from d in rawData orderby d.CreationTime descending group d by d.CreationTime.ToLocalTime().ToString("yyyy-MM-dd"));
+        await foreach(var item in grouped)
+        {
+            var list = new List<Post>();
+            Data.Add(item.Key, list);
+            await foreach(var p in item)
+            {
+                list.Add(p);
+            }
+        }
         Title = "";
     }
 }

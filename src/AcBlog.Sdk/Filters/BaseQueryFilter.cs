@@ -1,5 +1,4 @@
-﻿using AcBlog.Data.Models;
-using AcBlog.Data.Models.Actions;
+﻿using AcBlog.Data.Models.Actions;
 using System.Threading.Tasks;
 
 namespace AcBlog.Sdk.Filters

@@ -1,5 +1,4 @@
 ﻿using AcBlog.Client.UI.Interops;
-using AcBlog.Client.UI.Models;
 using AcBlog.Data.Models;
 using AcBlog.Sdk;
 using AcBlog.Sdk.Helpers;
@@ -7,11 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace AcBlog.Client.UI.Shared
 {

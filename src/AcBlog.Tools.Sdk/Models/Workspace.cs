@@ -1,14 +1,16 @@
-﻿using AcBlog.Data.Models;
-using AcBlog.Data.Repositories;
+﻿using AcBlog.Data.Extensions;
+using AcBlog.Data.Models;
 using AcBlog.Data.Repositories.FileSystem;
+using AcBlog.Data.Repositories.FileSystem.Builders;
 using AcBlog.Sdk;
 using AcBlog.Sdk.Api;
 using AcBlog.Sdk.FileSystem;
+using AcBlog.Sdk.Sitemap;
+using AcBlog.Sdk.Syndication;
 using AcBlog.Tools.Sdk.Helpers;
 using AcBlog.Tools.Sdk.Repositories;
 using LibGit2Sharp;
 using LibGit2Sharp.Handlers;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -16,18 +18,12 @@ using StardustDL.Extensions.FileProviders;
 using StardustDL.Extensions.FileProviders.Http;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AcBlog.Sdk.Sitemap;
-using AcBlog.Sdk.Syndication;
 using System.Xml;
-using AcBlog.Data.Repositories.FileSystem.Builders;
-using AcBlog.Data.Extensions;
 
 namespace AcBlog.Tools.Sdk.Models
 {
@@ -217,10 +213,8 @@ namespace AcBlog.Tools.Sdk.Models
                             // TODO: Pages & layouts
 
                             HashSet<string> remoteIds = (await Remote.PostService.All()).ToHashSet();
-                            foreach (var item in await Local.PostService.GetAllItems())
+                            await foreach (var item in Local.PostService.GetAllItems().IgnoreNull())
                             {
-                                if (item is null)
-                                    continue;
                                 Logger.LogInformation($"Loaded {item.Id}: {item.Title}");
                                 if (remoteIds.Contains(item.Id))
                                 {
@@ -336,28 +330,22 @@ namespace AcBlog.Tools.Sdk.Models
                 fsBuilder.EnsureDirectoryEmpty();
 
                 List<Post> posts = new List<Post>();
-                foreach (var item in await Local.PostService.GetAllItems())
+                await foreach (var item in Local.PostService.GetAllItems().IgnoreNull())
                 {
-                    if (item is null)
-                        continue;
                     Logger.LogInformation($"Loaded Post {item.Id}: {item.Title}");
                     posts.Add(item);
                 }
 
                 List<Layout> layouts = new List<Layout>();
-                foreach (var item in await Local.LayoutService.GetAllItems())
+                await foreach (var item in Local.LayoutService.GetAllItems().IgnoreNull())
                 {
-                    if (item is null)
-                        continue;
                     Logger.LogInformation($"Loaded Layout {item.Id}");
                     layouts.Add(item);
                 }
 
                 List<Page> pages = new List<Page>();
-                foreach (var item in await Local.PageService.GetAllItems())
+                await foreach (var item in Local.PageService.GetAllItems().IgnoreNull())
                 {
-                    if (item is null)
-                        continue;
                     Logger.LogInformation($"Loaded Page {item.Id}: {item.Title}");
                     pages.Add(item);
                 }

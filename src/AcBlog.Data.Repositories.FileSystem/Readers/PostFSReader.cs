@@ -1,12 +1,7 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
-using AcBlog.Data.Repositories;
 using StardustDL.Extensions.FileProviders;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +16,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         protected override string GetPath(string id) => Paths.GetFileById(RootPath, id);
 
-        public async override Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
+        public override async Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
         {
             query.Pagination ??= new Pagination();
 

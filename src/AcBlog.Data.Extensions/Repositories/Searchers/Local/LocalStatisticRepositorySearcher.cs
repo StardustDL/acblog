@@ -15,14 +15,14 @@ namespace AcBlog.Data.Repositories.Searchers.Local
 
         public async Task<QueryResponse<string>> Search(StatisticQueryRequest query, CancellationToken cancellationToken = default)
         {
-            var qr = (await Repository.GetAllItems(cancellationToken)).IgnoreNull();
+            var qr = Repository.GetAllItems(cancellationToken).IgnoreNull();
 
             if (!string.IsNullOrWhiteSpace(query.Category))
                 qr = qr.Where(x => x.Category == query.Category);
             if (!string.IsNullOrWhiteSpace(query.Uri))
                 qr = qr.Where(x => x.Uri == query.Uri);
 
-            return qr.AsQueryResponse<Statistic, string>(query);
+            return (await qr.ToArrayAsync(cancellationToken)).AsQueryResponse<Statistic, string>(query);
         }
     }
 }

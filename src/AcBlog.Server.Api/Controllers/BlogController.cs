@@ -1,6 +1,4 @@
 ﻿using AcBlog.Data.Models;
-using AcBlog.Data.Models.Actions;
-using AcBlog.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

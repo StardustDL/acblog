@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AcBlog.Data.Models;
+﻿using AcBlog.Data.Models;
 using AcBlog.Sdk;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace AcBlog.Client.Server.Pages
 {

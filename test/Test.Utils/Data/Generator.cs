@@ -1,8 +1,6 @@
 ﻿using AcBlog.Data.Documents;
 using AcBlog.Data.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Test.Data
 {

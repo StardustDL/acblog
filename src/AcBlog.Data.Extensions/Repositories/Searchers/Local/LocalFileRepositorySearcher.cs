@@ -1,6 +1,7 @@
 ﻿using AcBlog.Data.Extensions;
 using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,9 +15,9 @@ namespace AcBlog.Data.Repositories.Searchers.Local
 
         public async Task<QueryResponse<string>> Search(FileQueryRequest query, CancellationToken cancellationToken = default)
         {
-            var qr = (await Repository.GetAllItems(cancellationToken)).IgnoreNull();
+            var qr = Repository.GetAllItems(cancellationToken).IgnoreNull();
 
-            return qr.AsQueryResponse<File, string>(query);
+            return (await qr.ToArrayAsync(cancellationToken)).AsQueryResponse<File, string>(query);
         }
     }
 }

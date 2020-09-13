@@ -1,12 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using System.Threading.Tasks;
-using AcBlog.Client.Models;
-using AcBlog.Client.UI.Models;
-using AcBlog.Data.Models;
-using AcBlog.Data.Models.Actions;
-using AcBlog.Data.Repositories;
-using Microsoft.AspNetCore.Http;
+﻿using AcBlog.Client.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 

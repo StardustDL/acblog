@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace AcBlog.Sdk.Syndication
 {
@@ -36,9 +35,9 @@ namespace AcBlog.Sdk.Syndication
                 }*/
             }
             {
-                var posts = await service.PostService.GetAllItems();
+                var posts = service.PostService.GetAllItems().IgnoreNull();
                 List<SyndicationItem> items = new List<SyndicationItem>();
-                foreach (var p in posts)
+                await foreach (var p in posts)
                 {
                     if (p is null)
                         continue;

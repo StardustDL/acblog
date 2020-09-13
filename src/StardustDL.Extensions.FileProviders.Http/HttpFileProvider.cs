@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Primitives;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 

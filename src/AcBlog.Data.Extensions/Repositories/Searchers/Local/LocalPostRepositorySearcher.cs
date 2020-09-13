@@ -1,11 +1,8 @@
 ﻿using AcBlog.Data.Extensions;
 using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
-using Scriban.Syntax;
 using System;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +16,7 @@ namespace AcBlog.Data.Repositories.Searchers.Local
 
         public async Task<QueryResponse<string>> Search(PostQueryRequest query, CancellationToken cancellationToken = default)
         {
-            var qr = (await Repository.GetAllItems(cancellationToken)).IgnoreNull();
+            var qr = Repository.GetAllItems(cancellationToken).IgnoreNull();
 
             if (query.Type is not null)
                 qr = qr.Where(x => x.Type == query.Type);
@@ -56,7 +53,7 @@ namespace AcBlog.Data.Repositories.Searchers.Local
                 _ => throw new NotImplementedException(),
             };
 
-            return qr.AsQueryResponse<Post, string>(query);
+            return (await qr.ToArrayAsync(cancellationToken)).AsQueryResponse<Post, string>(query);
         }
     }
 }
