@@ -34,7 +34,7 @@ namespace AcBlog.Tools.Sdk.Commands.Tools
         public override async Task<int> Handle(CArgument argument, IHost host, CancellationToken cancellationToken)
         {
             Workspace workspace = host.Services.GetRequiredService<Workspace>();
-            ILogger<CompleteCommand> logger = host.Services.GetService<ILogger<CompleteCommand>>();
+            ILogger<CompleteCommand> logger = host.Services.GetRequiredService<ILogger<CompleteCommand>>();
 
             foreach (var id in await workspace.Local.PostService.All(cancellationToken))
             {

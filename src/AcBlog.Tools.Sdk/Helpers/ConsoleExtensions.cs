@@ -9,7 +9,7 @@ namespace AcBlog.Tools.Sdk.Helpers
         public static string Input(string prompt = "")
         {
             Console.Write(prompt);
-            return Console.ReadLine();
+            return Console.ReadLine() ?? string.Empty;
         }
 
         public static string InputPassword(string prompt = "")
@@ -19,7 +19,7 @@ namespace AcBlog.Tools.Sdk.Helpers
             while (true)
             {
                 var key = Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Enter)
+                if (key.Key is ConsoleKey.Enter)
                 {
                     Console.WriteLine();
                     break;

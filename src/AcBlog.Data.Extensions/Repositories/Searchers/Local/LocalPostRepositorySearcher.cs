@@ -21,13 +21,13 @@ namespace AcBlog.Data.Repositories.Searchers.Local
         {
             var qr = (await Repository.GetAllItems(cancellationToken)).IgnoreNull();
 
-            if (query.Type != null)
+            if (query.Type is not null)
                 qr = qr.Where(x => x.Type == query.Type);
             if (!string.IsNullOrWhiteSpace(query.Author))
                 qr = qr.Where(x => x.Author == query.Author);
-            if (query.Category != null)
+            if (query.Category is not null)
                 qr = qr.Where(x => x.Category.ToString().StartsWith(query.Category.ToString()));
-            if (query.Keywords != null)
+            if (query.Keywords is not null)
                 qr = qr.Where(x => query.Keywords.Items.All(k => x.Keywords.Items.Contains(k)));
             if (!string.IsNullOrWhiteSpace(query.Title))
                 qr = qr.Where(x => x.Title.Contains(query.Title));

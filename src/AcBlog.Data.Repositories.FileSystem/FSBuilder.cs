@@ -42,7 +42,9 @@ namespace AcBlog.Data.Repositories.FileSystem
             {
                 if (!File.Exists(path))
                 {
-                    EnsureDirectoryExists(Path.GetDirectoryName(path));
+                    var par = Path.GetDirectoryName(path);
+                    if (!string.IsNullOrWhiteSpace(par))
+                        EnsureDirectoryExists(par);
                     File.WriteAllBytes(path, initialData ?? Array.Empty<byte>());
                 }
             }

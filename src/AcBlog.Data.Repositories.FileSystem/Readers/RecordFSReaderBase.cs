@@ -19,7 +19,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         protected PagingProvider<TId> PagingProvider { get; }
 
-        Lazy<RepositoryStatus> Status = new Lazy<RepositoryStatus>(new RepositoryStatus
+        readonly Lazy<RepositoryStatus> _status = new Lazy<RepositoryStatus>(new RepositoryStatus
         {
             CanRead = true,
             CanWrite = false,
@@ -69,13 +69,13 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             await using var fs = await (await FileProvider.GetFileInfo(GetPath(id)).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
             var result = await JsonSerializer.DeserializeAsync<T?>(fs, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
-            if (result != null)
+            if (result is not null)
                 result.Id = id;
             return result;
         }
 
         public override Task<bool> Update(T value, CancellationToken cancellationToken = default) => Task.FromResult(false);
 
-        public override Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(Status.Value);
+        public override Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(_status.Value);
     }
 }

@@ -8,16 +8,16 @@ namespace Test.Data
 {
     public static class Generator
     {
-        static Random random { get; set; } = new Random();
+        static Random Random { get; set; } = new Random();
 
         public static string GetString()
         {
-            return random.Next().ToString();
+            return Random.Next().ToString();
         }
 
         public static DateTimeOffset GetDateTimeOffset()
         {
-            return new DateTimeOffset(random.Next(), TimeSpan.Zero);
+            return new DateTimeOffset(Random.Next(), TimeSpan.Zero);
         }
 
         public static Document GetDocument()
@@ -132,7 +132,7 @@ namespace Test.Data
                 Keywords = GetKeyword(),
                 CreationTime = GetDateTimeOffset(),
                 ModificationTime = GetDateTimeOffset(),
-                Type = (PostType)types.GetValue(random.Next(types.Length)),
+                Type = (PostType)types.GetValue(Random.Next(types.Length)),
             };
         }
     }

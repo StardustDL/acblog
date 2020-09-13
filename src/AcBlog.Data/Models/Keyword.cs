@@ -23,7 +23,7 @@ namespace AcBlog.Data.Models
 
         public string OneName() => Items.First();
 
-        public string OneNameOrDefault() => Items.FirstOrDefault();
+        public string OneNameOrDefault() => Items.FirstOrDefault() ?? string.Empty;
 
         public IList<string> Items { get; set; } = Array.Empty<string>();
 

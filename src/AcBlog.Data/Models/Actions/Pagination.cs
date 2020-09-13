@@ -15,9 +15,9 @@ namespace AcBlog.Data.Models.Actions
             }
         }
 
-        public int CurrentPage { get; set; } = 0;
+        public int CurrentPage { get; set; }
 
-        public int TotalCount { get; set; } = 0;
+        public int TotalCount { get; set; }
 
         public int Offset => PageSize * CurrentPage;
 

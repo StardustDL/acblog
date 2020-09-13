@@ -47,7 +47,7 @@ namespace AcBlog.Tools.Sdk.Commands.Lists
             foreach (var id in await service.PostService.All(cancellationToken))
             {
                 var item = await service.PostService.Get(id, cancellationToken);
-                if (item != null)
+                if (item is not null)
                 {
                     Console.WriteLine(item.Title);
                 }

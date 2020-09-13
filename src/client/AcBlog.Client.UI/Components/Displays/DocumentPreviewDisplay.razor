@@ -10,7 +10,7 @@
 
     protected override void OnParametersSet()
     {
-        if (Document != null)
+        if (Document is not null)
         {
             Preview = Document.GetPreview(1000);
         }

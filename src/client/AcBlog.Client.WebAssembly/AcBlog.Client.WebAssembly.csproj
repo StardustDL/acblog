@@ -24,4 +24,6 @@
 		<ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
 	</ItemGroup>
 
+	<ProjectExtensions><VisualStudio><UserProperties publish_4wwwroot_4_3content_4acblog_1client_1ui_4lib_4bootstrap_4css_4bootstrap_1min_1css_1map__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
 </Project>

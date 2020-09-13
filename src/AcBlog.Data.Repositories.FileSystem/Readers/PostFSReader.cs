@@ -27,7 +27,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
             var paging = PagingProvider;
 
-            if (query.Type != null)
+            if (query.Type is not null)
             {
                 switch (query.Type)
                 {
@@ -42,11 +42,11 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
                         break;
                 }
             }
-            else if (query.Category != null && query.Category.Items.Any())
+            else if (query.Category is not null && query.Category.Items.Any())
             {
                 paging = new PagingProvider<string>(Paths.GetCategoryRoot(RootPath, query.Category), FileProvider);
             }
-            else if (query.Keywords != null && query.Keywords.Items.Any())
+            else if (query.Keywords is not null && query.Keywords.Items.Any())
             {
                 paging = new PagingProvider<string>(Paths.GetKeywordRoot(RootPath, query.Keywords), FileProvider);
             }

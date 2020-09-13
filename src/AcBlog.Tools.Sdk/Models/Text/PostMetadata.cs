@@ -2,8 +2,12 @@
 using System;
 using System.Linq;
 
+#pragma warning disable IDE1006 // 命名样式
+#pragma warning disable CA1805 // 避免进行不必要的初始化
+
 namespace AcBlog.Tools.Sdk.Models.Text
 {
+
     public class PostMetadata : MetadataBase<Post>
     {
         public string? id { get; set; } = null;
@@ -40,13 +44,13 @@ namespace AcBlog.Tools.Sdk.Models.Text
 
         public override void ApplyTo(Post data)
         {
-            if (id != null)
+            if (id is not null)
                 data.Id = id;
-            if (title != null)
+            if (title is not null)
                 data.Title = title;
-            if (category != null)
+            if (category is not null)
                 data.Category = new Category(category);
-            if (keywords != null)
+            if (keywords is not null)
                 data.Keywords = new Keyword(keywords);
             if (DateTimeOffset.TryParse(creationTime, out var _creationTime))
             {
@@ -56,9 +60,9 @@ namespace AcBlog.Tools.Sdk.Models.Text
             {
                 data.ModificationTime = _modificationTime;
             }
-            if (type != null)
+            if (type is not null)
                 data.Type = Enum.Parse<PostType>(type, true);
-            if (author != null)
+            if (author is not null)
                 data.Author = author;
         }
     }

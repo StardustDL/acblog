@@ -1,20 +1,20 @@
 ﻿@using AcBlog.Client.UI.Components.Displays
 
-@if (Value != null)
+@if (Value is not null)
 {
     <div class="d-flex flex-wrap justify-content-between" style="color:#999">
         <div>
             <small>
                 <ItemTimeDisplay CreationTime="@Value.CreationTime" ModificationTime="@Value.ModificationTime" />
             </small>
-            @if (Value.Category != null && Value.Category.Items.Any())
+            @if (Value.Category is not null && Value.Category.Items.Any())
             {
                 <small class="m-1"></small>
                 <small>
                     <CategoryDisplay Data="@Value.Category" />
                 </small>
             }
-            @if (Value.Keywords != null && Value.Keywords.Items.Any())
+            @if (Value.Keywords is not null && Value.Keywords.Items.Any())
             {
                 <small class="m-1"></small>
                 <small>

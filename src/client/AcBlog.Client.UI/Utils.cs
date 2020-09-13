@@ -76,25 +76,25 @@ namespace AcBlog.Client.UI
             }
             if (value.Hours > 0)
             {
-                if (haspre) sb.Append(" ");
+                if (haspre) sb.Append(' ');
                 sb.Append(string.Format("{0} h", value.Hours));
                 haspre = true;
             }
             if (value.Minutes > 0)
             {
-                if (haspre) sb.Append(" ");
+                if (haspre) sb.Append(' ');
                 sb.Append(string.Format("{0} min", value.Minutes));
                 haspre = true;
             }
             if (value.Seconds > 0)
             {
-                if (haspre) sb.Append(" ");
+                if (haspre) sb.Append(' ');
                 sb.Append(string.Format("{0} s", value.Seconds));
                 haspre = true;
             }
             if (value.Milliseconds > 0)
             {
-                if (haspre) sb.Append(" ");
+                if (haspre) sb.Append(' ');
                 sb.Append(string.Format("{0} ms", value.Milliseconds));
             }
             else

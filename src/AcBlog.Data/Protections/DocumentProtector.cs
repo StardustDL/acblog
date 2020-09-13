@@ -12,13 +12,15 @@ namespace AcBlog.Data.Protections
 {
     public sealed class DocumentProtector : IProtector<Document>
     {
-        readonly static SHA256Managed sha = new SHA256Managed();
+        readonly static SHA256Managed _sha = new SHA256Managed();
 
         static byte[] FormalKey(byte[] raw)
         {
-            var bs = sha.ComputeHash(raw);
+            var bs = _sha.ComputeHash(raw);
             if (bs.Length >= 32)
+            {
                 return bs[..32];
+            }
             else
             {
                 byte[] res = new byte[32];
@@ -60,11 +62,11 @@ namespace AcBlog.Data.Protections
             return resultArray;
         }
 
-        readonly static string ProtectFlag = Convert.ToBase64String(Encoding.UTF8.GetBytes("Protected Post by PostProtector"));
+        readonly static string _protectFlag = Convert.ToBase64String(Encoding.UTF8.GetBytes("Protected Post by PostProtector"));
 
         public Task<bool> IsProtected(Document value, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(value.Tag == ProtectFlag);
+            return Task.FromResult(value.Tag == _protectFlag);
         }
 
         public async Task<Document> Protect(Document value, ProtectionKey key, CancellationToken cancellationToken = default)
@@ -79,7 +81,7 @@ namespace AcBlog.Data.Protections
                     bs = ms.ToArray();
                 }
                 var ky = Encoding.UTF8.GetBytes(key.Password);
-                res.Tag = ProtectFlag;
+                res.Tag = _protectFlag;
                 res.Raw = Convert.ToBase64String(AesEncrypt(bs, ky));
                 return res;
             }
@@ -93,16 +95,14 @@ namespace AcBlog.Data.Protections
         {
             try
             {
-                if (!await IsProtected(value))
+                if (!await IsProtected(value, cancellationToken))
                 {
                     return value;
                 }
                 var bs = Convert.FromBase64String(value.Raw);
                 var ky = Encoding.UTF8.GetBytes(key.Password);
-                await using (var ms = new MemoryStream(AesDecrypt(bs, ky)))
-                {
-                    return await JsonSerializer.DeserializeAsync<Document>(ms, cancellationToken: cancellationToken);
-                }
+                await using var ms = new MemoryStream(AesDecrypt(bs, ky));
+                return await JsonSerializer.DeserializeAsync<Document>(ms, cancellationToken: cancellationToken);
             }
             catch (Exception ex)
             {

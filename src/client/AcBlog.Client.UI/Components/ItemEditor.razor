@@ -52,7 +52,7 @@
                 Description = string.Join('\n', mv.Errors)
             });
         }
-        return mv.Errors.Count == 0;
+        return mv.Errors.Count is 0;
     }
 
     private async Task onCreate()

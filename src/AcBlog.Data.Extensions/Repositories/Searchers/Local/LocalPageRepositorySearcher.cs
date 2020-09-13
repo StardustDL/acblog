@@ -19,7 +19,7 @@ namespace AcBlog.Data.Repositories.Searchers.Local
             var qr = (await Repository.GetAllItems(cancellationToken)).IgnoreNull();
 
             if (string.IsNullOrEmpty(query.Route))
-                qr.Where(x => x.Route.StartsWith(query.Route));
+                qr = qr.Where(x => x.Route.StartsWith(query.Route));
             if (!string.IsNullOrWhiteSpace(query.Term))
             {
                 qr = qr.Where(x =>

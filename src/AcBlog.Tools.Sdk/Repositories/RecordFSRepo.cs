@@ -23,7 +23,7 @@ namespace AcBlog.Tools.Sdk.Repositories
             FileProvider = new PhysicalFileProvider(rootPath).AsFileProvider();
         }
 
-        Lazy<RepositoryStatus> _status = new Lazy<RepositoryStatus>(() =>
+        readonly Lazy<RepositoryStatus> _status = new Lazy<RepositoryStatus>(() =>
         {
             return new RepositoryStatus
             {
@@ -40,7 +40,7 @@ namespace AcBlog.Tools.Sdk.Repositories
             foreach (var file in Directory.EnumerateFiles(RootPath, "*.md", SearchOption.AllDirectories))
             {
                 var name = Path.GetRelativePath(RootPath, file);
-                result.Add(name.Substring(0, name.Length - 3).Replace('\\', '/'));
+                result.Add(name[0..^3].Replace('\\', '/'));
             }
             return Task.FromResult<IEnumerable<string>>(result);
         }

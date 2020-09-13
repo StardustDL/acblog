@@ -108,6 +108,7 @@ namespace AcBlog.Client.UI.Shared
         public virtual void Dispose()
         {
             NavigationManager.LocationChanged -= LocationChanged;
+            GC.SuppressFinalize(this);
         }
     }
 }

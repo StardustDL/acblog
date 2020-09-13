@@ -9,7 +9,7 @@ namespace AcBlog.Sdk.Sitemap
     {
         private readonly XNamespace NS = "http://www.sitemaps.org/schemas/sitemap/0.9";
 
-        private List<SitemapUrl> _urls;
+        private readonly List<SitemapUrl> _urls;
 
         public SitemapBuilder()
         {

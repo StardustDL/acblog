@@ -94,8 +94,8 @@
     {
         Model.CreationTime = DateTimeOffset.Now;
         var id = await Service.PostService.Create(Model);
-        result.Result = id != null;
-        if (id != null)
+        result.Result = id is not null;
+        if (id is not null)
         {
             NavigationManager.NavigateTo($"posts/{Uri.EscapeDataString(id)}");
         }

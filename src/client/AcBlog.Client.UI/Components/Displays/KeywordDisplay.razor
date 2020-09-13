@@ -2,7 +2,7 @@
 @inject IClientUrlGenerator UrlGenerator
 
 <span class="itemdisplay">
-    <span class="mdi @(Data.Items.Count() == 1 ? "mdi-tag" : "mdi-tag-multiple")">
+    <span class="mdi @(Data.Items.Count() is 1 ? "mdi-tag" : "mdi-tag-multiple")">
         @foreach (var key in Data.Items)
         {
             <a href="@UrlGenerator.Keyword(new Keyword(key))" style="color: inherit;">@key</a>

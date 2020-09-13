@@ -34,7 +34,7 @@ namespace AcBlog.Client.WebAssembly.Host.Pages
             result.Add(header);
             if (path.Length > 0)
             {
-                if (path[0] == "pages")
+                if (path[0] is "pages")
                 {
                     await GeneratePageTitle(path[1..], result);
                 }
@@ -52,7 +52,7 @@ namespace AcBlog.Client.WebAssembly.Host.Pages
             result.Add("Categories");
             if (path.Length > 0)
             {
-                if (path[0] == "pages")
+                if (path[0] is "pages")
                 {
                     await GeneratePageTitle(path[1..], result);
                 }
@@ -72,7 +72,7 @@ namespace AcBlog.Client.WebAssembly.Host.Pages
             result.Add("Keywords");
             if (path.Length > 0)
             {
-                if (path[0] == "pages")
+                if (path[0] is "pages")
                 {
                     await GeneratePageTitle(path[1..], result);
                 }

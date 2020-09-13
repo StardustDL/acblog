@@ -14,14 +14,8 @@ namespace AcBlog.Data.Models
 
         public string this[string key, string defaultValue = ""]
         {
-            get
-            {
-                return Raw.TryGetValue(key, out var res) ? res : defaultValue;
-            }
-            set
-            {
-                Raw[key] = value;
-            }
+            get => Raw.TryGetValue(key, out var res) ? res : defaultValue;
+            set => Raw[key] = value;
         }
     }
 }

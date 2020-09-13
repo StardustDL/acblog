@@ -36,7 +36,7 @@ namespace AcBlog.Sdk.Api
         public IFileService FileService => throw new NotImplementedException();
 
 
-        const string PrepUrl = "/Blog";
+        protected const string PrepUrl = "/Blog";
 
         public async Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default)
         {

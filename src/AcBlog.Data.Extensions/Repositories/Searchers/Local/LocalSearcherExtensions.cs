@@ -14,7 +14,7 @@ namespace AcBlog.Data.Repositories.Searchers.Local
                 TotalCount = data.Count(),
             };
 
-            if (query.Pagination != null)
+            if (query.Pagination is not null)
             {
                 data = data.Skip(query.Pagination.Offset).Take(query.Pagination.PageSize);
                 pagination.CurrentPage = query.Pagination.CurrentPage;

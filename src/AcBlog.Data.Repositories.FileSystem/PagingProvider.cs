@@ -30,7 +30,7 @@ namespace AcBlog.Data.Repositories.FileSystem
 
         protected IFileProvider FileProvider { get; }
 
-        public PagingConfig? Config { get; private set; } = null;
+        public PagingConfig? Config { get; private set; }
 
         public string GetConfigPath() => Path.Join(RootPath, "config.json");
 
@@ -49,7 +49,7 @@ namespace AcBlog.Data.Repositories.FileSystem
 
             if (pagination.CurrentPage >= 0 &&
                 (pagination.CurrentPage < Config!.TotalPage ||
-                Config.TotalPage == 0 && pagination.CurrentPage == 0))
+                Config.TotalPage is 0 && pagination.CurrentPage is 0))
             {
                 string path = GetPagePath(pagination.CurrentPage);
                 await using var fs = await (await FileProvider.GetFileInfo(path).ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
@@ -96,7 +96,7 @@ namespace AcBlog.Data.Repositories.FileSystem
                     pn++;
                 }
             }
-            if (page.Count > 0 || data.Count == 0)
+            if (page.Count > 0 || data.Count is 0)
             {
                 string pagePath = Path.GetRelativePath(RootPath, GetPagePath(pn));
 

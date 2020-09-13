@@ -29,7 +29,7 @@ namespace AcBlog.Data.Repositories
 
     public class EmptyRecordRepository<T, TId, TQuery> : IRecordRepository<T, TId, TQuery> where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
     {
-        protected static RepositoryStatus Status = new RepositoryStatus
+        private static readonly RepositoryStatus _status = new RepositoryStatus
         {
             CanRead = false,
             CanWrite = false
@@ -47,7 +47,7 @@ namespace AcBlog.Data.Repositories
 
         public virtual Task<T?> Get(TId id, CancellationToken cancellationToken = default) => Task.FromResult<T?>(null);
 
-        public virtual Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(Status);
+        public virtual Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(_status);
 
         public virtual Task<QueryResponse<TId>> Query(TQuery query, CancellationToken cancellationToken = default) => Task.FromResult(new QueryResponse<TId>(Array.Empty<TId>()));
 

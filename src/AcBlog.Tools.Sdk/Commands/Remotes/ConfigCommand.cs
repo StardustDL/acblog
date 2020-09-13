@@ -32,13 +32,13 @@ namespace AcBlog.Tools.Sdk.Commands.Remotes
             Workspace workspace = host.Services.GetRequiredService<Workspace>();
             if (workspace.Option.Remotes.TryGetValue(argument.Name, out var remote))
             {
-                if (argument.Token != null)
+                if (argument.Token is not null)
                     remote.Token = argument.Token;
-                if (argument.Type != null)
+                if (argument.Type is not null)
                     remote.Type = argument.Type.Value;
-                if (argument.Uri != null)
+                if (argument.Uri is not null)
                 {
-                    if (remote.Type == RemoteType.LocalFS)
+                    if (remote.Type is RemoteType.LocalFS)
                     {
                         remote.Uri = new DirectoryInfo(argument.Uri).FullName;
                     }
@@ -54,13 +54,13 @@ namespace AcBlog.Tools.Sdk.Commands.Remotes
 
         public class CArgument
         {
-            public string? Uri { get; set; } = null;
+            public string? Uri { get; set; }
 
             public string Name { get; set; } = string.Empty;
 
-            public string? Token { get; set; } = null;
+            public string? Token { get; set; }
 
-            public RemoteType? Type { get; set; } = null;
+            public RemoteType? Type { get; set; }
         }
     }
 }

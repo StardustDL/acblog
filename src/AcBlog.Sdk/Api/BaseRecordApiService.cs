@@ -31,7 +31,7 @@ namespace AcBlog.Sdk.Api
 
         protected virtual void SetHeader()
         {
-            if (Context != null && !string.IsNullOrWhiteSpace(Context.Token))
+            if (Context is not null && !string.IsNullOrWhiteSpace(Context.Token))
             {
                 HttpClient.DefaultRequestHeaders.Remove("Authorization");
                 HttpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Context.Token);
@@ -63,7 +63,7 @@ namespace AcBlog.Sdk.Api
             if (!responseMessage.IsSuccessStatusCode)
                 return null;
 
-            return await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return await responseMessage.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public virtual async Task<bool> Delete(string id, CancellationToken cancellationToken = default)
@@ -94,7 +94,7 @@ namespace AcBlog.Sdk.Api
             responseMessage.EnsureSuccessStatusCode();
 
             var result = await responseMessage.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken).ConfigureAwait(false);
-            if (result != null)
+            if (result is not null)
                 result.Id = id;
 
             return result;

@@ -30,7 +30,7 @@ namespace AcBlog.Tools.Sdk.Commands.Remotes
         public override async Task<int> Handle(CArgument argument, IHost host, CancellationToken cancellationToken)
         {
             Workspace workspace = host.Services.GetRequiredService<Workspace>();
-            if (argument.Type == RemoteType.LocalFS)
+            if (argument.Type is RemoteType.LocalFS)
             {
                 argument.Uri = new DirectoryInfo(argument.Uri).FullName;
             }

@@ -18,7 +18,7 @@ namespace AcBlog.Tools.Sdk.Models.Text
         public static string Format<TMeta>(TMeta metadata, string data)
         {
             StringBuilder sb = new StringBuilder();
-            if (metadata != null)
+            if (metadata is not null)
             {
                 string metastr = YamlSerializer.Serialize(metadata).Trim(new char[] { '\r', '\n' });
                 sb.Append($"{MetaSplitter}\n{metastr}\n{MetaSplitter}\n");
@@ -36,7 +36,7 @@ namespace AcBlog.Tools.Sdk.Models.Text
 
             if (lines.Length > 0)
             {
-                if (lines[0] == MetaSplitter)
+                if (lines[0] is MetaSplitter)
                 {
                     int l = 1, r = 1;
                     for (; r < lines.Length; r++)

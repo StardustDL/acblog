@@ -44,36 +44,36 @@ namespace StardustDL.Extensions.FileProviders
         {
             class MSFileInfoWrapper : IFileInfo
             {
-                Microsoft.Extensions.FileProviders.IFileInfo fileInfo;
+                readonly Microsoft.Extensions.FileProviders.IFileInfo _fileInfo;
 
-                public MSFileInfoWrapper(Microsoft.Extensions.FileProviders.IFileInfo fileInfo) => this.fileInfo = fileInfo;
+                public MSFileInfoWrapper(Microsoft.Extensions.FileProviders.IFileInfo fileInfo) => this._fileInfo = fileInfo;
 
-                public string PhysicalPath => fileInfo.PhysicalPath;
+                public string PhysicalPath => _fileInfo.PhysicalPath;
 
-                public string Name => fileInfo.Name;
+                public string Name => _fileInfo.Name;
 
-                public bool IsDirectory => fileInfo.IsDirectory;
+                public bool IsDirectory => _fileInfo.IsDirectory;
 
-                public Task<Stream> CreateReadStream() => Task.FromResult(fileInfo.CreateReadStream());
-                public Task<bool> Exists() => Task.FromResult(fileInfo.Exists);
-                public Task<long> Length() => Task.FromResult(fileInfo.Length);
+                public Task<Stream> CreateReadStream() => Task.FromResult(_fileInfo.CreateReadStream());
+                public Task<bool> Exists() => Task.FromResult(_fileInfo.Exists);
+                public Task<long> Length() => Task.FromResult(_fileInfo.Length);
             }
 
             class MSDirectoryContentsWrapper : IDirectoryContents
             {
-                Microsoft.Extensions.FileProviders.IDirectoryContents fileInfo;
+                readonly Microsoft.Extensions.FileProviders.IDirectoryContents _fileInfo;
 
-                public MSDirectoryContentsWrapper(Microsoft.Extensions.FileProviders.IDirectoryContents fileInfo) => this.fileInfo = fileInfo;
+                public MSDirectoryContentsWrapper(Microsoft.Extensions.FileProviders.IDirectoryContents fileInfo) => this._fileInfo = fileInfo;
 
                 public async IAsyncEnumerable<IFileInfo> Children()
                 {
-                    foreach (var v in fileInfo)
+                    foreach (var v in _fileInfo)
                     {
                         yield return await Task.FromResult(new MSFileInfoWrapper(v));
                     }
                 }
 
-                public Task<bool> Exists() => Task.FromResult(fileInfo.Exists);
+                public Task<bool> Exists() => Task.FromResult(_fileInfo.Exists);
             }
 
             Microsoft.Extensions.FileProviders.IFileProvider fileInfo;

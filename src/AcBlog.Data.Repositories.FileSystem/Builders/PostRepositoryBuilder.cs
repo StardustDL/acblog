@@ -29,7 +29,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
                 PagingProvider<string> paging = new PagingProvider<string>(Paths.GetArticleRoot(RootPath));
 
                 await paging.Build(data.Where(
-                    x => x.Type == PostType.Article).ToList().Select(x => x.Id).ToArray(),
+                    x => x.Type is PostType.Article).ToList().Select(x => x.Id).ToArray(),
                     PagingConfig).ConfigureAwait(false);
             }
 
@@ -37,7 +37,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
                 PagingProvider<string> paging = new PagingProvider<string>(Paths.GetSlidesRoot(RootPath));
 
                 await paging.Build(data.Where(
-                    x => x.Type == PostType.Slides).ToList().Select(x => x.Id).ToArray(),
+                    x => x.Type is PostType.Slides).ToList().Select(x => x.Id).ToArray(),
                     PagingConfig).ConfigureAwait(false);
             }
 
@@ -45,7 +45,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
                 PagingProvider<string> paging = new PagingProvider<string>(Paths.GetNoteRoot(RootPath));
 
                 await paging.Build(data.Where(
-                    x => x.Type == PostType.Note).ToList().Select(x => x.Id).ToArray(),
+                    x => x.Type is PostType.Note).ToList().Select(x => x.Id).ToArray(),
                     PagingConfig).ConfigureAwait(false);
             }
         }

@@ -1,7 +1,7 @@
 ﻿@typeparam TItem
 @inject NavigationManager NavigationManager
 
-@if (Data != null)
+@if (Data is not null)
 {
     <AntList DataSource="Data.Results" ItemLayout="@AntDirectionVHType.Vertical" Header="@Header">
         <Item Context="item">
@@ -9,7 +9,7 @@
         </Item>
     </AntList>
 
-    @if (Data.CurrentPage != null)
+    @if (Data.CurrentPage is not null)
     {
         <div class="text-center m-1">
             <AntDesign.Pagination Total="Data.CurrentPage.TotalCount" Current="Data.CurrentPage.CurrentPage + 1"
@@ -65,17 +65,17 @@
         else
         {
         PaginationItemRenderer = ctx => @<Template>
-            @if (ctx.Type == "page")
+            @if (ctx.Type is "page")
             {
                 <a href="@($"{PageNavigationUrl}/pages/{ctx.Page - 1}")">@(ctx.Page)</a>
             }
-            else if (ctx.Type == "prev" && Data.CurrentPage.HasPreviousPage)
+            else if (ctx.Type is "prev" && Data.CurrentPage.HasPreviousPage)
             {
                 <a href="@($"{PageNavigationUrl}/pages/{Data.CurrentPage.CurrentPage - 1}")">
                     @("<")
                 </a>
             }
-            else if (ctx.Type == "next" && Data.CurrentPage.HasNextPage)
+            else if (ctx.Type is "next" && Data.CurrentPage.HasNextPage)
             {
                 <a href="@($"{PageNavigationUrl}/pages/{Data.CurrentPage.CurrentPage + 1}")">
                     @(">")

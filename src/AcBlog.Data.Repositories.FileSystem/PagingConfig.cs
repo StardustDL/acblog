@@ -16,7 +16,7 @@ namespace AcBlog.Data.Repositories.FileSystem
             }
         }
 
-        public int TotalCount { get; set; } = 0;
+        public int TotalCount { get; set; }
 
         public int TotalPage => (int)Math.Ceiling((double)TotalCount / PageSize);
     }

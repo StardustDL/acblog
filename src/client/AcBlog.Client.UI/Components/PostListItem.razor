@@ -60,7 +60,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        if (loader != null)
+        if (loader is not null)
         {
             await loader.Load();
         }

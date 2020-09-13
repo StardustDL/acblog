@@ -17,7 +17,7 @@
 
     public class IdentityServerSettings
     {
-        public bool Enable { get; set; } = false;
+        public bool Enable { get; set; }
 
         public string Endpoint { get; set; } = "_configuration/AcBlog.Client.WebAssembly";
 

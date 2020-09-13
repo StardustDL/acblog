@@ -35,7 +35,7 @@ namespace AcBlog.Tools.Sdk.Commands.News
         public override async Task<int> Handle(CArgument argument, IHost host, CancellationToken cancellationToken)
         {
             Workspace workspace = host.Services.GetRequiredService<Workspace>();
-            ILogger<PostCommand> logger = host.Services.GetService<ILogger<PostCommand>>();
+            ILogger<PostCommand> logger = host.Services.GetRequiredService<ILogger<PostCommand>>();
 
             Post post = new Post
             {

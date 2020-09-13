@@ -32,7 +32,7 @@ namespace AcBlog.Server.Api
 {
     public class Startup
     {
-        const string DefaultCorsPolicy = nameof(DefaultCorsPolicy);
+        internal string DefaultCorsPolicy { get; } = nameof(DefaultCorsPolicy);
 
         public Startup(IConfiguration configuration)
         {

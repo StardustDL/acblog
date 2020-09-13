@@ -15,12 +15,9 @@ namespace AcBlog.Data.Repositories.SqlServer
 {
     public class PostRepository : IPostRepository
     {
-        public PostRepository(DataContext data)
-        {
-            Data = data;
-        }
+        public PostRepository(DataContext data) => Data = data;
 
-        Lazy<RepositoryStatus> Status = new Lazy<RepositoryStatus>(new RepositoryStatus
+        readonly Lazy<RepositoryStatus> _status = new Lazy<RepositoryStatus>(new RepositoryStatus
         {
             CanRead = true,
             CanWrite = true,
@@ -54,7 +51,7 @@ namespace AcBlog.Data.Repositories.SqlServer
         public async Task<bool> Exists(string id, CancellationToken cancellationToken = default)
         {
             var item = await Data.Posts.FindAsync(new object[] { id }, cancellationToken).ConfigureAwait(false);
-            return item != null;
+            return item is not null;
         }
 
         public async Task<Post> Get(string id, CancellationToken cancellationToken = default)
@@ -67,13 +64,13 @@ namespace AcBlog.Data.Repositories.SqlServer
         {
             var qr = Data.Posts.AsQueryable();
 
-            if (query.Type != null)
+            if (query.Type is not null)
                 qr = qr.Where(x => x.Type == query.Type);
             if (!string.IsNullOrWhiteSpace(query.Author))
                 qr = qr.Where(x => x.AuthorId == query.Author);
-            if (query.Category != null)
+            if (query.Category is not null)
                 qr = qr.Where(x => x.Category.StartsWith(query.Category.ToString()));
-            if (query.Keywords != null)
+            if (query.Keywords is not null)
                 qr = qr.Where(x => x.Keywords.StartsWith(query.Keywords.ToString()));
             if (!string.IsNullOrWhiteSpace(query.Title))
                 qr = qr.Where(x => x.Title.Contains(query.Title));
@@ -97,7 +94,7 @@ namespace AcBlog.Data.Repositories.SqlServer
                 TotalCount = await qr.CountAsync(cancellationToken).ConfigureAwait(false),
             };
 
-            if (query.Pagination != null)
+            if (query.Pagination is not null)
             {
                 qr = qr.Skip(query.Pagination.Offset).Take(query.Pagination.PageSize);
                 pagination.CurrentPage = query.Pagination.CurrentPage;
@@ -134,7 +131,7 @@ namespace AcBlog.Data.Repositories.SqlServer
             return true;
         }
 
-        public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(Status.Value);
+        public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(_status.Value);
 
         public Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default) => throw new NotImplementedException();
 

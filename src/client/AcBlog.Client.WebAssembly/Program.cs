@@ -29,7 +29,7 @@ namespace AcBlog.Client.WebAssembly
 {
     public class Program
     {
-        public static bool HasHost { get; set; } = false;
+        public static bool HasHost { get; set; }
 
         public static async Task Main(string[] args)
         {

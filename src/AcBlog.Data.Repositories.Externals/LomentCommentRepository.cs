@@ -17,7 +17,7 @@ namespace AcBlog.Data.Repositories.Externals
             Service = service;
         }
 
-        Lazy<RepositoryStatus> Status = new Lazy<RepositoryStatus>(new RepositoryStatus
+        readonly Lazy<RepositoryStatus> _status = new Lazy<RepositoryStatus>(new RepositoryStatus
         {
             CanRead = true,
             CanWrite = true,
@@ -64,7 +64,7 @@ namespace AcBlog.Data.Repositories.Externals
             try
             {
                 var result = await Get(id, cancellationToken).ConfigureAwait(false);
-                return result != null;
+                return result is not null;
             }
             catch
             {
@@ -91,7 +91,7 @@ namespace AcBlog.Data.Repositories.Externals
             };
         }
 
-        public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(Status.Value);
+        public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(_status.Value);
 
         public async Task<QueryResponse<string>> Query(CommentQueryRequest query, CancellationToken cancellationToken = default)
         {

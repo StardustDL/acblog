@@ -6,7 +6,7 @@ namespace AcBlog.Data.Models.Actions
 {
     public class PostQueryRequest : QueryRequest
     {
-        public PostType? Type { get; set; } = null;
+        public PostType? Type { get; set; }
 
         public string Author { get; set; } = string.Empty;
 
@@ -14,9 +14,9 @@ namespace AcBlog.Data.Models.Actions
 
         public string Title { get; set; } = string.Empty;
 
-        public Keyword? Keywords { get; set; } = null;
+        public Keyword? Keywords { get; set; }
 
-        public Category? Category { get; set; } = null;
+        public Category? Category { get; set; }
 
         public PostResponseOrder Order { get; set; } = PostResponseOrder.None;
     }

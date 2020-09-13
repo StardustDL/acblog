@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
+#pragma warning disable IDE1006 // 命名样式
+
 namespace AcBlog.Tools.Sdk.Models.Text
 {
     public class PageMetadata : MetadataBase<Page>

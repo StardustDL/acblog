@@ -1,7 +1,7 @@
 ﻿@inject IBlogService Service
 @inject IClientUrlGenerator UrlGenerator
 
-@if (Count != null)
+@if (Count is not null)
 {
     <span class="itemdisplay">
         <span class="mdi mdi-eye">@Count.Value</span>

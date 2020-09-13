@@ -39,7 +39,7 @@ namespace AcBlog.Tools.Sdk.Models
 
         public const string BlogOptionPath = "blog.json";
 
-        const string AssetsPath = "assets";
+        public const string AssetsPath = "assets";
 
         public Workspace(IOptions<WorkspaceOption> option, IOptions<DB> db, LocalBlogService localBlogService, IHttpClientFactory httpClientFactory, ILogger<Workspace> logger)
         {
@@ -113,7 +113,7 @@ namespace AcBlog.Tools.Sdk.Models
             await SaveDb();
         }
 
-        const string GitTempFolder = "temp/git";
+        string GitTempFolder { get; } = "temp/git";
 
         public async Task Connect(string name = "")
         {
@@ -309,14 +309,16 @@ namespace AcBlog.Tools.Sdk.Models
 
                                 Logger.LogInformation($"Push to {repo.Head.RemoteName}.");
 
-                                PushOptions options = new LibGit2Sharp.PushOptions();
-                                options.CredentialsProvider = new CredentialsHandler(
+                                PushOptions options = new PushOptions
+                                {
+                                    CredentialsProvider = new CredentialsHandler(
                                     (url, usernameFromUrl, types) =>
                                         new UsernamePasswordCredentials()
                                         {
                                             Username = string.IsNullOrEmpty(userName) ? usernameFromUrl : userName,
                                             Password = password
-                                        });
+                                        })
+                                };
                                 repo.Network.Push(repo.Head, options);
                             }
                         }
@@ -369,9 +371,11 @@ namespace AcBlog.Tools.Sdk.Models
                     {
                         foreach (var file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
                         {
-                            Data.Models.File f = new Data.Models.File();
-                            f.Id = Path.GetRelativePath(Environment.CurrentDirectory, file).Replace('\\', '/');
-                            if (!string.IsNullOrEmpty(baseAddress))
+                            Data.Models.File f = new Data.Models.File
+                            {
+                                Id = Path.GetRelativePath(Environment.CurrentDirectory, file).Replace('\\', '/')
+                            };
+                            if (!string.IsNullOrWhiteSpace(baseAddress))
                             {
                                 f.Uri = $"{baseAddress.TrimEnd('/')}/{f.Id}";
                             }

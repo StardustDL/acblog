@@ -21,7 +21,7 @@ namespace AcBlog.Data.Extensions
 
         public static async Task<T?[]> GetAllItems<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, CancellationToken cancellationToken = default) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
         {
-            return await repository.GetItems(await repository.All());
+            return await repository.GetItems(await repository.All(cancellationToken), cancellationToken);
         }
 
         public static IEnumerable<T> IgnoreNull<T>(this IEnumerable<T?> raw) where T : class

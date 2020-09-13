@@ -83,7 +83,7 @@ namespace AcBlog.Tools.Sdk
             while (true)
             {
                 Console.Write("> ");
-                string str = Console.ReadLine();
+                string str = Console.ReadLine() ?? string.Empty;
                 try
                 {
                     await parser.InvokeAsync(str);

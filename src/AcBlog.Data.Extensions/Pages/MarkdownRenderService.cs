@@ -21,7 +21,7 @@ namespace AcBlog.Data.Pages
             {
                 string path = uri.AbsolutePath;
                 var items = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
-                if (items.Length >= 2 && items[0] == "video")
+                if (items.Length >= 2 && items[0] is "video")
                 {
                     return $"//player.bilibili.com/player.html?bvid={items[1]}";
                 }
@@ -48,19 +48,19 @@ namespace AcBlog.Data.Pages
                 try
                 {
                     string url = uri.ToString();
-                    url = url.Substring(uri.Scheme.Length + 3); // ://
+                    url = url[(uri.Scheme.Length + 3)..]; // ://
                     string pre = "music.163.com/#/";
                     if (url.StartsWith(pre))
                     {
-                        var items = url.Substring(pre.Length).Split('?');
-                        var id = items[1].Split("&", StringSplitOptions.RemoveEmptyEntries).First(p => p.StartsWith("id="))?.Substring(3);
-                        int type = 0;
-                        if (items[0] == "song")
-                            type = 2;
-                        else if (items[0] == "playlist")
-                            type = 0;
-                        else if (items[0] == "album")
-                            type = 1;
+                        var items = url[pre.Length..].Split('?');
+                        var id = items[1].Split("&", StringSplitOptions.RemoveEmptyEntries).First(p => p.StartsWith("id="))?[3..];
+                        int type = (items[0]) switch
+                        {
+                            "song" => 2,
+                            "playlist" => 0,
+                            "album" => 1,
+                            _ => 0,
+                        };
                         return $"//music.163.com/outchain/player?type={type}&id={id}&auto=0";
                     }
                 }
@@ -78,7 +78,7 @@ namespace AcBlog.Data.Pages
             public bool AllowFullScreen => Inner.AllowFullScreen;
         }
 
-        Lazy<MarkdownPipeline> Pipeline = new Lazy<MarkdownPipeline>(() =>
+        readonly Lazy<MarkdownPipeline> _pipeline = new Lazy<MarkdownPipeline>(() =>
         {
             MediaOptions mediaOptions = new MediaOptions();
             mediaOptions.Hosts.Add(new BilibiliMediaLinkHost());
@@ -119,14 +119,14 @@ namespace AcBlog.Data.Pages
 
         public Task<string> RenderPlainText(string markdown)
         {
-            return Task.FromResult(Markdown.ToPlainText(markdown, Pipeline.Value));
+            return Task.FromResult(Markdown.ToPlainText(markdown, _pipeline.Value));
         }
 
         public async Task<string> RenderHtml(string markdown)
         {
-            var document = Markdown.Parse(markdown, Pipeline.Value);
+            var document = Markdown.Parse(markdown, _pipeline.Value);
 
-            if (FileRepository != null)
+            if (FileRepository is not null)
             {
                 foreach (LinkInline link in document.Descendants<LinkInline>())
                 {
@@ -141,14 +141,14 @@ namespace AcBlog.Data.Pages
                     }
                     var id = link.Url.Replace('\\', '/').TrimStart('/');
                     var url = await FileRepository.Get(id);
-                    if (url != null)
+                    if (url is not null)
                         link.Url = url.Uri;
                 }
             }
 
             await using var writer = new StringWriter();
             HtmlRenderer renderer = new HtmlRenderer(writer);
-            Pipeline.Value.Setup(renderer);
+            _pipeline.Value.Setup(renderer);
 
             renderer.Render(document);
             writer.Flush();

@@ -4,7 +4,7 @@
 
 @if (UseSkeleton)
 {
-    <Skeleton Loading="State == DataLoadingState.Loading" Active>
+    <Skeleton Loading="State is DataLoadingState.Loading" Active>
         @switch (State)
         {
             case DataLoadingState.Success:
@@ -106,7 +106,7 @@ else
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (NeedCallback && State == DataLoadingState.Success)
+        if (NeedCallback && State is DataLoadingState.Success)
         {
             NeedCallback = false;
             await OnLoaded.InvokeAsync(null);

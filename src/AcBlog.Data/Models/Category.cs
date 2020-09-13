@@ -22,7 +22,7 @@ namespace AcBlog.Data.Models
 
         public string OneName() => Items.Last();
 
-        public string OneNameOrDefault() => Items.LastOrDefault();
+        public string OneNameOrDefault() => Items.LastOrDefault() ?? string.Empty;
 
         public static bool IsValidName(string name) => !name.Contains(CategorySeperator);
 
