@@ -4,6 +4,7 @@ using Loment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,7 +27,7 @@ namespace AcBlog.Data.Repositories.Externals
 
         public ILomentService Service { get; }
 
-        public async Task<IEnumerable<string>> All(CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<string> All(CancellationToken cancellationToken = default)
         {
             var items = await Service.Query(new Loment.Models.CommentQuery
             {
@@ -34,7 +35,8 @@ namespace AcBlog.Data.Repositories.Externals
                 Limit = int.MaxValue,
             }, cancellationToken).ConfigureAwait(false);
 
-            return items.Select(x => x.Id);
+            foreach (var item in items.Select(x => x.Id))
+                yield return item;
         }
 
         public Task<string?> Create(Comment value, CancellationToken cancellationToken = default)
@@ -92,9 +94,13 @@ namespace AcBlog.Data.Repositories.Externals
 
         public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(_status.Value);
 
-        public async Task<QueryResponse<string>> Query(CommentQueryRequest query, CancellationToken cancellationToken = default)
+        Loment.Models.CommentQuery ToInnerQuery(CommentQueryRequest query)
         {
-            var pagination = query.Pagination ?? new Pagination();
+            var pagination = query.Pagination ?? new Pagination
+            {
+                PageSize = int.MaxValue,
+                CurrentPage = 0
+            };
 
             var innerQuery = new Loment.Models.CommentQuery
             {
@@ -106,16 +112,27 @@ namespace AcBlog.Data.Repositories.Externals
                 Offset = pagination.Offset,
                 Limit = pagination.PageSize,
             };
+            return innerQuery;
+        }
+
+        public async IAsyncEnumerable<string> Query(CommentQueryRequest query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            var innerQuery = ToInnerQuery(query);
 
             var items = await Service.Query(innerQuery, cancellationToken).ConfigureAwait(false);
 
-            innerQuery.Offset = 0;
-            innerQuery.Limit = int.MaxValue;
+            foreach (var item in items.Select(x => x.Id))
+                yield return item;
+        }
+
+        public async Task<QueryStatistic> Statistic(CommentQueryRequest query, CancellationToken cancellationToken = default)
+        {
+            var innerQuery = ToInnerQuery(query);
             var count = await Service.Count(innerQuery, cancellationToken).ConfigureAwait(false);
-
-            pagination.TotalCount = (int)count;
-
-            return new QueryResponse<string>(items.Select(x => x.Id), pagination);
+            return new QueryStatistic
+            {
+                Count = (int)count
+            };
         }
 
         public Task<bool> Update(Comment value, CancellationToken cancellationToken = default)

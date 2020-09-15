@@ -13,7 +13,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
         {
         }
 
-        async Task BuildIndexType(IList<Post> data)
+        /* async Task BuildIndexType(IList<Post> data)
         {
             {
                 PagingProvider<string> paging = new PagingProvider<string>(Paths.GetArticleRoot(RootPath));
@@ -84,14 +84,15 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
             await using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetCategoryMetadata(RootPath));
             await JsonSerializer.SerializeAsync(st, tree).ConfigureAwait(false);
         }
+        */
 
         public override async Task Build(IList<Post> data)
         {
             data = (from x in data orderby x.CreationTime descending select x).ToArray();
             await base.Build(data).ConfigureAwait(false);
-            await BuildIndexType(data).ConfigureAwait(false);
+            /*await BuildIndexType(data).ConfigureAwait(false);
             await BuildIndexKeyword(data).ConfigureAwait(false);
-            await BuildIndexCategory(data).ConfigureAwait(false);
+            await BuildIndexCategory(data).ConfigureAwait(false);*/
         }
     }
 }

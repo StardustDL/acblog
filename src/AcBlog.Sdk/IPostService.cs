@@ -10,7 +10,5 @@ namespace AcBlog.Sdk
         IBlogService BlogService { get; }
 
         IProtector<Document> Protector { get; }
-
-        IPostRepositorySearcher Searcher { get; }
     }
 }

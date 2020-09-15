@@ -35,15 +35,15 @@ namespace AcBlog.Client.Helpers
                 return null;
             try
             {
-                return (await service.Query(new Data.Models.Actions.StatisticQueryRequest
+                return (await service.Statistic(new Data.Models.Actions.StatisticQueryRequest
                 {
                     Category = "Post",
                     Uri = urlGenerator.Post(data),
                     Pagination = new Data.Models.Actions.Pagination
                     {
-                        PageSize = 1
+                        PageSize = int.MaxValue
                     }
-                })).CurrentPage.TotalCount;
+                })).Count;
             }
             catch
             {

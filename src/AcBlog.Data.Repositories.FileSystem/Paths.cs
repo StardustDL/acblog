@@ -32,6 +32,14 @@ namespace AcBlog.Data.Repositories.FileSystem
 
         public static string GetRouteFile(string rootPath, string route) => Path.Join(GetRouteRoot(rootPath), $"{NameUtility.Encode(route)}.json");
 
-        public static string GetFileById(string rootPath, string id) => Path.Join(rootPath, $"{NameUtility.Encode(id)}.json");
+        public static string GetDataFile(string rootPath, string id) => Path.Join(GetDataRoot(rootPath), $"{NameUtility.Encode(id)}.json");
+
+        public static string GetDataRoot(string rootPath) => Path.Join(rootPath, "data");
+
+        public static string GetConfigRoot(string rootPath) => Path.Join(rootPath, "config");
+
+        public static string GetStatisticFile(string rootPath) => Path.Join(GetConfigRoot(rootPath), "statistic.json");
+
+        public static string GetIdListFile(string rootPath) => Path.Join(GetConfigRoot(rootPath), "all.json");
     }
 }

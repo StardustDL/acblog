@@ -1,16 +1,17 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AcBlog.Sdk.Filters
 {
-    public class PostTypeFilter : BaseQueryFilter<IPostService, PostType?>
+    public class PostTypeFilter : BaseQueryFilter<IPostService, string, PostType?>
     {
         public PostTypeFilter(IPostService baseService) : base(baseService)
         {
         }
 
-        public override Task<QueryResponse<string>> Filter(PostType? arg = null, Pagination? pagination = null)
+        public override IAsyncEnumerable<string> Filter(PostType? arg = null, Pagination? pagination = null)
         {
             return BaseService.Query(new PostQueryRequest
             {
@@ -20,30 +21,30 @@ namespace AcBlog.Sdk.Filters
         }
     }
 
-    public class PostArticleFilter : PostTypeFilter, IQueryFilter<IPostService>
+    public class PostArticleFilter : PostTypeFilter, IQueryFilter<IPostService, string>
     {
         public PostArticleFilter(IPostService baseService) : base(baseService)
         {
         }
 
-        public Task<QueryResponse<string>> Filter(Pagination? pagination = null) => base.Filter(PostType.Article, pagination);
+        public IAsyncEnumerable<string> Filter(Pagination? pagination = null) => base.Filter(PostType.Article, pagination);
     }
 
-    public class PostSlidesFilter : PostTypeFilter, IQueryFilter<IPostService>
+    public class PostSlidesFilter : PostTypeFilter, IQueryFilter<IPostService, string>
     {
         public PostSlidesFilter(IPostService baseService) : base(baseService)
         {
         }
 
-        public Task<QueryResponse<string>> Filter(Pagination? pagination = null) => base.Filter(PostType.Slides, pagination);
+        public IAsyncEnumerable<string> Filter(Pagination? pagination = null) => base.Filter(PostType.Slides, pagination);
     }
 
-    public class PostNoteFilter : PostTypeFilter, IQueryFilter<IPostService>
+    public class PostNoteFilter : PostTypeFilter, IQueryFilter<IPostService, string>
     {
         public PostNoteFilter(IPostService baseService) : base(baseService)
         {
         }
 
-        public Task<QueryResponse<string>> Filter(Pagination? pagination = null) => base.Filter(PostType.Note, pagination);
+        public IAsyncEnumerable<string> Filter(Pagination? pagination = null) => base.Filter(PostType.Note, pagination);
     }
 }

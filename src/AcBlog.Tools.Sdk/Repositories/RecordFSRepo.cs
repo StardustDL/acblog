@@ -8,6 +8,8 @@ using StardustDL.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,15 +34,13 @@ namespace AcBlog.Tools.Sdk.Repositories
 
         protected virtual string GetPath(string id) => Path.Join(RootPath, $"{id}.md");
 
-        public override Task<IEnumerable<string>> All(CancellationToken cancellationToken = default)
+        public override async IAsyncEnumerable<string> All([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            List<string> result = new List<string>();
             foreach (var file in Directory.EnumerateFiles(RootPath, "*.md", SearchOption.AllDirectories))
             {
                 var name = Path.GetRelativePath(RootPath, file);
-                result.Add(name[0..^3].Replace('\\', '/'));
+                yield return name[0..^3].Replace('\\', '/');
             }
-            return Task.FromResult<IEnumerable<string>>(result);
         }
 
         protected abstract Task<T> CreateExistedItem(string id, TMeta metadata, string content);
@@ -99,5 +99,18 @@ namespace AcBlog.Tools.Sdk.Repositories
         }
 
         public override Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(_status.Value);
+
+        public override IAsyncEnumerable<string> Query(TQuery query, CancellationToken cancellationToken = default)
+        {
+            return AsyncEnumerable.Empty<string>();
+        }
+
+        public override Task<QueryStatistic> Statistic(TQuery query, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(new QueryStatistic
+            {
+                Count = 0
+            });
+        }
     }
 }

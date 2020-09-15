@@ -1,11 +1,12 @@
-﻿namespace AcBlog.Data.Models.Actions
+﻿using System;
+
+namespace AcBlog.Data.Models.Actions
 {
     public class QueryStatistic
     {
-        public static QueryStatistic Empty()
-        {
-            return new QueryStatistic { Count = 0 };
-        }
+        static Lazy<QueryStatistic> _empty = new Lazy<QueryStatistic>(new QueryStatistic { Count = 0 });
+
+        public static QueryStatistic Empty() => _empty.Value;
 
         public int Count { get; set; }
     }

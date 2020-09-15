@@ -12,9 +12,6 @@ namespace AcBlog.Sdk.FileSystem
     {
         public PageService(IBlogService blog, string rootPath, IFileProvider fileProvider) : base(blog, new PageFSReader(rootPath, fileProvider))
         {
-            Searcher = Repository.CreateLocalSearcher();
         }
-
-        public IPageRepositorySearcher Searcher { get; }
     }
 }

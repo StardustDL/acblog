@@ -1,6 +1,7 @@
 ﻿using AcBlog.Data.Extensions;
 using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,13 +10,9 @@ namespace AcBlog.Data.Repositories.Searchers.Local
 {
     public class LocalCommentRepositorySearcher : ICommentRepositorySearcher
     {
-        public LocalCommentRepositorySearcher(ICommentRepository repository) => Repository = repository;
-
-        public ICommentRepository Repository { get; }
-
-        public async Task<QueryResponse<string>> Search(CommentQueryRequest query, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<string> Search(ICommentRepository repository, CommentQueryRequest query, CancellationToken cancellationToken = default)
         {
-            var qr = Repository.GetAllItems(cancellationToken).IgnoreNull();
+            var qr = repository.GetAllItems(cancellationToken).IgnoreNull();
 
             if (!string.IsNullOrWhiteSpace(query.Author))
                 qr = qr.Where(x => x.Author == query.Author);
@@ -35,7 +32,7 @@ namespace AcBlog.Data.Repositories.Searchers.Local
                 );
             }
 
-            return (await qr.ToArrayAsync(cancellationToken)).AsQueryResponse<Comment, string>(query);
+            return qr.Select(item => item.Id).Paging(query.Pagination);
         }
     }
 }

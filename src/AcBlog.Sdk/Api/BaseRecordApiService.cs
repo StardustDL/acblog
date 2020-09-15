@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace AcBlog.Sdk.Api
 {
-    internal abstract class BaseRecordApiService<T, TQuery, TSearcher> where T : class, IHasId<string>
+    internal abstract class BaseRecordApiService<T, TQuery, TSearcher> : IRecordRepository<T, string, TQuery> where T : class, IHasId<string> where TQuery : QueryRequest, new()
     {
         protected abstract string PrepUrl { get; }
 
@@ -37,12 +38,16 @@ namespace AcBlog.Sdk.Api
             }
         }
 
-        public virtual async Task<IEnumerable<string>> All(CancellationToken cancellationToken = default)
+        public virtual async IAsyncEnumerable<string> All([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             SetHeader();
             using var responseMessage = await HttpClient.GetAsync(PrepUrl, cancellationToken).ConfigureAwait(false);
             responseMessage.EnsureSuccessStatusCode();
-            return await responseMessage.Content.ReadFromJsonAsync<IEnumerable<string>>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            var result = await responseMessage.Content.ReadFromJsonAsync<IEnumerable<string>>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            foreach (var item in result!)
+            {
+                yield return item;
+            }
         }
 
         public virtual async Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default)
@@ -50,7 +55,7 @@ namespace AcBlog.Sdk.Api
             SetHeader();
             using var responseMessage = await HttpClient.GetAsync(PrepUrl, cancellationToken).ConfigureAwait(false);
             responseMessage.EnsureSuccessStatusCode();
-            return await responseMessage.Content.ReadFromJsonAsync<RepositoryStatus>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return (await responseMessage.Content.ReadFromJsonAsync<RepositoryStatus>(cancellationToken: cancellationToken).ConfigureAwait(false))!;
         }
 
         public virtual async Task<string?> Create(T value, CancellationToken cancellationToken = default)
@@ -99,14 +104,27 @@ namespace AcBlog.Sdk.Api
             return result;
         }
 
-        public virtual async Task<QueryResponse<string>> Query(TQuery query, CancellationToken cancellationToken = default)
+        public virtual async IAsyncEnumerable<string> Query(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             SetHeader();
 
             using var responseMessage = await HttpClient.PutAsJsonAsync($"{PrepUrl}/query", query, cancellationToken).ConfigureAwait(false);
             responseMessage.EnsureSuccessStatusCode();
 
-            return await responseMessage.Content.ReadFromJsonAsync<QueryResponse<string>>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            var result = await responseMessage.Content.ReadFromJsonAsync<IEnumerable<string>>(cancellationToken: cancellationToken).ConfigureAwait(false);
+
+            foreach (var item in result!)
+            {
+                yield return item;
+            }
+        }
+
+        public virtual async Task<QueryStatistic> Statistic(TQuery query, CancellationToken cancellationToken = default)
+        {
+            SetHeader();
+            using var responseMessage = await HttpClient.PutAsJsonAsync($"{PrepUrl}/stats", query, cancellationToken).ConfigureAwait(false);
+            responseMessage.EnsureSuccessStatusCode();
+            return (await responseMessage.Content.ReadFromJsonAsync<QueryStatistic>(cancellationToken: cancellationToken).ConfigureAwait(false))!;
         }
 
         public virtual async Task<bool> Update(T value, CancellationToken cancellationToken = default)

@@ -17,12 +17,9 @@ namespace AcBlog.Sdk.FileSystem
         public PostService(IBlogService blog, string rootPath, IFileProvider fileProvider) : base(blog, new PostFSReader(rootPath, fileProvider))
         {
             Protector = new DocumentProtector();
-            Searcher = Repository.CreateLocalSearcher();
         }
 
         public IProtector<Document> Protector { get; }
-
-        public IPostRepositorySearcher Searcher { get; }
 
         public Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default) => Repository.GetCategories(cancellationToken);
 

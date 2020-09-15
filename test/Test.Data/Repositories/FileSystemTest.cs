@@ -72,7 +72,7 @@ namespace Test.Data.Repositories
                 Assert.IsTrue(PostData.Any(x => x.Id == id));
             }
 
-            {
+            /*{
                 {
                     var res = await repo.Query(new AcBlog.Data.Models.Actions.PostQueryRequest
                     {
@@ -131,7 +131,7 @@ namespace Test.Data.Repositories
 
                 var filter = await repo.CreateKeywordFilter().Filter(c);
                 filter.ShouldDeepEqual(res);
-            }
+            }*/
         }
 
         [TestMethod]
@@ -187,7 +187,7 @@ namespace Test.Data.Repositories
                 Assert.IsTrue(PageData.Any(x => x.Id == id));
             }
 
-            {
+            /*{
                 var c = PageData.First().Route;
                 var res = await repo.Query(new AcBlog.Data.Models.Actions.PageQueryRequest
                 {
@@ -197,7 +197,7 @@ namespace Test.Data.Repositories
 
                 var filter = await repo.CreateRouteFilter().Filter(c);
                 filter.ShouldDeepEqual(res);
-            }
+            }*/
         }
     }
 }

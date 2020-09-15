@@ -17,10 +17,7 @@ namespace AcBlog.Sdk.Extensions
         {
             public RepoBasedService(IBlogService blogService, ICommentRepository repository) : base(blogService, repository)
             {
-                Searcher = Repository.CreateLocalSearcher();
             }
-
-            public ICommentRepositorySearcher Searcher { get; }
         }
     }
 }

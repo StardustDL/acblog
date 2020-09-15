@@ -6,7 +6,5 @@ namespace AcBlog.Sdk
     public interface IPageService : IPageRepository
     {
         IBlogService BlogService { get; }
-
-        IPageRepositorySearcher Searcher { get; }
     }
 }

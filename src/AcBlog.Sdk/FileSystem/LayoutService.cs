@@ -12,9 +12,6 @@ namespace AcBlog.Sdk.FileSystem
     {
         public LayoutService(IBlogService blog, string rootPath, IFileProvider fileProvider) : base(blog, new LayoutFSReader(rootPath, fileProvider))
         {
-            Searcher = Repository.CreateLocalSearcher();
         }
-
-        public ILayoutRepositorySearcher Searcher { get; }
     }
 }

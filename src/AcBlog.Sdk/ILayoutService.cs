@@ -6,7 +6,5 @@ namespace AcBlog.Sdk
     public interface ILayoutService : ILayoutRepository
     {
         IBlogService BlogService { get; }
-
-        ILayoutRepositorySearcher Searcher { get; }
     }
 }

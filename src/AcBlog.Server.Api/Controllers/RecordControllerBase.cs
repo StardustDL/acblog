@@ -27,17 +27,25 @@ namespace AcBlog.Server.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<IEnumerable<TId>>> All()
+        public IAsyncEnumerable<TId> All()
         {
-            return Ok(await Repository.All());
+            return Repository.All();
         }
 
         [HttpPut("query")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<QueryResponse<TId>>> Query([FromBody] TQuery query)
+        public IAsyncEnumerable<TId> Query([FromBody] TQuery query)
         {
-            return Ok(await Repository.Query(query));
+            return Repository.Query(query);
+        }
+
+        [HttpPut("stats")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<QueryStatistic>> Statistic([FromBody] TQuery query)
+        {
+            return await Repository.Statistic(query);
         }
 
         [HttpGet("{id}")]

@@ -20,11 +20,6 @@ namespace AcBlog.Tools.Sdk.Repositories
 
         public IProtector<Document> Protector { get; }
 
-        public override Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
-        {
-            return Task.FromResult(new QueryResponse<string>(Array.Empty<string>()));
-        }
-
         public Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default) => Task.FromResult(new CategoryTree());
 
         public Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default) => Task.FromResult(new KeywordCollection());

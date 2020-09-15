@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Readers
@@ -15,10 +16,8 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
     {
         protected RecordFSReaderBase(string rootPath, IFileProvider fileProvider) : base(rootPath, fileProvider)
         {
-            PagingProvider = new PagingProvider<TId>(Paths.GetPaginationRoot(RootPath), FileProvider);
-        }
 
-        protected PagingProvider<TId> PagingProvider { get; }
+        }
 
         readonly Lazy<RepositoryStatus> _status = new Lazy<RepositoryStatus>(new RepositoryStatus
         {
@@ -26,31 +25,62 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             CanWrite = false,
         });
 
-        protected virtual string GetPath(TId id) => Path.Join(RootPath, $"{id}.json");
+        protected virtual async Task<RepositoryStatistic> GetStatistic(CancellationToken cancellationToken = default)
+        {
+            await using var fs = await (await FileProvider.GetFileInfo(Paths.GetStatisticFile(RootPath)).ConfigureAwait(false))
+                    .CreateReadStream().ConfigureAwait(false);
+            var result = await JsonSerializer.DeserializeAsync<RepositoryStatistic>(fs, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            if (result is null)
+                throw new Exception("Statistic is null.");
+            return result;
+        }
+
+        protected virtual string GetPath(TId id) => Paths.GetDataFile(RootPath, id?.ToString() ?? throw new Exception("Id is empty."));
 
         public override async IAsyncEnumerable<TId> All([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await foreach (var item in Query(new TQuery(), cancellationToken).ConfigureAwait(false))
+            await using var fs = await (await FileProvider.GetFileInfo(Paths.GetIdListFile(RootPath)).ConfigureAwait(false))
+                .CreateReadStream().ConfigureAwait(false);
+            var result = await JsonSerializer.DeserializeAsync<IList<TId>>(fs, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            if (result is not null)
             {
-                yield return item;
+                foreach (var item in result)
+                    yield return item;
             }
         }
 
-        public override async IAsyncEnumerable<TId> Query(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        protected virtual IAsyncEnumerable<TId>? EfficientQuery(TQuery query, CancellationToken cancellationToken = default) => null;
+
+        protected virtual IAsyncEnumerable<TId>? FullQuery(TQuery query, CancellationToken cancellationToken = default) => null;
+
+        public override IAsyncEnumerable<TId> Query(TQuery query, CancellationToken cancellationToken = default)
         {
-            query.Pagination ??= new Pagination();
-
-            await PagingProvider.FillPagination(query.Pagination);
-
-            var res = new QueryResponse<TId>(
-                await PagingProvider.GetPaging(query.Pagination).ConfigureAwait(false),
-                query.Pagination);
-            return res;
+            if (EfficientQuery(query, cancellationToken) is IAsyncEnumerable<TId> result)
+            {
+                return result;
+            }
+            else if (FullQuery(query, cancellationToken) is IAsyncEnumerable<TId> result2)
+            {
+                return result2;
+            }
+            return AsyncEnumerable.Empty<TId>();
         }
 
         public override async Task<QueryStatistic> Statistic(TQuery query, CancellationToken cancellationToken = default)
         {
-
+            if (string.IsNullOrWhiteSpace(query.Term))
+            {
+                var stats = await GetStatistic(cancellationToken);
+                return new QueryStatistic
+                {
+                    Count = stats.Count
+                };
+            }
+            var result = new QueryStatistic();
+            result.Count = await Query(query, cancellationToken).CountAsync(cancellationToken).ConfigureAwait(false);
+            return result;
         }
 
         public override Task<TId?> Create(T value, CancellationToken cancellationToken = default) => Task.FromResult<TId?>(null);

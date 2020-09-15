@@ -25,7 +25,7 @@ namespace AcBlog.Data.Repositories.SqlServer
 
         public RepositoryAccessContext Context { get; set; } = new RepositoryAccessContext();
 
-        public async Task<IEnumerable<string>> All(CancellationToken cancellationToken = default) => await Data.Posts.Select(x => x.Id).ToArrayAsync(cancellationToken).ConfigureAwait(false);
+        public IAsyncEnumerable<string> All(CancellationToken cancellationToken = default) => Data.Posts.AsQueryable().Select(x => x.Id).AsAsyncEnumerable();
 
         public async Task<string> Create(Post value, CancellationToken cancellationToken = default)
         {
@@ -58,7 +58,7 @@ namespace AcBlog.Data.Repositories.SqlServer
             return RawPost.To(item);
         }
 
-        public async Task<QueryResponse<string>> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
+        IQueryable<string> InnerQuery(PostQueryRequest query)
         {
             var qr = Data.Posts.AsQueryable();
 
@@ -87,24 +87,26 @@ namespace AcBlog.Data.Repositories.SqlServer
                 _ => throw new NotImplementedException(),
             };
 
-            Pagination pagination = new Pagination
-            {
-                TotalCount = await qr.CountAsync(cancellationToken).ConfigureAwait(false),
-            };
-
             if (query.Pagination is not null)
             {
                 qr = qr.Skip(query.Pagination.Offset).Take(query.Pagination.PageSize);
-                pagination.CurrentPage = query.Pagination.CurrentPage;
-                pagination.PageSize = query.Pagination.PageSize;
-            }
-            else
-            {
-                pagination.CurrentPage = 0;
-                pagination.PageSize = pagination.TotalCount;
             }
 
-            return new QueryResponse<string>(await qr.Select(x => x.Id).ToArrayAsync(cancellationToken).ConfigureAwait(false), pagination);
+            return qr.Select(x => x.Id);
+        }
+
+        public IAsyncEnumerable<string> Query(PostQueryRequest query, CancellationToken cancellationToken = default)
+        {
+            return InnerQuery(query).AsAsyncEnumerable();
+        }
+
+        public async Task<QueryStatistic> Statistic(PostQueryRequest query, CancellationToken cancellationToken = default)
+        {
+            var count = await InnerQuery(query).CountAsync(cancellationToken);
+            return new QueryStatistic
+            {
+                Count = count
+            };
         }
 
         public async Task<bool> Update(Post value, CancellationToken cancellationToken = default)

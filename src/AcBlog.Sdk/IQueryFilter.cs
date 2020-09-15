@@ -1,19 +1,20 @@
 ﻿using AcBlog.Data.Models.Actions;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AcBlog.Sdk
 {
-    public interface IQueryFilter<TBase>
+    public interface IQueryFilter<TService, TResult>
     {
-        TBase BaseService { get; }
+        TService BaseService { get; }
 
-        Task<QueryResponse<string>> Filter(Pagination? pagination);
+        IAsyncEnumerable<TResult> Filter(Pagination? pagination);
     }
 
-    public interface IQueryFilter<TBase, T>
+    public interface IQueryFilter<TService, TResult, T>
     {
-        TBase BaseService { get; }
+        TService BaseService { get; }
 
-        Task<QueryResponse<string>> Filter(T arg, Pagination? pagination);
+        IAsyncEnumerable<TResult> Filter(T arg, Pagination? pagination);
     }
 }

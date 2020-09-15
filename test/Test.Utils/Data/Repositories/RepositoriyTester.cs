@@ -28,15 +28,18 @@ namespace Test.Data.Repositories
 
         public static async Task<IEnumerable<TId>> TestAll<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
         {
-            var result = await repository.All();
+            var result = repository.All();
             Assert.IsNotNull(result);
 
-            foreach (var v in result)
+            List<TId> res = new List<TId>();
+
+            await foreach (var v in result)
             {
+                res.Add(v);
                 await repository.TestGet(v);
             }
 
-            return result;
+            return res;
         }
 
         public static async Task TestGet<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, TId id) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
