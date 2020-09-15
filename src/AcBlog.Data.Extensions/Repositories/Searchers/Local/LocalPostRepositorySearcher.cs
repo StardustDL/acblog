@@ -45,11 +45,11 @@ namespace AcBlog.Data.Repositories.Searchers.Local
 
             qr = query.Order switch
             {
-                PostResponseOrder.None => qr,
-                PostResponseOrder.CreationTimeAscending => qr.OrderBy(x => x.CreationTime),
-                PostResponseOrder.CreationTimeDescending => qr.OrderByDescending(x => x.CreationTime),
-                PostResponseOrder.ModificationTimeAscending => qr.OrderBy(x => x.ModificationTime),
-                PostResponseOrder.ModificationTimeDescending => qr.OrderByDescending(x => x.ModificationTime),
+                PostQueryOrder.None => qr,
+                PostQueryOrder.CreationTimeAscending => qr.OrderBy(x => x.CreationTime),
+                PostQueryOrder.CreationTimeDescending => qr.OrderByDescending(x => x.CreationTime),
+                PostQueryOrder.ModificationTimeAscending => qr.OrderBy(x => x.ModificationTime),
+                PostQueryOrder.ModificationTimeDescending => qr.OrderByDescending(x => x.ModificationTime),
                 _ => throw new NotImplementedException(),
             };
 

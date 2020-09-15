@@ -105,6 +105,13 @@ namespace AcBlog.Server.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+
+                app.UseSwagger();
+
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "AcBlog API V1");
+                });
             }
 
             app.UseHttpsRedirection();
@@ -118,13 +125,6 @@ namespace AcBlog.Server.Api
             app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseSwagger();
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "AcBlog API V1");
-            });
 
             app.UseEndpoints(endpoints =>
             {

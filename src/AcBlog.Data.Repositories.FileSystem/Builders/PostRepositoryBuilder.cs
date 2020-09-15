@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Builders
 {
-    public class PostRepositoryBuilder : RecoderRepositoryBuilderBase<Post, string>
+    public class PostRepositoryBuilder : RecordRepositoryBuilderBase<Post, string>
     {
         public PostRepositoryBuilder(string rootPath) : base(rootPath)
         {

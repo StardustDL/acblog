@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Models.Actions
 {
-    public static class QueryResponse
+    internal static class QueryResponse
     {
         public static QueryResponse<T> Empty<T>()
         {
@@ -13,7 +13,7 @@ namespace AcBlog.Data.Models.Actions
         }
     }
 
-    public class QueryResponse<T>
+    internal class QueryResponse<T>
     {
         public QueryResponse(IList<T> results)
         {

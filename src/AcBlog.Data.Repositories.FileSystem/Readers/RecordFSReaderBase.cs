@@ -4,6 +4,7 @@ using StardustDL.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,23 +28,15 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         protected virtual string GetPath(TId id) => Path.Join(RootPath, $"{id}.json");
 
-        public override async Task<IEnumerable<TId>> All(CancellationToken cancellationToken = default)
+        public override async IAsyncEnumerable<TId> All([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            List<TId> result = new List<TId>();
-            TQuery pq = new TQuery();
-            while (true)
+            await foreach (var item in Query(new TQuery(), cancellationToken).ConfigureAwait(false))
             {
-                cancellationToken.ThrowIfCancellationRequested();
-                var req = await Query(pq, cancellationToken).ConfigureAwait(false);
-                result.AddRange(req.Results);
-                if (!req.CurrentPage.HasNextPage)
-                    break;
-                pq.Pagination = req.CurrentPage.NextPage();
+                yield return item;
             }
-            return result;
         }
 
-        public override async Task<QueryResponse<TId>> Query(TQuery query, CancellationToken cancellationToken = default)
+        public override async IAsyncEnumerable<TId> Query(TQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             query.Pagination ??= new Pagination();
 
@@ -53,6 +46,11 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
                 await PagingProvider.GetPaging(query.Pagination).ConfigureAwait(false),
                 query.Pagination);
             return res;
+        }
+
+        public override async Task<QueryStatistic> Statistic(TQuery query, CancellationToken cancellationToken = default)
+        {
+
         }
 
         public override Task<TId?> Create(T value, CancellationToken cancellationToken = default) => Task.FromResult<TId?>(null);

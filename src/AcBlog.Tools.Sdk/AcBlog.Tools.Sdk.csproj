@@ -23,15 +23,15 @@
 
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0-preview.8.20407.11" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0-preview.8.20407.11" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0-preview.8.20407.11" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0-preview.8.20407.11" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="5.0.0-preview.8.20407.11" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0-preview.8.20407.11" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0-preview.8.20407.11" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0-preview.8.20407.11" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0-preview.8.20407.11" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0-rc.1.20451.14" />
     <PackageReference Include="System.CommandLine.Hosting" Version="0.3.0-alpha.20427.1" />
     <PackageReference Include="YamlDotNet" Version="8.1.2" />
   </ItemGroup>

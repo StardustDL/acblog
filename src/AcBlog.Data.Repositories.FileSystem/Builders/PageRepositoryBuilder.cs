@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Builders
 {
-    public class PageRepositoryBuilder : RecoderRepositoryBuilderBase<Page, string>
+    public class PageRepositoryBuilder : RecordRepositoryBuilderBase<Page, string>
     {
         public PageRepositoryBuilder(string rootPath) : base(rootPath)
         {

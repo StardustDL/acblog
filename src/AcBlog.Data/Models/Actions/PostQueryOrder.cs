@@ -1,6 +1,6 @@
 ﻿namespace AcBlog.Data.Models.Actions
 {
-    public enum PostResponseOrder
+    public enum PostQueryOrder
     {
         None,
         CreationTimeAscending,

@@ -22,7 +22,7 @@
         @if (!HttpContext.Request.Path.StartsWithSegments("/authentication"))
         {
             // TODO: Wait Antd fix prerender bug https://github.com/ant-design-blazor/ant-design-blazor/issues/181
-            <component type="typeof(App)" render-mode="ServerPrerendered" />
+            <component type="typeof(App)" render-mode="WebAssemblyPrerendered" />
         }
         else
         {

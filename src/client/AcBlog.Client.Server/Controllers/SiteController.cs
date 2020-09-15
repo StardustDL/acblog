@@ -32,7 +32,7 @@ namespace AcBlog.Client.Server.Controllers
         {
             var siteMapBuilder = await BlogService.BuildSitemap(BaseAddress);
             StringBuilder sb = new StringBuilder();
-            await using (var writer = XmlWriter.Create(sb))
+            await using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Async = true }))
                 siteMapBuilder.Build().WriteTo(writer);
             return Content(sb.ToString(), "text/xml");
         }
@@ -43,9 +43,9 @@ namespace AcBlog.Client.Server.Controllers
         {
             var feed = await BlogService.BuildSyndication(BaseAddress);
             StringBuilder sb = new StringBuilder();
-            await using (var writer = XmlWriter.Create(sb))
+            await using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Async = true }))
                 feed.GetAtom10Formatter().WriteTo(writer);
-            return Content(sb.ToString(), "text/xml");
+            return Content(sb.ToString(), "application/atom+xml");
         }
 
         [HttpGet("rss")]
@@ -54,9 +54,9 @@ namespace AcBlog.Client.Server.Controllers
         {
             var feed = await BlogService.BuildSyndication(BaseAddress);
             StringBuilder sb = new StringBuilder();
-            using (var writer = XmlWriter.Create(sb))
+            using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Async = true }))
                 feed.GetRss20Formatter().WriteTo(writer);
-            return Content(sb.ToString(), "text/xml");
+            return Content(sb.ToString(), "application/rss+xml");
         }
     }
 }

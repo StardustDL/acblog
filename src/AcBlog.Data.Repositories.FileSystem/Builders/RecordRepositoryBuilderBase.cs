@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Builders
 {
-    public abstract class RecoderRepositoryBuilderBase<T, TId> where TId : class where T : class, IHasId<TId>
+    public abstract class RecordRepositoryBuilderBase<T, TId> where TId : class where T : class, IHasId<TId>
     {
-        protected RecoderRepositoryBuilderBase(string rootPath)
+        protected RecordRepositoryBuilderBase(string rootPath)
         {
             RootPath = rootPath;
         }

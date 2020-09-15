@@ -28,9 +28,9 @@ namespace AcBlog.Data.Repositories.FileSystem
 
         public RepositoryAccessContext Context { get; set; } = new RepositoryAccessContext();
 
-        public abstract Task<IEnumerable<TId>> All(CancellationToken cancellationToken = default);
+        public abstract IAsyncEnumerable<TId> All(CancellationToken cancellationToken = default);
 
-        public abstract Task<QueryResponse<TId>> Query(TQuery query, CancellationToken cancellationToken = default);
+        public abstract IAsyncEnumerable<TId> Query(TQuery query, CancellationToken cancellationToken = default);
 
         public abstract Task<TId?> Create(T value, CancellationToken cancellationToken = default);
 
@@ -43,5 +43,7 @@ namespace AcBlog.Data.Repositories.FileSystem
         public abstract Task<bool> Update(T value, CancellationToken cancellationToken = default);
 
         public abstract Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default);
+
+        public abstract Task<QueryStatistic> Statistic(TQuery query, CancellationToken cancellationToken = default);
     }
 }
