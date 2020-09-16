@@ -25,11 +25,11 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             CanWrite = false,
         });
 
-        protected virtual async Task<RepositoryStatistic> GetStatistic(CancellationToken cancellationToken = default)
+        protected virtual async Task<QueryStatistic> GetStatistic(CancellationToken cancellationToken = default)
         {
             await using var fs = await (await FileProvider.GetFileInfo(Paths.GetStatisticFile(RootPath)).ConfigureAwait(false))
                     .CreateReadStream().ConfigureAwait(false);
-            var result = await JsonSerializer.DeserializeAsync<RepositoryStatistic>(fs, cancellationToken: cancellationToken)
+            var result = await JsonSerializer.DeserializeAsync<QueryStatistic>(fs, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             if (result is null)
                 throw new Exception("Statistic is null.");

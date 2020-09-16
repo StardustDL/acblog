@@ -1,4 +1,5 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Data.Models.Actions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
             }
 
             {
-                var stats = new RepositoryStatistic
+                var stats = new QueryStatistic
                 {
                     Count = data.Count
                 };

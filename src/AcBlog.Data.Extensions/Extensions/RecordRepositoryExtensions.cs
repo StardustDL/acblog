@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace AcBlog.Data.Extensions
 {
@@ -18,7 +19,7 @@ namespace AcBlog.Data.Extensions
                 async (id, cancellationToken) => await repository.Get(id, cancellationToken));
         }
 
-        public static IAsyncEnumerable<T?> GetAllItems<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, [EnumeratorCancellation] CancellationToken cancellationToken = default) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        public static IAsyncEnumerable<T?> GetAllItems<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, CancellationToken cancellationToken = default) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
         {
             return GetItems(repository, repository.All(), cancellationToken);
         }
@@ -37,6 +38,13 @@ namespace AcBlog.Data.Extensions
             if (pagination is null)
                 return collection;
             return collection.Skip(pagination.Offset).Take(pagination.PageSize);
+        }
+
+        public static async Task<PagingData<TId>> QueryPaging<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, TQuery query, CancellationToken cancellationToken = default) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        {
+            var stats = await repository.Statistic(query, cancellationToken);
+
+            return await repository.Query(query, cancellationToken).AsPagingData(query, stats);
         }
     }
 }

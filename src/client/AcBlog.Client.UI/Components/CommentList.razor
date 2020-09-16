@@ -29,7 +29,7 @@
 
     const int PageSize = 10;
 
-    QueryResponse<string> Data { get; set; }
+    PagingData<string> Data { get; set; }
 
     private int PageNumber { get; set; } = 0;
 
@@ -77,7 +77,7 @@
             Uri = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         }
 
-        Data = await Service.CommentService.Query(new CommentQueryRequest
+        Data = await Service.CommentService.QueryPaging(new CommentQueryRequest
         {
             Uri = Uri,
             Pagination = new Data.Models.Actions.Pagination
@@ -125,4 +125,4 @@
     private async Task OnUpdatePage() => await loader.Load();
 
     RenderFragment Editor;
-    }
+}

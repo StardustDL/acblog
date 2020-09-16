@@ -1,4 +1,6 @@
-﻿using AcBlog.Data.Models;
+﻿using AcBlog.Data;
+using AcBlog.Data.Extensions;
+using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,9 +13,9 @@ namespace AcBlog.Sdk.Filters
         {
         }
 
-        public override IAsyncEnumerable<string> Filter(Category? arg, Pagination? pagination = null)
+        public override Task<PagingData<string>> Filter(Category? arg, Pagination? pagination = null)
         {
-            return BaseService.Query(new PostQueryRequest
+            return BaseService.QueryPaging(new PostQueryRequest
             {
                 Category = arg,
                 Pagination = pagination

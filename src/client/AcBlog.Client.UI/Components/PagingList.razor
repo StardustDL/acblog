@@ -26,7 +26,7 @@
     public string PageNavigationUrl { get; set; } = "";
 
     [Parameter]
-    public QueryResponse<TItem> Data { get; set; }
+    public PagingData<TItem> Data { get; set; }
 
     [Parameter]
     public int? Column { get; set; } = null;

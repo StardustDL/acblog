@@ -45,7 +45,7 @@
 
     const int PageSize = 10;
 
-    QueryResponse<string> Data { get; set; }
+    PagingData<string> Data { get; set; }
 
     int PageNumber { get; set; } = 0;
 
@@ -56,12 +56,12 @@
         if (string.IsNullOrWhiteSpace(CurrentQuery))
         {
             Title = "";
-            Data = new QueryResponse<string>(Array.Empty<string>());
+            Data = new PagingData<string>(Array.Empty<string>());
         }
         else
         {
             Title = "Loading...";
-            Data = await Service.PostService.Searcher.Search(new PostQueryRequest
+            Data = await Service.PostService.QueryPaging(new PostQueryRequest
             {
                 Term = CurrentQuery,
                 Pagination = new Data.Models.Actions.Pagination

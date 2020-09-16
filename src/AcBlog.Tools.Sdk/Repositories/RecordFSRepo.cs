@@ -105,9 +105,9 @@ namespace AcBlog.Tools.Sdk.Repositories
             return AsyncEnumerable.Empty<string>();
         }
 
-        public override Task<QueryStatistic> Statistic(TQuery query, CancellationToken cancellationToken = default)
+        public override Task<Data.Models.Actions.QueryStatistic> Statistic(TQuery query, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(new QueryStatistic
+            return Task.FromResult(new Data.Models.Actions.QueryStatistic
             {
                 Count = 0
             });

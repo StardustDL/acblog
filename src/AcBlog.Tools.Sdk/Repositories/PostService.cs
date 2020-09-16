@@ -15,14 +15,11 @@ namespace AcBlog.Tools.Sdk.Repositories
     {
         public PostService(IBlogService blog, string rootPath) : base(blog, new PostFSRepo(rootPath, new DocumentProtector()))
         {
-            Searcher = Repository.CreateLocalSearcher();
         }
 
         internal PostFSRepo InnerRepository => (Repository as PostFSRepo)!;
 
         public IProtector<Document> Protector => InnerRepository.Protector;
-
-        public IPostRepositorySearcher Searcher { get; }
 
         public Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default) => Repository.GetCategories(cancellationToken);
 

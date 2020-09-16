@@ -1,4 +1,5 @@
-﻿using AcBlog.Data.Models.Actions;
+﻿using AcBlog.Data;
+using AcBlog.Data.Models.Actions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace AcBlog.Sdk.Filters
 
         public TService BaseService { get; protected set; }
 
-        public abstract IAsyncEnumerable<TResult> Filter(Pagination? pagination = null);
+        public abstract Task<PagingData<TResult>> Filter(Pagination? pagination = null);
     }
 
     public abstract class BaseQueryFilter<TService, TResult, T> : IQueryFilter<TService, TResult, T>
@@ -25,6 +26,6 @@ namespace AcBlog.Sdk.Filters
 
         public TService BaseService { get; protected set; }
 
-        public abstract IAsyncEnumerable<TResult> Filter(T arg, Pagination? pagination = null);
+        public abstract Task<PagingData<TResult>> Filter(T arg, Pagination? pagination = null);
     }
 }

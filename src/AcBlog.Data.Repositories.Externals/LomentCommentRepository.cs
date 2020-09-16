@@ -27,7 +27,7 @@ namespace AcBlog.Data.Repositories.Externals
 
         public ILomentService Service { get; }
 
-        public async IAsyncEnumerable<string> All(CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<string> All([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var items = await Service.Query(new Loment.Models.CommentQuery
             {

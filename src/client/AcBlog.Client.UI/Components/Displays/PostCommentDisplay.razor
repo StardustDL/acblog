@@ -18,7 +18,7 @@
     {
         try
         {
-            var query = await Service.CommentService.Query(new CommentQueryRequest
+            var query = await Service.CommentService.QueryPaging(new CommentQueryRequest
             {
                 Uri = UrlGenerator.Post(Data),
                 Pagination = new Data.Models.Actions.Pagination

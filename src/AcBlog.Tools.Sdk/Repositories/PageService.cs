@@ -11,9 +11,6 @@ namespace AcBlog.Tools.Sdk.Repositories
     {
         public PageService(IBlogService blog, string rootPath) : base(blog, new PageFSRepo(rootPath))
         {
-            Searcher = Repository.CreateLocalSearcher();
         }
-
-        public IPageRepositorySearcher Searcher { get; }
     }
 }

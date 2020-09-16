@@ -26,7 +26,7 @@ namespace AcBlog.Tools.Sdk.Commands.Tools
             Workspace workspace = host.Services.GetRequiredService<Workspace>();
             ILogger<CompleteCommand> logger = host.Services.GetRequiredService<ILogger<CompleteCommand>>();
 
-            foreach (var id in await workspace.Local.PostService.All(cancellationToken))
+            await foreach(var id in workspace.Local.PostService.All(cancellationToken))
             {
                 var post = await workspace.Local.PostService.Get(id, cancellationToken);
                 if (post is null)

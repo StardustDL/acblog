@@ -40,7 +40,7 @@
 @code {
     const int PageSize = 10;
 
-    QueryResponse<string> Data { get; set; }
+    PagingData<string> Data { get; set; }
 
     [Parameter]
     public int? PageNumber { get; set; } = null;
@@ -50,7 +50,7 @@
     private async Task OnLoad()
     {
         Title = "Loading...";
-        Data = await Service.CommentService.Query(new CommentQueryRequest
+        Data = await Service.CommentService.QueryPaging(new CommentQueryRequest
         {
             Pagination= new Data.Models.Actions.Pagination
             {

@@ -11,9 +11,6 @@ namespace AcBlog.Tools.Sdk.Repositories
     {
         public LayoutService(IBlogService blog, string rootPath) : base(blog, new LayoutFSRepo(rootPath))
         {
-            Searcher = Repository.CreateLocalSearcher();
         }
-
-        public ILayoutRepositorySearcher Searcher { get; }
     }
 }

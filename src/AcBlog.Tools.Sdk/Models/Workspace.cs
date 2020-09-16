@@ -212,7 +212,7 @@ namespace AcBlog.Tools.Sdk.Models
 
                             // TODO: Pages & layouts
 
-                            HashSet<string> remoteIds = (await Remote.PostService.All()).ToHashSet();
+                            HashSet<string> remoteIds = await Remote.PostService.All().ToHashSetAsync();
                             await foreach (var item in Local.PostService.GetAllItems().IgnoreNull())
                             {
                                 Logger.LogInformation($"Loaded {item.Id}: {item.Title}");
@@ -395,7 +395,7 @@ namespace AcBlog.Tools.Sdk.Models
                         {
                             var siteMapBuilder = await Local.BuildSitemap(baseAddress);
                             await using var st = sub.GetFileRewriteStream("sitemap.xml");
-                            await using var writer = XmlWriter.Create(st);
+                            await using var writer = XmlWriter.Create(st, new XmlWriterSettings { Async = true });
                             siteMapBuilder.Build().WriteTo(writer);
                         }
                         Logger.LogInformation("Build feed.");
@@ -403,12 +403,12 @@ namespace AcBlog.Tools.Sdk.Models
                             var feed = await Local.BuildSyndication(baseAddress);
                             await using (var st = sub.GetFileRewriteStream("atom.xml"))
                             {
-                                await using var writer = XmlWriter.Create(st);
+                                await using var writer = XmlWriter.Create(st, new XmlWriterSettings { Async = true });
                                 feed.GetAtom10Formatter().WriteTo(writer);
                             }
                             await using (var st = sub.GetFileRewriteStream("rss.xml"))
                             {
-                                await using var writer = XmlWriter.Create(st);
+                                await using var writer = XmlWriter.Create(st, new XmlWriterSettings { Async = true });
                                 feed.GetRss20Formatter().WriteTo(writer);
                             }
                         }
