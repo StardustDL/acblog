@@ -17,31 +17,36 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
 
         public string RootPath { get; }
 
+        protected virtual async Task BuildDataIdList(IList<TId> dataIds, string rootPath)
+        {
+            {
+                var stats = new QueryStatistic
+                {
+                    Count = dataIds.Count
+                };
+                await using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetStatisticFile(rootPath));
+                await JsonSerializer.SerializeAsync(st, stats).ConfigureAwait(false);
+            }
+
+            {
+                await using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetIdListFile(rootPath));
+                await JsonSerializer.SerializeAsync(st, dataIds).ConfigureAwait(false);
+            }
+        }
+
         protected virtual async Task BuildData(IList<T> data)
         {
-            List<string> ids = new List<string>();
-            
+            List<TId> ids = new List<TId>();
+
             foreach (var v in data)
             {
                 var id = v.Id.ToString() ?? throw new NullReferenceException(nameof(v.Id));
                 await using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetDataFile(RootPath, id));
                 await JsonSerializer.SerializeAsync(st, v).ConfigureAwait(false);
-                ids.Add(id);
+                ids.Add(v.Id);
             }
 
-            {
-                var stats = new QueryStatistic
-                {
-                    Count = data.Count
-                };
-                await using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetStatisticFile(RootPath));
-                await JsonSerializer.SerializeAsync(st, stats).ConfigureAwait(false);
-            }
-
-            {
-                await using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetIdListFile(RootPath));
-                await JsonSerializer.SerializeAsync(st, ids).ConfigureAwait(false);
-            }
+            await BuildDataIdList(ids, Paths.GetConfigRoot(RootPath)).ConfigureAwait(false);
         }
 
         public virtual async Task Build(IList<T> data)
@@ -49,6 +54,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
             FSStaticBuilder.EnsureDirectoryEmpty(RootPath);
             FSStaticBuilder.EnsureDirectoryEmpty(Paths.GetDataRoot(RootPath));
             FSStaticBuilder.EnsureDirectoryEmpty(Paths.GetConfigRoot(RootPath));
+            FSStaticBuilder.EnsureDirectoryEmpty(Paths.GetIndexRoot(RootPath));
 
             await BuildData(data).ConfigureAwait(false);
         }

@@ -4,6 +4,7 @@ using AcBlog.Data.Repositories.Searchers.Local;
 using StardustDL.Extensions.FileProviders;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,45 +17,41 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
         {
         }
 
-        protected override IAsyncEnumerable<string>? EfficientQuery(PostQueryRequest query, CancellationToken cancellationToken = default)
+        protected override async IAsyncEnumerable<string>? EfficientQuery(PostQueryRequest query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            /*
             query.Pagination ??= new Pagination();
 
-            var paging = PagingProvider;
+            var rootPath = RootPath;
 
             if (query.Type is not null)
             {
                 switch (query.Type)
                 {
                     case PostType.Article:
-                        paging = new PagingProvider<string>(Paths.GetArticleRoot(RootPath), FileProvider);
+                        rootPath = Paths.GetArticleRoot(RootPath);
                         break;
                     case PostType.Slides:
-                        paging = new PagingProvider<string>(Paths.GetSlidesRoot(RootPath), FileProvider);
+                        rootPath = Paths.GetSlidesRoot(RootPath);
                         break;
                     case PostType.Note:
-                        paging = new PagingProvider<string>(Paths.GetNoteRoot(RootPath), FileProvider);
+                        rootPath = Paths.GetNoteRoot(RootPath);
                         break;
                 }
             }
             else if (query.Category is not null && query.Category.Items.Any())
             {
-                paging = new PagingProvider<string>(Paths.GetCategoryRoot(RootPath, query.Category), FileProvider);
+                rootPath = Paths.GetCategoryRoot(RootPath, query.Category);
             }
             else if (query.Keywords is not null && query.Keywords.Items.Any())
             {
-                paging = new PagingProvider<string>(Paths.GetKeywordRoot(RootPath, query.Keywords), FileProvider);
+                rootPath = Paths.GetKeywordRoot(RootPath, query.Keywords);
             }
 
-            await paging.FillPagination(query.Pagination);
-
-            var res = new QueryResponse<string>(
-                await paging.GetPaging(query.Pagination),
-                query.Pagination);
-            return res;
-            */
-            return base.EfficientQuery(query, cancellationToken);
+            var list = await GetIdList(rootPath, cancellationToken).ConfigureAwait(false);
+            foreach(var item in list)
+            {
+                yield return item;
+            }
         }
 
         protected override IAsyncEnumerable<string>? FullQuery(PostQueryRequest query, CancellationToken cancellationToken = default)

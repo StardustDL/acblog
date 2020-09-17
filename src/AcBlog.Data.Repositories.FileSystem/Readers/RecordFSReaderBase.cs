@@ -25,9 +25,9 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             CanWrite = false,
         });
 
-        protected virtual async Task<QueryStatistic> GetStatistic(CancellationToken cancellationToken = default)
+        protected virtual async Task<QueryStatistic> GetStatistic(string rootPath, CancellationToken cancellationToken = default)
         {
-            await using var fs = await (await FileProvider.GetFileInfo(Paths.GetStatisticFile(RootPath)).ConfigureAwait(false))
+            await using var fs = await (await FileProvider.GetFileInfo(Paths.GetStatisticFile(rootPath)).ConfigureAwait(false))
                     .CreateReadStream().ConfigureAwait(false);
             var result = await JsonSerializer.DeserializeAsync<QueryStatistic>(fs, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
@@ -36,13 +36,22 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             return result;
         }
 
+        protected virtual async Task<IList<TId>> GetIdList(string rootPath, CancellationToken cancellationToken = default)
+        {
+            await using var fs = await (await FileProvider.GetFileInfo(Paths.GetIdListFile(rootPath)).ConfigureAwait(false))
+                    .CreateReadStream().ConfigureAwait(false);
+            var result = await JsonSerializer.DeserializeAsync<IList<TId>>(fs, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            if (result is null)
+                throw new Exception("Id list is null.");
+            return result;
+        }
+
         protected virtual string GetPath(TId id) => Paths.GetDataFile(RootPath, id?.ToString() ?? throw new Exception("Id is empty."));
 
         public override async IAsyncEnumerable<TId> All([EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            await using var fs = await (await FileProvider.GetFileInfo(Paths.GetIdListFile(RootPath)).ConfigureAwait(false))
-                .CreateReadStream().ConfigureAwait(false);
-            var result = await JsonSerializer.DeserializeAsync<IList<TId>>(fs, cancellationToken: cancellationToken)
+            var result = await GetIdList(Paths.GetConfigRoot(RootPath), cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             if (result is not null)
             {
@@ -52,6 +61,8 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
         }
 
         protected virtual IAsyncEnumerable<TId>? EfficientQuery(TQuery query, CancellationToken cancellationToken = default) => null;
+
+        protected virtual Task<QueryStatistic?> EfficientStatistic(TQuery query, CancellationToken cancellationToken = default) => Task.FromResult<QueryStatistic?>(null);
 
         protected virtual IAsyncEnumerable<TId>? FullQuery(TQuery query, CancellationToken cancellationToken = default) => null;
 
@@ -70,16 +81,14 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public override async Task<QueryStatistic> Statistic(TQuery query, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(query.Term))
+            if (await EfficientStatistic(query, cancellationToken) is QueryStatistic res)
             {
-                var stats = await GetStatistic(cancellationToken);
-                return new QueryStatistic
-                {
-                    Count = stats.Count
-                };
+                return res;
             }
-            var result = new QueryStatistic();
-            result.Count = await Query(query, cancellationToken).CountAsync(cancellationToken).ConfigureAwait(false);
+            var result = new QueryStatistic
+            {
+                Count = await Query(query, cancellationToken).CountAsync(cancellationToken).ConfigureAwait(false)
+            };
             return result;
         }
 

@@ -9,7 +9,7 @@ defaults:
     shell: pwsh
 
 env:
-  dotnet-version: "3.1.x"
+  dotnet-version: "5.0.x"
   node-version: "12.x"
   build_version: "0.0.3.${{ github.run_number }}"
 
