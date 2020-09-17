@@ -19,6 +19,10 @@ namespace AcBlog.Sdk.Api
             PageService = new PageService(this, httpClient);
 
             LayoutService = new LayoutService(this, httpClient);
+
+            CommentService = new CommentService(this, httpClient);
+
+            StatisticService = new StatisticService(this, httpClient);
         }
 
         public HttpClient HttpClient { get; }
@@ -29,9 +33,9 @@ namespace AcBlog.Sdk.Api
 
         public ILayoutService LayoutService { get; }
 
-        public ICommentService CommentService => throw new NotImplementedException();
+        public ICommentService CommentService { get; }
 
-        public IStatisticService StatisticService => throw new NotImplementedException();
+        public IStatisticService StatisticService { get; }
 
         public IFileService FileService => throw new NotImplementedException();
 

@@ -13,5 +13,9 @@ namespace AcBlog.Data.Repositories.SqlServer.Models
         public DbSet<RawPage> Pages { get; set; }
 
         public DbSet<RawLayout> Layouts { get; set; }
+
+        public DbSet<RawComment> Comments { get; set; }
+
+        public DbSet<RawStatistic> Statistics { get; set; }
     }
 }

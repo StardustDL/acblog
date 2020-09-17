@@ -2,5 +2,6 @@
 {
     public class LayoutQueryRequest : QueryRequest
     {
+        public QueryTimeOrder Order { get; set; } = QueryTimeOrder.None;
     }
 }

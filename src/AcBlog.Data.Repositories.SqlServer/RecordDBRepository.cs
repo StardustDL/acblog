@@ -67,6 +67,11 @@ namespace AcBlog.Data.Repositories.SqlServer
         {
             var qr = DbSet.AsQueryable();
 
+            if (query.Pagination is not null)
+            {
+                qr = qr.Skip(query.Pagination.Offset).Take(query.Pagination.PageSize);
+            }
+
             return qr.Select(x => x.Id);
         }
 

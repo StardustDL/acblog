@@ -11,5 +11,7 @@
         public string Link { get; set; } = string.Empty;
 
         public string Uri { get; set; } = string.Empty;
+
+        public QueryTimeOrder Order { get; set; } = QueryTimeOrder.None;
     }
 }

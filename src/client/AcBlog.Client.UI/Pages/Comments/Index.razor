@@ -52,7 +52,8 @@
         Title = "Loading...";
         Data = await Service.CommentService.QueryPaging(new CommentQueryRequest
         {
-            Pagination= new Data.Models.Actions.Pagination
+            Order = QueryTimeOrder.CreationTimeDescending,
+            Pagination = new Data.Models.Actions.Pagination
             {
                 CurrentPage = PageNumber ?? 0,
                 PageSize = PageSize

@@ -33,6 +33,21 @@ namespace AcBlog.Data.Repositories.SqlServer
                 qr = qr.Where(x => x.Route == query.Route);
             }
 
+            qr = query.Order switch
+            {
+                QueryTimeOrder.None => qr,
+                QueryTimeOrder.CreationTimeAscending => qr.OrderBy(x => x.CreationTime),
+                QueryTimeOrder.CreationTimeDescending => qr.OrderByDescending(x => x.CreationTime),
+                QueryTimeOrder.ModificationTimeAscending => qr.OrderBy(x => x.ModificationTime),
+                QueryTimeOrder.ModificationTimeDescending => qr.OrderByDescending(x => x.ModificationTime),
+                _ => throw new NotImplementedException(),
+            };
+
+            if (query.Pagination is not null)
+            {
+                qr = qr.Skip(query.Pagination.Offset).Take(query.Pagination.PageSize);
+            }
+
             return qr.Select(x => x.Id);
         }
 

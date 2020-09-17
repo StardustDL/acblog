@@ -14,6 +14,6 @@
 
         public Category? Category { get; set; }
 
-        public PostQueryOrder Order { get; set; } = PostQueryOrder.None;
+        public QueryTimeOrder Order { get; set; } = QueryTimeOrder.None;
     }
 }

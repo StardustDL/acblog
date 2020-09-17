@@ -9,17 +9,30 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.SqlServer
 {
-    public class LayoutDBRepository : RecordDBRepository<Layout, string, LayoutQueryRequest, RawLayout>, ILayoutRepository
+    public class StatisticDBRepository : RecordDBRepository<Statistic, string, StatisticQueryRequest, RawStatistic>, IStatisticRepository
     {
-        public LayoutDBRepository(BlogDataContext dataSource) : base(dataSource)
+        public StatisticDBRepository(BlogDataContext dataSource) : base(dataSource)
         {
         }
 
-        protected override DbSet<RawLayout> DbSet => DataSource.Layouts;
+        protected override DbSet<RawStatistic> DbSet => DataSource.Statistics;
 
-        protected override IQueryable<string> InnerQuery(LayoutQueryRequest query)
+        protected override IQueryable<string> InnerQuery(StatisticQueryRequest query)
         {
             var qr = DbSet.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query.Uri))
+            {
+                qr = qr.Where(x => x.Uri == query.Uri);
+            }
+            if (!string.IsNullOrWhiteSpace(query.Category))
+            {
+                qr = qr.Where(x => x.Category == query.Category);
+            }
+            if (!string.IsNullOrWhiteSpace(query.Payload))
+            {
+                qr = qr.Where(x => x.Payload.Contains(query.Payload));
+            }
 
             qr = query.Order switch
             {
@@ -39,20 +52,22 @@ namespace AcBlog.Data.Repositories.SqlServer
             return qr.Select(x => x.Id);
         }
 
-        public override Task<string> Create(Layout value, CancellationToken cancellationToken = default)
+        public override Task<string> Create(Statistic value, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(value.Id))
                 value.Id = Guid.NewGuid().ToString();
             return base.Create(value, cancellationToken);
         }
 
-        protected override RawLayout ToRaw(Layout item) => RawLayout.From(item);
+        protected override RawStatistic ToRaw(Statistic item) => RawStatistic.From(item);
 
-        protected override Layout ToModel(RawLayout item) => RawLayout.To(item);
+        protected override Statistic ToModel(RawStatistic item) => RawStatistic.To(item);
 
-        protected override void ApplyChanges(RawLayout target, RawLayout value)
+        protected override void ApplyChanges(RawStatistic target, RawStatistic value)
         {
-            target.Template = value.Template;
+            target.Category = value.Category;
+            target.Payload = value.Payload;
+            target.Uri = value.Uri;
             target.CreationTime = value.CreationTime;
             target.ModificationTime = value.ModificationTime;
         }

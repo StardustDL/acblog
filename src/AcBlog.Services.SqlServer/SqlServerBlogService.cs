@@ -15,6 +15,8 @@ namespace AcBlog.Services.SqlServer
             PostService = new PostService(this, DataContext);
             PageService = new PageService(this, DataContext);
             LayoutService = new LayoutService(this, DataContext);
+            CommentService = new CommentService(this, DataContext);
+            StatisticService = new StatisticService(this, DataContext);
         }
 
         public BlogDataContext DataContext { get; }
@@ -27,9 +29,9 @@ namespace AcBlog.Services.SqlServer
 
         public IFileService FileService => throw new NotImplementedException();
 
-        public ICommentService CommentService => throw new NotImplementedException();
+        public ICommentService CommentService { get; }
 
-        public IStatisticService StatisticService => throw new NotImplementedException();
+        public IStatisticService StatisticService { get; }
 
         public async Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default)
         {
