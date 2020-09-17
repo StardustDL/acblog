@@ -2,7 +2,7 @@
 
 namespace AcBlog.Data.Repositories.FileSystem.Builders
 {
-    public class FileRepositoryBuilder : RecordRepositoryBuilderBase<File, string>
+    public class FileRepositoryBuilder : RecordFSBuilderBase<File, string>
     {
         public FileRepositoryBuilder(string rootPath) : base(rootPath)
         {

@@ -2,6 +2,7 @@ using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.SqlServer.Models;
 using AcBlog.Server.Api.Data;
 using AcBlog.Server.Api.Models;
+using AcBlog.Services;
 using Loment;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -37,10 +38,12 @@ namespace AcBlog.Server.Api
             }
 
             {
-                services.AddDbContext<DataContext>(options =>
+                services.AddDbContext<BlogDataContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-                services.AddScoped<IPostRepository, AcBlog.Data.Repositories.SqlServer.PostRepository>();
+                services.AddScoped<IBlogService, AcBlog.Services.SqlServer.SqlServerBlogService>();
+
+                // services.AddScoped<IPostRepository, AcBlog.Data.Repositories.SqlServer.PostRepository>();
             }
             {
                 services.AddDbContext<IdentityDbContext>(options =>

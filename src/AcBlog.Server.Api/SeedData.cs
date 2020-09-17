@@ -39,7 +39,7 @@ namespace AcBlog.Server.Api
 
         public static async Task InitializeDb(IServiceProvider serviceProvider)
         {
-            var context = serviceProvider.GetRequiredService<DataContext>();
+            var context = serviceProvider.GetRequiredService<BlogDataContext>();
             await context.Database.EnsureCreatedAsync();
             await context.SaveChangesAsync();
         }

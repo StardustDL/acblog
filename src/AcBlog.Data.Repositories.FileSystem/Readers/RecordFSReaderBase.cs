@@ -19,7 +19,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         }
 
-        readonly Lazy<RepositoryStatus> _status = new Lazy<RepositoryStatus>(new RepositoryStatus
+        private static readonly Lazy<RepositoryStatus> _status = new Lazy<RepositoryStatus>(new RepositoryStatus
         {
             CanRead = true,
             CanWrite = false,

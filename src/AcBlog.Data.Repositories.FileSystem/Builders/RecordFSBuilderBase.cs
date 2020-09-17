@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Builders
 {
-    public abstract class RecordRepositoryBuilderBase<T, TId> where TId : class where T : class, IHasId<TId>
+    public abstract class RecordFSBuilderBase<T, TId> where TId : class where T : class, IHasId<TId>
     {
-        protected RecordRepositoryBuilderBase(string rootPath)
+        protected RecordFSBuilderBase(string rootPath)
         {
             RootPath = rootPath;
         }

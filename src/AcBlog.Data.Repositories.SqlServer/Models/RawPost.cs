@@ -5,13 +5,13 @@ using System.Text.Json;
 
 namespace AcBlog.Data.Repositories.SqlServer.Models
 {
-    public class RawPost
+    public class RawPost : IHasId<string>
     {
         public string Id { get; set; } = string.Empty;
 
         public PostType Type { get; set; } = PostType.Article;
 
-        public string AuthorId { get; set; } = string.Empty;
+        public string Author { get; set; } = string.Empty;
 
         public string Content { get; set; } = string.Empty;
 
@@ -30,7 +30,7 @@ namespace AcBlog.Data.Repositories.SqlServer.Models
             return new RawPost
             {
                 Id = value.Id,
-                AuthorId = value.Author,
+                Author = value.Author,
                 Category = value.Category.ToString(),
                 CreationTime = value.CreationTime,
                 ModificationTime = value.ModificationTime,
@@ -46,7 +46,7 @@ namespace AcBlog.Data.Repositories.SqlServer.Models
             return new Post
             {
                 Id = value.Id,
-                Author = value.AuthorId,
+                Author = value.Author,
                 Category = AcBlog.Data.Models.Category.Parse(value.Category),
                 CreationTime = value.CreationTime,
                 ModificationTime = value.ModificationTime,

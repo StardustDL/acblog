@@ -9,19 +9,19 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Server.Api.Controllers
 {
-    public class RecordControllerBase<T, TId, TRepo, TQuery> : ControllerBase where TId : class where T : class, IHasId<TId> where TRepo : IRecordRepository<T, TId, TQuery> where TQuery : QueryRequest, new()
+    public class RecordControllerBase<T, TId, TService, TQuery> : ControllerBase where TId : class where T : class, IHasId<TId> where TService : IRecordRepository<T, TId, TQuery> where TQuery : QueryRequest, new()
     {
-        protected TRepo Repository { get; }
+        protected TService Service { get; }
 
-        protected RecordControllerBase(TRepo repository)
+        protected RecordControllerBase(TService repository)
         {
-            Repository = repository;
+            Service = repository;
         }
 
         [HttpGet("status")]
         public async Task<ActionResult<RepositoryStatus>> GetStatus()
         {
-            return await Repository.GetStatus();
+            return await Service.GetStatus();
         }
 
         [HttpGet]
@@ -29,7 +29,7 @@ namespace AcBlog.Server.Api.Controllers
         [ProducesDefaultResponseType]
         public IAsyncEnumerable<TId> All()
         {
-            return Repository.All();
+            return Service.All();
         }
 
         [HttpPut("query")]
@@ -37,7 +37,7 @@ namespace AcBlog.Server.Api.Controllers
         [ProducesDefaultResponseType]
         public IAsyncEnumerable<TId> Query([FromBody] TQuery query)
         {
-            return Repository.Query(query);
+            return Service.Query(query);
         }
 
         [HttpPut("stats")]
@@ -45,7 +45,7 @@ namespace AcBlog.Server.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult<QueryStatistic>> Statistic([FromBody] TQuery query)
         {
-            return await Repository.Statistic(query);
+            return await Service.Statistic(query);
         }
 
         [HttpGet("{id}")]
@@ -54,8 +54,8 @@ namespace AcBlog.Server.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult<T>> Get(TId id)
         {
-            if (await Repository.Exists(id))
-                return Ok(await Repository.Get(id));
+            if (await Service.Exists(id))
+                return Ok(await Service.Get(id));
             else
                 return NotFound();
         }
@@ -66,7 +66,7 @@ namespace AcBlog.Server.Api.Controllers
         [Authorize]
         public async Task<ActionResult<TId>> Create([FromBody] T value)
         {
-            var result = await Repository.Create(value);
+            var result = await Service.Create(value);
             return Created(result.ToString(), result);
         }
 
@@ -78,8 +78,8 @@ namespace AcBlog.Server.Api.Controllers
         public async Task<ActionResult<bool>> Update(TId id, [FromBody] T value)
         {
             value.Id = id;
-            if (await Repository.Exists(value.Id))
-                return Ok(await Repository.Update(value));
+            if (await Service.Exists(value.Id))
+                return Ok(await Service.Update(value));
             else
                 return NotFound();
         }
@@ -91,8 +91,8 @@ namespace AcBlog.Server.Api.Controllers
         [Authorize]
         public async Task<ActionResult<bool>> Delete(TId id)
         {
-            if (await Repository.Exists(id))
-                return Ok(await Repository.Delete(id));
+            if (await Service.Exists(id))
+                return Ok(await Service.Delete(id));
             else
                 return NotFound();
         }

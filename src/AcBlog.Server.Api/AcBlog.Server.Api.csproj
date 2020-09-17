@@ -27,6 +27,8 @@
   <ItemGroup>
     <ProjectReference Include="..\AcBlog.Data.Repositories.SqlServer\AcBlog.Data.Repositories.SqlServer.csproj" />
     <ProjectReference Include="..\AcBlog.Data\AcBlog.Data.csproj" />
+    <ProjectReference Include="..\AcBlog.Services.SqlServer\AcBlog.Services.SqlServer.csproj" />
+    <ProjectReference Include="..\AcBlog.Services\AcBlog.Services.csproj" />
   </ItemGroup>
 
 
