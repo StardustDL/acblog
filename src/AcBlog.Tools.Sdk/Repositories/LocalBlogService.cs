@@ -1,6 +1,8 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Sdk;
+using AcBlog.Services;
 using AcBlog.Tools.Sdk.Models;
+using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
@@ -40,7 +42,9 @@ namespace AcBlog.Tools.Sdk.Repositories
             if (System.IO.File.Exists(path))
             {
                 await using var st = System.IO.File.OpenRead(path);
-                return await JsonSerializer.DeserializeAsync<BlogOptions>(st).ConfigureAwait(false);
+                return
+                    await JsonSerializer.DeserializeAsync<BlogOptions>(st, cancellationToken: cancellationToken).ConfigureAwait(false)
+                    ?? throw new NullReferenceException("Options is null");
             }
             else
             {

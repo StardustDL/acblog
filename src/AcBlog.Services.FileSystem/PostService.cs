@@ -10,9 +10,9 @@ using StardustDL.Extensions.FileProviders;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AcBlog.Sdk.FileSystem
+namespace AcBlog.Services.FileSystem
 {
-    internal class PostService : RecordRepoBaseService<Post, string, PostQueryRequest, IPostRepository>, IPostService
+    internal class PostService : RecordRepoBasedService<Post, string, PostQueryRequest, IPostRepository>, IPostService
     {
         public PostService(IBlogService blog, string rootPath, IFileProvider fileProvider) : base(blog, new PostFSReader(rootPath, fileProvider))
         {

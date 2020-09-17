@@ -48,7 +48,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             }
 
             var list = await GetIdList(rootPath, cancellationToken).ConfigureAwait(false);
-            foreach(var item in list)
+            foreach (var item in list)
             {
                 yield return item;
             }

@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AcBlog.Sdk
+namespace AcBlog.Services
 {
-    public abstract class RecordRepoBaseService<T, TId, TQuery, TRepo> : IRecordRepository<T, TId, TQuery> where TRepo : IRecordRepository<T, TId, TQuery> where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+    public abstract class RecordRepoBasedService<T, TId, TQuery, TRepo> : IRecordRepository<T, TId, TQuery> where TRepo : IRecordRepository<T, TId, TQuery> where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
     {
-        protected RecordRepoBaseService(IBlogService blogService, TRepo repository)
+        protected RecordRepoBasedService(IBlogService blogService, TRepo repository)
         {
             Repository = repository;
             BlogService = blogService;

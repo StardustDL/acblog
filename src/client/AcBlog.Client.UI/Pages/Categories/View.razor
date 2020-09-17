@@ -2,7 +2,7 @@
 @page "/categories/{id}/pages/{pageNumber:int}"
 @using AcBlog.Data.Models.Builders
 @inherits BaseCategoryPage
-@inject AcBlog.Sdk.Filters.PostCategoryFilter Categories
+@inject AcBlog.Services.Filters.PostCategoryFilter Categories
 
 <Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 

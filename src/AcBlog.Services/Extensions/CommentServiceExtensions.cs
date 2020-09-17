@@ -3,8 +3,9 @@ using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.Searchers;
+using AcBlog.Services;
 
-namespace AcBlog.Sdk.Extensions
+namespace AcBlog.Services.Extensions
 {
     public static class CommentServiceExtensions
     {
@@ -13,7 +14,7 @@ namespace AcBlog.Sdk.Extensions
             return new RepoBasedService(blogService, repository);
         }
 
-        class RepoBasedService : RecordRepoBaseService<Comment, string, CommentQueryRequest, ICommentRepository>, ICommentService
+        class RepoBasedService : RecordRepoBasedService<Comment, string, CommentQueryRequest, ICommentRepository>, ICommentService
         {
             public RepoBasedService(IBlogService blogService, ICommentRepository repository) : base(blogService, repository)
             {

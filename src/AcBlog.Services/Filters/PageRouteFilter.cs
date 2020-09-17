@@ -4,7 +4,7 @@ using AcBlog.Data.Models.Actions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AcBlog.Sdk.Filters
+namespace AcBlog.Services.Filters
 {
     public class PageRouteFilter : BaseQueryFilter<IPageService, string, string?>
     {

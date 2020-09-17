@@ -28,21 +28,21 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
                     .ConfigureAwait(false);
                 if (result is not null)
                 {
-                    foreach (var item in result)
-                        yield return item;
-                }
+                foreach (var item in result)
+                    yield return item;
             }
+        }
 
             if (!string.IsNullOrEmpty(query.Route))
             {
                 return ByRoute().Paging(query.Pagination);
-            }
+    }
             return null;
         }
 
-        protected override IAsyncEnumerable<string>? FullQuery(PageQueryRequest query, CancellationToken cancellationToken = default)
-        {
-            return new LocalPageRepositorySearcher().Search(this, query, cancellationToken);
-        }
+protected override IAsyncEnumerable<string>? FullQuery(PageQueryRequest query, CancellationToken cancellationToken = default)
+{
+    return new LocalPageRepositorySearcher().Search(this, query, cancellationToken);
+}
     }
 }

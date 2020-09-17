@@ -34,13 +34,18 @@ namespace AcBlog.Tools.Sdk.Repositories
 
         protected virtual string GetPath(string id) => Path.Join(RootPath, $"{id}.md");
 
-        public override async IAsyncEnumerable<string> All([EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public override IAsyncEnumerable<string> All(CancellationToken cancellationToken = default)
         {
-            foreach (var file in Directory.EnumerateFiles(RootPath, "*.md", SearchOption.AllDirectories))
+            IEnumerable<string> Inner()
             {
-                var name = Path.GetRelativePath(RootPath, file);
-                yield return name[0..^3].Replace('\\', '/');
+                foreach (var file in Directory.EnumerateFiles(RootPath, "*.md", SearchOption.AllDirectories))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var name = Path.GetRelativePath(RootPath, file);
+                    yield return name[0..^3].Replace('\\', '/');
+                }
             }
+            return Inner().ToAsyncEnumerable();
         }
 
         protected abstract Task<T> CreateExistedItem(string id, TMeta metadata, string content);

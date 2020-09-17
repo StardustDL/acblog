@@ -3,7 +3,7 @@ using AcBlog.Data.Models.Actions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AcBlog.Sdk.Filters
+namespace AcBlog.Services.Filters
 {
     public abstract class BaseQueryFilter<TService, TResult> : IQueryFilter<TService, TResult>
     {

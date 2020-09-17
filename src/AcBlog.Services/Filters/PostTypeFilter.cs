@@ -5,7 +5,7 @@ using AcBlog.Data.Models.Actions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AcBlog.Sdk.Filters
+namespace AcBlog.Services.Filters
 {
     public class PostTypeFilter : BaseQueryFilter<IPostService, string, PostType?>
     {

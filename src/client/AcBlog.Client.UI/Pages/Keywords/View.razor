@@ -2,7 +2,7 @@
 @page "/keywords/{id}/pages/{pageNumber:int}"
 @using AcBlog.Data.Models.Builders
 @inherits BaseKeywordPage
-@inject AcBlog.Sdk.Filters.PostKeywordFilter Keywords
+@inject AcBlog.Services.Filters.PostKeywordFilter Keywords
 
 <Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 

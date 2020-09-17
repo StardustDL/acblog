@@ -6,12 +6,13 @@ using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.Searchers;
 using AcBlog.Sdk;
+using AcBlog.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace AcBlog.Tools.Sdk.Repositories
 {
-    internal class PostService : RecordRepoBaseService<Post, string, PostQueryRequest, IPostRepository>, IPostService
+    internal class PostService : RecordRepoBasedService<Post, string, PostQueryRequest, IPostRepository>, IPostService
     {
         public PostService(IBlogService blog, string rootPath) : base(blog, new PostFSRepo(rootPath, new DocumentProtector()))
         {

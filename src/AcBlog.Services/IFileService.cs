@@ -1,6 +1,6 @@
 ﻿using AcBlog.Data.Repositories;
 
-namespace AcBlog.Sdk
+namespace AcBlog.Services
 {
     public interface IFileService : IFileRepository
     {

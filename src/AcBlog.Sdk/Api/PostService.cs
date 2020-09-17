@@ -3,6 +3,8 @@ using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Protections;
 using AcBlog.Data.Repositories.Searchers;
+using AcBlog.Services;
+using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
@@ -26,7 +28,8 @@ namespace AcBlog.Sdk.Api
             SetHeader();
             using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/categories", cancellationToken).ConfigureAwait(false);
             responseMessage.EnsureSuccessStatusCode();
-            return await responseMessage.Content.ReadFromJsonAsync<CategoryTree>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await responseMessage.Content.ReadFromJsonAsync<CategoryTree>(cancellationToken: cancellationToken).ConfigureAwait(false)
+                ?? throw new NullReferenceException("Null");
         }
 
         public async Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default)
@@ -34,7 +37,8 @@ namespace AcBlog.Sdk.Api
             SetHeader();
             using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/keywords", cancellationToken).ConfigureAwait(false);
             responseMessage.EnsureSuccessStatusCode();
-            return await responseMessage.Content.ReadFromJsonAsync<KeywordCollection>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await responseMessage.Content.ReadFromJsonAsync<KeywordCollection>(cancellationToken: cancellationToken).ConfigureAwait(false)
+                ?? throw new NullReferenceException("Null");
         }
     }
 }

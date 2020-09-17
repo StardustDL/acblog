@@ -7,7 +7,7 @@ namespace AcBlog.Sdk.Sitemap
 {
     public class SitemapBuilder
     {
-        private readonly XNamespace NS = "http://www.sitemaps.org/schemas/sitemap/0.9";
+        private readonly XNamespace _nS = "http://www.sitemaps.org/schemas/sitemap/0.9"!;
 
         private readonly List<SitemapUrl> _urls;
 
@@ -31,7 +31,7 @@ namespace AcBlog.Sdk.Sitemap
         {
             var sitemap = new XDocument(
                 new XDeclaration("1.0", "utf-8", "yes"),
-                new XElement(NS + "urlset",
+                new XElement(_nS + "urlset",
                     from item in _urls
                     select CreateItemElement(item)
                     ));
@@ -41,21 +41,21 @@ namespace AcBlog.Sdk.Sitemap
 
         private XElement CreateItemElement(SitemapUrl url)
         {
-            XElement itemElement = new XElement(NS + "url", new XElement(NS + "loc", url.Url.ToLower()));
+            XElement itemElement = new XElement(_nS + "url", new XElement(_nS + "loc", url.Url.ToLower()));
 
             if (url.Modified.HasValue)
             {
-                itemElement.Add(new XElement(NS + "lastmod", url.Modified.Value.ToString("yyyy-MM-ddTHH:mm:ss.f") + "+00:00"));
+                itemElement.Add(new XElement(_nS + "lastmod", url.Modified.Value.ToString("yyyy-MM-ddTHH:mm:ss.f") + "+00:00"));
             }
 
             if (url.ChangeFrequency.HasValue)
             {
-                itemElement.Add(new XElement(NS + "changefreq", url.ChangeFrequency.Value.ToString().ToLower()));
+                itemElement.Add(new XElement(_nS + "changefreq", url.ChangeFrequency.Value.ToString().ToLower()));
             }
 
             if (url.Priority.HasValue)
             {
-                itemElement.Add(new XElement(NS + "priority", url.Priority.Value.ToString("N1")));
+                itemElement.Add(new XElement(_nS + "priority", url.Priority.Value.ToString("N1")));
             }
 
             return itemElement;

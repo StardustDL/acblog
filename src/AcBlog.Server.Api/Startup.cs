@@ -58,6 +58,8 @@ namespace AcBlog.Server.Api
 
             services.AddHttpClient();
 
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
             {
                 services.Configure<LomentServerOptions>(Configuration.GetSection("LomentServer"));
                 services.AddHttpClient("loment-client", (sp, client) =>
@@ -104,7 +106,7 @@ namespace AcBlog.Server.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
 
                 app.UseSwagger();
 

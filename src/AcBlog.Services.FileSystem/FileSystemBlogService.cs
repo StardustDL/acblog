@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AcBlog.Sdk.FileSystem
+namespace AcBlog.Services.FileSystem
 {
     public class FileSystemBlogService : IBlogService
     {
@@ -36,7 +36,7 @@ namespace AcBlog.Sdk.FileSystem
         {
             await using var fs = await (await FileProvider.GetFileInfo("blog.json").ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
             return await JsonSerializer.DeserializeAsync<BlogOptions>(fs, cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+                .ConfigureAwait(false) ?? throw new NullReferenceException("Options is null");
         }
     }
 }

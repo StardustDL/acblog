@@ -1,6 +1,6 @@
-﻿using AcBlog.Sdk.Filters;
+﻿using AcBlog.Services.Filters;
 
-namespace AcBlog.Sdk.Extensions
+namespace AcBlog.Services.Extensions
 {
     public static class PostServiceExtensions
     {

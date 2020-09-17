@@ -2,8 +2,8 @@
 using AcBlog.Data.Models;
 using AcBlog.Data.Repositories.FileSystem;
 using AcBlog.Data.Repositories.FileSystem.Builders;
-using AcBlog.Sdk.Extensions;
-using AcBlog.Sdk.FileSystem;
+using AcBlog.Services.Extensions;
+using AcBlog.Services.FileSystem;
 using DeepEqual.Syntax;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

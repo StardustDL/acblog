@@ -1,4 +1,5 @@
 ﻿using AcBlog.Sdk;
+using AcBlog.Services;
 using AcBlog.Tools.Sdk.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -37,7 +38,7 @@ namespace AcBlog.Tools.Sdk.Commands.Lists
                 service = workspace.Local;
             }
 
-            await foreach(var id in service.PostService.All(cancellationToken))
+            await foreach (var id in service.PostService.All(cancellationToken))
             {
                 var item = await service.PostService.Get(id, cancellationToken);
                 if (item is not null)

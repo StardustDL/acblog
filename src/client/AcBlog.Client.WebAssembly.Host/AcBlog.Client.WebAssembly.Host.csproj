@@ -10,7 +10,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.0-rc.1.20451.17" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.0-rc.1.20453.2" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="5.0.0-rc.1.20451.14" />
   </ItemGroup>
 
@@ -18,7 +17,5 @@
     <ProjectReference Include="..\AcBlog.Client.Core\AcBlog.Client.Core.csproj" />
     <ProjectReference Include="..\AcBlog.Client.WebAssembly\AcBlog.Client.WebAssembly.csproj" />
   </ItemGroup>
-
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

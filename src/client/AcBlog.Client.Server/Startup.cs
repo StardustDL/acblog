@@ -34,6 +34,8 @@ namespace AcBlog.Client.Server
 
             services.AddHttpClient();
 
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
             services.AddClientConfigurations(Configuration);
             {
                 var server = new ServerSettings();
@@ -67,7 +69,7 @@ namespace AcBlog.Client.Server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
             }
             else
             {

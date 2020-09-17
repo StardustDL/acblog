@@ -4,7 +4,7 @@ using AcBlog.Data.Repositories.FileSystem;
 using AcBlog.Data.Repositories.FileSystem.Builders;
 using AcBlog.Sdk;
 using AcBlog.Sdk.Api;
-using AcBlog.Sdk.FileSystem;
+using AcBlog.Services.FileSystem;
 using AcBlog.Sdk.Sitemap;
 using AcBlog.Sdk.Syndication;
 using AcBlog.Tools.Sdk.Helpers;
@@ -24,6 +24,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml;
+using AcBlog.Services;
 
 namespace AcBlog.Tools.Sdk.Models
 {

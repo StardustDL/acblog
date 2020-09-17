@@ -6,9 +6,9 @@ using AcBlog.Data.Repositories.FileSystem.Readers;
 using AcBlog.Data.Repositories.Searchers;
 using StardustDL.Extensions.FileProviders;
 
-namespace AcBlog.Sdk.FileSystem
+namespace AcBlog.Services.FileSystem
 {
-    internal class LayoutService : RecordRepoBaseService<Layout, string, LayoutQueryRequest, ILayoutRepository>, ILayoutService
+    internal class LayoutService : RecordRepoBasedService<Layout, string, LayoutQueryRequest, ILayoutRepository>, ILayoutService
     {
         public LayoutService(IBlogService blog, string rootPath, IFileProvider fileProvider) : base(blog, new LayoutFSReader(rootPath, fileProvider))
         {

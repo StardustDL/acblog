@@ -6,9 +6,9 @@ using AcBlog.Data.Repositories.FileSystem.Readers;
 using AcBlog.Data.Repositories.Searchers;
 using StardustDL.Extensions.FileProviders;
 
-namespace AcBlog.Sdk.FileSystem
+namespace AcBlog.Services.FileSystem
 {
-    internal class PageService : RecordRepoBaseService<Page, string, PageQueryRequest, IPageRepository>, IPageService
+    internal class PageService : RecordRepoBasedService<Page, string, PageQueryRequest, IPageRepository>, IPageService
     {
         public PageService(IBlogService blog, string rootPath, IFileProvider fileProvider) : base(blog, new PageFSReader(rootPath, fileProvider))
         {

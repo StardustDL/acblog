@@ -5,27 +5,19 @@
     <Nullable>enable</Nullable>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <!--<GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
-
+    
     <Authors>StardustDL</Authors>
     <Company>AcBlog</Company>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/acblog</PackageProjectUrl>
     <RepositoryUrl>https://github.com/acblog/acblog</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-    <PackageId>AcBlog.Sdk</PackageId>
-    <Product>AcBlog.Sdk</Product>
     <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Markdig" Version="0.21.1" />
-    <PackageReference Include="System.Net.Http.Json" Version="5.0.0-rc.1.20451.14" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AcBlog.Data\AcBlog.Data.csproj" />
-    <ProjectReference Include="..\AcBlog.Services.FileSystem\AcBlog.Services.FileSystem.csproj" />
-    <ProjectReference Include="..\AcBlog.Services\AcBlog.Services.csproj" />
+    <PackageReference Include="System.Linq.Async" Version="4.1.1" />
+    <PackageReference Include="System.Text.Json" Version="5.0.0-rc.1.20451.14" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,5 +25,10 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AcBlog.Data.Repositories.FileSystem\AcBlog.Data.Repositories.FileSystem.csproj" />
+    <ProjectReference Include="..\AcBlog.Services\AcBlog.Services.csproj" />
   </ItemGroup>
 </Project>

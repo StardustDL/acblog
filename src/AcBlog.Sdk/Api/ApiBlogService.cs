@@ -1,4 +1,5 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Services;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -41,7 +42,8 @@ namespace AcBlog.Sdk.Api
         {
             using var responseMessage = await HttpClient.GetAsync(PrepUrl, cancellationToken).ConfigureAwait(false);
             responseMessage.EnsureSuccessStatusCode();
-            return await responseMessage.Content.ReadFromJsonAsync<BlogOptions>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await responseMessage.Content.ReadFromJsonAsync<BlogOptions>(cancellationToken: cancellationToken).ConfigureAwait(false)
+                ?? throw new NullReferenceException("Null");
         }
     }
 }

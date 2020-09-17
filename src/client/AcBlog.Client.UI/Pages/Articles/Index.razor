@@ -2,7 +2,7 @@
 @page "/articles/pages"
 @page "/articles/pages/{pageNumber:int}"
 @inherits BaseArticlePage
-@inject AcBlog.Sdk.Filters.PostArticleFilter Article
+@inject AcBlog.Services.Filters.PostArticleFilter Article
 
 <Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 

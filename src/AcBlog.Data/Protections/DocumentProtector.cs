@@ -101,7 +101,8 @@ namespace AcBlog.Data.Protections
                 var bs = Convert.FromBase64String(value.Raw);
                 var ky = Encoding.UTF8.GetBytes(key.Password);
                 await using var ms = new MemoryStream(AesDecrypt(bs, ky));
-                return await JsonSerializer.DeserializeAsync<Document>(ms, cancellationToken: cancellationToken);
+                return await JsonSerializer.DeserializeAsync<Document>(ms, cancellationToken: cancellationToken)
+                    ?? throw new NullReferenceException("Null");
             }
             catch (Exception ex)
             {

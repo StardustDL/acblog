@@ -3,8 +3,9 @@ using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.Searchers;
+using AcBlog.Services;
 
-namespace AcBlog.Sdk.Extensions
+namespace AcBlog.Services.Extensions
 {
     public static class StatisticServiceExtensions
     {
@@ -13,7 +14,7 @@ namespace AcBlog.Sdk.Extensions
             return new RepoBasedService(blogService, repository);
         }
 
-        class RepoBasedService : RecordRepoBaseService<Statistic, string, StatisticQueryRequest, IStatisticRepository>, IStatisticService
+        class RepoBasedService : RecordRepoBasedService<Statistic, string, StatisticQueryRequest, IStatisticRepository>, IStatisticService
         {
             public RepoBasedService(IBlogService blogService, IStatisticRepository repository) : base(blogService, repository)
             {

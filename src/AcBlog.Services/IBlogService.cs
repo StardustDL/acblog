@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AcBlog.Sdk
+namespace AcBlog.Services
 {
     public interface IBlogService
     {

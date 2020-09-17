@@ -2,7 +2,7 @@
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
 
-namespace AcBlog.Sdk.Extensions
+namespace AcBlog.Services.Extensions
 {
     public static class FileServiceExtensions
     {
@@ -11,7 +11,7 @@ namespace AcBlog.Sdk.Extensions
             return new RepoBasedService(blogService, repository);
         }
 
-        class RepoBasedService : RecordRepoBaseService<File, string, FileQueryRequest, IFileRepository>, IFileService
+        class RepoBasedService : RecordRepoBasedService<File, string, FileQueryRequest, IFileRepository>, IFileService
         {
             public RepoBasedService(IBlogService blogService, IFileRepository repository) : base(blogService, repository)
             {
