@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace AcBlog.Client.Server
 {
@@ -45,9 +46,27 @@ namespace AcBlog.Client.Server
                 {
                     if (identityProvider.Enable)
                     {
-                        services.AddAuthentication();
+                        JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
-                        services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+                        services.AddAuthentication(options =>
+                        {
+                            options.DefaultScheme = "Cookies";
+                            options.DefaultChallengeScheme = "oidc";
+                        })
+                            .AddCookie("Cookies")
+                            .AddOpenIdConnect("oidc", options =>
+                            {
+                                options.Authority = identityProvider.Endpoint;
+
+                                options.ClientId = "AcBlog.Client.Server";
+                                options.ClientSecret = "secret";
+                                options.ResponseType = "code";
+
+                                options.SaveTokens = true;
+                            });
+
+                        // services.AddAuthentication();
+                        // services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
                     }
                     else
                     {

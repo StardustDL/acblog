@@ -23,7 +23,7 @@ namespace AcBlog.Data.Repositories.SqlServer
 
             qr = query.Order switch
             {
-                QueryTimeOrder.None => qr,
+                QueryTimeOrder.None => qr.OrderBy(x => x.CreationTime),
                 QueryTimeOrder.CreationTimeAscending => qr.OrderBy(x => x.CreationTime),
                 QueryTimeOrder.CreationTimeDescending => qr.OrderByDescending(x => x.CreationTime),
                 QueryTimeOrder.ModificationTimeAscending => qr.OrderBy(x => x.ModificationTime),

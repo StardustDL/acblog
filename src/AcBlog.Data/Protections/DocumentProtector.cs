@@ -11,7 +11,7 @@ namespace AcBlog.Data.Protections
 {
     public sealed class DocumentProtector : IProtector<Document>
     {
-        static readonly SHA256Managed _sha = new SHA256Managed();
+        /*static readonly SHA256Managed _sha = new SHA256Managed();
 
         static byte[] FormalKey(byte[] raw)
         {
@@ -59,7 +59,7 @@ namespace AcBlog.Data.Protections
             byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
 
             return resultArray;
-        }
+        }*/
 
         static readonly string _protectFlag = Convert.ToBase64String(Encoding.UTF8.GetBytes("Protected Post by PostProtector"));
 
@@ -72,7 +72,7 @@ namespace AcBlog.Data.Protections
         {
             try
             {
-                var res = new Document();
+                /*var res = new Document();
                 byte[] bs;
                 await using (var ms = new MemoryStream())
                 {
@@ -82,7 +82,8 @@ namespace AcBlog.Data.Protections
                 var ky = Encoding.UTF8.GetBytes(key.Password);
                 res.Tag = _protectFlag;
                 res.Raw = Convert.ToBase64String(AesEncrypt(bs, ky));
-                return res;
+                return res;*/
+                return value;
             }
             catch (Exception ex)
             {
@@ -94,7 +95,7 @@ namespace AcBlog.Data.Protections
         {
             try
             {
-                if (!await IsProtected(value, cancellationToken))
+                /*if (!await IsProtected(value, cancellationToken))
                 {
                     return value;
                 }
@@ -102,7 +103,8 @@ namespace AcBlog.Data.Protections
                 var ky = Encoding.UTF8.GetBytes(key.Password);
                 await using var ms = new MemoryStream(AesDecrypt(bs, ky));
                 return await JsonSerializer.DeserializeAsync<Document>(ms, cancellationToken: cancellationToken)
-                    ?? throw new NullReferenceException("Null");
+                    ?? throw new NullReferenceException("Null");*/
+                return value;
             }
             catch (Exception ex)
             {

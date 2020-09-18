@@ -1,4 +1,5 @@
-﻿using AcBlog.Data.Models;
+﻿using AcBlog.Data.Extensions;
+using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories.SqlServer.Models;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +48,7 @@ namespace AcBlog.Data.Repositories.SqlServer
 
             qr = query.Order switch
             {
-                QueryTimeOrder.None => qr,
+                QueryTimeOrder.None => qr.OrderBy(x => x.CreationTime),
                 QueryTimeOrder.CreationTimeAscending => qr.OrderBy(x => x.CreationTime),
                 QueryTimeOrder.CreationTimeDescending => qr.OrderByDescending(x => x.CreationTime),
                 QueryTimeOrder.ModificationTimeAscending => qr.OrderBy(x => x.ModificationTime),
@@ -63,9 +64,17 @@ namespace AcBlog.Data.Repositories.SqlServer
             return qr.Select(x => x.Id);
         }
 
-        public Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public async Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default)
+        {
+            var cates = DbSet.AsQueryable().Select(x => x.Category).Distinct().AsAsyncEnumerable();
+            return await CategoryTreeBuilder.Build(cates.Select(x => Category.Parse(x)), cancellationToken);
+        }
 
-        public Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public async Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default)
+        {
+            var cates = DbSet.AsQueryable().Select(x => x.Keywords).Distinct().AsAsyncEnumerable();
+            return await KeywordCollectionBuilder.Build(cates.Select(x => Keyword.Parse(x)), cancellationToken);
+        }
 
         protected override RawPost ToRaw(Post item) => RawPost.From(item);
 

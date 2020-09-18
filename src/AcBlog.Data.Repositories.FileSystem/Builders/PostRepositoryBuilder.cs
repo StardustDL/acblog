@@ -35,7 +35,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
         {
             FSStaticBuilder.EnsureDirectoryEmpty(Paths.GetKeywordRoot(RootPath));
 
-            var (collection, map) = KeywordCollectionBuilder.BuildFromPosts(data);
+            var (collection, map) = await KeywordCollectionBuilder.BuildFromPosts(data.ToAsyncEnumerable());
 
             foreach (var v in collection.Items)
             {
@@ -51,7 +51,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
         {
             FSStaticBuilder.EnsureDirectoryEmpty(Paths.GetCategoryRoot(RootPath));
 
-            var (tree, map) = CategoryTreeBuilder.BuildFromPosts(data);
+            var (tree, map) = await CategoryTreeBuilder.BuildFromPosts(data.ToAsyncEnumerable());
 
             Queue<CategoryTree.Node> q = new Queue<CategoryTree.Node>();
             foreach (var v in tree.Root.Children.Values)

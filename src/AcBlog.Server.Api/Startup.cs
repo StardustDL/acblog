@@ -63,7 +63,7 @@ namespace AcBlog.Server.Api
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            {
+            /*{
                 services.Configure<LomentServerOptions>(Configuration.GetSection("LomentServer"));
                 services.AddHttpClient("loment-client", (sp, client) =>
                 {
@@ -76,7 +76,7 @@ namespace AcBlog.Server.Api
                     var http = sp.GetRequiredService<IHttpClientFactory>().CreateClient("loment-client");
                     return new LomentService(http);
                 });
-            }
+            }*/
 
             services.AddControllersWithViews();
             services.AddRazorPages();

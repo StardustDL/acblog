@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AcBlog.Data.Extensions\AcBlog.Data.Extensions.csproj" />
     <ProjectReference Include="..\AcBlog.Data\AcBlog.Data.csproj" />
   </ItemGroup>
 
