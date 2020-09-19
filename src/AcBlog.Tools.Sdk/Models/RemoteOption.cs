@@ -1,4 +1,6 @@
-﻿namespace AcBlog.Tools.Sdk.Models
+﻿using AcBlog.Data.Models;
+
+namespace AcBlog.Tools.Sdk.Models
 {
     public enum RemoteType
     {
@@ -15,6 +17,8 @@
         public string Uri { get; set; } = string.Empty;
 
         public string Token { get; set; } = string.Empty;
+
+        public PropertyCollection Properties { get; set; } = new PropertyCollection();
 
         public RemoteType Type { get; set; }
     }

@@ -20,6 +20,7 @@ namespace AcBlog.Tools.Sdk.Commands
             result.AddCommand(new Remotes.AddCommand().Build());
             result.AddCommand(new Remotes.RemoveCommand().Build());
             result.AddCommand(new Remotes.ConfigCommand().Build());
+            result.AddCommand(new Remotes.LoginCommand().Build());
             result.AddArgument(new Argument<string?>(nameof(CArgument.Current).ToLowerInvariant(), () => null, "Current remote name"));
             return result;
         }

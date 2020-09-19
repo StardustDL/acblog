@@ -8,7 +8,7 @@ namespace AcBlog.Server.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class PostsController : RecordControllerBase<Post, string, IPostService, PostQueryRequest>
+    public class PostsController : RecordControllerBase<Post, IPostService, PostQueryRequest>
     {
         public PostsController(IBlogService service) : base(service.PostService)
         {

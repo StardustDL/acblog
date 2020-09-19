@@ -10,7 +10,7 @@ namespace AcBlog.Server.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class CommentsController : RecordControllerBase<Comment, string, ICommentRepository, CommentQueryRequest>
+    public class CommentsController : RecordControllerBase<Comment, ICommentRepository, CommentQueryRequest>
     {
         public CommentsController(IBlogService service) : base(service.CommentService)
         {

@@ -25,6 +25,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml;
 using AcBlog.Services;
+using AcBlog.Data.Repositories;
+using AcBlog.Data.Models.Actions;
 
 namespace AcBlog.Tools.Sdk.Models
 {
@@ -173,7 +175,8 @@ namespace AcBlog.Tools.Sdk.Models
                         }
                         break;
                 }
-                Remote.PostService.Context.Token = remote.Token;
+                // TODO: sub-service 's token
+                Remote.Context.Token = remote.Token;
 
                 Option.CurrentRemote = name;
                 await SaveOption();
@@ -181,6 +184,55 @@ namespace AcBlog.Tools.Sdk.Models
             else
             {
                 throw new Exception("No remote");
+            }
+        }
+
+        public async Task SyncRecordRepository<T, TId, TQuery>(IRecordRepository<T, TId, TQuery> source, IRecordRepository<T, TId, TQuery> target, bool full) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        {
+            HashSet<TId> remoteIds = await target.All().ToHashSetAsync();
+            await foreach (var item in source.GetAllItems().IgnoreNull())
+            {
+                Logger.LogInformation($"Loaded {item.Id}");
+                if (remoteIds.Contains(item.Id))
+                {
+                    var result = await target.Update(item);
+                    if (result)
+                    {
+                        Logger.LogInformation($"Updated {item.Id}");
+                    }
+                    else
+                    {
+                        Logger.LogError($"Failed to update {item.Id}");
+                    }
+                }
+                else
+                {
+                    var result = await target.Create(item);
+                    if (result is null)
+                    {
+                        Logger.LogError($"Failed to create {item.Id}");
+                    }
+                    else
+                    {
+                        Logger.LogInformation($"Created {item.Id}");
+                    }
+                }
+                remoteIds.Remove(item.Id);
+            }
+            if (full)
+            {
+                foreach (var v in remoteIds)
+                {
+                    var result = await target.Delete(v);
+                    if (result)
+                    {
+                        Logger.LogInformation($"Deleted {v}.");
+                    }
+                    else
+                    {
+                        Logger.LogError($"Failed to deleted {v}.");
+                    }
+                }
             }
         }
 
@@ -209,55 +261,14 @@ namespace AcBlog.Tools.Sdk.Models
                     case RemoteType.Api:
                         {
                             await Connect(name);
+
                             Logger.LogInformation($"Fetch remote posts.");
 
-                            // TODO: Pages & layouts
+                            await SyncRecordRepository(Local.PostService, Remote.PostService, full);
 
-                            HashSet<string> remoteIds = await Remote.PostService.All().ToHashSetAsync();
-                            await foreach (var item in Local.PostService.GetAllItems().IgnoreNull())
-                            {
-                                Logger.LogInformation($"Loaded {item.Id}: {item.Title}");
-                                if (remoteIds.Contains(item.Id))
-                                {
-                                    var result = await Remote.PostService.Update(item);
-                                    if (result)
-                                    {
-                                        Logger.LogInformation($"Updated {item.Id}");
-                                    }
-                                    else
-                                    {
-                                        Logger.LogError($"Failed to update {item.Id}");
-                                    }
-                                }
-                                else
-                                {
-                                    var result = await Remote.PostService.Create(item);
-                                    if (result is null)
-                                    {
-                                        Logger.LogError($"Failed to create {item.Id}");
-                                    }
-                                    else
-                                    {
-                                        Logger.LogInformation($"Created {item.Id}");
-                                    }
-                                }
-                                remoteIds.Remove(item.Id);
-                            }
-                            if (full)
-                            {
-                                foreach (var v in remoteIds)
-                                {
-                                    var result = await Remote.PostService.Delete(v);
-                                    if (result)
-                                    {
-                                        Logger.LogInformation($"Deleted {v}.");
-                                    }
-                                    else
-                                    {
-                                        Logger.LogError($"Failed to deleted {v}.");
-                                    }
-                                }
-                            }
+                            await SyncRecordRepository(Local.PageService, Remote.PageService, full);
+
+                            await SyncRecordRepository(Local.LayoutService, Remote.LayoutService, full);
                         }
                         break;
                     case RemoteType.Git:

@@ -11,20 +11,20 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using AcBlog.Data.Repositories;
+using AcBlog.Data.Models;
 
 namespace AcBlog.Server.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : RecordControllerBase<User, IUserRepository, UserQueryRequest>
     {
-        public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IdentityServerTools identityServerTools, IBlogService blogService)
+        public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IdentityServerTools identityServerTools, IBlogService service) : base(service.UserService)
         {
             UserManager = userManager;
             IdentityServerTools = identityServerTools;
             SignInManager = signInManager;
-
-            BlogService = blogService;
         }
 
         IdentityServerTools IdentityServerTools { get; }
@@ -33,7 +33,6 @@ namespace AcBlog.Server.Api.Controllers
 
         SignInManager<ApplicationUser> SignInManager { get; }
 
-        IBlogService BlogService { get; }
 
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -53,9 +52,9 @@ namespace AcBlog.Server.Api.Controllers
 
             if (result.Succeeded)
             {
-                if (!await BlogService.UserService.Exists(user.Id))
+                if (!await Service.Exists(user.Id))
                 {
-                    await BlogService.UserService.Create(new AcBlog.Data.Models.User
+                    await Service.Create(new AcBlog.Data.Models.User
                     {
                         NickName = user.UserName,
                         Email = user.UserName,

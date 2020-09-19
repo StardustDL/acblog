@@ -10,7 +10,7 @@ namespace AcBlog.Server.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class StatisticsController : RecordControllerBase<Statistic, string, IStatisticRepository, StatisticQueryRequest>
+    public class StatisticsController : RecordControllerBase<Statistic, IStatisticRepository, StatisticQueryRequest>
     {
         public StatisticsController(IBlogService service) : base(service.StatisticService)
         {

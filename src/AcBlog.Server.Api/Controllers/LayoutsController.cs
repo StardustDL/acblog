@@ -8,7 +8,7 @@ namespace AcBlog.Server.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class LayoutsController : RecordControllerBase<Layout, string, ILayoutRepository, LayoutQueryRequest>
+    public class LayoutsController : RecordControllerBase<Layout, ILayoutRepository, LayoutQueryRequest>
     {
         public LayoutsController(IBlogService service) : base(service.LayoutService)
         {
