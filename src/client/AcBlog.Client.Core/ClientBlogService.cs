@@ -156,7 +156,12 @@ namespace AcBlog.Client
 
         public IStatisticService StatisticService { get; }
 
+        public IUserService UserService => Main.UserService;
+
+        public RepositoryAccessContext Context => Main.Context;
+
         public Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default) => Main.GetOptions(cancellationToken);
+        public Task<bool> SetOptions(BlogOptions options, CancellationToken cancellationToken = default) => Main.SetOptions(options, cancellationToken);
 
         class EmptyCommentRepo : EmptyRecordRepository<Comment, string, CommentQueryRequest>, ICommentRepository
         {

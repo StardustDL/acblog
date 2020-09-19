@@ -6,7 +6,7 @@ using System.Net.Http;
 
 namespace AcBlog.Sdk.Api
 {
-    internal class StatisticService : BaseRecordApiService<Statistic, StatisticQueryRequest, IStatisticRepositorySearcher>, IStatisticService
+    internal class StatisticService : BaseRecordApiService<Statistic, StatisticQueryRequest>, IStatisticService
     {
         public StatisticService(IBlogService blog, HttpClient httpClient) : base(blog, httpClient)
         {

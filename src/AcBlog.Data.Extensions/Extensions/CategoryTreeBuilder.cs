@@ -10,14 +10,14 @@ namespace AcBlog.Data.Extensions
 {
     public static class CategoryTreeBuilder
     {
-        public static async Task<(CategoryTree, IReadOnlyDictionary<CategoryTree.Node, IList<Post>>)> BuildFromPosts(IAsyncEnumerable<Post> data, CancellationToken cancellationToken = default)
+        public static async Task<(CategoryTree, IReadOnlyDictionary<CategoryTree.CategoryTreeNode, IList<Post>>)> BuildFromPosts(IAsyncEnumerable<Post> data, CancellationToken cancellationToken = default)
         {
-            CategoryTree.Node root = new CategoryTree.Node(new Category());
-            Dictionary<CategoryTree.Node, IList<Post>> map = new Dictionary<CategoryTree.Node, IList<Post>>();
+            CategoryTree.CategoryTreeNode root = new CategoryTree.CategoryTreeNode(new Category());
+            Dictionary<CategoryTree.CategoryTreeNode, IList<Post>> map = new Dictionary<CategoryTree.CategoryTreeNode, IList<Post>>();
             await foreach (var v in data)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                CategoryTree.Node node = root;
+                CategoryTree.CategoryTreeNode node = root;
                 foreach (var k in v.Category.Items)
                 {
                     if (!node.Children.ContainsKey(k))
@@ -25,7 +25,7 @@ namespace AcBlog.Data.Extensions
                         CategoryBuilder cb = new CategoryBuilder();
                         cb.AddSubCategory(node.Category.Items.Concat(new[] { k }).ToArray());
                         Category c = cb.Build();
-                        var tn = new CategoryTree.Node(c);
+                        var tn = new CategoryTree.CategoryTreeNode(c);
                         map.Add(tn, new List<Post>());
                         node.Children.Add(k, tn);
                         node = tn;
@@ -42,11 +42,11 @@ namespace AcBlog.Data.Extensions
 
         public static async Task<CategoryTree> Build(IAsyncEnumerable<Category> data, CancellationToken cancellationToken = default)
         {
-            CategoryTree.Node root = new CategoryTree.Node(new Category());
+            CategoryTree.CategoryTreeNode root = new CategoryTree.CategoryTreeNode(new Category());
             await foreach (var v in data)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                CategoryTree.Node node = root;
+                CategoryTree.CategoryTreeNode node = root;
                 foreach (var k in v.Items)
                 {
                     if (!node.Children.ContainsKey(k))
@@ -54,7 +54,7 @@ namespace AcBlog.Data.Extensions
                         CategoryBuilder cb = new CategoryBuilder();
                         cb.AddSubCategory(node.Category.Items.Concat(new[] { k }).ToArray());
                         Category c = cb.Build();
-                        var tn = new CategoryTree.Node(c);
+                        var tn = new CategoryTree.CategoryTreeNode(c);
                         node.Children.Add(k, tn);
                         node = tn;
                     }

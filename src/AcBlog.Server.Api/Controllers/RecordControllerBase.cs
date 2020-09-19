@@ -19,7 +19,7 @@ namespace AcBlog.Server.Api.Controllers
         }
 
         [HttpGet("status")]
-        public async Task<ActionResult<RepositoryStatus>> GetStatus()
+        public virtual async Task<ActionResult<RepositoryStatus>> GetStatus()
         {
             return await Service.GetStatus();
         }
@@ -27,7 +27,7 @@ namespace AcBlog.Server.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public IAsyncEnumerable<TId> All()
+        public virtual IAsyncEnumerable<TId> All()
         {
             return Service.All();
         }
@@ -35,7 +35,7 @@ namespace AcBlog.Server.Api.Controllers
         [HttpPut("query")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public IAsyncEnumerable<TId> Query([FromBody] TQuery query)
+        public virtual IAsyncEnumerable<TId> Query([FromBody] TQuery query)
         {
             return Service.Query(query);
         }
@@ -43,7 +43,7 @@ namespace AcBlog.Server.Api.Controllers
         [HttpPut("stats")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<QueryStatistic>> Statistic([FromBody] TQuery query)
+        public virtual async Task<ActionResult<QueryStatistic>> Statistic([FromBody] TQuery query)
         {
             return await Service.Statistic(query);
         }
@@ -52,7 +52,7 @@ namespace AcBlog.Server.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<T>> Get(TId id)
+        public virtual async Task<ActionResult<T>> Get(TId id)
         {
             if (await Service.Exists(id))
                 return Ok(await Service.Get(id));
@@ -64,7 +64,7 @@ namespace AcBlog.Server.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesDefaultResponseType]
         [Authorize]
-        public async Task<ActionResult<TId>> Create([FromBody] T value)
+        public virtual async Task<ActionResult<TId>> Create([FromBody] T value)
         {
             var result = await Service.Create(value);
             return Created(result.ToString(), result);
@@ -75,7 +75,7 @@ namespace AcBlog.Server.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         [Authorize]
-        public async Task<ActionResult<bool>> Update(TId id, [FromBody] T value)
+        public virtual async Task<ActionResult<bool>> Update(TId id, [FromBody] T value)
         {
             value.Id = id;
             if (await Service.Exists(value.Id))
@@ -89,7 +89,7 @@ namespace AcBlog.Server.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         [Authorize]
-        public async Task<ActionResult<bool>> Delete(TId id)
+        public virtual async Task<ActionResult<bool>> Delete(TId id)
         {
             if (await Service.Exists(id))
                 return Ok(await Service.Delete(id));

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Sdk.Api
 {
-    internal class PostService : BaseRecordApiService<Post, PostQueryRequest, IPostRepositorySearcher>, IPostService
+    internal class PostService : BaseRecordApiService<Post, PostQueryRequest>, IPostService
     {
         public PostService(IBlogService blog, HttpClient httpClient) : base(blog, httpClient)
         {

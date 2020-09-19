@@ -1,4 +1,5 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Data.Repositories;
 using AcBlog.Services;
 using System;
 using System.Net.Http;
@@ -23,6 +24,19 @@ namespace AcBlog.Sdk.Api
             CommentService = new CommentService(this, httpClient);
 
             StatisticService = new StatisticService(this, httpClient);
+
+            UserService = new UserService(this, httpClient);
+        }
+
+        public RepositoryAccessContext Context { get; set; } = new RepositoryAccessContext();
+
+        internal void SetHeader()
+        {
+            if (Context is not null && !string.IsNullOrWhiteSpace(Context.Token))
+            {
+                HttpClient.DefaultRequestHeaders.Remove("Authorization");
+                HttpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Context.Token);
+            }
         }
 
         public HttpClient HttpClient { get; }
@@ -37,6 +51,8 @@ namespace AcBlog.Sdk.Api
 
         public IStatisticService StatisticService { get; }
 
+        public IUserService UserService { get; }
+
         public IFileService FileService => throw new NotImplementedException();
 
 
@@ -44,10 +60,19 @@ namespace AcBlog.Sdk.Api
 
         public async Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default)
         {
-            using var responseMessage = await HttpClient.GetAsync(PrepUrl, cancellationToken).ConfigureAwait(false);
+            SetHeader();
+            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/options", cancellationToken).ConfigureAwait(false);
             responseMessage.EnsureSuccessStatusCode();
             return await responseMessage.Content.ReadFromJsonAsync<BlogOptions>(cancellationToken: cancellationToken).ConfigureAwait(false)
                 ?? throw new NullReferenceException("Null");
+        }
+
+        public async Task<bool> SetOptions(BlogOptions options, CancellationToken cancellationToken = default)
+        {
+            SetHeader();
+            using var responseMessage = await HttpClient.PostAsJsonAsync($"{PrepUrl}/options", options, cancellationToken).ConfigureAwait(false);
+            responseMessage.EnsureSuccessStatusCode();
+            return await responseMessage.Content.ReadFromJsonAsync<bool>(cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

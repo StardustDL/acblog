@@ -1,5 +1,5 @@
 ﻿using AcBlog.Data.Models;
-using IdentityServer4;
+using AcBlog.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -10,35 +10,25 @@ namespace AcBlog.Server.Api.Controllers
     [ApiController]
     public class BlogController : ControllerBase
     {
-        public BlogController(IdentityServerTools identityServerTools)
+        public BlogController(IBlogService blogService)
         {
-            IdentityServerTools = identityServerTools;
+            BlogService = blogService;
         }
 
-        IdentityServerTools IdentityServerTools { get; }
+        public IBlogService BlogService { get; }
 
-        [HttpGet]
-        public Task<BlogOptions> Options()
+
+        [HttpGet("options")]
+        public async Task<BlogOptions> GetOptions()
         {
-            // TODO: update options
-            return Task.FromResult(new BlogOptions());
+            return await BlogService.GetOptions();
         }
 
-        [HttpGet("token")]
-        public async Task<string> GetToken()
-        {
-            var token = await IdentityServerTools.IssueClientJwtAsync(
-                clientId: "Internal",
-                lifetime: 3600,
-                audiences: new string[] { "AcBlog.Server.ApiAPI" });
-            return token;
-        }
-
+        [HttpPost("options")]
         [Authorize]
-        [HttpGet("check_token")]
-        public async Task<string> CheckToken()
+        public async Task<bool> SetOptions([FromBody] BlogOptions options)
         {
-            return "Passed";
+            return await BlogService.SetOptions(options);
         }
     }
 }

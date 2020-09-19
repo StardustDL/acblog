@@ -15,6 +15,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 
 namespace AcBlog.Server.Api
@@ -52,6 +54,8 @@ namespace AcBlog.Server.Api
                 services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                     .AddEntityFrameworkStores<IdentityDbContext>();
 
+                JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // avoid ms-default mapping, it will change sub claim's type name
+
                 services.AddIdentityServer(Configuration.GetSection("IdentityServer:Options"))
                     .AddApiAuthorization<ApplicationUser, IdentityDbContext>();
 
@@ -84,6 +88,36 @@ namespace AcBlog.Server.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AcBlog API", Version = "v1" });
+
+                var apiKey = new OpenApiSecurityScheme
+                {
+                    Description = "JWT token",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                };
+
+                c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme()
+                {
+                    Description =
+                "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    In = ParameterLocation.Header,
+                    Scheme = "Bearer"
+                });
+
+                var oar = new OpenApiSecurityRequirement();
+                oar.Add(
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "bearerAuth"
+                        }
+                    }, new List<string>());
+                c.AddSecurityRequirement(oar);
             });
 
             services.AddCors(options =>

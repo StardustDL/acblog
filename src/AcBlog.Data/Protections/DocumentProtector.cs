@@ -1,7 +1,6 @@
 ﻿using AcBlog.Data.Documents;
 using System;
 using System.IO;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -72,18 +71,18 @@ namespace AcBlog.Data.Protections
         {
             try
             {
-                /*var res = new Document();
+                var res = new Document();
                 byte[] bs;
                 await using (var ms = new MemoryStream())
                 {
                     await JsonSerializer.SerializeAsync(ms, value, cancellationToken: cancellationToken);
                     bs = ms.ToArray();
                 }
-                var ky = Encoding.UTF8.GetBytes(key.Password);
+
                 res.Tag = _protectFlag;
-                res.Raw = Convert.ToBase64String(AesEncrypt(bs, ky));
-                return res;*/
-                return value;
+                // var ky = Encoding.UTF8.GetBytes(key.Password); AesEncrypt(bs, ky)
+                res.Raw = Convert.ToBase64String(bs);
+                return res;
             }
             catch (Exception ex)
             {
@@ -95,16 +94,16 @@ namespace AcBlog.Data.Protections
         {
             try
             {
-                /*if (!await IsProtected(value, cancellationToken))
+                if (!await IsProtected(value, cancellationToken))
                 {
                     return value;
                 }
                 var bs = Convert.FromBase64String(value.Raw);
-                var ky = Encoding.UTF8.GetBytes(key.Password);
-                await using var ms = new MemoryStream(AesDecrypt(bs, ky));
+                // var ky = Encoding.UTF8.GetBytes(key.Password);
+                // await using var ms = new MemoryStream(AesDecrypt(bs, ky));
+                await using var ms = new MemoryStream(bs);
                 return await JsonSerializer.DeserializeAsync<Document>(ms, cancellationToken: cancellationToken)
-                    ?? throw new NullReferenceException("Null");*/
-                return value;
+                    ?? throw new NullReferenceException("Null");
             }
             catch (Exception ex)
             {

@@ -4,6 +4,7 @@ using System.Text.Json;
 
 namespace AcBlog.Data.Repositories.SqlServer.Models
 {
+
     public class RawPage : IHasId<string>
     {
         public string Id { get; set; } = string.Empty;

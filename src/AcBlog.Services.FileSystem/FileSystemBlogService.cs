@@ -1,4 +1,5 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Data.Repositories;
 using StardustDL.Extensions.FileProviders;
 using System;
 using System.Text.Json;
@@ -32,11 +33,17 @@ namespace AcBlog.Services.FileSystem
 
         public IStatisticService StatisticService => throw new NotImplementedException();
 
+        public IUserService UserService => throw new NotImplementedException();
+
+        public RepositoryAccessContext Context => new RepositoryAccessContext();
+
         public async Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default)
         {
             await using var fs = await (await FileProvider.GetFileInfo("blog.json").ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
             return await JsonSerializer.DeserializeAsync<BlogOptions>(fs, cancellationToken: cancellationToken)
                 .ConfigureAwait(false) ?? throw new NullReferenceException("Options is null");
         }
+
+        public Task<bool> SetOptions(BlogOptions options, CancellationToken cancellationToken = default) => throw new NotImplementedException();
     }
 }

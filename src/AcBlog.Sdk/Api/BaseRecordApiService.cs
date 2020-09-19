@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Sdk.Api
 {
-    internal abstract class BaseRecordApiService<T, TQuery, TSearcher> : IRecordRepository<T, string, TQuery> where T : class, IHasId<string> where TQuery : QueryRequest, new()
+    internal abstract class BaseRecordApiService<T, TQuery> : IRecordRepository<T, string, TQuery> where T : class, IHasId<string> where TQuery : QueryRequest, new()
     {
         protected abstract string PrepUrl { get; }
 
@@ -26,12 +26,11 @@ namespace AcBlog.Sdk.Api
 
         public HttpClient HttpClient { get; }
 
-        public TSearcher Searcher => throw new NotImplementedException();
-
         public RepositoryAccessContext Context { get; set; } = new RepositoryAccessContext();
 
         protected virtual void SetHeader()
         {
+            (BlogService as ApiBlogService)?.SetHeader();
             if (Context is not null && !string.IsNullOrWhiteSpace(Context.Token))
             {
                 HttpClient.DefaultRequestHeaders.Remove("Authorization");

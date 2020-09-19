@@ -6,7 +6,7 @@ using System.Net.Http;
 
 namespace AcBlog.Sdk.Api
 {
-    internal class CommentService : BaseRecordApiService<Comment, CommentQueryRequest, ICommentRepositorySearcher>, ICommentService
+    internal class CommentService : BaseRecordApiService<Comment, CommentQueryRequest>, ICommentService
     {
         public CommentService(IBlogService blog, HttpClient httpClient) : base(blog, httpClient)
         {

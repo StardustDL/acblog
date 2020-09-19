@@ -1,4 +1,5 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Data.Repositories;
 using AcBlog.Sdk;
 using AcBlog.Services;
 using AcBlog.Tools.Sdk.Models;
@@ -36,6 +37,10 @@ namespace AcBlog.Tools.Sdk.Repositories
 
         public IFileService FileService => throw new System.NotImplementedException();
 
+        public IUserService UserService => throw new NotImplementedException();
+
+        public RepositoryAccessContext Context { get; set; } = new RepositoryAccessContext();
+
         public async Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default)
         {
             string path = Path.Join(RootPath, Workspace.BlogOptionPath);
@@ -51,5 +56,7 @@ namespace AcBlog.Tools.Sdk.Repositories
                 return new BlogOptions();
             }
         }
+
+        public Task<bool> SetOptions(BlogOptions options, CancellationToken cancellationToken = default) => throw new NotImplementedException();
     }
 }

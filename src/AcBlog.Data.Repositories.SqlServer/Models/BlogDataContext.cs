@@ -17,5 +17,9 @@ namespace AcBlog.Data.Repositories.SqlServer.Models
         public DbSet<RawComment> Comments { get; set; }
 
         public DbSet<RawStatistic> Statistics { get; set; }
+
+        public DbSet<RawUser> Users { get; set; }
+
+        public DbSet<RawEntry> BlogEntries { get; set; }
     }
 }

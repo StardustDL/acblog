@@ -4,31 +4,31 @@ namespace AcBlog.Data.Models
 {
     public class CategoryTree
     {
-        public CategoryTree() : this(new Node()) { }
+        public CategoryTree() : this(new CategoryTreeNode()) { }
 
-        public CategoryTree(Node root) => Root = root;
+        public CategoryTree(CategoryTreeNode root) => Root = root;
 
-        public Node Root { get; set; }
+        public CategoryTreeNode Root { get; set; }
 
-        public class Node
+        public class CategoryTreeNode
         {
-            public Node() : this(Category.Empty)
+            public CategoryTreeNode() : this(Category.Empty)
             {
             }
 
-            public Node(Category category)
+            public CategoryTreeNode(Category category)
             {
                 Category = category;
             }
 
             public Category Category { get; set; }
 
-            public Dictionary<string, Node> Children { get; set; } = new Dictionary<string, Node>();
+            public Dictionary<string, CategoryTreeNode> Children { get; set; } = new Dictionary<string, CategoryTreeNode>();
         }
 
         public IEnumerable<Category> AsCategoryList()
         {
-            Queue<Node> q = new Queue<Node>();
+            Queue<CategoryTreeNode> q = new Queue<CategoryTreeNode>();
             foreach (var item in Root.Children.Values)
             {
                 q.Enqueue(item);

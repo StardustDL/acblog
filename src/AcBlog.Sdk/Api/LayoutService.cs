@@ -6,7 +6,7 @@ using System.Net.Http;
 
 namespace AcBlog.Sdk.Api
 {
-    internal class LayoutService : BaseRecordApiService<Layout, LayoutQueryRequest, ILayoutRepositorySearcher>, ILayoutService
+    internal class LayoutService : BaseRecordApiService<Layout, LayoutQueryRequest>, ILayoutService
     {
         public LayoutService(IBlogService blog, HttpClient httpClient) : base(blog, httpClient)
         {

@@ -46,25 +46,9 @@ namespace AcBlog.Client.Server
                 {
                     if (identityProvider.Enable)
                     {
-                        JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
-
-                        services.AddAuthentication(options =>
-                        {
-                            options.DefaultScheme = "Cookies";
-                            options.DefaultChallengeScheme = "oidc";
-                        })
-                            .AddCookie("Cookies")
-                            .AddOpenIdConnect("oidc", options =>
-                            {
-                                options.Authority = identityProvider.Endpoint;
-
-                                options.ClientId = "AcBlog.Client.Server";
-                                options.ClientSecret = "secret";
-                                options.ResponseType = "code";
-
-                                options.SaveTokens = true;
-                            });
-
+                        services.AddAuthorizationCore();
+                        services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
+                        services.AddScoped<SignOutSessionStateManager>();
                         // services.AddAuthentication();
                         // services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
                     }

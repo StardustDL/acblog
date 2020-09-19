@@ -53,7 +53,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
 
             var (tree, map) = await CategoryTreeBuilder.BuildFromPosts(data.ToAsyncEnumerable());
 
-            Queue<CategoryTree.Node> q = new Queue<CategoryTree.Node>();
+            Queue<CategoryTree.CategoryTreeNode> q = new Queue<CategoryTree.CategoryTreeNode>();
             foreach (var v in tree.Root.Children.Values)
                 q.Enqueue(v);
 
