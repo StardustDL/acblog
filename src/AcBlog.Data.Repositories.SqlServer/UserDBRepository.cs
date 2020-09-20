@@ -30,7 +30,7 @@ namespace AcBlog.Data.Repositories.SqlServer
 
             if (!string.IsNullOrWhiteSpace(query.NickName))
             {
-                qr = qr.Where(x => x.Name == query.NickName);
+                qr = qr.Where(x => x.NickName == query.NickName);
             }
 
             qr = qr.OrderBy(x => x.Id);
@@ -49,7 +49,7 @@ namespace AcBlog.Data.Repositories.SqlServer
 
         protected override void ApplyChanges(RawUser target, RawUser value)
         {
-            target.Name = value.Name;
+            target.NickName = value.NickName;
             target.Email = value.Email;
         }
     }

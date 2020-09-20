@@ -32,5 +32,13 @@ namespace AcBlog.Sdk.Api
             responseMessage.EnsureSuccessStatusCode();
             return await responseMessage.Content.ReadAsStringAsync(cancellationToken: cancellationToken).ConfigureAwait(false) ?? string.Empty;
         }
+
+        public async Task<User?> GetCurrent(CancellationToken cancellationToken = default)
+        {
+            SetHeader();
+            using var responseMessage = await HttpClient.GetAsync($"{PrepUrl}/current", cancellationToken).ConfigureAwait(false);
+            responseMessage.EnsureSuccessStatusCode();
+            return await responseMessage.Content.ReadFromJsonAsync<User>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
     }
 }

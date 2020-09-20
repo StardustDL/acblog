@@ -8,6 +8,8 @@ namespace AcBlog.Data.Repositories.SqlServer.Models
 
         public string Name { get; set; } = string.Empty;
 
+        public string NickName { get; set; } = string.Empty;
+
         public string Email { get; set; } = string.Empty;
 
         public static RawUser From(User value)
@@ -15,7 +17,8 @@ namespace AcBlog.Data.Repositories.SqlServer.Models
             return new RawUser
             {
                 Id = value.Id,
-                Name = value.NickName,
+                NickName = value.NickName,
+                Name = value.Name,
                 Email = value.Email,
             };
         }
@@ -25,7 +28,8 @@ namespace AcBlog.Data.Repositories.SqlServer.Models
             return new User
             {
                 Id = value.Id,
-                NickName = value.Name,
+                Name = value.Name,
+                NickName = value.NickName,
                 Email = value.Email,
             };
         }

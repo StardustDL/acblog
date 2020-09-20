@@ -1,4 +1,5 @@
-﻿using AcBlog.Data.Models.Actions;
+﻿using AcBlog.Data.Models;
+using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
 using AcBlog.Services.Models;
 using System.Threading;
@@ -9,6 +10,8 @@ namespace AcBlog.Services
     public interface IUserService : IUserRepository
     {
         IBlogService BlogService { get; }
+
+        Task<User?> GetCurrent(CancellationToken cancellationToken = default);
 
         Task<string> Login(UserLoginRequest request, CancellationToken cancellationToken = default);
 

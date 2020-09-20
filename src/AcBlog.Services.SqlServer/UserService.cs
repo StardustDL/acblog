@@ -16,6 +16,7 @@ namespace AcBlog.Services.SqlServer
         }
 
         public Task<bool> ChangePassword(UserChangePasswordRequest request, CancellationToken cancellationToken = default) => throw new System.NotImplementedException();
+        public Task<User?> GetCurrent(CancellationToken cancellationToken = default) => throw new System.NotImplementedException();
         public Task<string> Login(UserLoginRequest request, CancellationToken cancellationToken = default) => throw new System.NotImplementedException();
     }
 }

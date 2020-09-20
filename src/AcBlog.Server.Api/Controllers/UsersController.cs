@@ -18,7 +18,7 @@ namespace AcBlog.Server.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class UsersController : RecordControllerBase<User, IUserRepository, UserQueryRequest>
+    public class UsersController : RecordControllerBase<User, IUserService, UserQueryRequest>
     {
         public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IdentityServerTools identityServerTools, IBlogService service) : base(service.UserService)
         {
@@ -56,6 +56,7 @@ namespace AcBlog.Server.Api.Controllers
                 {
                     await Service.Create(new AcBlog.Data.Models.User
                     {
+                        Name = user.UserName,
                         NickName = user.UserName,
                         Email = user.UserName,
                         Id = user.Id
@@ -105,13 +106,14 @@ namespace AcBlog.Server.Api.Controllers
             }
         }
 
-#if DEBUG
         [Authorize]
-        [HttpGet("check_token")]
-        public string CheckToken()
+        [HttpGet("current")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<User>> Current()
         {
-            return $"{User.Identity.GetSubjectId()}:{User.GetDisplayName()}:{User.IsAuthenticated()}";
+            return await Service.Get(User.Identity.GetSubjectId());
         }
-#endif
     }
 }
