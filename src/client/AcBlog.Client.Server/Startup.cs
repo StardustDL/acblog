@@ -4,7 +4,6 @@ using AcBlog.Client.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -42,28 +41,10 @@ namespace AcBlog.Client.Server
                 var server = new ServerSettings();
                 Configuration.GetSection("Server").Bind(server);
 
-                static void AddServerAuthorization(IServiceCollection services, IdentityServerSettings identityProvider)
-                {
-                    if (identityProvider.Enable)
-                    {
-                        services.AddAuthorizationCore();
-                        services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
-                        services.AddScoped<SignOutSessionStateManager>();
-                        // services.AddAuthentication();
-                        // services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-                    }
-                    else
-                    {
-                        services.AddAuthorizationCore();
-                        services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
-                        services.AddScoped<SignOutSessionStateManager>();
-                    }
-                }
 
-                AddServerAuthorization(services, server.Identity);
             }
 
-            services.AddBlogService(Configuration.GetBaseAddress());
+            services.AddBlogService(Configuration.GetBaseAddress()).AddBlogServiceAuth();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

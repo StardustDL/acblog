@@ -2,7 +2,6 @@
 @page "/posts/{id}/edit"
 @attribute [Authorize]
 @inherits BasePostPage
-@inject IAccessTokenProvider TokenProvider
 
 <Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
 
@@ -57,12 +56,6 @@
     private Post Model { get; set; }
 
     private bool IsCreate { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await Service.PostService.UseToken(TokenProvider);
-        await base.OnInitializedAsync();
-    }
 
     private async Task OnLoad()
     {

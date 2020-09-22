@@ -1,38 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>AcBlog.Client</RootNamespace>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <!--<GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<RootNamespace>AcBlog.Client</RootNamespace>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<!--<GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
 
-    <Authors>StardustDL</Authors>
-    <Company>AcBlog</Company>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/acblog</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/acblog/acblog</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-    <PackageIcon>icon.png</PackageIcon>
-  </PropertyGroup>
+		<Authors>StardustDL</Authors>
+		<Company>AcBlog</Company>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/acblog</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/acblog/acblog</RepositoryUrl>
+		<RepositoryType>Git</RepositoryType>
+		<PackageIcon>icon.png</PackageIcon>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\..\..\assets\images\icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\..\assets\images\icon.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0-rc.1.20451.14" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0-rc.1.20451.14" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0-rc.1.20451.14" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0-rc.1.20451.14" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web.Extensions" Version="5.0.0-preview9.20467.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0.0-rc.1.20451.17" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0-rc.1.20451.14" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0-rc.1.20451.14" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0-rc.1.20451.14" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0-rc.1.20451.14" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\AcBlog.Data.Repositories.Externals\AcBlog.Data.Repositories.Externals.csproj" />
-    <ProjectReference Include="..\..\AcBlog.Sdk\AcBlog.Sdk.csproj" />
-    <ProjectReference Include="..\..\StardustDL.Extensions.FileProviders.Http\StardustDL.Extensions.FileProviders.Http.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\AcBlog.Data.Repositories.Externals\AcBlog.Data.Repositories.Externals.csproj" />
+		<ProjectReference Include="..\..\AcBlog.Sdk\AcBlog.Sdk.csproj" />
+		<ProjectReference Include="..\..\StardustDL.Extensions.FileProviders.Http\StardustDL.Extensions.FileProviders.Http.csproj" />
+	</ItemGroup>
 
 </Project>

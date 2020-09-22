@@ -37,6 +37,10 @@ namespace AcBlog.Sdk.Api
                 HttpClient.DefaultRequestHeaders.Remove("Authorization");
                 HttpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Context.Token);
             }
+            else
+            {
+                HttpClient.DefaultRequestHeaders.Remove("Authorization");
+            }
         }
 
         public HttpClient HttpClient { get; }

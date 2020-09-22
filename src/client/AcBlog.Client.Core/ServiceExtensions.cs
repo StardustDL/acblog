@@ -7,9 +7,13 @@ using AcBlog.Sdk.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using AcBlog.Services;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web.Extensions;
 
 namespace AcBlog.Client
 {
+
+
     public static class ServiceExtensions
     {
         public static void AddClientConfigurations(this IServiceCollection services, IConfiguration configuration)
@@ -18,7 +22,7 @@ namespace AcBlog.Client
             services.Configure<BuildStatus>(configuration.GetSection("Build"));
         }
 
-        public static void AddBlogService(this IServiceCollection services, string baseAddress)
+        public static IServiceCollection AddBlogService(this IServiceCollection services, string baseAddress)
         {
             services.PostConfigure<ServerSettings>(settings =>
             {
@@ -51,6 +55,16 @@ namespace AcBlog.Client
             services.AddScoped<IPageRenderService, PageRenderService>();
 
             services.AddScoped<IClientUrlGenerator, ClientUrlGenerator>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddBlogServiceAuth(this IServiceCollection services)
+        {
+            services.AddAuthorizationCore();
+            services.AddScoped<AccessTokenProvider>();
+            services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+            return services;
         }
     }
 }

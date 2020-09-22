@@ -31,11 +31,6 @@ namespace AcBlog.Sdk.Api
         protected virtual void SetHeader()
         {
             (BlogService as ApiBlogService)?.SetHeader();
-            if (Context is not null && !string.IsNullOrWhiteSpace(Context.Token))
-            {
-                HttpClient.DefaultRequestHeaders.Remove("Authorization");
-                HttpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Context.Token);
-            }
         }
 
         public virtual async IAsyncEnumerable<string> All([EnumeratorCancellation] CancellationToken cancellationToken = default)

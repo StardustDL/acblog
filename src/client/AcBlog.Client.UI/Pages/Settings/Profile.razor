@@ -1,7 +1,7 @@
 ﻿@page "/settings"
 @page "/settings/profile"
 @inherits BaseSettingsPage
-@inject IAccessTokenProvider TokenProvider
+@inject AccessTokenProvider TokenProvider
 @attribute [Authorize]
 
 <Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
@@ -43,9 +43,7 @@
     protected override async Task OnInitializedAsync()
     {
         Title = "Profile";
-        var tokenResult = await TokenProvider.RequestAccessToken();
-        if (tokenResult.TryGetToken(out var token))
-            Token = token.Value;
+        Token = await TokenProvider.GetToken();
         await base.OnInitializedAsync();
     }
 

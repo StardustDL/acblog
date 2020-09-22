@@ -37,9 +37,7 @@ namespace AcBlog.Client.WebAssembly.Host
 
             services.AddClientConfigurations(Configuration);
 
-            services.AddServerPrerenderAuthorization();
-
-            services.AddBlogService(Configuration.GetBaseAddress());
+            services.AddBlogService(Configuration.GetBaseAddress()).AddBlogServiceAuth();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -55,8 +55,8 @@ namespace AcBlog.Client.WebAssembly
                 var serverSettings = await LoadServerSettings(builder, client);
 
                 builder.Services.AddClientConfigurations(builder.Configuration);
-                builder.Services.AddClientAuthorization(serverSettings.Identity);
-                builder.Services.AddBlogService(builder.HostEnvironment.BaseAddress);
+
+                builder.Services.AddBlogService(builder.HostEnvironment.BaseAddress).AddBlogServiceAuth();
             }
 
             builder.RootComponents.Add<AcBlog.Client.UI.App>("app");

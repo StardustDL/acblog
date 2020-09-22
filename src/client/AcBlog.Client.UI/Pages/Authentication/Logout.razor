@@ -1,0 +1,11 @@
+﻿@page "/authentication/logout"
+@inherits BasePage
+@inject AccessTokenProvider AccessTokenProvider
+
+@code{
+    protected override async Task OnParametersSetAsync()
+    {
+        await AccessTokenProvider.SetToken("");
+        NavigationManager.NavigateTo("/");
+    }
+}

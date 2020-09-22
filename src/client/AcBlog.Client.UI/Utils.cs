@@ -1,5 +1,4 @@
 ﻿using AcBlog.Data.Repositories;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -9,17 +8,6 @@ namespace AcBlog.Client.UI
 {
     public static class Utils
     {
-        public static async Task UseToken(this IRepository repository, IAccessTokenProvider provider)
-        {
-            var tokenResult = await provider.RequestAccessToken();
-            if (tokenResult.TryGetToken(out var token))
-            {
-                if (repository.Context is null)
-                    repository.Context = new RepositoryAccessContext();
-                repository.Context.Token = token.Value;
-            }
-        }
-
         public static string ToFriendlyString(this DateTimeOffset value)
         {
             TimeSpan tspan = DateTimeOffset.Now - value;

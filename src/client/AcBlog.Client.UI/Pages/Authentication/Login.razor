@@ -1,0 +1,92 @@
+﻿@page "/authentication/login"
+@inherits BasePage
+@inject IOptions<ServerSettings> ServerSettings
+@inject MessageService MessageService
+@inject AccessTokenProvider AccessTokenProvider
+
+<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
+
+<PageHeader>
+    <PageHeaderTitle>Login</PageHeaderTitle>
+    <PageHeaderBreadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>
+                <a href="">
+                    <MdiIcon Type="home" />
+                    <span>Home</span>
+                </a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                <span>
+                    <MdiIcon Type="login" />
+                    <span>Login</span>
+                </span>
+            </BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderBreadcrumb>
+</PageHeader>
+
+<div class="container">
+    <Form Model="@model"
+          LabelCol="new ColLayoutParam { Span = 4 }"
+          WrapperCol="new ColLayoutParam { Span = 20 }"
+          OnFinish="OnLogin">
+        <FormItem Label="User Name">
+            <Input @bind-Value="@context.Username" />
+        </FormItem>
+        <FormItem Label="Password">
+            <InputPassword @bind-Value="@context.Password" />
+        </FormItem>
+        <FormItem WrapperCol="new ColLayoutParam{ Offset = 4, Span = 20 }">
+            <Button Type="@ButtonType.Primary" HtmlType="submit">
+                Login
+            </Button>
+        </FormItem>
+    </Form>
+</div>
+
+@code{
+    class Model
+    {
+        [Required]
+        public string Username { get; set; }
+        [Required]
+        public string Password { get; set; }
+    }
+
+    private Model model = new Model();
+
+    protected override void OnInitialized()
+    {
+        Title = "Login";
+        base.OnInitialized();
+    }
+
+    async Task OnLogin()
+    {
+        try
+        {
+            var token = await Service.UserService.Login(new Services.Models.UserLoginRequest
+            {
+                UserName = model.Username,
+                Password = model.Password,
+            });
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                await AccessTokenProvider.SetToken(token);
+                Service.Context.Token = token;
+                var user = await Service.UserService.GetCurrent()!;
+                _ = MessageService.Success($"Welcome {user.NickName}");
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                await MessageService.Error($"Failed to log in.");
+            }
+        }
+        catch
+        {
+            await MessageService.Error($"Failed to log in.");
+        }
+    }
+}
