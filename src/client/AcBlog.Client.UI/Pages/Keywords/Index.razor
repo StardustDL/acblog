@@ -1,11 +1,8 @@
 ﻿@page "/keywords"
 @inherits BaseKeywordPage
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
-<PageHeader>
-    <PageHeaderTitle>Keywords</PageHeaderTitle>
-    <PageHeaderBreadcrumb>
+<PageContainer Title="Keywords" PageTitle="@Title">
+    <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
@@ -20,21 +17,20 @@
                 </span>
             </BreadcrumbItem>
         </Breadcrumb>
-    </PageHeaderBreadcrumb>
-</PageHeader>
-
-<div class="container">
-    <Loader OnLoad="@OnLoad" @ref="loader">
-        <div>
-            @foreach(var v in Data.Items)
-            {
-                <Tag Class="m-1">
-                    <a class="m-1" style="font-size: 18px" href="@UrlGenerator.Keyword(v)">@v.OneNameOrDefault()</a>
-                </Tag>
-            }
-        </div>
-    </Loader>
-</div>
+    </Breadcrumb>
+    <ChildContent>
+        <Loader OnLoad="@OnLoad" @ref="loader">
+            <div>
+                @foreach (var v in Data.Items)
+                {
+                    <Tag Class="m-1">
+                        <a class="m-1" style="font-size: 18px" href="@UrlGenerator.Keyword(v)">@v.OneNameOrDefault()</a>
+                    </Tag>
+                }
+            </div>
+        </Loader>
+    </ChildContent>
+</PageContainer>
 
 @code {
     private KeywordCollection Data;

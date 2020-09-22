@@ -2,11 +2,8 @@
 @page "/search/{query}"
 @inherits BaseSearchPage
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
-<PageHeader>
-    <PageHeaderTitle>Search</PageHeaderTitle>
-    <PageHeaderBreadcrumb>
+<PageContainer Title="Search" PageTitle="@Title">
+    <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
@@ -21,21 +18,21 @@
                 </span>
             </BreadcrumbItem>
         </Breadcrumb>
-    </PageHeaderBreadcrumb>
-    <PageHeaderContent>
+    </Breadcrumb>
+    <Content>
         <Search Placeholder="Search" Size="@InputSize.Large" OnSearch="@OnSearch" OnPressEnter="@OnSearch" @bind-Value="@CurrentQuery" />
-    </PageHeaderContent>
-</PageHeader>
+    </Content>
 
-<div class="container">
-    <Loader OnLoad="@OnLoad" LoadKey="@($"{CurrentQuery}")" @ref="loader">
-        <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo">
-            <ItemTemplate>
-                <PostListItem Id="@context" ShowType="true"></PostListItem>
-            </ItemTemplate>
-        </PagingList>
-    </Loader>
-</div>
+    <ChildContent>
+        <Loader OnLoad="@OnLoad" LoadKey="@($"{CurrentQuery}")" @ref="loader">
+            <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo">
+                <ItemTemplate>
+                    <PostListItem Id="@context" ShowType="true"></PostListItem>
+                </ItemTemplate>
+            </PagingList>
+        </Loader>
+    </ChildContent>
+</PageContainer>
 
 @code {
     [Parameter]

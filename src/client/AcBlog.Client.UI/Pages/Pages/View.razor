@@ -5,15 +5,10 @@
 @inject IPageRenderService PageService
 @using AcBlog.Client.UI.Components.Renderers
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
 <Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" LoadKey="@Route" @ref="loader">
     <ChildContent>
-        <PageHeader>
-            <PageHeaderTitle>
-                @Page.Title
-            </PageHeaderTitle>
-            <PageHeaderBreadcrumb>
+        <PageContainer Title="@Page.Title" PageTitle="@Title">
+            <Breadcrumb>
                 <Breadcrumb>
                     <BreadcrumbItem>
                         <a href="">
@@ -31,10 +26,12 @@
                         <span>@Page.Id</span>
                     </BreadcrumbItem>
                 </Breadcrumb>
-            </PageHeaderBreadcrumb>
-        </PageHeader>
+            </Breadcrumb>
 
-        @((MarkupString)Rendered)
+            <ChildContent>
+                @((MarkupString)Rendered)
+            </ChildContent>
+        </PageContainer>
     </ChildContent>
 
     <FailingContent>

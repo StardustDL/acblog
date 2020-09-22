@@ -22,10 +22,8 @@ namespace AcBlog.Client
 {
     public class ClientBlogService : IBlogService
     {
-        public ClientBlogService(IOptions<ServerSettings> serverOptions, IHttpClientFactory httpClientFactory, ILogger<ClientBlogService> logger)
+        public ClientBlogService(IOptions<ServerSettings> serverOptions, IHttpClientFactory httpClientFactory)
         {
-            logger.LogInformation("Create Client Blog Service");
-
             var server = serverOptions.Value;
             {
                 var client = httpClientFactory.CreateClient();

@@ -4,11 +4,8 @@
 @inherits BaseCategoryPage
 @inject AcBlog.Services.Filters.PostCategoryFilter Categories
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
-<PageHeader>
-    <PageHeaderTitle>@Category.OneNameOrDefault()</PageHeaderTitle>
-    <PageHeaderBreadcrumb>
+<PageContainer Title="@Category.OneNameOrDefault()" PageTitle="@Title">
+    <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
@@ -43,18 +40,17 @@
                 }
             }
         </Breadcrumb>
-    </PageHeaderBreadcrumb>
-</PageHeader>
-
-<div class="container">
-    <Loader OnLoad="@OnLoad" LoadKey="@($"{Id}-{PageNumber}")" @ref="loader">
-        <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="@PageNavigationUrl">
-            <ItemTemplate>
-                <PostListItem Id="@context" ShowType="true"></PostListItem>
-            </ItemTemplate>
-        </PagingList>
-    </Loader>
-</div>
+    </Breadcrumb>
+    <ChildContent>
+        <Loader OnLoad="@OnLoad" LoadKey="@($"{Id}-{PageNumber}")" @ref="loader">
+            <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo" PageNavigationUrl="@PageNavigationUrl">
+                <ItemTemplate>
+                    <PostListItem Id="@context" ShowType="true"></PostListItem>
+                </ItemTemplate>
+            </PagingList>
+        </Loader>
+    </ChildContent>
+</PageContainer>
 
 @code {
     const int PageSize = 10;

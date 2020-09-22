@@ -4,11 +4,8 @@
 @inject AccessTokenProvider TokenProvider
 @attribute [Authorize]
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
-<PageHeader>
-    <PageHeaderTitle>Profile</PageHeaderTitle>
-    <PageHeaderExtra>
+<PageContainer Title="Profile" PageTitle="@Title">
+    <Extra>
         <AuthorizeView>
             <Authorized>
                 <div class="btn-group-toggle mx-auto" role="group">
@@ -17,21 +14,20 @@
                 </div>
             </Authorized>
         </AuthorizeView>
-    </PageHeaderExtra>
-</PageHeader>
-
-<div class="container">
-    <div class="input-group mt-3">
-        <div class="input-group-prepend">
-            <label class="input-group-text" for="inputToken">Token</label>
+    </Extra>
+    <ChildContent>
+        <div class="input-group mt-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputToken">Token</label>
+            </div>
+            <input type="text" class="form-control" value="@(IsTokenShow ? Token : "*******")" id="inputToken" readonly @ref="_inputToken" />
+            <div class="input-group-append">
+                <button class="btn btn-secondary mdi @(IsTokenShow ? "mdi-eye-off" : "mdi-eye")" @onclick="@(()=>IsTokenShow = !IsTokenShow)">@(IsTokenShow ? "Hide" : "Show")</button>
+                <button class="btn btn-success mdi mdi-content-copy" @onclick="@OnCopyToken" disabled="@(!IsTokenShow)">Copy</button>
+            </div>
         </div>
-        <input type="text" class="form-control" value="@(IsTokenShow ? Token : "*******")" id="inputToken" readonly @ref="_inputToken" />
-        <div class="input-group-append">
-            <button class="btn btn-secondary mdi @(IsTokenShow ? "mdi-eye-off" : "mdi-eye")" @onclick="@(()=>IsTokenShow = !IsTokenShow)">@(IsTokenShow ? "Hide" : "Show")</button>
-            <button class="btn btn-success mdi mdi-content-copy" @onclick="@OnCopyToken" disabled="@(!IsTokenShow)">Copy</button>
-        </div>
-    </div>
-</div>
+    </ChildContent>
+</PageContainer>
 
 @code {
     private string Token { get; set; }

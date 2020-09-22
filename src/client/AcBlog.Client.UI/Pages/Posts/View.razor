@@ -3,14 +3,9 @@
 @inherits BasePostPage
 @using AcBlog.Client.UI.Components.Renderers
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
 <Loader OnLoad="@OnLoad" OnLoaded="@OnLoaded" LoadKey="@Id" @ref="loader">
-    <PageHeader>
-        <PageHeaderTitle>
-            @Post.Title
-        </PageHeaderTitle>
-        <PageHeaderBreadcrumb>
+    <PageContainer Title="@Post.Title" PageTitle="@Title">
+        <Breadcrumb>
             <Breadcrumb>
                 <BreadcrumbItem>
                     <a href="">
@@ -28,8 +23,8 @@
                     <span>@Post.Id</span>
                 </BreadcrumbItem>
             </Breadcrumb>
-        </PageHeaderBreadcrumb>
-        <PageHeaderExtra>
+        </Breadcrumb>
+        <Extra>
             <div class="btn-group-toggle my-auto" role="group">
                 @if (IsProtected)
                 {
@@ -41,40 +36,39 @@
                     </Authorized>
                 </AuthorizeView>
             </div>
-        </PageHeaderExtra>
-        <PageHeaderTags>
+        </Extra>
+        <Tags>
             <PostMetadataDisplay Value="@Post" />
-        </PageHeaderTags>
-    </PageHeader>
-
-    @if (IsProtected)
-    {
-        <Modal Title="@("Input Password")" Visible="inputPasswordModalVisible" OnOk="e=>OnPasswordSubmit()" OnCancel="e => inputPasswordModalVisible = false">
-            <InputPassword @bind-Value="@Password" Size="@InputSize.Large" OnPressEnter="e=>OnPasswordSubmit()" />
-        </Modal>
-    }
-    else
-    {
-        <div class="container">
-            @switch (Post.Type)
+        </Tags>
+        <ChildContent>
+            @if (IsProtected)
             {
-                case PostType.Article:
-                case PostType.Note:
-                    <ArticleRenderer Document="@Post.Content"></ArticleRenderer>
-                    break;
-                case PostType.Slides:
-                    <SlidesRenderer Document="@Post.Content" Style="@SlidesStyle"></SlidesRenderer>
-                    <button type="button" class="btn btn-primary mt-2" style="width: 100%;" @onclick="@OnFullViewClick">Full View</button>
-                    break;
-                default:
-                    break;
+                <Modal Title="@("Input Password")" Visible="inputPasswordModalVisible" OnOk="e=>OnPasswordSubmit()" OnCancel="e => inputPasswordModalVisible = false">
+                    <InputPassword @bind-Value="@Password" Size="@InputSize.Large" OnPressEnter="e=>OnPasswordSubmit()" />
+                </Modal>
             }
+            else
+            {
+                @switch (Post.Type)
+                {
+                    case PostType.Article:
+                    case PostType.Note:
+                        <ArticleRenderer Document="@Post.Content"></ArticleRenderer>
+                        break;
+                    case PostType.Slides:
+                        <SlidesRenderer Document="@Post.Content" Style="@SlidesStyle"></SlidesRenderer>
+                        <button type="button" class="btn btn-primary mt-2" style="width: 100%;" @onclick="@OnFullViewClick">Full View</button>
+                        break;
+                    default:
+                        break;
+                }
 
-            <div class="mt-5">
-                <CommentList Uri="@UrlGenerator.Post(Post)"></CommentList>
-            </div>
-        </div>
-    }
+                <div class="mt-5">
+                    <CommentList Uri="@UrlGenerator.Post(Post)"></CommentList>
+                </div>
+            }
+        </ChildContent>
+    </PageContainer>
 </Loader>
 
 @code {

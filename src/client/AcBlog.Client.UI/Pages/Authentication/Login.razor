@@ -4,11 +4,8 @@
 @inject MessageService MessageService
 @inject AccessTokenProvider AccessTokenProvider
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
-<PageHeader>
-    <PageHeaderTitle>Login</PageHeaderTitle>
-    <PageHeaderBreadcrumb>
+<PageContainer Title="Login" PageTitle="@Title">
+    <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
@@ -23,27 +20,26 @@
                 </span>
             </BreadcrumbItem>
         </Breadcrumb>
-    </PageHeaderBreadcrumb>
-</PageHeader>
-
-<div class="container">
-    <Form Model="@model"
-          LabelCol="new ColLayoutParam { Span = 4 }"
-          WrapperCol="new ColLayoutParam { Span = 20 }"
-          OnFinish="OnLogin">
-        <FormItem Label="User Name">
-            <Input @bind-Value="@context.Username" />
-        </FormItem>
-        <FormItem Label="Password">
-            <InputPassword @bind-Value="@context.Password" />
-        </FormItem>
-        <FormItem WrapperCol="new ColLayoutParam{ Offset = 4, Span = 20 }">
-            <Button Type="@ButtonType.Primary" HtmlType="submit">
-                Login
-            </Button>
-        </FormItem>
-    </Form>
-</div>
+    </Breadcrumb>
+    <ChildContent>
+        <Form Model="@model"
+              LabelCol="new ColLayoutParam { Span = 4 }"
+              WrapperCol="new ColLayoutParam { Span = 20 }"
+              OnFinish="OnLogin">
+            <FormItem Label="User Name">
+                <Input @bind-Value="@context.Username" />
+            </FormItem>
+            <FormItem Label="Password">
+                <InputPassword @bind-Value="@context.Password" />
+            </FormItem>
+            <FormItem WrapperCol="new ColLayoutParam{ Offset = 4, Span = 20 }">
+                <Button Type="@ButtonType.Primary" HtmlType="submit">
+                    Login
+                </Button>
+            </FormItem>
+        </Form>
+    </ChildContent>
+</PageContainer>
 
 @code{
     class Model

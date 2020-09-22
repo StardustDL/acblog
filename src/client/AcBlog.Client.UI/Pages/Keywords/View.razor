@@ -4,11 +4,8 @@
 @inherits BaseKeywordPage
 @inject AcBlog.Services.Filters.PostKeywordFilter Keywords
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
-<PageHeader>
-    <PageHeaderTitle> @(Keyword.OneNameOrDefault()) </PageHeaderTitle>
-    <PageHeaderBreadcrumb>
+<PageContainer Title="@(Keyword.OneNameOrDefault())" PageTitle="@Title">
+    <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
@@ -26,18 +23,17 @@
                 <span>@(Keyword.OneNameOrDefault())</span>
             </BreadcrumbItem>
         </Breadcrumb>
-    </PageHeaderBreadcrumb>
-</PageHeader>
-
-<div class="container">
-    <Loader OnLoad="@OnLoad" LoadKey="@($"{Id}-{PageNumber}")" @ref="loader">
-        <PagingList Data="@Data" Column="1" PageNavigationUrl="@PageNavigationUrl">
-            <ItemTemplate>
-                <PostListItem Id="@context" ShowType="true"></PostListItem>
-            </ItemTemplate>
-        </PagingList>
-    </Loader>
-</div>
+    </Breadcrumb>
+    <ChildContent>
+        <Loader OnLoad="@OnLoad" LoadKey="@($"{Id}-{PageNumber}")" @ref="loader">
+            <PagingList Data="@Data" Column="1" PageNavigationUrl="@PageNavigationUrl">
+                <ItemTemplate>
+                    <PostListItem Id="@context" ShowType="true"></PostListItem>
+                </ItemTemplate>
+            </PagingList>
+        </Loader>
+    </ChildContent>
+</PageContainer>
 
 @code {
     const int PageSize = 10;

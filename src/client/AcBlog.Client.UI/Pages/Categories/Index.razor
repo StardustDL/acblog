@@ -1,11 +1,8 @@
 ﻿@page "/categories"
 @inherits BaseCategoryPage
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
-<PageHeader>
-    <PageHeaderTitle>Categories</PageHeaderTitle>
-    <PageHeaderBreadcrumb>
+<PageContainer Title="Categories" PageTitle="@Title">
+    <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
@@ -20,17 +17,16 @@
                 </span>
             </BreadcrumbItem>
         </Breadcrumb>
-    </PageHeaderBreadcrumb>
-</PageHeader>
-
-<div class="container">
-    <Loader OnLoad="@OnLoad" @ref="loader">
-        <div>
-            <Tree Nodes="TreeNodes">
-            </Tree>
-        </div>
-    </Loader>
-</div>
+    </Breadcrumb>
+    <ChildContent>
+        <Loader OnLoad="@OnLoad" @ref="loader">
+            <div>
+                <Tree Nodes="TreeNodes">
+                </Tree>
+            </div>
+        </Loader>
+    </ChildContent>
+</PageContainer>
 
 @code {
     private CategoryTree Data;
@@ -57,16 +53,16 @@
             NodeTemplate = ctx =>
     @<Template>
         <span style="font-size: 18px;" class="m-1">
-            <MdiIcon Type="folder"/>
+            <MdiIcon Type="folder" />
             <a href="@UrlGenerator.Category(node.Category)">@node.Category.OneNameOrDefault()</a>
         </span>
     </Template>,
-            IsExpanded = true,
-        };
-        foreach (var v in node.Children.Values)
-        {
-            result.Nodes.Add(BuildTreeNode(v));
-        }
-        return result;
-    }
+ IsExpanded = true,
+};
+foreach (var v in node.Children.Values)
+{
+ result.Nodes.Add(BuildTreeNode(v));
+}
+return result;
+}
 }

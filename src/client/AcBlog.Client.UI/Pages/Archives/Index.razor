@@ -1,11 +1,8 @@
 ﻿@page "/archives"
 @inherits BaseArchivePage
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
-<PageHeader>
-    <PageHeaderTitle>Archives</PageHeaderTitle>
-    <PageHeaderBreadcrumb>
+<PageContainer Title="Archives" PageTitle="@Title">
+    <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
@@ -20,41 +17,40 @@
                 </span>
             </BreadcrumbItem>
         </Breadcrumb>
-    </PageHeaderBreadcrumb>
-</PageHeader>
-
-<div class="container">
-    <Loader OnLoad="@OnLoad" LoadKey="@($"{PageNumber}")" @ref="loader">
-        <Timeline Mode="alternate">
-            @foreach (var item in Data)
-            {
-                <TimelineItem Color="@($"#{((item.Key.GetHashCode() + 1) % 0xffffff + 1).ToString("X6")}")" Style="font-size: 16px;">
-                    <p>@item.Key</p>
-                    @foreach (var p in item.Value)
-                    {
-                        <p>
-                            @switch (p.Type)
-                            {
-                                case PostType.Article:
-                                    <MdiIcon Type="feather" />
-                                    break;
-                                case PostType.Slides:
-                                    <MdiIcon Type="presentation" />
-                                    break;
-                                case PostType.Note:
-                                    <MdiIcon Type="file-document" />
-                                    break;
-                                default:
-                                    break;
-                            }
-                            <a href="@UrlGenerator.Post(p)">@p.Title</a>
-                        </p>
-                    }
-                </TimelineItem>
-            }
-        </Timeline>
-    </Loader>
-</div>
+    </Breadcrumb>
+    <ChildContent>
+        <Loader OnLoad="@OnLoad" LoadKey="@($"{PageNumber}")" @ref="loader">
+            <Timeline Mode="alternate">
+                @foreach (var item in Data)
+                {
+                    <TimelineItem Color="@($"#{((item.Key.GetHashCode() + 1) % 0xffffff + 1).ToString("X6")}")" Style="font-size: 16px;">
+                        <p>@item.Key</p>
+                        @foreach (var p in item.Value)
+                        {
+                            <p>
+                                @switch (p.Type)
+                                {
+                                    case PostType.Article:
+                                        <MdiIcon Type="feather" />
+                                        break;
+                                    case PostType.Slides:
+                                        <MdiIcon Type="presentation" />
+                                        break;
+                                    case PostType.Note:
+                                        <MdiIcon Type="file-document" />
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                <a href="@UrlGenerator.Post(p)">@p.Title</a>
+                            </p>
+                        }
+                    </TimelineItem>
+                }
+            </Timeline>
+        </Loader>
+    </ChildContent>
+</PageContainer>
 
 @code {
     const int PageSize = 10;
@@ -73,11 +69,11 @@
         Data.Clear();
         var rawData = Service.PostService.GetAllItems();
         var grouped = (from d in rawData orderby d.CreationTime descending group d by d.CreationTime.ToLocalTime().ToString("yyyy-MM-dd"));
-        await foreach(var item in grouped)
+        await foreach (var item in grouped)
         {
             var list = new List<Post>();
             Data.Add(item.Key, list);
-            await foreach(var p in item)
+            await foreach (var p in item)
             {
                 list.Add(p);
             }

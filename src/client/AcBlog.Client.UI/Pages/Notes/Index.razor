@@ -4,11 +4,8 @@
 @inherits BaseNotePage
 @inject AcBlog.Services.Filters.PostNoteFilter Notes
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
-<PageHeader>
-    <PageHeaderTitle>Notes</PageHeaderTitle>
-    <PageHeaderBreadcrumb>
+<PageContainer Title="Notes" PageTitle="@Title">
+    <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
@@ -29,8 +26,8 @@
                 </span>
             </BreadcrumbItem>
         </Breadcrumb>
-    </PageHeaderBreadcrumb>
-    <PageHeaderExtra>
+    </Breadcrumb>
+    <Extra>
         <AuthorizeView>
             <Authorized>
                 <div class="btn-group-toggle mx-auto" role="group">
@@ -38,18 +35,18 @@
                 </div>
             </Authorized>
         </AuthorizeView>
-    </PageHeaderExtra>
-</PageHeader>
+    </Extra>
 
-<div class="container">
-    <Loader OnLoad="@OnLoad" LoadKey="@($"{PageNumber}")" @ref="loader">
-        <PagingList Data="@Data" Column="1" PageNavigationUrl="@UrlGenerator.Notes()">
-            <ItemTemplate>
-                <PostListItem Id="@context"></PostListItem>
-            </ItemTemplate>
-        </PagingList>
-    </Loader>
-</div>
+    <ChildContent>
+        <Loader OnLoad="@OnLoad" LoadKey="@($"{PageNumber}")" @ref="loader">
+            <PagingList Data="@Data" Column="1" PageNavigationUrl="@UrlGenerator.Notes()">
+                <ItemTemplate>
+                    <PostListItem Id="@context"></PostListItem>
+                </ItemTemplate>
+            </PagingList>
+        </Loader>
+    </ChildContent>
+</PageContainer>
 
 @code {
     const int PageSize = 10;

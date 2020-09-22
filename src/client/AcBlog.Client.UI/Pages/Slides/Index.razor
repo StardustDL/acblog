@@ -4,11 +4,8 @@
 @inherits BaseSlidePage
 @inject AcBlog.Services.Filters.PostSlidesFilter Slides
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
-<PageHeader>
-    <PageHeaderTitle>Slides</PageHeaderTitle>
-    <PageHeaderBreadcrumb>
+<PageContainer Title="Slides" PageTitle="@Title">
+    <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
@@ -29,8 +26,8 @@
                 </span>
             </BreadcrumbItem>
         </Breadcrumb>
-    </PageHeaderBreadcrumb>
-    <PageHeaderExtra>
+    </Breadcrumb>
+    <Extra>
         <AuthorizeView>
             <Authorized>
                 <div class="btn-group-toggle mx-auto" role="group">
@@ -38,18 +35,17 @@
                 </div>
             </Authorized>
         </AuthorizeView>
-    </PageHeaderExtra>
-</PageHeader>
-
-<div class="container">
-    <Loader OnLoad="@OnLoad" @ref="loader">
-        <PagingList Data="@Data" Column="1" PageNavigationUrl="@UrlGenerator.Slides()">
-            <ItemTemplate>
-                <PostListItem Id="@context"></PostListItem>
-            </ItemTemplate>
-        </PagingList>
-    </Loader>
-</div>
+    </Extra>
+    <ChildContent>
+        <Loader OnLoad="@OnLoad" @ref="loader">
+            <PagingList Data="@Data" Column="1" PageNavigationUrl="@UrlGenerator.Slides()">
+                <ItemTemplate>
+                    <PostListItem Id="@context"></PostListItem>
+                </ItemTemplate>
+            </PagingList>
+        </Loader>
+    </ChildContent>
+</PageContainer>
 
 @code {
     const int PageSize = 10;

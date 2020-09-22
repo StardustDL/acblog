@@ -1,0 +1,54 @@
+﻿<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@PageTitle"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
+
+<PageHeader Title="@Title" PageHeaderBreadcrumb="@Breadcrumb" PageHeaderExtra="@Extra" PageHeaderContent="@Content" PageHeaderTags="@Tags">
+</PageHeader>
+
+<Container>
+    @ChildContent
+</Container>
+
+@code {
+    private RenderFragment _breadcrumb;
+    private RenderFragment _extra;
+    private RenderFragment _content;
+    private RenderFragment _tags;
+
+    [Parameter]
+    public string PageTitle { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment Content
+    {
+        get => _content ?? (builder => { });
+        set => _content = value;
+    }
+
+    [Parameter]
+    public RenderFragment Tags
+    {
+        get => _tags ?? (builder => { });
+        set => _tags = value;
+    }
+
+
+    [Parameter]
+    public RenderFragment Breadcrumb
+    {
+        get => _breadcrumb ?? (builder => { });
+        set => _breadcrumb = value;
+    }
+
+    [Parameter]
+    public RenderFragment Extra
+    {
+        get => _extra ?? (builder => { });
+        set => _extra = value;
+    }
+}

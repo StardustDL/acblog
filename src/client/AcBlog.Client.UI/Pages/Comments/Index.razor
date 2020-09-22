@@ -5,11 +5,8 @@
 @inherits BaseCommentPage
 @using AcBlog.Client.UI.Components.Renderers
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
-
-<PageHeader>
-    <PageHeaderTitle>Comments</PageHeaderTitle>
-    <PageHeaderBreadcrumb>
+<PageContainer Title="Comments" PageTitle="@Title">
+    <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
@@ -24,18 +21,17 @@
                 </span>
             </BreadcrumbItem>
         </Breadcrumb>
-    </PageHeaderBreadcrumb>
-</PageHeader>
-
-<div class="container">
-    <Loader OnLoad="@OnLoad" LoadKey="@($"{PageNumber}")" @ref="loader">
-        <PagingList Data="@Data" Column="1" PageNavigationUrl="@UrlGenerator.Comments()">
-            <ItemTemplate>
-                <CommentListItem Id="@context" ShowSource="@true"></CommentListItem>
-            </ItemTemplate>
-        </PagingList>
-    </Loader>
-</div>
+    </Breadcrumb>
+    <ChildContent>
+        <Loader OnLoad="@OnLoad" LoadKey="@($"{PageNumber}")" @ref="loader">
+            <PagingList Data="@Data" Column="1" PageNavigationUrl="@UrlGenerator.Comments()">
+                <ItemTemplate>
+                    <CommentListItem Id="@context" ShowSource="@true"></CommentListItem>
+                </ItemTemplate>
+            </PagingList>
+        </Loader>
+    </ChildContent>
+</PageContainer>
 
 @code {
     const int PageSize = 10;
