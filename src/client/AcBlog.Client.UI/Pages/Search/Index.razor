@@ -24,7 +24,7 @@
     </Content>
 
     <ChildContent>
-        <Loader OnLoad="@OnLoad" LoadKey="@($"{CurrentQuery}")" @ref="loader">
+        <Loader OnLoad="@OnLoad" @ref="loader">
             <PagingList Data="@Data" Column="1" OnUpdatePage="@OnUpdatePage" OnPageTo="@OnPageTo">
                 <ItemTemplate>
                     <PostListItem Id="@context" ShowType="true"></PostListItem>
@@ -79,13 +79,13 @@
 
     private async Task OnUpdatePage() => await loader.Load();
 
-    private void OnSearch()
+    private async Task OnSearch()
     {
         if (string.IsNullOrWhiteSpace(CurrentQuery))
             return;
         PageNumber = 0;
         NavigationManager.NavigateTo(UrlGenerator.Search(CurrentQuery));
-        StateHasChanged();
+        await loader.Load();
     }
 
     protected override void OnParametersSet()

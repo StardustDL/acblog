@@ -2,58 +2,107 @@
 @page "/posts/{id}/edit"
 @attribute [Authorize]
 @inherits BasePostPage
+@inject MessageService MessageService
+@using OneOf
 
-<Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@Title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
+<Loader OnLoad="@OnLoad">
+    <PageContainer Title="@(IsCreate ? "Create Post" : "Edit Post")" PageTitle="@Title">
+        <Breadcrumb>
+            <Breadcrumb>
+                <BreadcrumbItem>
+                    <a href="">
+                        <MdiIcon Type="home" />
+                        <span>Home</span>
+                    </a>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                    <a href="@UrlGenerator.Posts()">
+                        <MdiIcon Type="post" />
+                        <span>Posts</span>
+                    </a>
+                </BreadcrumbItem>
+                @if (IsCreate)
+                {
+                    <BreadcrumbItem>
+                        <a href="@UrlGenerator.Post(Target)">
+                            <span>@Target.Id</span>
+                        </a>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem>
+                        <span>Edit</span>
+                    </BreadcrumbItem>
+                }
+                else
+                {
+                    <BreadcrumbItem>
+                        <span>Create</span>
+                    </BreadcrumbItem>
+                }
+            </Breadcrumb>
+        </Breadcrumb>
+        <ChildContent>
+            <Form Model="@model"
+                  OnFinish="OnSubmit">
+                <FormItem Label="Title">
+                    <Input @bind-Value="@context.Title" />
+                </FormItem>
+                <FormItem Label="Type">
+                    <RadioGroup @bind-Value="@context.Type">
+                        <Radio RadioButton Value="@(PostType.Article)">Article</Radio>
+                        <Radio RadioButton Value="@(PostType.Slides)">Slides</Radio>
+                        <Radio RadioButton Value="@(PostType.Note)">Note</Radio>
+                    </RadioGroup>
+                </FormItem>
+                <FormItem Label="Category">
+                    <Input Placeholder="Input as a/b/c." @bind-Value="@context.CategoryString"/>
+                </FormItem>
+                <FormItem Label="Keywords">
+                    <Input Placeholder="Input as a;b;c." @bind-Value="@context.KeywordsString"/>
+                </FormItem>
+                <FormItem Label="Content">
+                    <TextArea @bind-Value="@context.Content.Raw" AutoSize="@true" MinRows="10"></TextArea>
+                </FormItem>
+                <FormItem>
+                    <Button Type="@ButtonType.Primary" HtmlType="submit">
+                        @if (IsCreate)
+                        {
+                            <span>Create</span>
+                        }
+                        else
+                        {
+                            <span>Update</span>
+                        }
+                    </Button>
+                </FormItem>
+            </Form>
+        </ChildContent>
+    </PageContainer>
 
-<div class="container">
-    <ItemEditor IsCreate="@IsCreate" Title="@(IsCreate ? "Create post" : "Edit post")" OnCheckValidation="@OnCheckValidation" OnCreate="@OnCreate" OnDelete="@OnDelete" OnUpdate="@OnUpdate">
-        <Loader OnLoad="@OnLoad">
-            <div class="input-group mt-3">
-                <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputTitle">Title</label>
-                </div>
-                <input type="text" class="form-control" @bind-value="Model.Title" id="inputTitle" required />
-            </div>
-
-            <div class="input-group mt-3">
-                <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputType">Type</label>
-                </div>
-                <select class="custom-select" id="inputType" @bind="Model.Type">
-                    <option value="@PostType.Article" class="mdi mdi-presentation">Article</option>
-                    <option value="@PostType.Slides">Slides</option>
-                    <option value="@PostType.Note">Note</option>
-                </select>
-            </div>
-
-            <div class="input-group mt-3">
-                <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputCategory">Category</label>
-                </div>
-                <select class="custom-select" id="inputCategory">
-                    <option value="@string.Empty"></option>
-                </select>
-            </div>
-
-            <div class="form-group mt-3">
-                <label class="col-form-label">Keywords</label>
-                <span class="form-control">
-                </span>
-            </div>
-
-            <div class="form-group mt-3">
-                <label for="inputContent" class="col-form-label">Content</label>
-                <textarea class="form-control" id="inputContent" @bind="Model.Content.Raw" style="height: 800px" />
-            </div>
-        </Loader>
-    </ItemEditor>
-</div>
+</Loader>
 
 @code {
     [Parameter]
     public string Id { get; set; }
 
-    private Post Model { get; set; }
+    class Model
+    {
+        public PostType Type { get; set; } = PostType.Article;
+
+        public string Author { get; set; } = string.Empty;
+
+        public Document Content { get; set; } = new Document();
+
+        [Required]
+        public string Title { get; set; } = string.Empty;
+
+        public string CategoryString { get; set; }
+
+        public string KeywordsString { get; set; }
+    }
+
+    private Model model;
+
+    private Post Target { get; set; }
 
     private bool IsCreate { get; set; }
 
@@ -62,56 +111,76 @@
         Title = "Loading...";
         if (string.IsNullOrWhiteSpace(Id))
         {
-            Model = new Post();
+            Target = new Post();
             IsCreate = true;
             Title = "New";
         }
         else
         {
-            Model = await Service.PostService.Get(Id);
+            Target = await Service.PostService.Get(Id);
             IsCreate = false;
             Title = "Edit";
         }
+        model = new Model
+        {
+            Author = Target.Author,
+            Content = Target.Content,
+            Title = Target.Title,
+            Type = Target.Type,
+            CategoryString = Target.Category.ToString(),
+            KeywordsString = Target.Keywords.ToString(),
+        };
     }
 
-    private Task OnCheckValidation(ModelValidation validation)
+    private void ModelToTarget()
     {
-        if (string.IsNullOrWhiteSpace(Model.Title))
+        Target.Author = model.Author;
+        Target.Category = Category.Parse(model.CategoryString);
+        Target.Keywords = Keyword.Parse(model.KeywordsString);
+        Target.Title = model.Title;
+        Target.Content = model.Content;
+        Target.Type = model.Type;
+    }
+
+    async Task OnSubmit()
+    {
+        try
         {
-            validation.Errors.Add("Title is empty.");
+            ModelToTarget();
         }
-        return Task.CompletedTask;
-    }
-
-    private async Task OnCreate(EventCallbackResult<bool> result)
-    {
-        Model.CreationTime = DateTimeOffset.Now;
-        var id = await Service.PostService.Create(Model);
-        result.Result = id is not null;
-        if (id is not null)
+        catch
         {
-            NavigationManager.NavigateTo($"posts/{Uri.EscapeDataString(id)}");
+            _ = MessageService.Error("Invalid input.");
+            return;
         }
-    }
+        Target.ModificationTime = DateTimeOffset.Now;
 
-    private async Task OnUpdate(EventCallbackResult<bool> result)
-    {
-        Model.ModificationTime = DateTimeOffset.Now;
-        var pass = await Service.PostService.Update(Model);
-        result.Result = pass;
-        if (pass)
+        if (IsCreate)
         {
-            NavigationManager.NavigateTo($"posts/{Uri.EscapeDataString(Model.Id)}");
+            Target.CreationTime = DateTimeOffset.Now;
+            var id = await Service.PostService.Create(Target);
+            if (id is not null)
+            {
+                _ = MessageService.Success("Created post successfully.");
+                NavigationManager.NavigateTo($"posts/{Uri.EscapeDataString(id)}");
+            }
+            else
+            {
+                _ = MessageService.Error("Failed to create post.");
+            }
         }
-    }
-
-    private async Task OnDelete(EventCallbackResult<bool> result)
-    {
-        var pass = await Service.PostService.Delete(Model.Id);
-        result.Result = pass;
-        if (pass)
+        else
         {
-            NavigationManager.NavigateTo("posts");
+            var pass = await Service.PostService.Update(Target);
+            if (pass)
+            {
+                _ = MessageService.Success("Updated post successfully.");
+                NavigationManager.NavigateTo($"posts/{Uri.EscapeDataString(Target.Id)}");
+            }
+            else
+            {
+                _ = MessageService.Error("Failed to update post.");
+            }
         }
     }
 }
