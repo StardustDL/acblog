@@ -84,6 +84,7 @@ namespace AcBlog.Data.Repositories.SqlServer
 
         public virtual async Task<QueryStatistic> Statistic(TQuery query, CancellationToken cancellationToken = default)
         {
+            query.Pagination = null;
             var count = await InnerQuery(query).CountAsync(cancellationToken).ConfigureAwait(false);
             return new QueryStatistic
             {

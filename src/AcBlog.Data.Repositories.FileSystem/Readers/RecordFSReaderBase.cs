@@ -81,6 +81,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public override async Task<QueryStatistic> Statistic(TQuery query, CancellationToken cancellationToken = default)
         {
+            query.Pagination = null;
             if (await EfficientStatistic(query, cancellationToken) is QueryStatistic res)
             {
                 return res;
