@@ -4,6 +4,7 @@
 @attribute [Authorize]
 @inherits BasePostPage
 @inject MessageService MessageService
+@using AcBlog.Client.UI.Components.Renderers
 @using OneOf
 
 <Loader OnLoad="@OnLoad">
@@ -42,6 +43,9 @@
             </Breadcrumb>
         </Breadcrumb>
         <Extra>
+            <Button OnClick="OnPreview">
+                Preview
+            </Button>
             <Button Type="@ButtonType.Primary" OnClick="OnSubmit">
                 @if (IsCreate)
                 {
@@ -86,6 +90,20 @@
                     <TextArea @bind-Value="@context.Content.Raw" AutoSize="@true" MinRows="10"></TextArea>
                 </FormItem>
             </Form>
+            <Drawer Closable Width="600" Visible="@Preview" Placement="right" Title="@("Preview")" OnClose="@(_ => Preview = false)">
+                @switch (PreviewPost.Type)
+                {
+                    case PostType.Article:
+                    case PostType.Note:
+                        <ArticleRenderer Document="@PreviewPost.Content"></ArticleRenderer>
+                        break;
+                    case PostType.Slides:
+                        <SlidesRenderer Document="@PreviewPost.Content" Style="border: 0; height: 500px; width: 100%"></SlidesRenderer>
+                        break;
+                    default:
+                        break;
+                }
+            </Drawer>
         </ChildContent>
     </PageContainer>
 
@@ -97,6 +115,10 @@
 
     [Parameter]
     public string CreateType { get; set; }
+
+    private bool Preview { get; set; }
+
+    private Post PreviewPost { get; set; } = new Post();
 
     class Model
     {
@@ -121,6 +143,13 @@
     private Post Target { get; set; }
 
     private bool IsCreate { get; set; }
+
+    private void OnPreview()
+    {
+        PreviewPost.Type = model.Type;
+        PreviewPost.Content.Raw = model.Content.Raw;
+        Preview = true;
+    }
 
     private async Task OnLoad()
     {
