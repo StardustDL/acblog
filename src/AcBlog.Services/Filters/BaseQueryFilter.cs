@@ -14,7 +14,7 @@ namespace AcBlog.Services.Filters
 
         public TService BaseService { get; protected set; }
 
-        public abstract Task<PagingData<TResult>> Filter(Pagination? pagination = null);
+        public abstract Task<PagingData<TResult>> Filter(Pagination? pagination = null, QueryTimeOrder order = QueryTimeOrder.None);
     }
 
     public abstract class BaseQueryFilter<TService, TResult, T> : IQueryFilter<TService, TResult, T>
@@ -26,6 +26,6 @@ namespace AcBlog.Services.Filters
 
         public TService BaseService { get; protected set; }
 
-        public abstract Task<PagingData<TResult>> Filter(T arg, Pagination? pagination = null);
+        public abstract Task<PagingData<TResult>> Filter(T arg, Pagination? pagination = null, QueryTimeOrder order = QueryTimeOrder.None);
     }
 }

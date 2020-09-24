@@ -26,6 +26,8 @@
 
         public const string Page = "book-open";
 
+        public const string Delete = "delete";
+
         public const string Edit = "square-edit-outline";
 
         public const string Login = "login";

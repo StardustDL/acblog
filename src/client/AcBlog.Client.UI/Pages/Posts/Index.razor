@@ -60,7 +60,8 @@
             {
                 CurrentPage = PageNumber ?? 0,
                 PageSize = PageSize
-            }
+            },
+            Order = QueryTimeOrder.CreationTimeDescending,
         });
         Title = $"Page {Data.CurrentPage.CurrentPage + 1}";
     }

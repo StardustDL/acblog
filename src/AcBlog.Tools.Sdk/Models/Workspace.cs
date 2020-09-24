@@ -264,6 +264,8 @@ namespace AcBlog.Tools.Sdk.Models
 
                             Logger.LogInformation($"Fetch remote posts.");
 
+                            await Remote.SetOptions(await Local.GetOptions());
+
                             await SyncRecordRepository(Local.PostService, Remote.PostService, full);
 
                             await SyncRecordRepository(Local.PageService, Remote.PageService, full);

@@ -9,13 +9,13 @@ namespace AcBlog.Services
     {
         TService BaseService { get; }
 
-        Task<PagingData<TResult>> Filter(Pagination? pagination);
+        Task<PagingData<TResult>> Filter(Pagination? pagination, QueryTimeOrder order = QueryTimeOrder.None);
     }
 
     public interface IQueryFilter<TService, TResult, T>
     {
         TService BaseService { get; }
 
-        Task<PagingData<TResult>> Filter(T arg, Pagination? pagination);
+        Task<PagingData<TResult>> Filter(T arg, Pagination? pagination, QueryTimeOrder order = QueryTimeOrder.None);
     }
 }

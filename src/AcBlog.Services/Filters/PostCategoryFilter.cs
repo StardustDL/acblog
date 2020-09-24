@@ -13,12 +13,13 @@ namespace AcBlog.Services.Filters
         {
         }
 
-        public override Task<PagingData<string>> Filter(Category? arg, Pagination? pagination = null)
+        public override Task<PagingData<string>> Filter(Category? arg, Pagination? pagination = null, QueryTimeOrder order = QueryTimeOrder.None)
         {
             return BaseService.QueryPaging(new PostQueryRequest
             {
                 Category = arg,
-                Pagination = pagination
+                Pagination = pagination,
+                Order = order,
             });
         }
     }

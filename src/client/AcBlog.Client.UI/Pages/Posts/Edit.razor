@@ -41,9 +41,31 @@
                 }
             </Breadcrumb>
         </Breadcrumb>
+        <Extra>
+            <Button Type="@ButtonType.Primary" OnClick="OnSubmit">
+                @if (IsCreate)
+                {
+                    <MdiIcon Type="@IconNames.Create"></MdiIcon>
+                    <span>Create</span>
+                }
+                else
+                {
+                    <MdiIcon Type="@IconNames.Edit"></MdiIcon>
+                    <span>Update</span>
+                }
+            </Button>
+            @if (!IsCreate)
+            {
+                <Popconfirm Title="@("Are you sure delete this post?")" OnConfirm="OnDelete" Placement="@PlacementType.BottomRight">
+                    <Button Danger>
+                        <MdiIcon Type="@IconNames.Delete"></MdiIcon>
+                        <span>Delete</span>
+                    </Button>
+                </Popconfirm>
+            }
+        </Extra>
         <ChildContent>
-            <Form Model="@model"
-                  OnFinish="OnSubmit">
+            <Form @ref="form" Model="@model">
                 <FormItem Label="Title">
                     <Input @bind-Value="@context.Title" />
                 </FormItem>
@@ -62,18 +84,6 @@
                 </FormItem>
                 <FormItem Label="Content">
                     <TextArea @bind-Value="@context.Content.Raw" AutoSize="@true" MinRows="10"></TextArea>
-                </FormItem>
-                <FormItem>
-                    <Button Type="@ButtonType.Primary" HtmlType="submit">
-                        @if (IsCreate)
-                        {
-                            <span>Create</span>
-                        }
-                        else
-                        {
-                            <span>Update</span>
-                        }
-                    </Button>
                 </FormItem>
             </Form>
         </ChildContent>
@@ -105,6 +115,8 @@
     }
 
     private Model model;
+
+    private Form<Model> form;
 
     private Post Target { get; set; }
 
@@ -153,8 +165,29 @@
         Target.Type = model.Type;
     }
 
+    async Task OnDelete()
+    {
+        if (IsCreate)
+            return;
+        var pass = await Service.PostService.Delete(Target.Id);
+        if (pass)
+        {
+            _ = MessageService.Success("Deleted post successfully.");
+            NavigationManager.NavigateTo($"posts");
+        }
+        else
+        {
+            _ = MessageService.Error("Failed to delete post.");
+        }
+    }
+
     async Task OnSubmit()
     {
+        if (!form.Validate())
+        {
+            _ = MessageService.Error("Invalid input.");
+            return;
+        }
         try
         {
             ModelToTarget();
