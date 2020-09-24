@@ -1,28 +1,28 @@
-﻿@page "/articles"
-@page "/articles/pages"
-@page "/articles/pages/{pageNumber:int}"
-@inherits BaseArticlePage
-@inject AcBlog.Services.Filters.PostArticleFilter Article
+﻿@page "/slides"
+@page "/slides/pages"
+@page "/slides/pages/{pageNumber:int}"
+@inherits BaseSlidePage
+@inject AcBlog.Services.Filters.PostSlidesFilter Slides
 
-<PageContainer Title="Articles" PageTitle="@Title">
+<PageContainer Title="Slides" PageTitle="@Title">
     <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
-                    <MdiIcon Type="home" />
+                    <MdiIcon Type="@IconNames.Home" />
                     <span>Home</span>
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
                 <a href="@UrlGenerator.Posts()">
-                    <MdiIcon Type="post" />
+                    <MdiIcon Type="@IconNames.Posts" />
                     <span>Posts</span>
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
                 <span>
-                    <MdiIcon Type="feather" />
-                    <span>Articles</span>
+                    <MdiIcon Type="@IconNames.Slides" />
+                    <span>Slides</span>
                 </span>
             </BreadcrumbItem>
         </Breadcrumb>
@@ -30,15 +30,16 @@
     <Extra>
         <AuthorizeView>
             <Authorized>
-                <div class="btn-group-toggle mx-auto" role="group">
-                    <a class="btn btn-success mdi mdi-plus" href="posts/new">Create</a>
-                </div>
+                <ButtonLink Href="@($"posts/create/slides")">
+                    <MdiIcon Type="@IconNames.Create"></MdiIcon>
+                    <span>Create</span>
+                </ButtonLink>
             </Authorized>
         </AuthorizeView>
     </Extra>
     <ChildContent>
-        <Loader OnLoad="@OnLoad" LoadKey="@($"{PageNumber}")" @ref="loader">
-            <PagingList Data="@Data" Column="1" PageNavigationUrl="@UrlGenerator.Articles()">
+        <Loader OnLoad="@OnLoad" @ref="loader">
+            <PagingList Data="@Data" Column="1" PageNavigationUrl="@UrlGenerator.Slides()">
                 <ItemTemplate>
                     <PostListItem Id="@context"></PostListItem>
                 </ItemTemplate>
@@ -60,7 +61,7 @@
     private async Task OnLoad()
     {
         Title = "Loading...";
-        Data = await Article.Filter(new Data.Models.Actions.Pagination
+        Data = await Slides.Filter(new Data.Models.Actions.Pagination
         {
             CurrentPage = PageNumber ?? 0,
             PageSize = PageSize

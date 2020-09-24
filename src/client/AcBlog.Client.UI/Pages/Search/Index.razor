@@ -2,18 +2,20 @@
 @page "/search/{query}"
 @inherits BaseSearchPage
 
+@using AcBlog.Client.UI.Pages.Posts.Components
+
 <PageContainer Title="Search" PageTitle="@Title">
     <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
-                    <MdiIcon Type="home" />
+                    <MdiIcon Type="@IconNames.Home" />
                     <span>Home</span>
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
                 <span>
-                    <MdiIcon Type="magnify" />
+                    <MdiIcon Type="@IconNames.Search" />
                     <span>Search</span>
                 </span>
             </BreadcrumbItem>

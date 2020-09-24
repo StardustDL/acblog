@@ -9,13 +9,13 @@
             <Breadcrumb>
                 <BreadcrumbItem>
                     <a href="">
-                        <MdiIcon Type="home" />
+                        <MdiIcon Type="@IconNames.Home" />
                         <span>Home</span>
                     </a>
                 </BreadcrumbItem>
                 <BreadcrumbItem>
                     <a href="@UrlGenerator.Posts()">
-                        <MdiIcon Type="post" />
+                        <MdiIcon Type="@IconNames.Posts" />
                         <span>Posts</span>
                     </a>
                 </BreadcrumbItem>
@@ -25,17 +25,18 @@
             </Breadcrumb>
         </Breadcrumb>
         <Extra>
-            <div class="btn-group-toggle my-auto" role="group">
-                @if (IsProtected)
-                {
-                    <button class="btn btn-success mdi mdi-shield-key-outline" @onclick="e => inputPasswordModalVisible = true">Deprotect</button>
-                }
-                <AuthorizeView>
-                    <Authorized>
-                        <a class="btn btn-primary mdi mdi-square-edit-outline" href="posts/@Uri.EscapeDataString(Id)/edit">Edit</a>
-                    </Authorized>
-                </AuthorizeView>
-            </div>
+            @if (IsProtected)
+            {
+                <button class="btn btn-success mdi mdi-shield-key-outline" @onclick="e => inputPasswordModalVisible = true">Deprotect</button>
+            }
+            <AuthorizeView>
+                <Authorized>
+                    <ButtonLink Href="@($"posts/{Uri.EscapeDataString(Id)}/edit")">
+                        <MdiIcon Type="@IconNames.Edit"></MdiIcon>
+                        <span>Edit</span>
+                    </ButtonLink>
+                </Authorized>
+            </AuthorizeView>
         </Extra>
         <Tags>
             <PostMetadataDisplay Value="@Post" />
@@ -64,7 +65,7 @@
                 }
 
                 <div class="mt-5">
-                    <CommentList Uri="@UrlGenerator.Post(Post)"></CommentList>
+                    <AcBlog.Client.UI.Pages.Comments.Components.CommentList Uri="@UrlGenerator.Post(Post)"></AcBlog.Client.UI.Pages.Comments.Components.CommentList>
                 </div>
             }
         </ChildContent>

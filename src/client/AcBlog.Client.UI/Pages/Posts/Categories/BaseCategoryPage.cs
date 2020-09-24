@@ -1,17 +1,17 @@
 ﻿using AcBlog.Client.UI.Shared;
 
-namespace AcBlog.Client.UI.Pages.Articles
+namespace AcBlog.Client.UI.Pages.Posts.Categories
 {
-    public class BaseArticlePage : BasePage
+    public class BaseCategoryPage : BasePage
     {
         protected override string Title
         {
             get => base.Title; set
             {
                 if (string.IsNullOrEmpty(value))
-                    value = $"Articles";
+                    value = $"Categories";
                 else
-                    value = $"{value} - Articles";
+                    value = $"{value} - Categories";
                 base.Title = value;
             }
         }

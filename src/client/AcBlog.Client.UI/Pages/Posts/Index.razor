@@ -8,13 +8,13 @@
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
-                    <MdiIcon Type="home" />
+                    <MdiIcon Type="@IconNames.Home" />
                     <span>Home</span>
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
                 <span>
-                    <MdiIcon Type="post" />
+                    <MdiIcon Type="@IconNames.Posts" />
                     <span>Posts</span>
                 </span>
             </BreadcrumbItem>
@@ -23,9 +23,10 @@
     <Extra>
         <AuthorizeView>
             <Authorized>
-                <div class="btn-group-toggle mx-auto" role="group">
-                    <a class="btn btn-success mdi mdi-plus" href="posts/new">Create</a>
-                </div>
+                <ButtonLink Href="@($"posts/create")">
+                    <MdiIcon Type="@IconNames.Create"></MdiIcon>
+                    <span>Create</span>
+                </ButtonLink>
             </Authorized>
         </AuthorizeView>
     </Extra>

@@ -11,13 +11,13 @@
                         switch (Post.Type)
                         {
                             case PostType.Article:
-                                <MdiIcon Type="feather" />
+                                <MdiIcon Type="@IconNames.Articles" />
                                 break;
                             case PostType.Slides:
-                                <MdiIcon Type="presentation" />
+                                <MdiIcon Type="@IconNames.Slides" />
                                 break;
                             case PostType.Note:
-                                <MdiIcon Type="file-document" />
+                                <MdiIcon Type="@IconNames.Notes" />
                                 break;
                             default:
                                 break;
@@ -35,7 +35,7 @@
         @if (!IsProtected)
         {
             <p>
-                <AcBlog.Client.UI.Components.Displays.DocumentPreviewDisplay Document="@Post.Content" />
+                <DocumentPreviewDisplay Document="@Post.Content" />
             </p>
         }
         else

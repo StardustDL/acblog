@@ -1,4 +1,5 @@
-﻿@page "/posts/new"
+﻿@page "/posts/create"
+@page "/posts/create/{createType}"
 @page "/posts/{id}/edit"
 @attribute [Authorize]
 @inherits BasePostPage
@@ -11,17 +12,17 @@
             <Breadcrumb>
                 <BreadcrumbItem>
                     <a href="">
-                        <MdiIcon Type="home" />
+                        <MdiIcon Type="@IconNames.Home" />
                         <span>Home</span>
                     </a>
                 </BreadcrumbItem>
                 <BreadcrumbItem>
                     <a href="@UrlGenerator.Posts()">
-                        <MdiIcon Type="post" />
+                        <MdiIcon Type="@IconNames.Posts" />
                         <span>Posts</span>
                     </a>
                 </BreadcrumbItem>
-                @if (IsCreate)
+                @if (!IsCreate)
                 {
                     <BreadcrumbItem>
                         <a href="@UrlGenerator.Post(Target)">
@@ -54,10 +55,10 @@
                     </RadioGroup>
                 </FormItem>
                 <FormItem Label="Category">
-                    <Input Placeholder="Input as a/b/c." @bind-Value="@context.CategoryString"/>
+                    <Input Placeholder="Input as a/b/c." @bind-Value="@context.CategoryString" />
                 </FormItem>
                 <FormItem Label="Keywords">
-                    <Input Placeholder="Input as a;b;c." @bind-Value="@context.KeywordsString"/>
+                    <Input Placeholder="Input as a;b;c." @bind-Value="@context.KeywordsString" />
                 </FormItem>
                 <FormItem Label="Content">
                     <TextArea @bind-Value="@context.Content.Raw" AutoSize="@true" MinRows="10"></TextArea>
@@ -83,6 +84,9 @@
 @code {
     [Parameter]
     public string Id { get; set; }
+
+    [Parameter]
+    public string CreateType { get; set; }
 
     class Model
     {
@@ -112,6 +116,13 @@
         if (string.IsNullOrWhiteSpace(Id))
         {
             Target = new Post();
+            Target.Type = CreateType switch
+            {
+                "article" => PostType.Article,
+                "slides" => PostType.Slides,
+                "note" => PostType.Note,
+                _ => PostType.Article
+            };
             IsCreate = true;
             Title = "New";
         }

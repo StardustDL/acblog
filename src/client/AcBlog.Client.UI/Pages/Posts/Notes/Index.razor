@@ -9,19 +9,19 @@
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
-                    <MdiIcon Type="home" />
+                    <MdiIcon Type="@IconNames.Home" />
                     <span>Home</span>
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
                 <a href="@UrlGenerator.Posts()">
-                    <MdiIcon Type="post" />
+                    <MdiIcon Type="@IconNames.Posts" />
                     <span>Posts</span>
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
                 <span>
-                    <MdiIcon Type="file-document" />
+                    <MdiIcon Type="@IconNames.Notes" />
                     <span>Notes</span>
                 </span>
             </BreadcrumbItem>
@@ -30,9 +30,10 @@
     <Extra>
         <AuthorizeView>
             <Authorized>
-                <div class="btn-group-toggle mx-auto" role="group">
-                    <a class="btn btn-success mdi mdi-plus" href="posts/new">Create</a>
-                </div>
+                <ButtonLink Href="@($"posts/create/note")">
+                    <MdiIcon Type="@IconNames.Create"></MdiIcon>
+                    <span>Create</span>
+                </ButtonLink>
             </Authorized>
         </AuthorizeView>
     </Extra>

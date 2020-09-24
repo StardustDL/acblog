@@ -1,0 +1,15 @@
+﻿@inject NavigationManager NavigationManager
+
+<AntDesign.Button OnClick="@(e=>NavigationManager.NavigateTo(Href))">
+    <a href="@Href">
+        @ChildContent
+    </a>
+</AntDesign.Button>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Href { get; set; }
+}

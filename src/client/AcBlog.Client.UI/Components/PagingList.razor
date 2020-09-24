@@ -67,18 +67,20 @@
         PaginationItemRenderer = ctx => @<Template>
             @if (ctx.Type is "page")
             {
-                <a href="@($"{PageNavigationUrl}/pages/{ctx.Page - 1}")">@(ctx.Page)</a>
+                <a href="@($"{PageNavigationUrl}/pages/{ctx.Page - 1}")">
+                    @ctx.DefaultRender(ctx)
+                </a>
             }
             else if (ctx.Type is "prev" && Data.CurrentPage.HasPreviousPage)
             {
                 <a href="@($"{PageNavigationUrl}/pages/{Data.CurrentPage.CurrentPage - 1}")">
-                    @("<")
+                    @ctx.DefaultRender(ctx)
                 </a>
             }
             else if (ctx.Type is "next" && Data.CurrentPage.HasNextPage)
             {
                 <a href="@($"{PageNavigationUrl}/pages/{Data.CurrentPage.CurrentPage + 1}")">
-                    @(">")
+                    @ctx.DefaultRender(ctx)
                 </a>
             }
             else

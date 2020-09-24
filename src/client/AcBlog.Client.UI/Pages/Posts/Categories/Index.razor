@@ -6,13 +6,13 @@
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
-                    <MdiIcon Type="home" />
+                    <MdiIcon Type="@IconNames.Home" />
                     <span>Home</span>
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
                 <span>
-                    <MdiIcon Type="folder" />
+                    <MdiIcon Type="@IconNames.Category" />
                     <span>Categories</span>
                 </span>
             </BreadcrumbItem>
@@ -53,7 +53,7 @@
             NodeTemplate = ctx =>
     @<Template>
         <span style="font-size: 18px;" class="m-1">
-            <MdiIcon Type="folder" />
+            <MdiIcon Type="@IconNames.Category" />
             <a href="@UrlGenerator.Category(node.Category)">@node.Category.OneNameOrDefault()</a>
         </span>
     </Template>,

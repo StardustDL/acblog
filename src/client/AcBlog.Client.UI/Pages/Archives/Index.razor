@@ -6,13 +6,13 @@
         <Breadcrumb>
             <BreadcrumbItem>
                 <a href="">
-                    <MdiIcon Type="home" />
+                    <MdiIcon Type="@IconNames.Home" />
                     <span>Home</span>
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
                 <span>
-                    <MdiIcon Type="archive" />
+                    <MdiIcon Type="@IconNames.Archive" />
                     <span>Archives</span>
                 </span>
             </BreadcrumbItem>
@@ -31,13 +31,13 @@
                                 @switch (p.Type)
                                 {
                                     case PostType.Article:
-                                        <MdiIcon Type="feather" />
+                                        <MdiIcon Type="@IconNames.Articles" />
                                         break;
                                     case PostType.Slides:
-                                        <MdiIcon Type="presentation" />
+                                        <MdiIcon Type="@IconNames.Slides" />
                                         break;
                                     case PostType.Note:
-                                        <MdiIcon Type="file-document" />
+                                        <MdiIcon Type="@IconNames.Notes" />
                                         break;
                                     default:
                                         break;

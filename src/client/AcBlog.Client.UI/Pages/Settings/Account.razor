@@ -1,0 +1,62 @@
+﻿@page "/settings"
+@page "/settings/account"
+@inherits BaseSettingsPage
+@inject AccessTokenProvider TokenProvider
+@attribute [Authorize]
+
+<PageContainer Title="Account" PageTitle="@Title">
+    <Breadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>
+                <a href="">
+                    <MdiIcon Type="@IconNames.Home" />
+                    <span>Home</span>
+                </a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                <span>
+                    <MdiIcon Type="@IconNames.Settings" />
+                    <span>Settings</span>
+                </span>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+                <span>
+                    <MdiIcon Type="@IconNames.Account" />
+                    <span>Account</span>
+                </span>
+            </BreadcrumbItem>
+        </Breadcrumb>
+    </Breadcrumb>
+    <Extra>
+        <AuthorizeView>
+            <Authorized>
+                <ButtonLink Href="authentication/changePassword">
+                    <MdiIcon Type="@IconNames.ChangePassword"></MdiIcon>
+                    <span>Change Password</span>
+                </ButtonLink>
+                <ButtonLink Href="authentication/logout">
+                    <MdiIcon Type="@IconNames.Logout"></MdiIcon>
+                    <span>Logout</span>
+                </ButtonLink>
+            </Authorized>
+        </AuthorizeView>
+    </Extra>
+    <ChildContent>
+        <InputPassword Value="@Token">
+            <Prefix>
+                <MdiIcon Type="@IconNames.Key"></MdiIcon>
+            </Prefix>
+        </InputPassword>
+    </ChildContent>
+</PageContainer>
+
+@code {
+    private string Token { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Title = "Account";
+        Token = await TokenProvider.GetToken();
+        await base.OnInitializedAsync();
+    }
+}

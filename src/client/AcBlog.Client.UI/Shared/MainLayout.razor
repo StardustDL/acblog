@@ -12,7 +12,7 @@
                 @BlogOptions.Name
             </MenuItem>
             <MenuItem>
-                <MdiIcon Type="home" />
+                <MdiIcon Type="@IconNames.Home" />
                 <span>
                     <MenuLink href="" Match="NavLinkMatch.All">
                         Home
@@ -21,7 +21,7 @@
             </MenuItem>
             @{
                 RenderFragment PostsSubMenuTitle = @<span>
-                    <MdiIcon Type="post" />
+                    <MdiIcon Type="@IconNames.Posts" />
                     <span>
                         <MenuLink href="posts">
                             Posts
@@ -31,7 +31,7 @@
             }
             <SubMenu Title="@PostsSubMenuTitle">
                 <MenuItem>
-                    <MdiIcon Type="feather" />
+                    <MdiIcon Type="@IconNames.Articles" />
                     <span>
                         <MenuLink href="articles">
                             Articles
@@ -39,7 +39,7 @@
                     </span>
                 </MenuItem>
                 <MenuItem>
-                    <MdiIcon Type="presentation" />
+                    <MdiIcon Type="@IconNames.Slides" />
                     <span>
                         <MenuLink href="slides">
                             Slides
@@ -47,7 +47,7 @@
                     </span>
                 </MenuItem>
                 <MenuItem>
-                    <MdiIcon Type="file-document" />
+                    <MdiIcon Type="@IconNames.Notes" />
                     <span>
                         <MenuLink href="notes">
                             Notes
@@ -56,7 +56,7 @@
                 </MenuItem>
             </SubMenu>
             <MenuItem>
-                <MdiIcon Type="folder" />
+                <MdiIcon Type="@IconNames.Category" />
                 <span>
                     <MenuLink href="categories">
                         Categories
@@ -64,7 +64,7 @@
                 </span>
             </MenuItem>
             <MenuItem>
-                <MdiIcon Type="tag-multiple" />
+                <MdiIcon Type="@IconNames.Keywords" />
                 <span>
                     <MenuLink href="keywords">
                         Keywords
@@ -72,7 +72,7 @@
                 </span>
             </MenuItem>
             <MenuItem>
-                <MdiIcon Type="archive" />
+                <MdiIcon Type="@IconNames.Archive" />
                 <span>
                     <MenuLink href="archives">
                         Archives
@@ -80,7 +80,7 @@
                 </span>
             </MenuItem>
             <MenuItem>
-                <MdiIcon Type="comment" />
+                <MdiIcon Type="@IconNames.Comment" />
                 <span>
                     <MenuLink href="comments">
                         Comments
@@ -88,7 +88,7 @@
                 </span>
             </MenuItem>
             <MenuItem>
-                <MdiIcon Type="magnify" />
+                <MdiIcon Type="@IconNames.Search" />
                 <span>
                     <MenuLink href="search">
                         Search
@@ -96,7 +96,7 @@
                 </span>
             </MenuItem>
             <MenuItem>
-                <MdiIcon Type="cog" />
+                <MdiIcon Type="@IconNames.Settings" />
                 <span>
                     <MenuLink href="settings">
                         Settings
