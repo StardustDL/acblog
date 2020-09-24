@@ -18,8 +18,7 @@
     }
 </Loader>
 
-<AntDesign.Comment Author="@CommentModel.Author" Content="@Editor" Avatar="@Utils.GetGravatarUrl(CommentModel.Email)">
-
+<AntDesign.Comment Author="@model.Author" Content="@Editor" Avatar="@Utils.GetGravatarUrl(model.Email)">
 </AntDesign.Comment>
 
 @code {
@@ -35,38 +34,30 @@
 
     private Loader loader;
 
-    private AcBlog.Data.Models.Comment CommentModel = new Data.Models.Comment();
+    private AcBlog.Data.Models.Comment model = new Data.Models.Comment();
 
     protected override void OnInitialized()
     {
         Editor =
-    @<div>
-        <div class="input-group mt-1">
-            <div class="input-group-prepend">
-                <label class="input-group-text">Name</label>
-            </div>
-            <input type="text" class="form-control" @bind-value="@CommentModel.Author" required />
-        </div>
-        <div class="input-group mt-1">
-            <div class="input-group-prepend">
-                <label class="input-group-text">Email</label>
-            </div>
-            <input type="text" class="form-control" @bind-value="@CommentModel.Email" />
-        </div>
-        <div class="input-group mt-1">
-            <div class="input-group-prepend">
-                <label class="input-group-text">Link</label>
-            </div>
-            <input type="text" class="form-control" @bind-value="@CommentModel.Link" />
-        </div>
-        <div class="form-group mt-1">
-            <label class="col-form-label">Content</label>
-            <textarea class="form-control" @bind="CommentModel.Content" style="height: 100px" />
-        </div>
-        <Button Loading="@IsSubmitting" OnClick="OnSubmit" Type="@ButtonType.Primary" Class="mt-1">
+    @<Form Model="@model" OnFinish="OnSubmit">
+    <FormItem Label="Name">
+        <Input @bind-Value="@model.Author" />
+    </FormItem>
+    <FormItem Label="Email">
+        <Input @bind-Value="@model.Email" />
+    </FormItem>
+    <FormItem Label="Link">
+        <Input @bind-Value="@model.Link" />
+    </FormItem>
+    <FormItem Label="Content">
+        <TextArea @bind-Value="@model.Content" AutoSize="@true" MinRows="5"></TextArea>
+    </FormItem>
+    <FormItem>
+        <Button HtmlType="submit" Type="@ButtonType.Primary">
             Reply
         </Button>
-    </div>;
+    </FormItem>
+</Form>;
         base.OnInitialized();
     }
 
@@ -94,13 +85,13 @@
     {
         IsSubmitting = true;
 
-        CommentModel.Uri = Uri;
-        CommentModel.CreationTime = DateTimeOffset.Now;
-        CommentModel.ModificationTime = DateTimeOffset.Now;
+        model.Uri = Uri;
+        model.CreationTime = DateTimeOffset.Now;
+        model.ModificationTime = DateTimeOffset.Now;
 
         try
         {
-            await Service.CommentService.Create(CommentModel);
+            await Service.CommentService.Create(model);
         }
         catch
         {
@@ -111,7 +102,7 @@
         }
 
         IsSubmitting = false;
-        CommentModel = new Data.Models.Comment();
+        model = new Data.Models.Comment();
 
         await OnUpdatePage();
     }
