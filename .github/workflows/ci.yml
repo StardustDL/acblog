@@ -51,7 +51,7 @@ jobs:
         token: ${{ secrets.PA_TOKEN }}
         event-type: cd
     - name: CD Preview
-      if: ${{ github.event_name == 'push' && github.ref != 'refs/heads/master' }}
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/dev' }}
       uses: peter-evans/repository-dispatch@v1
       with:
         token: ${{ secrets.PA_TOKEN }}

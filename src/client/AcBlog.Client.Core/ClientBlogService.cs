@@ -17,6 +17,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using AcBlog.Services.Models;
 
 namespace AcBlog.Client
 {
@@ -27,10 +28,10 @@ namespace AcBlog.Client
             var server = serverOptions.Value;
             {
                 var client = httpClientFactory.CreateClient();
-                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
+                /*client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
                 {
                     NoCache = true
-                };
+                };*/
                 if (string.IsNullOrEmpty(server.Main.Uri))
                 {
                     client.BaseAddress = new Uri($"{server.BaseAddress.TrimEnd('/')}/data/");
@@ -163,6 +164,7 @@ namespace AcBlog.Client
 
         public Task<BlogOptions> GetOptions(CancellationToken cancellationToken = default) => Main.GetOptions(cancellationToken);
         public Task<bool> SetOptions(BlogOptions options, CancellationToken cancellationToken = default) => Main.SetOptions(options, cancellationToken);
+        public Task<QueryResponse<string>> Query(BlogQueryRequest query, CancellationToken cancellationToken = default) => Main.Query(query, cancellationToken);
 
         class EmptyCommentRepo : EmptyRecordRepository<Comment, string, CommentQueryRequest>, ICommentRepository
         {

@@ -1,9 +1,9 @@
 ﻿using AcBlog.Data.Models;
 using System;
 
-namespace AcBlog.Sdk.Helpers
+namespace AcBlog.Services.Generators
 {
-    public class ClientUrlGenerator : IClientUrlGenerator
+    public class ClientUriGenerator : IClientUriGenerator
     {
         private string _baseAddress = string.Empty;
 

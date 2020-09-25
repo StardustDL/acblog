@@ -1,6 +1,5 @@
 ﻿using AcBlog.Data.Extensions;
 using AcBlog.Data.Models;
-using AcBlog.Sdk.Helpers;
 using AcBlog.Services;
 using Markdig;
 using System;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
 
-namespace AcBlog.Sdk.Syndication
+namespace AcBlog.Services.Generators.Syndication
 {
     public static class SyndicationExtensions
     {
@@ -17,7 +16,7 @@ namespace AcBlog.Sdk.Syndication
 
         public static async Task<SyndicationFeed> BuildSyndication(this IBlogService service, string baseAddress)
         {
-            ClientUrlGenerator generator = new ClientUrlGenerator
+            ClientUriGenerator generator = new ClientUriGenerator
             {
                 BaseAddress = baseAddress
             };

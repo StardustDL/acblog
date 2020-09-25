@@ -1,8 +1,8 @@
 ﻿using AcBlog.Data.Models;
 
-namespace AcBlog.Sdk.Helpers
+namespace AcBlog.Services.Generators
 {
-    public interface IClientUrlGenerator
+    public interface IClientUriGenerator
     {
         string Search(string query = "");
         string Archives();

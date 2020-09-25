@@ -1,5 +1,7 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
+using AcBlog.Services.Models;
 using StardustDL.Extensions.FileProviders;
 using System;
 using System.Text.Json;
@@ -42,6 +44,11 @@ namespace AcBlog.Services.FileSystem
             await using var fs = await (await FileProvider.GetFileInfo("blog.json").ConfigureAwait(false)).CreateReadStream().ConfigureAwait(false);
             return await JsonSerializer.DeserializeAsync<BlogOptions>(fs, cancellationToken: cancellationToken)
                 .ConfigureAwait(false) ?? throw new NullReferenceException("Options is null");
+        }
+
+        public Task<QueryResponse<string>> Query(BlogQueryRequest query, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(QueryResponse.Error<string>()); // TODO: use generated sitemap
         }
 
         public Task<bool> SetOptions(BlogOptions options, CancellationToken cancellationToken = default) => throw new NotImplementedException();

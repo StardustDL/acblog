@@ -27,7 +27,6 @@
     <PackageReference Include="Markdig" Version="0.21.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Scriban" Version="2.1.4" />
-    <PackageReference Include="System.ServiceModel.Syndication" Version="5.0.0-rc.1.20451.14" />
   </ItemGroup>
 
   <ItemGroup>

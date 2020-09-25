@@ -3,6 +3,8 @@ using AcBlog.Data.Repositories.SqlServer.Models;
 using AcBlog.Server.Api.Data;
 using AcBlog.Server.Api.Models;
 using AcBlog.Services;
+using Hangfire;
+using Hangfire.SqlServer;
 using Loment;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -44,6 +46,12 @@ namespace AcBlog.Server.Api
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
                 services.AddScoped<IBlogService, AcBlog.Services.SqlServer.SqlServerBlogService>();
+
+                // services.AddScoped<IPostRepository, AcBlog.Data.Repositories.SqlServer.PostRepository>();
+            }
+            {
+                services.AddDbContext<ServiceDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("ServiceConnection")));
 
                 // services.AddScoped<IPostRepository, AcBlog.Data.Repositories.SqlServer.PostRepository>();
             }
@@ -130,6 +138,24 @@ namespace AcBlog.Server.Api
                         builder.WithOrigins(Configuration.GetSection("Cors").Get<string[]>());
                     });
             });
+
+            {
+                services.AddHangfire(configuration => configuration
+                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UseSqlServerStorage(Configuration.GetConnectionString("ServiceConnection"), new SqlServerStorageOptions
+                    {
+                        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                        QueuePollInterval = TimeSpan.Zero,
+                        UseRecommendedIsolationLevel = true,
+                        DisableGlobalLocks = true,
+                    }));
+
+                // Add the processing server as IHostedService
+                services.AddHangfireServer();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -145,6 +171,7 @@ namespace AcBlog.Server.Api
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
 
+                app.UseHangfireDashboard();
                 app.UseSwagger();
 
                 app.UseSwaggerUI(c =>

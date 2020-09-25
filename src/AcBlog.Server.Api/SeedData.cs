@@ -1,4 +1,5 @@
 ﻿using AcBlog.Data.Repositories.SqlServer.Models;
+using AcBlog.Server.Api.Data;
 using AcBlog.Server.Api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -39,9 +40,16 @@ namespace AcBlog.Server.Api
 
         public static async Task InitializeDb(IServiceProvider serviceProvider)
         {
-            var context = serviceProvider.GetRequiredService<BlogDataContext>();
-            await context.Database.EnsureCreatedAsync();
-            await context.SaveChangesAsync();
+            {
+                var context = serviceProvider.GetRequiredService<BlogDataContext>();
+                await context.Database.EnsureCreatedAsync();
+                await context.SaveChangesAsync();
+            }
+            {
+                var context = serviceProvider.GetRequiredService<ServiceDbContext>();
+                await context.Database.EnsureCreatedAsync();
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

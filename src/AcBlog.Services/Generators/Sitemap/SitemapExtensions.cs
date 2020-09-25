@@ -1,16 +1,14 @@
 ﻿using AcBlog.Data.Extensions;
-using AcBlog.Sdk.Helpers;
-using AcBlog.Services;
 using System.Threading.Tasks;
 
-namespace AcBlog.Sdk.Sitemap
+namespace AcBlog.Services.Generators.Sitemap
 {
     public static class SyndicationExtensions
     {
         public static async Task<SitemapBuilder> BuildSitemap(this IBlogService service, string baseAddress)
         {
             SitemapBuilder siteMapBuilder = new SitemapBuilder();
-            ClientUrlGenerator generator = new ClientUrlGenerator
+            ClientUriGenerator generator = new ClientUriGenerator
             {
                 BaseAddress = baseAddress
             };

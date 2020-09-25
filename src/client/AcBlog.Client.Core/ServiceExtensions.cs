@@ -3,12 +3,12 @@ using AcBlog.Data.Pages;
 using AcBlog.Data.Repositories;
 using AcBlog.Sdk;
 using AcBlog.Services.Extensions;
-using AcBlog.Sdk.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using AcBlog.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web.Extensions;
+using AcBlog.Services.Generators;
 
 namespace AcBlog.Client
 {
@@ -54,7 +54,7 @@ namespace AcBlog.Client
             services.AddScoped<IMarkdownRenderService, MarkdownRenderService>();
             services.AddScoped<IPageRenderService, PageRenderService>();
 
-            services.AddScoped<IClientUrlGenerator, ClientUrlGenerator>();
+            services.AddScoped<IClientUriGenerator, ClientUriGenerator>();
 
             return services;
         }

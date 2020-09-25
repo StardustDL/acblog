@@ -1,4 +1,4 @@
-﻿namespace AcBlog.Sdk.Sitemap
+﻿namespace AcBlog.Services.Generators.Sitemap
 {
     public enum ChangeFrequency
     {

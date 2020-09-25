@@ -5,8 +5,6 @@ using AcBlog.Data.Repositories.FileSystem.Builders;
 using AcBlog.Sdk;
 using AcBlog.Sdk.Api;
 using AcBlog.Services.FileSystem;
-using AcBlog.Sdk.Sitemap;
-using AcBlog.Sdk.Syndication;
 using AcBlog.Tools.Sdk.Helpers;
 using AcBlog.Tools.Sdk.Repositories;
 using LibGit2Sharp;
@@ -27,6 +25,8 @@ using System.Xml;
 using AcBlog.Services;
 using AcBlog.Data.Repositories;
 using AcBlog.Data.Models.Actions;
+using AcBlog.Services.Generators.Sitemap;
+using AcBlog.Services.Generators.Syndication;
 
 namespace AcBlog.Tools.Sdk.Models
 {

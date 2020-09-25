@@ -1,6 +1,8 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
 using AcBlog.Services;
+using AcBlog.Services.Models;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -77,6 +79,14 @@ namespace AcBlog.Sdk.Api
             using var responseMessage = await HttpClient.PostAsJsonAsync($"{PrepUrl}/options", options, cancellationToken).ConfigureAwait(false);
             responseMessage.EnsureSuccessStatusCode();
             return await responseMessage.Content.ReadFromJsonAsync<bool>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<QueryResponse<string>> Query(BlogQueryRequest query, CancellationToken cancellationToken = default)
+        {
+            SetHeader();
+            using var responseMessage = await HttpClient.PostAsJsonAsync($"{PrepUrl}/query", query, cancellationToken).ConfigureAwait(false);
+            responseMessage.EnsureSuccessStatusCode();
+            return await responseMessage.Content.ReadFromJsonAsync<QueryResponse<string>>(cancellationToken: cancellationToken).ConfigureAwait(false) ?? QueryResponse.Error<string>();
         }
     }
 }

@@ -1,11 +1,17 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
 using AcBlog.Data.Repositories.SqlServer.Models;
+using AcBlog.Services.Generators.Sitemap;
+using AcBlog.Services.Generators.Syndication;
+using AcBlog.Services.Models;
 using System;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace AcBlog.Services.SqlServer
 {
@@ -73,6 +79,33 @@ namespace AcBlog.Services.SqlServer
             }
             await DataContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             return true;
+        }
+
+        public async Task<QueryResponse<string>> Query(BlogQueryRequest query, CancellationToken cancellationToken = default)
+        {
+            switch (query.Type)
+            {
+                case BlogQueryRequestStrings.Sitemap:
+                    {
+                        var baseAddress = query.GetBaseAddress() ?? string.Empty;
+                        var siteMapBuilder = await this.BuildSitemap(baseAddress);
+                        StringBuilder sb = new StringBuilder();
+                        await using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Async = true }))
+                            siteMapBuilder.Build().WriteTo(writer);
+                        return QueryResponse.Success(sb.ToString());
+                    }
+                case BlogQueryRequestStrings.AtomFeed:
+                    {
+                        var baseAddress = query.GetBaseAddress() ?? string.Empty;
+                        var feed = await this.BuildSyndication(baseAddress);
+                        StringBuilder sb = new StringBuilder();
+                        using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Async = true }))
+                            feed.GetAtom10Formatter().WriteTo(writer);
+                        return QueryResponse.Success(sb.ToString());
+                    }
+                default:
+                    return QueryResponse.Error<string>();
+            }
         }
     }
 }

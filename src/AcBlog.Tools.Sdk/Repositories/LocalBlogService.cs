@@ -1,7 +1,9 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Data.Models.Actions;
 using AcBlog.Data.Repositories;
 using AcBlog.Sdk;
 using AcBlog.Services;
+using AcBlog.Services.Models;
 using AcBlog.Tools.Sdk.Models;
 using System;
 using System.IO;
@@ -58,5 +60,6 @@ namespace AcBlog.Tools.Sdk.Repositories
         }
 
         public Task<bool> SetOptions(BlogOptions options, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+        public Task<QueryResponse<string>> Query(BlogQueryRequest query, CancellationToken cancellationToken = default) => throw new NotImplementedException();
     }
 }

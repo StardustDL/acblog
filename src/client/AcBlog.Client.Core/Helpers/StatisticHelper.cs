@@ -1,7 +1,7 @@
 ﻿using AcBlog.Data.Models;
 using AcBlog.Sdk;
-using AcBlog.Sdk.Helpers;
 using AcBlog.Services;
+using AcBlog.Services.Generators;
 using System;
 using System.Threading.Tasks;
 
@@ -9,7 +9,7 @@ namespace AcBlog.Client.Helpers
 {
     public static class StatisticHelper
     {
-        public static async Task Visited(this IStatisticService service, IClientUrlGenerator urlGenerator, Post data)
+        public static async Task Visited(this IStatisticService service, IClientUriGenerator urlGenerator, Post data)
         {
             if (service is null)
                 return;
@@ -30,7 +30,7 @@ namespace AcBlog.Client.Helpers
             }
         }
 
-        public static async Task<int?> Count(this IStatisticService service, IClientUrlGenerator urlGenerator, Post data)
+        public static async Task<int?> Count(this IStatisticService service, IClientUriGenerator urlGenerator, Post data)
         {
             if (service is null)
                 return null;

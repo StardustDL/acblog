@@ -1,7 +1,6 @@
 ﻿using AcBlog.Sdk;
-using AcBlog.Sdk.Sitemap;
-using AcBlog.Sdk.Syndication;
 using AcBlog.Services;
+using AcBlog.Services.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Text;
@@ -31,33 +30,16 @@ namespace AcBlog.Client.Server.Controllers
         [HttpGet("sitemap.xml")]
         public async Task<ActionResult> GetSitemap()
         {
-            var siteMapBuilder = await BlogService.BuildSitemap(BaseAddress);
-            StringBuilder sb = new StringBuilder();
-            await using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Async = true }))
-                siteMapBuilder.Build().WriteTo(writer);
-            return Content(sb.ToString(), "text/xml");
+            var result = await BlogService.QuerySitemap(BaseAddress);
+            return Content(result.Result, "text/xml");
         }
 
         [HttpGet("atom")]
         [HttpGet("atom.xml")]
         public async Task<ActionResult> GetAtomFeed()
         {
-            var feed = await BlogService.BuildSyndication(BaseAddress);
-            StringBuilder sb = new StringBuilder();
-            await using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Async = true }))
-                feed.GetAtom10Formatter().WriteTo(writer);
-            return Content(sb.ToString(), "application/atom+xml");
-        }
-
-        [HttpGet("rss")]
-        [HttpGet("rss.xml")]
-        public async Task<ActionResult> GetRssFeed()
-        {
-            var feed = await BlogService.BuildSyndication(BaseAddress);
-            StringBuilder sb = new StringBuilder();
-            using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Async = true }))
-                feed.GetRss20Formatter().WriteTo(writer);
-            return Content(sb.ToString(), "application/rss+xml");
+            var result = await BlogService.QueryaAtomFeed(BaseAddress);
+            return Content(result.Result, "application/atom+xml");
         }
     }
 }

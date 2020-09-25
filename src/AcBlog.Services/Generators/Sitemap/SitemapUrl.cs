@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AcBlog.Sdk.Sitemap
+namespace AcBlog.Services.Generators.Sitemap
 {
     public class SitemapUrl
     {
