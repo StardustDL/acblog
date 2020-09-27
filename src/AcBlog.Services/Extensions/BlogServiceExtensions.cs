@@ -19,7 +19,7 @@ namespace AcBlog.Services.Extensions
             }, cancellationToken);
         }
 
-        public static Task<QueryResponse<string>> QueryaAtomFeed(this IBlogService service, string baseAddress, CancellationToken cancellationToken = default)
+        public static Task<QueryResponse<string>> QueryAtomFeed(this IBlogService service, string baseAddress, CancellationToken cancellationToken = default)
         {
             return service.Query(new Models.BlogQueryRequest
             {

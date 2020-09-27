@@ -3,10 +3,11 @@
 
 @if (Data is not null)
 {
-    <AntList DataSource="Data.Results" ItemLayout="@AntDirectionVHType.Vertical" Header="@Header">
-        <Item Context="item">
+    <AntList DataSource="Data.Results" Header="@Header">
+        <ChildContent Context="item">
             @ItemTemplate(item)
-        </Item>
+        </ChildContent>
+        
     </AntList>
 
     @if (Data.CurrentPage is not null)

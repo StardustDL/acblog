@@ -71,13 +71,13 @@ namespace StardustDL.Extensions.FileProviders
                 public Task<bool> Exists() => Task.FromResult(_fileInfo.Exists);
             }
 
-            Microsoft.Extensions.FileProviders.IFileProvider fileInfo;
+            readonly Microsoft.Extensions.FileProviders.IFileProvider _fileInfo;
 
-            public MSFileProviderWrapper(Microsoft.Extensions.FileProviders.IFileProvider fileInfo) => this.fileInfo = fileInfo;
+            public MSFileProviderWrapper(Microsoft.Extensions.FileProviders.IFileProvider fileInfo) => this._fileInfo = fileInfo;
 
-            public Task<IFileInfo> GetFileInfo(string subpath) => Task.FromResult<IFileInfo>(new MSFileInfoWrapper(fileInfo.GetFileInfo(subpath)));
+            public Task<IFileInfo> GetFileInfo(string subpath) => Task.FromResult<IFileInfo>(new MSFileInfoWrapper(_fileInfo.GetFileInfo(subpath)));
 
-            public Task<IDirectoryContents> GetDirectoryContents(string subpath) => Task.FromResult<IDirectoryContents>(new MSDirectoryContentsWrapper(fileInfo.GetDirectoryContents(subpath)));
+            public Task<IDirectoryContents> GetDirectoryContents(string subpath) => Task.FromResult<IDirectoryContents>(new MSDirectoryContentsWrapper(_fileInfo.GetDirectoryContents(subpath)));
         }
 
         public static IFileProvider AsFileProvider(this Microsoft.Extensions.FileProviders.IFileProvider fileProvider) => new MSFileProviderWrapper(fileProvider);

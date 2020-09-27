@@ -52,7 +52,7 @@ namespace AcBlog.Client.WebAssembly
                 }
 
                 await LoadBuildStatus(builder, client);
-                var serverSettings = await LoadServerSettings(builder, client);
+                await LoadServerSettings(builder, client);
 
                 builder.Services.AddClientConfigurations(builder.Configuration);
 

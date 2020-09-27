@@ -28,7 +28,7 @@ namespace Test.Data.Models.Builders
         [TestMethod]
         public void String()
         {
-            var item = Generator.GetCategory().ToString();
+            _ = Generator.GetCategory().ToString();
         }
     }
 }

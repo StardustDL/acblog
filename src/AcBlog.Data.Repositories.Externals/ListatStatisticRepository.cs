@@ -88,7 +88,7 @@ namespace AcBlog.Data.Repositories.Externals
 
         public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(_status.Value);
 
-        Listat.Models.StatisticQuery ToInnerQuery(StatisticQueryRequest query)
+        static Listat.Models.StatisticQuery ToInnerQuery(StatisticQueryRequest query)
         {
             var pagination = query.Pagination ?? new Pagination
             {

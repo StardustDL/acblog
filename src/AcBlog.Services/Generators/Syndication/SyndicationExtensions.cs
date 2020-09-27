@@ -26,13 +26,13 @@ namespace AcBlog.Services.Generators.Syndication
             feed.Authors.Add(author);
             Dictionary<string, SyndicationCategory> categoryMap = new Dictionary<string, SyndicationCategory>();
             {
-                /*var cates = await BlogService.CategoryService.GetCategories(await BlogService.CategoryService.All());
-                foreach (var p in cates)
+                var cates = await service.PostService.GetCategories();
+                foreach (var p in cates.AsCategoryList())
                 {
-                    var cate = new SyndicationCategory(p.Name);
-                    categoryMap.Add(p.Id, cate);
+                    var cate = new SyndicationCategory(p.ToString());
+                    categoryMap.Add(p.ToString(), cate);
                     feed.Categories.Add(cate);
-                }*/
+                }
             }
             {
                 var posts = service.PostService.GetAllItems().IgnoreNull();
@@ -57,8 +57,8 @@ namespace AcBlog.Services.Generators.Syndication
                     }
                     s.Summary = SyndicationContent.CreatePlaintextContent(summary.Length <= 100 ? summary : summary.Substring(0, 100));
                     s.Categories.Add(new SyndicationCategory(p.Category.ToString()));
-                    /*if (categoryMap.TryGetValue(p.CategoryId, out var cate))
-                        s.Categories.Add(cate);*/
+                    if (categoryMap.TryGetValue(p.Category.ToString(), out var cate))
+                        s.Categories.Add(cate);
                     s.PublishDate = p.CreationTime;
                     items.Add(s);
                 }

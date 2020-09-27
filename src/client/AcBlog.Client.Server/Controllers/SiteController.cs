@@ -38,8 +38,8 @@ namespace AcBlog.Client.Server.Controllers
         [HttpGet("atom.xml")]
         public async Task<ActionResult> GetAtomFeed()
         {
-            var result = await BlogService.QueryaAtomFeed(BaseAddress);
-            return Content(result.Result, "application/atom+xml");
+            var result = await BlogService.QueryAtomFeed(BaseAddress);
+            return Content(result.Result, "text/xml");
         }
     }
 }

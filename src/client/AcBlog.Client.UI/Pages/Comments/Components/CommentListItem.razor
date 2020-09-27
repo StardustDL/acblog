@@ -1,9 +1,42 @@
 ﻿@inject IBlogService Service
 @inject IMarkdownRenderService MarkdownService
+@inject MessageService MessageService
 
 <Loader OnLoad="@OnLoad" LoadKey="@Id" UseSkeleton>
-    <AntDesign.Comment Datetime="@dateTime" Author="@author" Avatar="@Utils.GetGravatarUrl(Comment.Email)"
-                       Content="@content" @key="@Id">
+    <AntDesign.Comment Avatar="@Utils.GetGravatarUrl(Comment.Email)" @key="@Id">
+        <DatetimeTemplate>
+            <Tooltip Title="@(Comment.CreationTime.ToString("yyyy-MM-dd HH:mm:ss"))">
+                <span>
+                    @Comment.CreationTime.ToFriendlyString()
+                </span>
+            </Tooltip>
+        </DatetimeTemplate>
+        <ContentTemplate>
+            @((MarkupString)RawContent)
+            <br />
+            <AuthorizeView>
+                <Authorized>
+                    <Popconfirm Title="@($"Are you sure {(IsDeleted ? "revert" : "delete")} this comment?")" OnConfirm="OnDelete" Placement="@PlacementType.BottomRight">
+                        <Button Danger="@(!IsDeleted)">
+                            <MdiIcon Type="@(IsDeleted ? IconNames.Revert : IconNames.Delete)"></MdiIcon>
+                            <span>@(IsDeleted ? "Revert" : "Delete")</span>
+                        </Button>
+                    </Popconfirm>
+                </Authorized>
+            </AuthorizeView>
+        </ContentTemplate>
+        <AuthorTemplate>
+            <span>
+                <a href="@Comment.Link">@Comment.Author</a>
+                @if (ShowSource)
+                {
+                    <span>@@</span>
+                    <a href="@Comment.Uri">
+                        @Comment.Uri
+                    </a>
+                }
+            </span>
+        </AuthorTemplate>
     </AntDesign.Comment>
 </Loader>
 
@@ -16,33 +49,44 @@
 
     private AcBlog.Data.Models.Comment Comment { get; set; }
 
-    RenderFragment content;
-    RenderFragment dateTime;
-    RenderFragment author;
+    private string RawContent { get; set; } = string.Empty;
+
+    private bool IsDeleted { get; set; }
 
     private async Task OnLoad()
     {
         Comment = await Service.CommentService.Get(Id);
 
-        var rawContent = await MarkdownService.RenderHtml(Comment.Content);
+        RawContent = await MarkdownService.RenderHtml(Comment.Content);
+    }
 
-        content = @<Template>@((MarkupString)rawContent)</Template>;
-
-        dateTime = @<Tooltip Title="@(Comment.CreationTime.ToString("yyyy-MM-dd HH:mm:ss"))">
-            <span>
-                @Comment.CreationTime.ToFriendlyString()
-            </span>
-        </Tooltip>;
-
-        author = @<span>
-                          <a href="@Comment.Link">@Comment.Author</a>
-                          @if (ShowSource)
-                          {
-                              <span>@@</span> 
-                              <a href="@Comment.Uri">
-                                   @Comment.Uri
-                              </a>
-                          }
-                      </span>;
+    private async Task OnDelete()
+    {
+        if (IsDeleted)
+        {
+            var pass = await Service.CommentService.Create(Comment);
+            if (!string.IsNullOrWhiteSpace(pass))
+            {
+                IsDeleted = false;
+                _ = MessageService.Success("Reverted comment successfully.");
+            }
+            else
+            {
+                _ = MessageService.Error("Failed to revert comment.");
+            }
+        }
+        else
+        {
+            var pass = await Service.CommentService.Delete(Comment.Id);
+            if (pass)
+            {
+                IsDeleted = true;
+                _ = MessageService.Success("Deleted comment successfully.");
+            }
+            else
+            {
+                _ = MessageService.Error("Failed to delete comment.");
+            }
+        }
     }
 }

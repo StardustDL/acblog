@@ -94,7 +94,7 @@ namespace AcBlog.Data.Repositories.Externals
 
         public Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default) => Task.FromResult(_status.Value);
 
-        Loment.Models.CommentQuery ToInnerQuery(CommentQueryRequest query)
+        static Loment.Models.CommentQuery ToInnerQuery(CommentQueryRequest query)
         {
             var pagination = query.Pagination ?? new Pagination
             {

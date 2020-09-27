@@ -30,6 +30,8 @@
 
         public const string Edit = "square-edit-outline";
 
+        public const string Revert = "backup-restore";
+
         public const string Login = "login";
 
         public const string Logout = "logout";

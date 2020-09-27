@@ -18,7 +18,28 @@
     }
 </Loader>
 
-<AntDesign.Comment Author="@model.Author" Content="@Editor" Avatar="@Utils.GetGravatarUrl(model.Email)">
+<AntDesign.Comment Author="@model.Author" Avatar="@Utils.GetGravatarUrl(model.Email)">
+    <ContentTemplate>
+        <Form Model="@model" OnFinish="OnSubmit">
+            <FormItem Label="Name">
+                <Input @bind-Value="@model.Author" />
+            </FormItem>
+            <FormItem Label="Email">
+                <Input @bind-Value="@model.Email" />
+            </FormItem>
+            <FormItem Label="Link">
+                <Input @bind-Value="@model.Link" />
+            </FormItem>
+            <FormItem Label="Content">
+                <TextArea @bind-Value="@model.Content" AutoSize="@true" MinRows="5"></TextArea>
+            </FormItem>
+            <FormItem>
+                <Button HtmlType="submit" Type="@ButtonType.Primary">
+                    Reply
+                </Button>
+            </FormItem>
+        </Form>
+    </ContentTemplate>
 </AntDesign.Comment>
 
 @code {
@@ -35,31 +56,6 @@
     private Loader loader;
 
     private AcBlog.Data.Models.Comment model = new Data.Models.Comment();
-
-    protected override void OnInitialized()
-    {
-        Editor =
-    @<Form Model="@model" OnFinish="OnSubmit">
-    <FormItem Label="Name">
-        <Input @bind-Value="@model.Author" />
-    </FormItem>
-    <FormItem Label="Email">
-        <Input @bind-Value="@model.Email" />
-    </FormItem>
-    <FormItem Label="Link">
-        <Input @bind-Value="@model.Link" />
-    </FormItem>
-    <FormItem Label="Content">
-        <TextArea @bind-Value="@model.Content" AutoSize="@true" MinRows="5"></TextArea>
-    </FormItem>
-    <FormItem>
-        <Button HtmlType="submit" Type="@ButtonType.Primary">
-            Reply
-        </Button>
-    </FormItem>
-</Form>;
-        base.OnInitialized();
-    }
 
     private async Task OnLoad()
     {
@@ -114,6 +110,4 @@
     }
 
     private async Task OnUpdatePage() => await loader.Load();
-
-    RenderFragment Editor;
 }

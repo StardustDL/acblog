@@ -28,7 +28,7 @@ namespace Test.Data.Models.Builders
         [TestMethod]
         public void String()
         {
-            var item = Generator.GetFeature().ToString();
+            _ = Generator.GetFeature().ToString();
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿@inject IBlogService Service
 @inject IClientUriGenerator UrlGenerator
+@inject MessageService MessageService 
 
 <Loader OnLoad="@OnLoad" AutoLoad="@true" @ref="loader" UseSkeleton>
-    <AntListItem @key="@Id">
-        <AntListItemMeta Avatar="@("")">
-            <Title>
+    <ListItem @key="@Id" Style="display: block">
+        <ListItemMeta Avatar="@("")">
+            <TitleTemplate>
                 <h4>
                     @if (ShowType)
                     {
@@ -30,8 +31,9 @@
                 <div>
                     <PostMetadataDisplay Value="@Post" />
                 </div>
-            </Title>
-        </AntListItemMeta>
+            </TitleTemplate>
+        </ListItemMeta>
+
         @if (!IsProtected)
         {
             <p>
@@ -42,7 +44,19 @@
         {
             <p>Protected Post</p>
         }
-    </AntListItem>
+
+        <br />
+        <AuthorizeView>
+            <Authorized>
+                <Popconfirm Title="@($"Are you sure {(IsDeleted ? "revert" : "delete")} this post?")" OnConfirm="OnDelete" Placement="@PlacementType.BottomRight">
+                    <Button Danger="@(!IsDeleted)">
+                        <MdiIcon Type="@(IsDeleted ? IconNames.Revert : IconNames.Delete)"></MdiIcon>
+                        <span>@(IsDeleted ? "Revert" : "Delete")</span>
+                    </Button>
+                </Popconfirm>
+            </Authorized>
+        </AuthorizeView>
+    </ListItem>
 </Loader>
 
 @code {
@@ -55,6 +69,8 @@
     private Post Post { get; set; }
 
     private bool IsProtected { get; set; } = false;
+
+    private bool IsDeleted { get; set; }
 
     private Loader loader;
 
@@ -73,5 +89,35 @@
 
         Post = await Service.PostService.Get(Id);
         IsProtected = await Service.PostService.Protector.IsProtected(Post.Content);
+    }
+
+    private async Task OnDelete()
+    {
+        if (IsDeleted)
+        {
+            var pass = await Service.PostService.Create(Post);
+            if (!string.IsNullOrWhiteSpace(pass))
+            {
+                IsDeleted = false;
+                _ = MessageService.Success("Reverted post successfully.");
+            }
+            else
+            {
+                _ = MessageService.Error("Failed to revert post.");
+            }
+        }
+        else
+        {
+            var pass = await Service.PostService.Delete(Post.Id);
+            if (pass)
+            {
+                IsDeleted = true;
+                _ = MessageService.Success("Deleted post successfully.");
+            }
+            else
+            {
+                _ = MessageService.Error("Failed to delete post.");
+            }
+        }
     }
 }

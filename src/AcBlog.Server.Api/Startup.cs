@@ -115,16 +115,20 @@ namespace AcBlog.Server.Api
                     Scheme = "Bearer"
                 });
 
-                var oar = new OpenApiSecurityRequirement();
-                oar.Add(
-                    new OpenApiSecurityScheme
+                var oar = new OpenApiSecurityRequirement
+                {
                     {
-                        Reference = new OpenApiReference
+                        new OpenApiSecurityScheme
                         {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "bearerAuth"
-                        }
-                    }, new List<string>());
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "bearerAuth"
+                            }
+                        },
+                        new List<string>()
+                    }
+                };
                 c.AddSecurityRequirement(oar);
             });
 

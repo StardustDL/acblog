@@ -15,13 +15,13 @@ namespace AcBlog.Data.Extensions
     {
         public static IAsyncEnumerable<T?> GetItems<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, IAsyncEnumerable<TId> ids, CancellationToken cancellationToken = default) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
         {
-            return ids.SelectAwaitWithCancellation(
-                async (id, cancellationToken) => await repository.Get(id, cancellationToken));
+            return ids.SelectAwait(
+                async id => await repository.Get(id, cancellationToken));
         }
 
         public static IAsyncEnumerable<T?> GetAllItems<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, CancellationToken cancellationToken = default) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
         {
-            return GetItems(repository, repository.All(), cancellationToken);
+            return GetItems(repository, repository.All(cancellationToken), cancellationToken);
         }
 
         public static async IAsyncEnumerable<T> IgnoreNull<T>(this IAsyncEnumerable<T?> collection)

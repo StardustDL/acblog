@@ -19,41 +19,43 @@
                     </MenuLink>
                 </span>
             </MenuItem>
-            @{
-                RenderFragment PostsSubMenuTitle = @<span>
-                    <MdiIcon Type="@IconNames.Posts" />
+            <SubMenu>
+                <TitleTemplate>
                     <span>
-                        <MenuLink href="posts">
-                            Posts
-                        </MenuLink>
+                        <MdiIcon Type="@IconNames.Posts" />
+                        <span>
+                            <MenuLink href="posts">
+                                Posts
+                            </MenuLink>
+                        </span>
                     </span>
-                </span>;
-            }
-            <SubMenu Title="@PostsSubMenuTitle">
-                <MenuItem>
-                    <MdiIcon Type="@IconNames.Articles" />
-                    <span>
-                        <MenuLink href="articles">
-                            Articles
-                        </MenuLink>
-                    </span>
-                </MenuItem>
-                <MenuItem>
-                    <MdiIcon Type="@IconNames.Slides" />
-                    <span>
-                        <MenuLink href="slides">
-                            Slides
-                        </MenuLink>
-                    </span>
-                </MenuItem>
-                <MenuItem>
-                    <MdiIcon Type="@IconNames.Notes" />
-                    <span>
-                        <MenuLink href="notes">
-                            Notes
-                        </MenuLink>
-                    </span>
-                </MenuItem>
+                </TitleTemplate>
+                <ChildContent>
+                    <MenuItem>
+                        <MdiIcon Type="@IconNames.Articles" />
+                        <span>
+                            <MenuLink href="articles">
+                                Articles
+                            </MenuLink>
+                        </span>
+                    </MenuItem>
+                    <MenuItem>
+                        <MdiIcon Type="@IconNames.Slides" />
+                        <span>
+                            <MenuLink href="slides">
+                                Slides
+                            </MenuLink>
+                        </span>
+                    </MenuItem>
+                    <MenuItem>
+                        <MdiIcon Type="@IconNames.Notes" />
+                        <span>
+                            <MenuLink href="notes">
+                                Notes
+                            </MenuLink>
+                        </span>
+                    </MenuItem>
+                </ChildContent>
             </SubMenu>
             <MenuItem>
                 <MdiIcon Type="@IconNames.Category" />

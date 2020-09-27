@@ -33,16 +33,6 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.AZ_TOKEN }}
       run: Invoke-psake cd
-    - name: Upload package artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: packages
-        path: ./packages
-    - name: Upload WASM artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: wasm
-        path: ./src/client/AcBlog.Client.WebAssembly/publish
     - name: Push Client.WebAssembly image
       uses: docker/build-push-action@v1
       with:
@@ -79,3 +69,13 @@ jobs:
         repository: stardustdl/acblog-preview
         tags: api
         dockerfile: ./src/AcBlog.Server.Api/Dockerfile
+    - name: Upload package artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: packages
+        path: ./packages
+    - name: Upload WASM artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: wasm
+        path: ./src/client/AcBlog.Client.WebAssembly/publish

@@ -15,7 +15,7 @@ namespace AcBlog.Tools.Sdk.Commands
 
         public abstract string Description { get; }
 
-        protected virtual bool DisableHandler { get; } = false;
+        protected virtual bool DisableHandler { get; }
 
         public virtual Command Configure()
         {
