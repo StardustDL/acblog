@@ -69,7 +69,7 @@
             }
         </Extra>
         <ChildContent>
-            <Form @ref="form" Model="@model">
+            <Form @ref="form" Model="@model" Layout="@FormLayout.Vertical">
                 <FormItem Label="Title">
                     <Input @bind-Value="@context.Title" />
                 </FormItem>
@@ -88,7 +88,7 @@
                 </FormItem>
                 <FormItem Label="Content">
                     <TextArea @bind-Value="@context.Content.Raw" AutoSize="@true" MinRows="10"></TextArea>
-                </FormItem>
+                </FormItem> 
             </Form>
             <Drawer Closable Width="600" Visible="@Preview" Placement="right" Title="@("Preview")" OnClose="@(_ => Preview = false)">
                 @switch (PreviewPost.Type)

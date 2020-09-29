@@ -44,10 +44,12 @@
         {
             <p>Protected Post</p>
         }
-
-        <br />
         <AuthorizeView>
             <Authorized>
+                <ButtonLink Href="@($"posts/{Uri.EscapeDataString(Post.Id)}/edit")">
+                    <MdiIcon Type="@IconNames.Edit"></MdiIcon>
+                    <span>Edit</span>
+                </ButtonLink>
                 <Popconfirm Title="@($"Are you sure {(IsDeleted ? "revert" : "delete")} this post?")" OnConfirm="OnDelete" Placement="@PlacementType.BottomRight">
                     <Button Danger="@(!IsDeleted)">
                         <MdiIcon Type="@(IsDeleted ? IconNames.Revert : IconNames.Delete)"></MdiIcon>

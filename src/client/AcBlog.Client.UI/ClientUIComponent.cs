@@ -18,7 +18,6 @@ namespace AcBlog.Client.UI
             AddLocalStyleSheetResource("css/app.css");
 
             AddLocalScriptResource("js/interop.js");
-            AddScriptResource("_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js");
             AddScriptResource("_content/Microsoft.AspNetCore.Components.Web.Extensions/headManager.js");
             AddLocalScriptResource("lib/jquery/jquery.slim.min.js");
             // AddScriptResource("lib/bootstrap/js/bootstrap.bundle.min.js");

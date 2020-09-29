@@ -13,7 +13,6 @@
         </DatetimeTemplate>
         <ContentTemplate>
             @((MarkupString)RawContent)
-            <br />
             <AuthorizeView>
                 <Authorized>
                     <Popconfirm Title="@($"Are you sure {(IsDeleted ? "revert" : "delete")} this comment?")" OnConfirm="OnDelete" Placement="@PlacementType.BottomRight">

@@ -1,5 +1,6 @@
 ﻿@page "/posts/{id}"
 @inject NotificationService NotificationService
+@inject MessageService MessageService
 @inherits BasePostPage
 @using AcBlog.Client.UI.Components.Renderers
 
@@ -35,6 +36,12 @@
                         <MdiIcon Type="@IconNames.Edit"></MdiIcon>
                         <span>Edit</span>
                     </ButtonLink>
+                    <Popconfirm Title="@("Are you sure delete this post?")" OnConfirm="OnDelete" Placement="@PlacementType.BottomRight">
+                        <Button Danger>
+                            <MdiIcon Type="@IconNames.Delete"></MdiIcon>
+                            <span>Delete</span>
+                        </Button>
+                    </Popconfirm>
                 </Authorized>
             </AuthorizeView>
         </Extra>
@@ -106,6 +113,20 @@
                 Title = Post.Title;
             }
             await Service.StatisticService?.Visited(UrlGenerator, Post);
+        }
+    }
+
+    async Task OnDelete()
+    {
+        var pass = await Service.PostService.Delete(Post.Id);
+        if (pass)
+        {
+            _ = MessageService.Success("Deleted post successfully.");
+            NavigationManager.NavigateTo($"posts");
+        }
+        else
+        {
+            _ = MessageService.Error("Failed to delete post.");
         }
     }
 
