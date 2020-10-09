@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.14" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.15" />
     <PackageReference Include="Hangfire.Core" Version="1.7.14" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.7.14" />
     <PackageReference Include="Loment" Version="0.0.4" />
