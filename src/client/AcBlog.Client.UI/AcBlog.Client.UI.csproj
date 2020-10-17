@@ -34,11 +34,11 @@
     <PackageReference Include="AcBlog.UI.Components.Core" Version="0.0.1.36-preview" />
     <PackageReference Include="AcBlog.UI.Components.Loading" Version="0.0.1.36-preview" />
     <PackageReference Include="AcBlog.UI.Components.Slides" Version="0.0.1.36-preview" />
-    <PackageReference Include="AntDesign" Version="0.4.0-nightly-2009281553" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0-rc.1.20451.17" />
+    <PackageReference Include="AntDesign" Version="0.4.0-nightly-2010160515" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0-rc.2.20475.17" />
     <PackageReference Include="StardustDL.RazorComponents.Markdown" Version="0.0.1.22" />
     <PackageReference Include="StardustDL.RazorComponents.MaterialDesignIcons" Version="0.0.1" />
-    <PackageReference Include="System.Net.Http.Json" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0-rc.2.20475.5" />
   </ItemGroup>
 
   <ItemGroup>

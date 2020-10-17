@@ -21,7 +21,15 @@
     <ChildContent>
         <Loader OnLoad="@OnLoad" @ref="loader">
             <div>
-                <Tree Nodes="TreeNodes">
+                <Tree DataSource="Data.Root.Children.Values"
+                      TitleExpression="x=>((CategoryTree.CategoryTreeNode)x.DataItem).Category.OneNameOrDefault()"
+                      ChildrenExpression="x=>((CategoryTree.CategoryTreeNode)x.DataItem).Children.Values">
+                    <TitleIconTemplate>
+                        <MdiIcon Type="@IconNames.Category" />
+                    </TitleIconTemplate>
+                    <TitleTemplate>
+                        <a style="font-size: 18px;" class="m-1" href="@UrlGenerator.Category(((CategoryTree.CategoryTreeNode)context.DataItem).Category)">@context.Title</a>
+                    </TitleTemplate>
                 </Tree>
             </div>
         </Loader>
@@ -38,31 +46,5 @@
     private async Task OnLoad()
     {
         Data = await Service.PostService.GetCategories();
-        foreach (var v in Data.Root.Children.Values)
-        {
-            TreeNodes.Add(BuildTreeNode(v));
-        }
     }
-
-    TreeNode BuildTreeNode(CategoryTree.CategoryTreeNode node)
-    {
-        TreeNode result = new TreeNode
-        {
-            // Text = node.Category.OneNameOrDefault(),
-            // Key = node.Category.ToString(),
-            NodeTemplate = ctx =>
-    @<Template>
-        <span style="font-size: 18px;" class="m-1">
-            <MdiIcon Type="@IconNames.Category" />
-            <a href="@UrlGenerator.Category(node.Category)">@node.Category.OneNameOrDefault()</a>
-        </span>
-    </Template>,
- IsExpanded = true,
-};
-foreach (var v in node.Children.Values)
-{
- result.Nodes.Add(BuildTreeNode(v));
-}
-return result;
-}
 }

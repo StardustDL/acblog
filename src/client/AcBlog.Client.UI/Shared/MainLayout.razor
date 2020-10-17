@@ -117,26 +117,29 @@
                 @((MarkupString)BlogOptions.Footer)
             }
             Powered by
-
-            @{
-                RenderFragment AcBlogInfo = @<div>
-                    Repository: <a href="https://github.com/@BuildStatus.Value.Repository">@BuildStatus.Value.Repository</a>
-                    <br />
-                    Commit: <a href="https://github.com/@BuildStatus.Value.Repository/commit/@BuildStatus.Value.Commit">@BuildStatus.Value.TrimedCommit</a>
-                    <br />
-                    Branch: <a href="https://github.com/@BuildStatus.Value.Repository/tree/@BuildStatus.Value.Branch">@BuildStatus.Value.TrimedBranch</a>
-                    <br />
-                    Version: @BuildStatus.Value.Version
-                    <br />
-                    Built Date: @BuildStatus.Value.BuildDate
-                </div>;
-            }
             <Popover Content="AcBlogInfo" Title="@($"AcBlog v{BuildStatus.Value.Version}")">
-                <a href="https://github.com/acblog/acblog">AcBlog</a>
+                <ContentTemplate>
+                    <div>
+                        Repository: <a href="https://github.com/@BuildStatus.Value.Repository">@BuildStatus.Value.Repository</a>
+                        <br />
+                        Commit: <a href="https://github.com/@BuildStatus.Value.Repository/commit/@BuildStatus.Value.Commit">@BuildStatus.Value.TrimedCommit</a>
+                        <br />
+                        Branch: <a href="https://github.com/@BuildStatus.Value.Repository/tree/@BuildStatus.Value.Branch">@BuildStatus.Value.TrimedBranch</a>
+                        <br />
+                        Version: @BuildStatus.Value.Version
+                        <br />
+                        Built Date: @BuildStatus.Value.BuildDate
+                    </div>
+                </ContentTemplate>
+                <ChildContent>
+                    <a href="https://github.com/acblog/acblog">AcBlog</a>
+                </ChildContent>
             </Popover>
         </Footer>
     </AntDesign.Layout>
 </AntDesign.Layout>
+
+<BackTop></BackTop>
 
 @code {
     private BlogOptions BlogOptions { get; set; } = new BlogOptions();

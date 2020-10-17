@@ -1,6 +1,5 @@
 ﻿using AcBlog.Data.Repositories;
 using System;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -94,11 +93,12 @@ namespace AcBlog.Client.UI
         {
             static string ComputeHash(string input)
             {
-                MD5CryptoServiceProvider MD5 = new MD5CryptoServiceProvider();
+                /*MD5CryptoServiceProvider MD5 = new MD5CryptoServiceProvider();
                 byte[] inputArray = System.Text.Encoding.ASCII.GetBytes(input);
                 byte[] hashedArray = MD5.ComputeHash(inputArray);
                 MD5.Clear();
-                return BitConverter.ToString(hashedArray).Replace("-", "");
+                return BitConverter.ToString(hashedArray).Replace("-", "");*/
+                return Convert.ToBase64String(Encoding.UTF8.GetBytes(input));
             }
 
             email = email.Trim().ToLower();

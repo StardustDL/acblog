@@ -21,7 +21,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
         {
             query.Pagination ??= new Pagination();
 
-            var rootPath = RootPath;
+            var rootPath = Paths.GetConfigRoot(RootPath);
 
             if (query.Type is not null)
             {
