@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.22.0" />
-    <PackageReference Include="System.Net.Http.Json" Version="5.0.0-rc.2.20475.5" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

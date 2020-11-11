@@ -24,11 +24,11 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web.Extensions" Version="5.0.0-preview9.20513.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0.0-rc.2.20475.17" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0-rc.2.20475.5" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0-rc.2.20475.5" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0-rc.2.20475.5" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0-rc.2.20475.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
