@@ -1,4 +1,5 @@
 ﻿using AcBlog.Data.Models;
+using AcBlog.Data.Models.Builders;
 using System;
 using System.Text.Json;
 
@@ -47,7 +48,7 @@ namespace AcBlog.Data.Repositories.SqlServer.Models
             {
                 Id = value.Id,
                 Layout = value.Layout,
-                Features = AcBlog.Data.Models.Feature.Parse(value.Features),
+                Features = FeatureBuilder.FromString(value.Features),
                 CreationTime = value.CreationTime,
                 ModificationTime = value.ModificationTime,
                 Title = value.Title,

@@ -59,20 +59,20 @@ namespace AcBlog.Tools.Sdk.Repositories
                 metadata.category = defaultMeta.category;
             }
 
-            Post result = new Post();
-            metadata.ApplyTo(result);
-            result.Content = new Document
+            var result = metadata.ApplyTo(new Post());
+            var document = new Document
             {
                 Raw = content
             };
 
             if (!string.IsNullOrWhiteSpace(metadata.password))
             {
-                result.Content = await Protector.Protect(result.Content, new ProtectionKey
+                document = await Protector.Protect(result.Content, new ProtectionKey
                 {
                     Password = metadata.password
                 });
             }
+            result = result with { Content = document };
 
             return result;
         }

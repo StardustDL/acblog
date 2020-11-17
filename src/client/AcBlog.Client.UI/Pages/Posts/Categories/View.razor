@@ -4,7 +4,7 @@
 @inherits BaseCategoryPage
 @inject AcBlog.Services.Filters.PostCategoryFilter Categories
 
-<PageContainer Title="@Category.OneNameOrDefault()" PageTitle="@Title">
+<PageContainer Title="@Category.Items.FirstOrDefault()" PageTitle="@Title">
     <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
@@ -71,7 +71,7 @@
 
     private async Task OnLoad()
     {
-        Category = AcBlog.Data.Models.Category.Parse(Id);
+        Category = AcBlog.Data.Models.Builders.CategoryBuilder.FromString(Id);
         PageNavigationUrl = UrlGenerator.Category(Category);
         Title = "Loading...";
         Data = await Categories.Filter(Category, new Data.Models.Actions.Pagination

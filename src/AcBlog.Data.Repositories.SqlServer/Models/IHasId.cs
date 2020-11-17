@@ -1,4 +1,4 @@
-﻿namespace AcBlog.Data.Models
+﻿namespace AcBlog.Data.Repositories.SqlServer.Models
 {
     public interface IHasId<T>
     {

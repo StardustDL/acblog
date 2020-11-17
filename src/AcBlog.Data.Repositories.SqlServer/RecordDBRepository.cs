@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.SqlServer
 {
-    public abstract class RecordDBRepository<T, TId, TQuery, TRaw> : IRecordRepository<T, TId, TQuery> where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new() where TRaw : class, IHasId<TId>
+    public abstract class RecordDBRepository<T, TId, TQuery, TRaw> : IRecordRepository<T, TId, TQuery> where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new() where TRaw : class, IHasId<TId>
     {
         public RecordDBRepository(BlogDataContext dataSource) => DataSource = dataSource;
 
@@ -84,7 +84,7 @@ namespace AcBlog.Data.Repositories.SqlServer
 
         public virtual async Task<QueryStatistic> Statistic(TQuery query, CancellationToken cancellationToken = default)
         {
-            query.Pagination = null;
+            query = query with { Pagination = null };
             var count = await InnerQuery(query).CountAsync(cancellationToken).ConfigureAwait(false);
             return new QueryStatistic
             {

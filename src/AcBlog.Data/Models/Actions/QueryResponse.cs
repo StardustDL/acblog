@@ -1,10 +1,10 @@
 ﻿namespace AcBlog.Data.Models.Actions
 {
-    public class QueryResponse<T>
+    public record QueryResponse<T>
     {
-        public QueryStatus Status { get; set; }
+        public QueryStatus Status { get; init; }
 
-        public T? Result { get; set; }
+        public T? Result { get; init; }
     }
 
     public static class QueryResponse

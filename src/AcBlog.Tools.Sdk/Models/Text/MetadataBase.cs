@@ -2,6 +2,6 @@
 {
     public abstract class MetadataBase<T>
     {
-        public abstract void ApplyTo(T data);
+        public abstract T ApplyTo(T data);
     }
 }

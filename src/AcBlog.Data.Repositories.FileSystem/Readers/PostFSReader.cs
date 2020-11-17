@@ -19,7 +19,10 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         protected override async IAsyncEnumerable<string>? EfficientQuery(PostQueryRequest query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            query.Pagination ??= new Pagination();
+            if (query.Pagination is null)
+            {
+                query = query with { Pagination = new Pagination() };
+            }
 
             var rootPath = Paths.GetConfigRoot(RootPath);
 

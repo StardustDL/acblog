@@ -1,7 +1,7 @@
 ﻿namespace AcBlog.Data.Models.Actions
 {
-    public class UserQueryRequest : QueryRequest
+    public record UserQueryRequest : QueryRequest
     {
-        public string NickName { get; set; } = string.Empty;
+        public string NickName { get; init; } = string.Empty;
     }
 }

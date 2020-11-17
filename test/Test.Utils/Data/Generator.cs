@@ -29,29 +29,38 @@ namespace Test.Data
 
         public static Category GetCategory()
         {
-            return new Category(new string[]
+            return new Category
             {
-                GetString(),
-                GetString()
-            });
+                Items = new string[]
+                {
+                    GetString(),
+                    GetString()
+                }
+            };
         }
 
         public static Keyword GetKeyword()
         {
-            return new Keyword(new string[]
+            return new Keyword
             {
-                GetString(),
-                GetString()
-            });
+                Items = new string[]
+                {
+                    GetString(),
+                    GetString()
+                }
+            };
         }
 
         public static Feature GetFeature()
         {
-            return new Feature(new string[]
+            return new Feature
             {
-                GetString(),
-                GetString()
-            });
+                Items = new string[]
+                {
+                    GetString(),
+                    GetString()
+                }
+            };
         }
 
         public static Layout GetLayout()

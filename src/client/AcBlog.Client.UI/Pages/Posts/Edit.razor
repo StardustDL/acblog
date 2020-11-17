@@ -87,8 +87,8 @@
                     <Input Placeholder="Input as a;b;c." @bind-Value="@context.KeywordsString" />
                 </FormItem>
                 <FormItem Label="Content">
-                    <TextArea @bind-Value="@context.Content.Raw" AutoSize="@true" MinRows="10"></TextArea>
-                </FormItem> 
+                    <TextArea @bind-Value="@context.RawContent" AutoSize="@true" MinRows="10"></TextArea>
+                </FormItem>
             </Form>
             <Drawer Closable Width="600" Visible="@Preview" Placement="right" Title="@("Preview")" OnClose="@(_ => Preview = false)">
                 @switch (PreviewPost.Type)
@@ -126,7 +126,7 @@
 
         public string Author { get; set; } = string.Empty;
 
-        public Document Content { get; set; } = new Document();
+        public string RawContent { get; set; } = string.Empty;
 
         [Required]
         public string Title { get; set; } = string.Empty;
@@ -146,8 +146,11 @@
 
     private void OnPreview()
     {
-        PreviewPost.Type = model.Type;
-        PreviewPost.Content.Raw = model.Content.Raw;
+        PreviewPost = PreviewPost with
+        {
+            Type = model.Type,
+            Content = new Document { Raw = model.RawContent }
+        };
         Preview = true;
     }
 
@@ -156,13 +159,15 @@
         Title = "Loading...";
         if (string.IsNullOrWhiteSpace(Id))
         {
-            Target = new Post();
-            Target.Type = CreateType switch
+            Target = new Post
             {
-                "article" => PostType.Article,
-                "slides" => PostType.Slides,
-                "note" => PostType.Note,
-                _ => PostType.Article
+                Type = CreateType switch
+                {
+                    "article" => PostType.Article,
+                    "slides" => PostType.Slides,
+                    "note" => PostType.Note,
+                    _ => PostType.Article
+                }
             };
             IsCreate = true;
             Title = "New";
@@ -176,7 +181,7 @@
         model = new Model
         {
             Author = Target.Author,
-            Content = Target.Content,
+            RawContent = Target.Content.Raw,
             Title = Target.Title,
             Type = Target.Type,
             CategoryString = Target.Category.ToString(),
@@ -186,12 +191,15 @@
 
     private void ModelToTarget()
     {
-        Target.Author = model.Author;
-        Target.Category = Category.Parse(model.CategoryString);
-        Target.Keywords = Keyword.Parse(model.KeywordsString);
-        Target.Title = model.Title;
-        Target.Content = model.Content;
-        Target.Type = model.Type;
+        Target = Target with
+        {
+            Author = model.Author,
+            Category = AcBlog.Data.Models.Builders.CategoryBuilder.FromString(model.CategoryString),
+            Keywords = AcBlog.Data.Models.Builders.KeywordBuilder.FromString(model.KeywordsString),
+            Title = model.Title,
+            Content = new Document { Raw = model.RawContent },
+            Type = model.Type,
+        };
     }
 
     async Task OnDelete()
@@ -226,11 +234,11 @@
             _ = MessageService.Error("Invalid input.");
             return;
         }
-        Target.ModificationTime = DateTimeOffset.Now;
+        Target = Target with { ModificationTime = DateTimeOffset.Now };
 
         if (IsCreate)
         {
-            Target.CreationTime = DateTimeOffset.Now;
+            Target = Target with { CreationTime = DateTimeOffset.Now };
             var id = await Service.PostService.Create(Target);
             if (id is not null)
             {

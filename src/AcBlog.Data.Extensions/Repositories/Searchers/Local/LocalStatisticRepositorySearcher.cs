@@ -19,7 +19,7 @@ namespace AcBlog.Data.Repositories.Searchers.Local
             if (!string.IsNullOrWhiteSpace(query.Uri))
                 qr = qr.Where(x => x.Uri == query.Uri);
 
-            return qr.Select(item => item.Id).Paging(query.Pagination);
+            return qr.Select(item => item.Id).IgnoreNull().Paging(query.Pagination);
         }
     }
 }

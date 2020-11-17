@@ -17,17 +17,17 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
         {
             {
                 await BuildDataIdList(data.Where(
-                    x => x.Type is PostType.Article).ToList().Select(x => x.Id).ToArray(), Paths.GetArticleRoot(RootPath)).ConfigureAwait(false);
+                    x => x.Type is PostType.Article).ToList().Select(x => x.Id).IgnoreNull().ToArray(), Paths.GetArticleRoot(RootPath)).ConfigureAwait(false);
             }
 
             {
                 await BuildDataIdList(data.Where(
-                     x => x.Type is PostType.Slides).ToList().Select(x => x.Id).ToArray(), Paths.GetSlidesRoot(RootPath)).ConfigureAwait(false);
+                     x => x.Type is PostType.Slides).ToList().Select(x => x.Id).IgnoreNull().ToArray(), Paths.GetSlidesRoot(RootPath)).ConfigureAwait(false);
             }
 
             {
                 await BuildDataIdList(data.Where(
-                    x => x.Type is PostType.Note).ToList().Select(x => x.Id).ToArray(), Paths.GetNoteRoot(RootPath)).ConfigureAwait(false);
+                    x => x.Type is PostType.Note).ToList().Select(x => x.Id).IgnoreNull().ToArray(), Paths.GetNoteRoot(RootPath)).ConfigureAwait(false);
             }
         }
 
@@ -39,7 +39,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
 
             foreach (var v in collection.Items)
             {
-                await BuildDataIdList(map[v.OneName()].Select(x => x.Id).ToArray(),
+                await BuildDataIdList(map[v.Items.First()].Select(x => x.Id).IgnoreNull().ToArray(),
                     Paths.GetKeywordRoot(RootPath, v)).ConfigureAwait(false);
             }
 
@@ -61,7 +61,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
             {
                 var node = q.Dequeue();
 
-                await BuildDataIdList(map[node].Select(x => x.Id).ToArray(),
+                await BuildDataIdList(map[node].Select(x => x.Id).IgnoreNull().ToArray(),
                     Paths.GetCategoryRoot(RootPath, node.Category)).ConfigureAwait(false);
 
                 foreach (var v in node.Children.Values)

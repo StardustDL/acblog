@@ -18,7 +18,7 @@
   "devDependencies": {
     "browserify": "^17.0.0",
     "gulp": "^4.0.2",
-    "gulp-sourcemaps": "^2.6.5",
+    "gulp-sourcemaps": "^3.0.0",
     "gulp-uglify": "^3.0.2",
     "gulplog": "^1.0.0",
     "vinyl-buffer": "^1.0.1",

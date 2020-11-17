@@ -1,5 +1,6 @@
 ﻿using AcBlog.Data.Documents;
 using AcBlog.Data.Models;
+using AcBlog.Data.Models.Builders;
 using System;
 using System.Text.Json;
 
@@ -47,12 +48,12 @@ namespace AcBlog.Data.Repositories.SqlServer.Models
             {
                 Id = value.Id,
                 Author = value.Author,
-                Category = AcBlog.Data.Models.Category.Parse(value.Category),
+                Category = CategoryBuilder.FromString(value.Category),
                 CreationTime = value.CreationTime,
                 ModificationTime = value.ModificationTime,
                 Title = value.Title,
                 Type = value.Type,
-                Keywords = AcBlog.Data.Models.Keyword.Parse(value.Keywords),
+                Keywords = KeywordBuilder.FromString(value.Keywords),
                 Content = JsonSerializer.Deserialize<Document>(value.Content),
             };
         }

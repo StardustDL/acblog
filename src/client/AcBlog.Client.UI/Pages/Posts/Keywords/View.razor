@@ -4,7 +4,7 @@
 @inherits BaseKeywordPage
 @inject AcBlog.Services.Filters.PostKeywordFilter Keywords
 
-<PageContainer Title="@(Keyword.OneNameOrDefault())" PageTitle="@Title">
+<PageContainer Title="@(Keyword.Items.FirstOrDefault())" PageTitle="@Title">
     <Breadcrumb>
         <Breadcrumb>
             <BreadcrumbItem>
@@ -20,7 +20,7 @@
                 </a>
             </BreadcrumbItem>
             <BreadcrumbItem>
-                <span>@(Keyword.OneNameOrDefault())</span>
+                <span>@(Keyword.Items.FirstOrDefault())</span>
             </BreadcrumbItem>
         </Breadcrumb>
     </Breadcrumb>
@@ -55,7 +55,7 @@
     private async Task OnLoad()
     {
         Title = "Loading...";
-        Keyword = AcBlog.Data.Models.Keyword.Parse(Id);
+        Keyword = AcBlog.Data.Models.Builders.KeywordBuilder.FromString(Id);
         PageNavigationUrl = UrlGenerator.Keyword(Keyword);
         Data = await Keywords.Filter(Keyword, new Data.Models.Actions.Pagination
         {

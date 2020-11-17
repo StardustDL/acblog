@@ -55,7 +55,7 @@ namespace AcBlog.Data.Repositories.SqlServer
         public override Task<string> Create(Statistic value, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(value.Id))
-                value.Id = Guid.NewGuid().ToString();
+                value = value with { Id = Guid.NewGuid().ToString() };
             return base.Create(value, cancellationToken);
         }
 

@@ -1,7 +1,7 @@
 ﻿namespace AcBlog.Data.Models.Actions
 {
-    public class LayoutQueryRequest : QueryRequest
+    public record LayoutQueryRequest : QueryRequest
     {
-        public QueryTimeOrder Order { get; set; } = QueryTimeOrder.None;
+        public QueryTimeOrder Order { get; init; } = QueryTimeOrder.None;
     }
 }

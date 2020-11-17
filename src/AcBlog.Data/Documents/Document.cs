@@ -1,9 +1,9 @@
 ﻿namespace AcBlog.Data.Documents
 {
-    public class Document
+    public record Document
     {
-        public string Tag { get; set; } = string.Empty;
+        public string Tag { get; init; } = string.Empty;
 
-        public string Raw { get; set; } = string.Empty;
+        public string Raw { get; init; } = string.Empty;
     }
 }

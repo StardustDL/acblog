@@ -55,7 +55,18 @@
 
     private Loader loader;
 
-    private AcBlog.Data.Models.Comment model = new Data.Models.Comment();
+    private class Model
+    {
+        public string Content { get; set; } = string.Empty;
+
+        public string Author { get; set; } = string.Empty;
+
+        public string Email { get; set; } = string.Empty;
+
+        public string Link { get; set; } = string.Empty;
+    }
+
+    private Model model = new Model();
 
     private async Task OnLoad()
     {
@@ -81,13 +92,20 @@
     {
         IsSubmitting = true;
 
-        model.Uri = Uri;
-        model.CreationTime = DateTimeOffset.Now;
-        model.ModificationTime = DateTimeOffset.Now;
+        var target = new AcBlog.Data.Models.Comment
+        {
+            Uri = Uri,
+            CreationTime = DateTimeOffset.Now,
+            ModificationTime = DateTimeOffset.Now,
+            Author = model.Author,
+            Email = model.Email,
+            Content = model.Content,
+            Link = model.Link,
+        };
 
         try
         {
-            await Service.CommentService.Create(model);
+            await Service.CommentService.Create(target);
         }
         catch
         {
@@ -98,7 +116,7 @@
         }
 
         IsSubmitting = false;
-        model = new Data.Models.Comment();
+        model = new Model();
 
         await OnUpdatePage();
     }

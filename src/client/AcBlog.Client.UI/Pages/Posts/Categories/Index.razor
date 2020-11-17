@@ -22,7 +22,7 @@
         <Loader OnLoad="@OnLoad" @ref="loader">
             <div>
                 <Tree DataSource="Data.Root.Children.Values"
-                      TitleExpression="x=>((CategoryTree.CategoryTreeNode)x.DataItem).Category.OneNameOrDefault()"
+                      TitleExpression="x=>((CategoryTree.CategoryTreeNode)x.DataItem).Category.Items.FirstOrDefault()"
                       ChildrenExpression="x=>((CategoryTree.CategoryTreeNode)x.DataItem).Children.Values">
                     <TitleIconTemplate>
                         <MdiIcon Type="@IconNames.Category" />

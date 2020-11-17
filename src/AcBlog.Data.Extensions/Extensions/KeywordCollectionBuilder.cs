@@ -31,7 +31,7 @@ namespace AcBlog.Data.Extensions
                     }
                 }
             }
-            return (new KeywordCollection(dict.Select(pair => new Keyword(new string[] { pair.Key })).ToList()), dict);
+            return (new KeywordCollection(dict.Select(pair => new Keyword { Items = new string[] { pair.Key } }).ToList()), dict);
         }
 
         public static async Task<KeywordCollection> Build(IAsyncEnumerable<Keyword> data, CancellationToken cancellationToken = default)
@@ -46,7 +46,7 @@ namespace AcBlog.Data.Extensions
                     res.Add(k);
                 }
             }
-            return new KeywordCollection(res.Select(pair => new Keyword(new string[] { pair })).ToList());
+            return new KeywordCollection(res.Select(pair => new Keyword { Items = new string[] { pair } }).ToList());
         }
     }
 }

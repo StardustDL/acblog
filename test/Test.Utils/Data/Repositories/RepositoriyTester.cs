@@ -10,12 +10,12 @@ namespace Test.Data.Repositories
 {
     public static class RepositoriyTester
     {
-        public static async Task<RepositoryStatus> TestStatus<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        public static async Task<RepositoryStatus> TestStatus<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository) where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
         {
             return await repository.GetStatus();
         }
 
-        public static async Task<TId> TestCreate<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, T value) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        public static async Task<TId> TestCreate<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, T value) where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
         {
             var result = await repository.Create(value);
             Assert.IsNotNull(result);
@@ -26,7 +26,7 @@ namespace Test.Data.Repositories
             return result;
         }
 
-        public static async Task<IEnumerable<TId>> TestAll<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        public static async Task<IEnumerable<TId>> TestAll<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository) where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
         {
             var result = repository.All();
             Assert.IsNotNull(result);
@@ -42,13 +42,13 @@ namespace Test.Data.Repositories
             return res;
         }
 
-        public static async Task TestGet<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, TId id) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        public static async Task TestGet<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, TId id) where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
         {
             var result = await repository.Get(id);
             Assert.IsNotNull(result);
         }
 
-        public static async Task TestDelete<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, TId id) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        public static async Task TestDelete<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, TId id) where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
         {
             var result = await repository.Delete(id);
             Assert.IsTrue(result);
@@ -57,7 +57,7 @@ namespace Test.Data.Repositories
             Assert.IsNull(item);
         }
 
-        public static async Task TestUpdate<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, T value) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        public static async Task TestUpdate<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, T value) where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
         {
             var result = await repository.Update(value);
             Assert.IsTrue(result);
@@ -66,7 +66,7 @@ namespace Test.Data.Repositories
             item.ShouldDeepEqual(value);
         }
 
-        public static async Task TestCRUD<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, T value, T updated) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        public static async Task TestCRUD<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, T value, T updated) where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
         {
             var status = await repository.TestStatus();
             Assert.IsTrue(status.CanRead);
@@ -78,7 +78,7 @@ namespace Test.Data.Repositories
 
             await repository.TestAll();
 
-            updated.Id = id;
+            updated = updated with { Id = id };
             await repository.TestUpdate(updated);
 
             await repository.TestDelete(id);

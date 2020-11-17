@@ -71,7 +71,6 @@ namespace AcBlog.Data.Protections
         {
             try
             {
-                var res = new Document();
                 byte[] bs;
                 await using (var ms = new MemoryStream())
                 {
@@ -79,10 +78,8 @@ namespace AcBlog.Data.Protections
                     bs = ms.ToArray();
                 }
 
-                res.Tag = _protectFlag;
                 // var ky = Encoding.UTF8.GetBytes(key.Password); AesEncrypt(bs, ky)
-                res.Raw = Convert.ToBase64String(bs);
-                return res;
+                return new Document { Tag = _protectFlag, Raw = Convert.ToBase64String(bs) };
             }
             catch (Exception ex)
             {

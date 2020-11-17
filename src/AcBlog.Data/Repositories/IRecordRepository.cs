@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace AcBlog.Data.Repositories
 {
 
-    public interface IRecordRepository<T, TId, TQuery> : IRepository where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+    public interface IRecordRepository<T, TId, TQuery> : IRepository where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
     {
         Task<RepositoryStatus> GetStatus(CancellationToken cancellationToken = default);
 
@@ -30,7 +30,7 @@ namespace AcBlog.Data.Repositories
         Task<QueryStatistic> Statistic(TQuery query, CancellationToken cancellationToken = default);
     }
 
-    public class EmptyRecordRepository<T, TId, TQuery> : IRecordRepository<T, TId, TQuery> where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+    public class EmptyRecordRepository<T, TId, TQuery> : IRecordRepository<T, TId, TQuery> where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
     {
         private static readonly RepositoryStatus _status = new RepositoryStatus
         {

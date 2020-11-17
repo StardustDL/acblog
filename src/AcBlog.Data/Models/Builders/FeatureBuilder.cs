@@ -12,7 +12,7 @@ namespace AcBlog.Data.Models.Builders
         {
             foreach (var name in names)
             {
-                if (Feature.IsValidName(name))
+                if (!name.Contains(','))
                 {
                     Inner.Add(name);
                 }
@@ -34,5 +34,10 @@ namespace AcBlog.Data.Models.Builders
         public bool IsEmpty => Inner.Count > 0;
 
         public Feature Build() => new Feature { Items = Inner.ToArray() };
+
+        public static Feature FromString(string source)
+        {
+            return new Feature { Items = source.Split(',', StringSplitOptions.RemoveEmptyEntries) };
+        }
     }
 }

@@ -9,20 +9,15 @@ namespace AcBlog.Data.Extensions
     {
         public static PagingData<T> AsPagingData<T>(this IEnumerable<T> data, QueryRequest query, QueryStatistic statistic)
         {
-            Pagination pagination = new Pagination
-            {
-                TotalCount = statistic.Count
-            };
+            Pagination pagination;
 
             if (query.Pagination is not null)
             {
-                pagination.CurrentPage = query.Pagination.CurrentPage;
-                pagination.PageSize = query.Pagination.PageSize;
+                pagination = query.Pagination with { TotalCount = statistic.Count };
             }
             else
             {
-                pagination.CurrentPage = 0;
-                pagination.PageSize = pagination.TotalCount;
+                pagination = new Pagination { CurrentPage = 0, PageSize = statistic.Count, TotalCount = statistic.Count };
             }
 
             return new PagingData<T>(data, pagination);

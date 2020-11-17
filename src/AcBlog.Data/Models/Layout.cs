@@ -2,14 +2,12 @@
 
 namespace AcBlog.Data.Models
 {
-    public class Layout : IHasId<string>
+    public record Layout : RHasId<string>
     {
-        public string Id { get; set; } = string.Empty;
+        public string Template { get; init; } = string.Empty;
 
-        public string Template { get; set; } = string.Empty;
+        public DateTimeOffset CreationTime { get; init; }
 
-        public DateTimeOffset CreationTime { get; set; }
-
-        public DateTimeOffset ModificationTime { get; set; }
+        public DateTimeOffset ModificationTime { get; init; }
     }
 }

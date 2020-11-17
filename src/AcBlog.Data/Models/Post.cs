@@ -3,24 +3,22 @@ using System;
 
 namespace AcBlog.Data.Models
 {
-    public class Post : IHasId<string>
+    public record Post : RHasId<string>
     {
-        public string Id { get; set; } = string.Empty;
+        public PostType Type { get; init; } = PostType.Article;
 
-        public PostType Type { get; set; } = PostType.Article;
+        public string Author { get; init; } = string.Empty;
 
-        public string Author { get; set; } = string.Empty;
+        public Document Content { get; init; } = new Document();
 
-        public Document Content { get; set; } = new Document();
+        public string Title { get; init; } = string.Empty;
 
-        public string Title { get; set; } = string.Empty;
+        public Category Category { get; init; } = Category.Empty;
 
-        public Category Category { get; set; } = Category.Empty;
+        public Keyword Keywords { get; init; } = Keyword.Empty;
 
-        public Keyword Keywords { get; set; } = Keyword.Empty;
+        public DateTimeOffset CreationTime { get; init; }
 
-        public DateTimeOffset CreationTime { get; set; }
-
-        public DateTimeOffset ModificationTime { get; set; }
+        public DateTimeOffset ModificationTime { get; init; }
     }
 }

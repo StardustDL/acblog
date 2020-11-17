@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Readers
 {
-    public abstract class RecordFSReaderBase<T, TId, TQuery> : RecordFSRepository<T, TId, TQuery> where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+    public abstract class RecordFSReaderBase<T, TId, TQuery> : RecordFSRepository<T, TId, TQuery> where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
     {
         protected RecordFSReaderBase(string rootPath, IFileProvider fileProvider) : base(rootPath, fileProvider)
         {
@@ -81,7 +81,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
 
         public override async Task<QueryStatistic> Statistic(TQuery query, CancellationToken cancellationToken = default)
         {
-            query.Pagination = null;
+            query = query with { Pagination = null };
             if (await EfficientStatistic(query, cancellationToken) is QueryStatistic res)
             {
                 return res;
@@ -108,7 +108,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Readers
             var result = await JsonSerializer.DeserializeAsync<T?>(fs, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             if (result is not null)
-                result.Id = id;
+                result = result with { Id = id };
             return result;
         }
 

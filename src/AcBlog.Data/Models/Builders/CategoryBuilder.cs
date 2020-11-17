@@ -11,7 +11,7 @@ namespace AcBlog.Data.Models.Builders
         {
             foreach (var name in names)
             {
-                if (Category.IsValidName(name))
+                if (!name.Contains('/'))
                 {
                     Inner.Add(name);
                 }
@@ -39,5 +39,10 @@ namespace AcBlog.Data.Models.Builders
         public bool IsEmpty => Inner.Count > 0;
 
         public Category Build() => new Category { Items = Inner.ToArray() };
+
+        public static Category FromString(string source)
+        {
+            return new Category { Items = source.Split('/', StringSplitOptions.RemoveEmptyEntries) };
+        }
     }
 }

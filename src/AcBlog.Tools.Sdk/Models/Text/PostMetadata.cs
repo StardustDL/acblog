@@ -42,28 +42,29 @@ namespace AcBlog.Tools.Sdk.Models.Text
             type = Enum.GetName(typeof(PostType), data.Type)?.ToLowerInvariant() ?? string.Empty;
         }
 
-        public override void ApplyTo(Post data)
+        public override Post ApplyTo(Post data)
         {
             if (id is not null)
-                data.Id = id;
+                data = data with { Id = id };
             if (title is not null)
-                data.Title = title;
+                data = data with { Title = title };
             if (category is not null)
-                data.Category = new Category(category);
+                data = data with { Category = new Category { Items = category } };
             if (keywords is not null)
-                data.Keywords = new Keyword(keywords);
+                data = data with { Keywords = new Keyword { Items = keywords } };
             if (DateTimeOffset.TryParse(creationTime, out var _creationTime))
             {
-                data.CreationTime = _creationTime;
+                data = data with { CreationTime = _creationTime };
             }
             if (DateTimeOffset.TryParse(modificationTime, out var _modificationTime))
             {
-                data.ModificationTime = _modificationTime;
+                data = data with { ModificationTime = _modificationTime };
             }
             if (type is not null)
-                data.Type = Enum.Parse<PostType>(type, true);
+                data = data with { Type = Enum.Parse<PostType>(type, true) };
             if (author is not null)
-                data.Author = author;
+                data = data with { Author = author };
+            return data;
         }
     }
 }

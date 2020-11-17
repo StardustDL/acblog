@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.Searchers
 {
-    public interface IRecordRepositorySearcher<T, TId, TQuery, TRepo> where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new() where TRepo : IRecordRepository<T, TId, TQuery>
+    public interface IRecordRepositorySearcher<T, TId, TQuery, TRepo> where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new() where TRepo : IRecordRepository<T, TId, TQuery>
     {
         IAsyncEnumerable<TId> Search(TRepo repository, TQuery query, CancellationToken cancellationToken = default);
     }

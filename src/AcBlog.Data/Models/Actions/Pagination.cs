@@ -2,22 +2,23 @@
 
 namespace AcBlog.Data.Models.Actions
 {
-    public class Pagination
+    public record Pagination
     {
         private int _pageSize = 10;
 
         public int PageSize
         {
-            get => _pageSize; set
+            get => _pageSize; 
+            init
             {
                 if (value <= 0) value = 10;
                 _pageSize = value;
             }
         }
 
-        public int CurrentPage { get; set; }
+        public int CurrentPage { get; init; }
 
-        public int TotalCount { get; set; }
+        public int TotalCount { get; init; }
 
         public int Offset => PageSize * CurrentPage;
 

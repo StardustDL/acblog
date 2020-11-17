@@ -144,7 +144,7 @@
             {
                 Password = Password
             });
-            Post.Content = dep;
+            Post = Post with { Content = dep };
             IsProtected = await Service.PostService.Protector.IsProtected(Post.Content);
             if (!IsProtected)
                 inputPasswordModalVisible = false;

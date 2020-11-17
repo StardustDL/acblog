@@ -14,15 +14,15 @@ namespace Test.Data.Models.Builders
         {
             CategoryBuilder builder = new CategoryBuilder();
             builder.AddSubCategory("a", "b");
-            builder.Build().ShouldDeepEqual(new Category(new[] { "a", "b" }));
+            builder.Build().ShouldDeepEqual(new Category { Items = new[] { "a", "b" } });
 
             builder.AddSubCategory("c");
-            builder.Build().ShouldDeepEqual(new Category(new[] { "a", "b", "c" }));
+            builder.Build().ShouldDeepEqual(new Category { Items = new[] { "a", "b", "c" } });
 
             builder.RemoveSubCategory();
-            builder.Build().ShouldDeepEqual(new Category(new[] { "a", "b" }));
+            builder.Build().ShouldDeepEqual(new Category { Items = new[] { "a", "b" } });
 
-            Assert.ThrowsException<Exception>(() => builder.AddSubCategory($"a{Category.CategorySeperator}b"));
+            Assert.ThrowsException<Exception>(() => builder.AddSubCategory($"a/b"));
         }
 
         [TestMethod]

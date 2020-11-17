@@ -28,9 +28,8 @@ namespace AcBlog.Tools.Sdk.Repositories
                 metadata.modificationTime = System.IO.File.GetLastWriteTime(path).ToString();
             }
 
-            Layout result = new Layout();
-            metadata.ApplyTo(result);
-            result.Template = content;
+            var result = metadata.ApplyTo(new Layout());
+            result = result with { Template = content };
 
             return Task.FromResult(result);
         }

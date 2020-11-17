@@ -6,49 +6,10 @@ using System.Linq;
 
 namespace AcBlog.Data.Models
 {
-    public class Category
+    public record Category
     {
+        public IList<string> Items { get; init; } = Array.Empty<string>();
+
         public static Category Empty => new Category();
-
-        public const char CategorySeperator = '/';
-
-        public Category() { }
-
-        public Category(IList<string> items) => Items = items;
-
-        public Category(string name) : this(new string[] { name }) { }
-
-        public string OneName() => Items.Last();
-
-        public string OneNameOrDefault() => Items.LastOrDefault() ?? string.Empty;
-
-        public static bool IsValidName(string name) => !name.Contains(CategorySeperator);
-
-        public IList<string> Items { get; set; } = Array.Empty<string>();
-
-        public override string ToString() => string.Join(CategorySeperator, Items);
-
-        public static Category Parse(string input)
-        {
-            var items = input.Split(CategorySeperator, StringSplitOptions.RemoveEmptyEntries);
-            CategoryBuilder builder = new CategoryBuilder();
-            foreach (var name in items)
-                builder.AddSubCategory(name);
-            return builder.Build();
-        }
-
-        public static bool TryParse(string input, [NotNullWhen(true)] out Category? category)
-        {
-            try
-            {
-                category = Parse(input);
-                return true;
-            }
-            catch
-            {
-                category = null;
-                return false;
-            }
-        }
     }
 }

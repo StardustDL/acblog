@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Tools.Sdk.Repositories
 {
-    internal abstract class RecordFSRepo<T, TQuery, TMeta> : RecordFSRepository<T, string, TQuery> where T : class, IHasId<string> where TQuery : QueryRequest, new() where TMeta : MetadataBase<T>, new()
+    internal abstract class RecordFSRepo<T, TQuery, TMeta> : RecordFSRepository<T, string, TQuery> where T : RHasId<string> where TQuery : QueryRequest, new() where TMeta : MetadataBase<T>, new()
     {
         public RecordFSRepo(string rootPath) : base(rootPath)
         {
@@ -67,7 +67,7 @@ namespace AcBlog.Tools.Sdk.Repositories
         {
             if (string.IsNullOrEmpty(value.Id))
             {
-                value.Id = Guid.NewGuid().ToString();
+                value = value with { Id = Guid.NewGuid().ToString() };
             }
             var (metadata, content) = await CreateNewItem(value);
             string result = ObjectTextual.Format(metadata, content);

@@ -14,15 +14,15 @@ namespace Test.Data.Models.Builders
         {
             KeywordBuilder builder = new KeywordBuilder();
             builder.AddKeyword("a", "b");
-            builder.Build().ShouldDeepEqual(new Keyword(new[] { "a", "b" }));
+            builder.Build().ShouldDeepEqual(new Keyword{ Items = new[] { "a", "b" }});
 
             builder.AddKeyword("c");
-            builder.Build().ShouldDeepEqual(new Keyword(new[] { "a", "b", "c" }));
+            builder.Build().ShouldDeepEqual(new Keyword{ Items = new[] { "a", "b", "c" }});
 
             builder.RemoveKeyword("c");
-            builder.Build().ShouldDeepEqual(new Keyword(new[] { "a", "b" }));
+            builder.Build().ShouldDeepEqual(new Keyword{ Items = new[] { "a", "b" }});
 
-            Assert.ThrowsException<Exception>(() => builder.AddKeyword($"a{Keyword.KeywordSeperator}b"));
+            Assert.ThrowsException<Exception>(() => builder.AddKeyword($"a;b"));
         }
 
         [TestMethod]

@@ -1,9 +1,9 @@
 ﻿namespace AcBlog.Data.Models.Actions
 {
-    public class QueryRequest
+    public record QueryRequest
     {
-        public Pagination? Pagination { get; set; }
+        public Pagination? Pagination { get; init; }
 
-        public string Term { get; set; } = string.Empty;
+        public string Term { get; init; } = string.Empty;
     }
 }

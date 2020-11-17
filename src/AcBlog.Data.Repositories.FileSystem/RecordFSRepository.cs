@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem
 {
-    public abstract class RecordFSRepository<T, TId, TQuery> : IRecordRepository<T, TId, TQuery> where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+    public abstract class RecordFSRepository<T, TId, TQuery> : IRecordRepository<T, TId, TQuery> where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
     {
         protected RecordFSRepository(string rootPath)
         {

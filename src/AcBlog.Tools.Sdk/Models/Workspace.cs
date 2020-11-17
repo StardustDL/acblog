@@ -187,7 +187,7 @@ namespace AcBlog.Tools.Sdk.Models
             }
         }
 
-        public async Task SyncRecordRepository<T, TId, TQuery>(IRecordRepository<T, TId, TQuery> source, IRecordRepository<T, TId, TQuery> target, bool full) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        public async Task SyncRecordRepository<T, TId, TQuery>(IRecordRepository<T, TId, TQuery> source, IRecordRepository<T, TId, TQuery> target, bool full) where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
         {
             HashSet<TId> remoteIds = await target.All().ToHashSetAsync();
             await foreach (var item in source.GetAllItems().IgnoreNull())
@@ -373,18 +373,12 @@ namespace AcBlog.Tools.Sdk.Models
                     {
                         foreach (var file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
                         {
+                            var id = Path.GetRelativePath(Environment.CurrentDirectory, file).Replace('\\', '/');
                             Data.Models.File f = new Data.Models.File
                             {
-                                Id = Path.GetRelativePath(Environment.CurrentDirectory, file).Replace('\\', '/')
+                                Id = id,
+                                Uri = string.IsNullOrWhiteSpace(baseAddress) ? $"/{id}" : $"{baseAddress.TrimEnd('/')}/{id}"
                             };
-                            if (!string.IsNullOrWhiteSpace(baseAddress))
-                            {
-                                f.Uri = $"{baseAddress.TrimEnd('/')}/{f.Id}";
-                            }
-                            else
-                            {
-                                f.Uri = $"/{f.Id}";
-                            }
                             files.Add(f);
                         }
                     }

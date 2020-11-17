@@ -1,6 +1,7 @@
 ﻿using AcBlog.Data.Extensions;
 using AcBlog.Data.Models;
 using AcBlog.Data.Models.Actions;
+using AcBlog.Data.Models.Builders;
 using AcBlog.Data.Repositories.SqlServer.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,7 +23,7 @@ namespace AcBlog.Data.Repositories.SqlServer
         public override Task<string> Create(Post value, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(value.Id))
-                value.Id = Guid.NewGuid().ToString();
+                value = value with { Id = Guid.NewGuid().ToString() };
             return base.Create(value, cancellationToken);
         }
 
@@ -67,13 +68,13 @@ namespace AcBlog.Data.Repositories.SqlServer
         public async Task<CategoryTree> GetCategories(CancellationToken cancellationToken = default)
         {
             var cates = DbSet.AsQueryable().Select(x => x.Category).Distinct().AsAsyncEnumerable();
-            return await CategoryTreeBuilder.Build(cates.Select(x => Category.Parse(x)), cancellationToken);
+            return await CategoryTreeBuilder.Build(cates.Select(x => CategoryBuilder.FromString(x)), cancellationToken);
         }
 
         public async Task<KeywordCollection> GetKeywords(CancellationToken cancellationToken = default)
         {
             var cates = DbSet.AsQueryable().Select(x => x.Keywords).Distinct().AsAsyncEnumerable();
-            return await KeywordCollectionBuilder.Build(cates.Select(x => Keyword.Parse(x)), cancellationToken);
+            return await KeywordCollectionBuilder.Build(cates.Select(x => KeywordBuilder.FromString(x)), cancellationToken);
         }
 
         protected override RawPost ToRaw(Post item) => RawPost.From(item);

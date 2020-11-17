@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Data.Repositories.FileSystem.Builders
 {
-    public abstract class RecordFSBuilderBase<T, TId> where TId : class where T : class, IHasId<TId>
+    public abstract class RecordFSBuilderBase<T, TId> where TId : class where T : RHasId<TId>
     {
         protected RecordFSBuilderBase(string rootPath)
         {
@@ -40,7 +40,7 @@ namespace AcBlog.Data.Repositories.FileSystem.Builders
 
             foreach (var v in data)
             {
-                var id = v.Id.ToString() ?? throw new NullReferenceException(nameof(v.Id));
+                var id = v.Id?.ToString() ?? throw new NullReferenceException(nameof(v.Id));
                 await using var st = FSStaticBuilder.GetFileRewriteStream(Paths.GetDataFile(RootPath, id));
                 await JsonSerializer.SerializeAsync(st, v).ConfigureAwait(false);
                 ids.Add(v.Id);

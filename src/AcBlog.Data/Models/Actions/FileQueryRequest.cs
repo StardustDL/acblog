@@ -1,6 +1,6 @@
 ﻿namespace AcBlog.Data.Models.Actions
 {
-    public class FileQueryRequest : QueryRequest
+    public record FileQueryRequest : QueryRequest
     {
     }
 }

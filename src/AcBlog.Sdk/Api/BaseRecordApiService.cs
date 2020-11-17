@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Sdk.Api
 {
-    internal abstract class BaseRecordApiService<T, TQuery> : IRecordRepository<T, string, TQuery> where T : class, IHasId<string> where TQuery : QueryRequest, new()
+    internal abstract class BaseRecordApiService<T, TQuery> : IRecordRepository<T, string, TQuery> where T : RHasId<string> where TQuery : QueryRequest, new()
     {
         protected abstract string PrepUrl { get; }
 
@@ -94,7 +94,7 @@ namespace AcBlog.Sdk.Api
 
             var result = await responseMessage.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken).ConfigureAwait(false);
             if (result is not null)
-                result.Id = id;
+                result = result with { Id = id };
 
             return result;
         }

@@ -1,13 +1,11 @@
 ﻿namespace AcBlog.Data.Models
 {
-    public class User : IHasId<string>
+    public record User : RHasId<string>
     {
-        public string Id { get; set; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
 
-        public string Name { get; set; } = string.Empty;
+        public string NickName { get; init; } = string.Empty;
 
-        public string NickName { get; set; } = string.Empty;
-
-        public string Email { get; set; } = string.Empty;
+        public string Email { get; init; } = string.Empty;
     }
 }

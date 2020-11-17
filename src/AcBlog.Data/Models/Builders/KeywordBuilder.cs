@@ -12,7 +12,7 @@ namespace AcBlog.Data.Models.Builders
         {
             foreach (var name in names)
             {
-                if (Keyword.IsValidName(name))
+                if (!name.Contains(';'))
                 {
                     Inner.Add(name);
                 }
@@ -34,5 +34,10 @@ namespace AcBlog.Data.Models.Builders
         public bool IsEmpty => Inner.Count > 0;
 
         public Keyword Build() => new Keyword { Items = Inner.ToArray() };
+
+        public static Keyword FromString(string source)
+        {
+            return new Keyword { Items = source.Split(';', StringSplitOptions.RemoveEmptyEntries) };
+        }
     }
 }

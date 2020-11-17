@@ -22,7 +22,7 @@ namespace AcBlog.Data.Repositories.Searchers.Local
                     x.Content.ToString().Contains(query.Term)
                 );
             }
-            return qr.Select(item => item.Id).Paging(query.Pagination);
+            return qr.Select(item => item.Id).IgnoreNull().Paging(query.Pagination);
         }
     }
 }

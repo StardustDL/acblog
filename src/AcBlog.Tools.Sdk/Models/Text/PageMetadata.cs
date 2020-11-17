@@ -44,26 +44,30 @@ namespace AcBlog.Tools.Sdk.Models.Text
             route = data.Route;
         }
 
-        public override void ApplyTo(Page data)
+        public override Page ApplyTo(Page data)
         {
-            data.Id = id;
-            data.Title = title;
-            data.Features = new Feature(features);
-            if (DateTimeOffset.TryParse(creationTime, out var _creationTime))
+            data = data with
             {
-                data.CreationTime = _creationTime;
-            }
-            if (DateTimeOffset.TryParse(modificationTime, out var _modificationTime))
-            {
-                data.ModificationTime = _modificationTime;
-            }
-            data.Layout = layout;
-            data.Route = route;
-            data.Properties = new PropertyCollection(new Dictionary<string, string>(
+                Id = id,
+                Title = title,
+                Features = new Feature { Items = features },
+                Layout = layout,
+                Route = route,
+                Properties = new PropertyCollection(new Dictionary<string, string>(
                 properties.Select(
                     x => new KeyValuePair<string, string>(
                         x.Key,
-                        JsonConvert.SerializeObject(x.Value)))));
+                        JsonConvert.SerializeObject(x.Value)))))
+            };
+            if (DateTimeOffset.TryParse(creationTime, out var _creationTime))
+            {
+                data = data with { CreationTime = _creationTime };
+            }
+            if (DateTimeOffset.TryParse(modificationTime, out var _modificationTime))
+            {
+                data = data with { ModificationTime = _modificationTime };
+            }
+            return data;
         }
     }
 }

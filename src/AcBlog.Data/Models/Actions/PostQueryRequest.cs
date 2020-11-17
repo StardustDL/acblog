@@ -1,19 +1,19 @@
 ﻿namespace AcBlog.Data.Models.Actions
 {
-    public class PostQueryRequest : QueryRequest
+    public record PostQueryRequest : QueryRequest
     {
-        public PostType? Type { get; set; }
+        public PostType? Type { get; init; }
 
-        public string Author { get; set; } = string.Empty;
+        public string Author { get; init; } = string.Empty;
 
-        public string Content { get; set; } = string.Empty;
+        public string Content { get; init; } = string.Empty;
 
-        public string Title { get; set; } = string.Empty;
+        public string Title { get; init; } = string.Empty;
 
-        public Keyword? Keywords { get; set; }
+        public Keyword? Keywords { get; init; }
 
-        public Category? Category { get; set; }
+        public Category? Category { get; init; }
 
-        public QueryTimeOrder Order { get; set; } = QueryTimeOrder.None;
+        public QueryTimeOrder Order { get; init; } = QueryTimeOrder.None;
     }
 }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AcBlog.Server.Api.Controllers
 {
-    public class RecordControllerBase<T, TService, TQuery> : ControllerBase where T : class, IHasId<string> where TService : IRecordRepository<T, string, TQuery> where TQuery : QueryRequest, new()
+    public class RecordControllerBase<T, TService, TQuery> : ControllerBase where T : RHasId<string> where TService : IRecordRepository<T, string, TQuery> where TQuery : QueryRequest, new()
     {
         protected TService Service { get; }
 
@@ -81,8 +81,7 @@ namespace AcBlog.Server.Api.Controllers
         public virtual async Task<ActionResult<bool>> Update(string id, [FromBody] T value)
         {
             id = Uri.UnescapeDataString(id);
-
-            value.Id = id;
+            value = value with { Id = id };
             if (await Service.Exists(value.Id))
                 return Ok(await Service.Update(value));
             else

@@ -13,13 +13,13 @@ namespace AcBlog.Data.Extensions
 {
     public static class RecordRepositoryExtensions
     {
-        public static IAsyncEnumerable<T?> GetItems<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, IAsyncEnumerable<TId> ids, CancellationToken cancellationToken = default) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        public static IAsyncEnumerable<T?> GetItems<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, IAsyncEnumerable<TId> ids, CancellationToken cancellationToken = default) where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
         {
             return ids.SelectAwait(
                 async id => await repository.Get(id, cancellationToken));
         }
 
-        public static IAsyncEnumerable<T?> GetAllItems<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, CancellationToken cancellationToken = default) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        public static IAsyncEnumerable<T?> GetAllItems<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, CancellationToken cancellationToken = default) where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
         {
             return GetItems(repository, repository.All(cancellationToken), cancellationToken);
         }
@@ -33,6 +33,15 @@ namespace AcBlog.Data.Extensions
             }
         }
 
+        public static IEnumerable<T> IgnoreNull<T>(this IEnumerable<T?> collection)
+        {
+            foreach (var item in collection)
+            {
+                if (item is not null)
+                    yield return item;
+            }
+        }
+
         public static IAsyncEnumerable<T> Paging<T>(this IAsyncEnumerable<T> collection, Pagination? pagination)
         {
             if (pagination is null)
@@ -40,7 +49,7 @@ namespace AcBlog.Data.Extensions
             return collection.Skip(pagination.Offset).Take(pagination.PageSize);
         }
 
-        public static async Task<PagingData<TId>> QueryPaging<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, TQuery query, CancellationToken cancellationToken = default) where TId : class where T : class, IHasId<TId> where TQuery : QueryRequest, new()
+        public static async Task<PagingData<TId>> QueryPaging<T, TId, TQuery>(this IRecordRepository<T, TId, TQuery> repository, TQuery query, CancellationToken cancellationToken = default) where TId : class where T : RHasId<TId> where TQuery : QueryRequest, new()
         {
             var stats = await repository.Statistic(query, cancellationToken);
 

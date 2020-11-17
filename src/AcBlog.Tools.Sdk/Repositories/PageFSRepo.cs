@@ -28,9 +28,8 @@ namespace AcBlog.Tools.Sdk.Repositories
                 metadata.modificationTime = System.IO.File.GetLastWriteTime(path).ToString();
             }
 
-            Page result = new Page();
-            metadata.ApplyTo(result);
-            result.Content = content;
+            var result = metadata.ApplyTo(new Page());
+            result = result with { Content = content };
 
             return Task.FromResult(result);
         }

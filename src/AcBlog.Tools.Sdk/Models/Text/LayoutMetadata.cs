@@ -22,17 +22,18 @@ namespace AcBlog.Tools.Sdk.Models.Text
             modificationTime = data.ModificationTime.ToString();
         }
 
-        public override void ApplyTo(Layout data)
+        public override Layout ApplyTo(Layout data)
         {
-            data.Id = id;
+            data = data with { Id = id };
             if (DateTimeOffset.TryParse(creationTime, out var _creationTime))
             {
-                data.CreationTime = _creationTime;
+                data = data with { CreationTime = _creationTime };
             }
             if (DateTimeOffset.TryParse(modificationTime, out var _modificationTime))
             {
-                data.ModificationTime = _modificationTime;
+                data = data with { ModificationTime = _modificationTime };
             }
+            return data;
         }
     }
 }

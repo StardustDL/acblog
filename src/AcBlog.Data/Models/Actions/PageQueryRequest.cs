@@ -1,9 +1,9 @@
 ﻿namespace AcBlog.Data.Models.Actions
 {
-    public class PageQueryRequest : QueryRequest
+    public record PageQueryRequest : QueryRequest
     {
-        public string Route { get; set; } = string.Empty;
+        public string Route { get; init; } = string.Empty;
 
-        public QueryTimeOrder Order { get; set; } = QueryTimeOrder.None;
+        public QueryTimeOrder Order { get; init; } = QueryTimeOrder.None;
     }
 }

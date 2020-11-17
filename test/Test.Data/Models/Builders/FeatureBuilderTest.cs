@@ -14,15 +14,15 @@ namespace Test.Data.Models.Builders
         {
             FeatureBuilder builder = new FeatureBuilder();
             builder.AddFeature("a", "b");
-            builder.Build().ShouldDeepEqual(new Feature(new[] { "a", "b" }));
+            builder.Build().ShouldDeepEqual(new Feature{ Items = new[] { "a", "b" }});
 
             builder.AddFeature("c");
-            builder.Build().ShouldDeepEqual(new Feature(new[] { "a", "b", "c" }));
+            builder.Build().ShouldDeepEqual(new Feature{ Items = new[] { "a", "b", "c" }});
 
             builder.RemoveFeature("c");
-            builder.Build().ShouldDeepEqual(new Feature(new[] { "a", "b" }));
+            builder.Build().ShouldDeepEqual(new Feature{ Items = new[] { "a", "b" }});
 
-            Assert.ThrowsException<Exception>(() => builder.AddFeature($"a{Feature.FeatureSeperator}b"));
+            Assert.ThrowsException<Exception>(() => builder.AddFeature($"a,b"));
         }
 
         [TestMethod]
