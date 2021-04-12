@@ -33,7 +33,7 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
     <PackageReference Include="System.CommandLine.Hosting" Version="0.3.0-alpha.20427.1" />
-    <PackageReference Include="YamlDotNet" Version="8.1.2" />
+    <PackageReference Include="YamlDotNet" Version="11.1.1" />
   </ItemGroup>
 
   <ItemGroup>
