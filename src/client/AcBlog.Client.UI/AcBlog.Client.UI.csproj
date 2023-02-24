@@ -35,7 +35,7 @@
     <PackageReference Include="AcBlog.UI.Components.Slides" Version="0.0.1.36-preview" />
     <PackageReference Include="AntDesign" Version="0.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0" />
-    <PackageReference Include="StardustDL.RazorComponents.Markdown" Version="0.0.2.24" />
+    <PackageReference Include="StardustDL.RazorComponents.Markdown" Version="0.0.3.28" />
     <PackageReference Include="StardustDL.RazorComponents.MaterialDesignIcons" Version="0.0.1" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
