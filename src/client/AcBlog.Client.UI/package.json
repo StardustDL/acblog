@@ -11,7 +11,7 @@
   "dependencies": {
     "bootstrap": "^4.5.3",
     "github-markdown-css": "^4.0.0",
-    "jquery": "^3.5.1",
+    "jquery": "^3.6.4",
     "monaco-editor": "^0.21.2",
     "popper.js": "^1.16.1"
   },
